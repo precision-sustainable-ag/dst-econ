@@ -1,0 +1,189 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  max-width: 1400px;
+}
+
+.selected {
+  color: white;
+  background: navy;
+}
+
+nav button {
+  font-weight: bold;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  width: 14em;
+  zheight: 100vh;
+  margin-right: 1em;
+  padding: 0.5em;
+  background: #eee;
+  border: 1px solid #ddd;
+}
+
+nav button {
+  display: block;
+  width: calc(100% - 2em);
+  text-align: left;
+}
+
+nav span button {
+  margin-left: 1.5em;
+}
+
+.size {
+  font-size: 24px;
+}
+
+div.table {
+  display: table;
+}
+
+div.table > div:not(.caption) {
+  display: table-row;
+}
+
+div.table > div > * {
+  display: table-cell;
+}
+
+div.caption {
+  display: table-caption;
+  text-align: center;
+}
+
+.th {
+  text-align: center;
+}
+
+table {
+  border: 1px solid black;
+  border-spacing: 0; 
+  empty-cells: show;
+}
+
+td, th {
+  padding: 0.2em 0.5em;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #bbb;
+}
+
+div.Planting th {
+  text-align: left;
+  background: #eee;
+}
+
+.T7, .P7, .Total {
+  font-weight: bold;
+}
+
+label {
+  cursor: pointer;
+}
+
+#Activity th, #Costs th {
+  text-align: center;
+}
+
+#Activity tr > :nth-child(2n + 2) {
+  border-left: 1px solid black;
+}
+
+#Activity td:nth-child(n + 2),
+#Costs td:nth-child(n + 2) {
+  text-align: right;
+}
+
+#Costs tr > :nth-child(4n + 2) {
+  border-left: 1px solid black;
+}
+
+.hidden {
+  display: none;
+}
+
+#Activity tr > *,
+#Costs tr > * {
+  display: none;
+}
+
+#Activity.tillage tr > :nth-child(1):not(.hidden),
+#Activity.tillage tr > :nth-child(2):not(.hidden),
+#Activity.tillage tr > :nth-child(3):not(.hidden) {
+  display: table-cell;
+}
+
+#Activity.planting tr > :nth-child(1):not(.hidden),
+#Activity.planting tr > :nth-child(4):not(.hidden),
+#Activity.planting tr > :nth-child(5):not(.hidden) {
+  display: table-cell;
+}
+
+#Costs.tillage tr > :nth-child(1):not(.hidden),
+#Costs.tillage tr > :nth-child(2):not(.hidden),
+#Costs.tillage tr > :nth-child(3):not(.hidden),
+#Costs.tillage tr > :nth-child(4):not(.hidden),
+#Costs.tillage tr > :nth-child(5):not(.hidden) {
+  display: table-cell;
+}
+
+#Costs.planting tr > :nth-child(1):not(.hidden),
+#Costs.planting tr > :nth-child(6):not(.hidden),
+#Costs.planting tr > :nth-child(7):not(.hidden),
+#Costs.planting tr > :nth-child(8):not(.hidden),
+#Costs.planting tr > :nth-child(9):not(.hidden) {
+  display: table-cell;
+}
+
+#Activity tr > :nth-child(1),
+#Costs    tr > :nth-child(1) {
+  width: 10em;
+}
+
+#Activity tr > :nth-child(n + 2) {
+  width: calc(12em + 2px);
+}
+
+#Costs tr > :nth-child(n + 2) {
+  width: 6em;
+}
+
+li.selected {
+  font-weight: bold;
+  color: #246;
+  background: #ccc;
+}
+
+div.Species td:nth-child(1) {
+  width: 200px;
+}
+
+div.Species td:nth-child(n + 2) {
+  text-align: right;
+  width: 8em;
+}
+
+div.Species th {
+  background: #eee;
+}
+
+div.Species td:nth-child(n + 4) {
+  background: #eef;
+}
+
+div.Species tr > :nth-child(4) {
+  border-left: 1px solid black;
+}
+
+div.Species tr > td:nth-child(1),
+div.Species tr > td:nth-child(2),
+div.Species tr > td:nth-child(3) {
+  border-bottom: none;
+}
