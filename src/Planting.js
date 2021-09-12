@@ -11,8 +11,8 @@ const Logic = ({q, a, id, cond=true, ps, parms}) => {
                 <>
                   {
                     a.map(a => (
-                      <label>
-                        <input type="radio" name={id} id={id} value={a} checked={a === parms[id]}/>{a}
+                      <label key={a}>
+                        <input key={a} type="radio" name={id} id={id} value={a} checked={a === parms[id]}/>{a}
                         <br/>
                       </label>
                     ))
@@ -20,7 +20,7 @@ const Logic = ({q, a, id, cond=true, ps, parms}) => {
                 </>
                 :
                 <select {...ps(id)} >
-                  {a.map(a => <option>{a}</option>)}
+                  {a.map(a => <option key={a}>{a}</option>)}
                 </select> 
               :
               a === 'number' ?
@@ -39,17 +39,8 @@ const Logic = ({q, a, id, cond=true, ps, parms}) => {
 
 const Planting = ({setScreen, db, parms, ps, sets}) => {
   const implementCost = (type, desc, lookup) => {
-    // console.log(type, desc, lookup);
     let result = (+db[type][type === 'tillage' ? parms.T4 : parms.P4] || {})[lookup] || 0;
-
-    // console.log(parms.T4, parms.P4);
-
-    if (type === 'tillage' && db[type][parms.T4]) {
-      console.log(db[type][parms.T4][lookup])
-    } else {
-      // console.log(parms.T4)
-    }
-    
+  
     if (type === 'tillage' && db.tillage[parms.T4]) {
       result = +db.tillage[parms.T4][lookup];
     } else if (type === 'planting' && db.planting[parms.P4]) {
@@ -87,6 +78,33 @@ const Planting = ({setScreen, db, parms, ps, sets}) => {
 
   const Costs = ({desc, lookup}) => {
     const d = desc.replace('Repairs', 'Repair').replace('Storage shed', 'Shed');
+    const iCost = {};
+    const pCost = {};
+    const total = {};
+    const relevant = {};
+
+    ['tillage', 'planting'].map(type => {
+      iCost[type] = implementCost(type, d, lookup);
+      pCost[type] = powerCost(type, d, lookup);
+  
+      total[type]    = '$' + totalCost(type, d, lookup).toFixed(2);
+      relevant[type] = '$' + relevantCost(type, d, lookup).toFixed(2);
+    });
+
+    return (
+      <tr>
+        <td>{desc}</td>
+        <td>{iCost.tillage ? '$' + iCost.tillage.toFixed(2) : ''}</td>
+        <td>{pCost.tillage ? '$' + pCost.tillage.toFixed(2) : ''}</td>
+        <td>{total.tillage}</td>
+        <td>{relevant.tillage}</td>
+
+        <td>{iCost.planting ? '$' + iCost.planting.toFixed(2) : ''}</td>
+        <td>{pCost.planting ? '$' + pCost.planting.toFixed(2) : ''}</td>
+        <td>{total.planting}</td>
+        <td>{relevant.planting}</td>
+      </tr>
+    )
 
     return (
       <tr>

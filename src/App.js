@@ -17,7 +17,6 @@ import { tillage, planting, cropMaint, harvest} from './implement';
 
 // Screens
 import Home         from './Home';
-import Fields       from './Fields';
 import Species      from './Species';
 import Planting     from './Planting';
 import Termination  from './Termination';
@@ -48,13 +47,13 @@ const Help = ({parms}) => {
   )
 } // Help
 
-const Screens = ({parms}) => {
-  let [screen, setScreen2] = React.useState('Home');
+const Screens = ({parms, setSpecies, setRate, setPrice}) => {
+  // let [screen, setScreen2] = React.useState('Home');
+  let [screen, setScreen2] = React.useState('Species');
   // let [screen, setScreen2] = React.useState('Planting');
 
   const screens = {
     Home,
-    Fields,
     Modules: {
       Species,
       Planting,
@@ -78,22 +77,44 @@ const Screens = ({parms}) => {
     setScreen2(scr);
   } // setScreen
 
-  const update = (e) => {
+  const update = (e, id=e.target.id, val=e.target.value) => {
     try {
-      const id = e.target.id;
       if (/googlemap|mui/.test(id)) {
         return;
       }
-      const val = e.target.value;
-      console.log(JSON.stringify(val));
 
-      sets[id](val);
-      console.log(id, val);
-
-      // doesn't work with slider, and is a step behind input
-      if (/carb|cell/.test(id)) {
-        // sets.lign(100 - (+parms.carb + +parms.cell))
+      if (/^species\d/.test(id)) {
+        const n = id.match(/\d+/)[0];
+        setSpecies(arr => {
+          setRate(arr => {
+            arr[n] = (db.seedList[val] || {}).seedingRate;
+            return [...arr];
+          });
+          
+          setPrice(arr => {
+            arr[n] = (db.seedList[val] || {}).price;
+            return [...arr];
+          });
+        
+          arr[n] = val;
+          return [...arr];
+        });
+      } else if (/^rates\d/.test(id)) {
+        const n = id.match(/\d+/)[0];
+        setRate(arr => {
+          arr[n] = val;
+          return [...arr];
+        });
+      } else if (/^prices\d/.test(id)) {
+        const n = id.match(/\d+/)[0];
+        setPrice(arr => {
+          arr[n] = val;
+          return [...arr];
+        });
+      } else {
+        sets[id](val);
       }
+      console.log(id, val);
     } catch(ee) {
       console.log(e.target.id, ee.message);
     }
@@ -270,7 +291,8 @@ const Screens = ({parms}) => {
           sets: sets,
           parms: parms,
           setScreen: setScreen,
-          db: db
+          db: db,
+          update: update,
         })}
       </div>
     </div>
@@ -282,14 +304,27 @@ const App = () => {
   const State = (parm, value) => {
     [parms[parm], sets[parm]] = React.useState(value);
   }
-  
+
+  let setSpecies;
+  [parms.species, setSpecies] = useState([]);
+
+  let setRate;
+  [parms.rates, setRate] = useState([]);
+
+  let setPrice;
+  [parms.prices, setPrice] = useState([]);
+
   for (const [parm, value] of Object.entries(parms)) {
-    State(parm, value);
+    if (Array.isArray(value)) {
+
+    } else {
+      State(parm, value);
+    }
   }
 
   return (
     <div>
-      <Screens parms={parms} />
+      <Screens parms={parms} setSpecies={setSpecies} setRate={setRate} setPrice={setPrice} />
     </div>
   );
 } // App
@@ -421,21 +456,9 @@ let parms = {
   help                : '',
   helpX               : 0,
   helpY               : 0,
-  species1            : '',
-  rate1               : '',
-  price1              : '',
-  species2            : '',
-  rate2               : '',
-  price2              : '',
-  species3            : '',
-  rate3               : '',
-  price3              : '',
-  species4            : '',
-  rate4               : '',
-  price4              : '',
-  species5            : '',
-  rate5               : '',
-  price5              : '',
+  species             : [],
+  rates               : [],
+  prices              : [],
   T1                  : '',
   T2                  : 'No',
   T3                  : 'Self',

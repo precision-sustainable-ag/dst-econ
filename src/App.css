@@ -174,8 +174,17 @@ div.Species th {
   background: #eee;
 }
 
-div.Species td:nth-child(n + 4) {
-  background: #eef;
+div.Species tr:not(:last-child) td:nth-child(n + 2) {
+  background: #efe;
+}
+
+div.Species tr > :nth-child(n + 4) {
+  display: none;
+}
+
+div.Species tr:last-child td {
+  border-top: 1px solid #666;
+  background: #eee;
 }
 
 div.Species tr > :nth-child(4) {
@@ -186,4 +195,19 @@ div.Species tr > td:nth-child(1),
 div.Species tr > td:nth-child(2),
 div.Species tr > td:nth-child(3) {
   border-bottom: none;
+}
+
+div.Species td:nth-child(n + 2) input {
+  border: none;
+  font-size: 110%;
+  border-bottom: 1px solid silver;
+  background: transparent !important;
+  text-align: right;
+  width: 100%;
+  outline: none;
+}
+
+div.Species td:nth-child(n + 2) input:focus {
+  transition: all 0.5s;
+  border-bottom: 1px solid navy;
 }
