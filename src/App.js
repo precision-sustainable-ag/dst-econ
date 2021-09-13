@@ -13,6 +13,7 @@ import expenseTypes       from './expenseTypes';
 import rates              from './rates';
 import coefficients       from './coefficients';
 import power              from './power';
+import stateRegions       from './stateRegions';
 import { tillage, planting, cropMaint, harvest} from './implement';
 
 // Screens
@@ -102,13 +103,13 @@ const Screens = ({parms, setSpecies, setRate, setPrice}) => {
       } else if (/^rates\d/.test(id)) {
         const n = id.match(/\d+/)[0];
         setRate(arr => {
-          arr[n] = val;
+          arr[n] = val.match(/[\d.]+/)[0];
           return [...arr];
         });
       } else if (/^prices\d/.test(id)) {
         const n = id.match(/\d+/)[0];
         setPrice(arr => {
-          arr[n] = val;
+          arr[n] = val.match(/[\d.]+/)[0];
           return [...arr];
         });
       } else {
@@ -396,6 +397,9 @@ const alias = {
   'power': {
 
   },
+  'stateRegions': {
+
+  },
   'tillage': {
     ImplName: 'name',
     ImplDescription: 'description'
@@ -429,6 +433,7 @@ const db = {
   planting,
   cropMaint,
   harvest,
+  stateRegions,
 }
 
 Object.keys(db).forEach(key => {
@@ -467,6 +472,13 @@ let parms = {
   P3                  : 'Self',
   P4                  : '',
   P6                  : '',
+  lat                 : 40.7849,
+  lng                 : -74.8073,
+  mapZoom             : 13,
+  mapType             : 'hybrid',
+  location            : '',
+  state               : '',
+  USDARegion          : '',
   includeLabor        : true,
   includeFuel         : true,
   includeDepreciation : true,

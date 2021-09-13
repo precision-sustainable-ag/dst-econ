@@ -5,19 +5,40 @@ import NumberFormat from 'react-number-format';
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const SpeciesRow = ({db, n, parms, update}) => {
-  let list = Object.keys(db.seedList).filter(s => !parms.species.includes(s));
-  let inputRef;
+  const species = {
+    Brassica:   ['Brassica, Forage', 'Mustard', 'Radish, Forage', 'Radish, Oilseed', 'Rape, Oilseed, Spring', 'Rape, Oilseed, Winter', 'Rapeseed, Forage', 'Turnip, Forage', 'Turnip, Purple Top'],
+    Broadleaf:  ['Buckwheat', 'Phacelia', 'Sunflower'],
+    Grass:      ['Barley, Spring', 'Barley, Winter', 'Cereal Rye, Spring', 'Cereal Rye, Winter', 'Millet, Japanese', 'Millet, Pearl', 'Oats', 'Oats, Black', 'Oats, Spring', 'Ryegrass, Annual', 'Ryegrass, Perennial', 'Sorghum', 'Sorghum-sudangrass', 'Sudangrass', 'Teff', 'Triticale, Spring', 'Triticale, Winter', 'Wheat, Spring', 'Wheat, Winter'],
+    Legume:     ['Alfalfa, Dormant', 'Clover, Alsike', 'Clover, Balansa', 'Clover, Berseem', 'Clover, Crimson', 'Clover, Red', 'Clover, White', 'Cowpea', 'Pea, Spring', 'Pea, Winter', 'Soybeans', 'Sunn Hemp', 'Sweetclover, Yellow', 'Vetch, Hairy']
+  };
+
+  const options = [
+    ...species.Grass,
+    ...species.Legume,
+    ...species.Brassica,
+    ...species.Broadleaf,
+  ].filter(s => !parms.species.includes(s));
+
   return (
     <tr>
       <td>
         <Autocomplete
           getOptionSelected={(option, value) => option.id === value.id} // https://stackoverflow.com/a/65347275/3903374
-          options={list}
+
+          groupBy={
+            (option) => species.Brassica.includes(option)  ? 'Brassica' :
+                        species.Broadleaf.includes(option) ? 'Broadleaf' :
+                        species.Grass.includes(option)     ? 'Grass' :
+                        species.Legume.includes(option)    ? 'Legume' :
+                                                             'ERROR'
+          }
+          
+          options={options}
+    
           value={parms.species[n]}
+          
           onChange={(e, newValue) => {
             update(e, `species${n}`, newValue);  // loses focus
-            console.log(inputRef);
-            inputRef.focus();
           }}
     
           renderInput={(params) => (
@@ -26,9 +47,6 @@ const SpeciesRow = ({db, n, parms, update}) => {
               variant="standard"
               label=""
               fullWidth={true}
-              inputRef={input => {
-                inputRef = input;
-              }}
             />
           )}
         />
@@ -72,6 +90,18 @@ const Species = ({sets, setScreen, db, parms, update}) => {
         total += (+parms.rates[n] || 0) * (+parms.prices[n] || 0)
       }
     });
+
+  let rec = db.stateRegions[parms.state.toUpperCase()];
+  let region = rec ? db.stateRegions[parms.state.toUpperCase()].ccRegion.toLowerCase() : '';
+  if (region) {
+    region = region[0].toUpperCase() + region.slice(1);
+  }
+  const link = {
+    Midwest:    'https://mccc.msu.edu/selector-tool/',
+    Northeast:  'http://northeastcovercrops.com/decision-tool/',
+    Southern:   'https://southerncovercrops.org/cover-crop-resource-guide/',
+    Western:    'https://westerncovercrops.org/category/resources/selection/'
+  }[region];
 
   return (
     <div className="Species">
@@ -120,7 +150,13 @@ const Species = ({sets, setScreen, db, parms, update}) => {
           </tr>
         </tbody>
       </table>
-
+      
+      {
+        link &&
+        <a href={link} target="_blank">
+          {region} Cover Crops Council Species Selector
+        </a>
+      }
       <div>
         <button onClick={() => setScreen('Planting') }>Next</button>
       </div>

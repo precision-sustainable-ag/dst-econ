@@ -162,7 +162,7 @@ li.selected {
 }
 
 div.Species td:nth-child(1) {
-  width: 200px;
+  width: 15em;
 }
 
 div.Species td:nth-child(n + 2) {
