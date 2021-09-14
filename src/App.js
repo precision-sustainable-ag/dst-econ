@@ -86,7 +86,9 @@ const Screens = ({parms, setSpecies, setRate, setPrice}) => {
         return;
       }
 
-      if (/^species\d/.test(id)) {
+      if (/^include/.test(id)) {
+        sets[id](e.target.checked ? 'true' : 'false');
+      } else if (/^species\d/.test(id)) {
         const n = id.match(/\d+/)[0];
         setSpecies(arr => {
           setRate(arr => {
@@ -117,6 +119,7 @@ const Screens = ({parms, setSpecies, setRate, setPrice}) => {
       } else {
         sets[id](val);
       }
+
       if (id === 'T1' && val === 'No') {
         setScreen('Planting');
         return;
@@ -471,14 +474,18 @@ let parms = {
   species             : [],
   rates               : [],
   prices              : [],
-  T1                  : '',
+  T1                  : 'Yes',  // ''
   T2                  : 'No',
   T3                  : 'Self',
-  T4                  : '',
+  T4                  : 'Chisel Plow; 15 Ft',     // ''
+  T5                  : '',
   T6                  : '',
+  T7                  : '',
   P3                  : 'Self',
   P4                  : '',
+  P5                  : '',
   P6                  : '',
+  P7                  : '',
   lat                 : 40.7849,
   lng                 : -74.8073,
   mapZoom             : 13,
@@ -486,19 +493,20 @@ let parms = {
   location            : '',
   state               : '',
   USDARegion          : '',
-  includeLabor        : true,
-  includeFuel         : true,
-  includeDepreciation : true,
-  includeInterest     : true,
-  includeRepair       : true,
-  includeTaxes        : true,
-  includeInsurance    : true,
-  includeShed         : true,
+  includeLabor        : 'true',
+  includeFuel         : 'true',
+  includeDepreciation : 'true',
+  includeInterest     : 'true',
+  includeRepairs      : 'true',
+  includeTaxes        : 'true',
+  includeInsurance    : 'true',
+  includeStorage      : 'true',
 }
 
 const ps = (s) => ({
   id: s,
-  value: parms[s]
+  value: parms[s],
+  checked: parms[s] === 'true'
 });
 
 const sets = {};

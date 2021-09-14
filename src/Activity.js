@@ -1,43 +1,4 @@
-const Logic = ({q, a, id, cond=true, ps, parms}) => {
-  return (
-    <>
-      {cond && 
-        <tr className={id}>
-          <td>{q}</td>
-          <td>
-            {
-              a instanceof Array ?
-                a.length < 3 ? 
-                <>
-                  {
-                    a.map(a => (
-                      <label key={a}>
-                        <input key={a} type="radio" name={id} id={id} value={a} checked={a === parms[id]}/>{a}
-                        <br/>
-                      </label>
-                    ))
-                  }
-                </>
-                :
-                <select {...ps(id)} >
-                  {a.map(a => <option key={a}>{a}</option>)}
-                </select> 
-              :
-              a === 'number' ?
-                <input {...ps(id)} /> :
-              isFinite(a) ? 
-                '$' + (+a).toFixed(2)
-              :
-                ''
-            }
-          </td>
-        </tr>
-      }
-    </>
-  )
-} // Logic
-
-const Activity = ({setScreen, db, parms, ps, sets}) => {
+const Activity = ({sets, db, parms, ps}) => {
   const implementCost = (type, desc, lookup) => {
     let result = (+db[type][type === 'tillage' ? parms.T4 : parms.P4] || {})[lookup] || 0;
   
@@ -56,16 +17,20 @@ const Activity = ({setScreen, db, parms, ps, sets}) => {
     return result;
   } // implementCost
 
-  const powerCost = (type, desc, lookup) => {
+  const powerCost = (type, desc) => {
+    let result;
+
     if (type === 'planting') {
-      return desc === 'Labor' ? 0 :
-             desc === 'Fuel'  ? (power[type]['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / plantingAcresHour:
-                                 power[type][desc + ' ($/hour)'] / plantingAcresHour;
+      result = desc === 'Labor' ? 0 :
+               desc === 'Fuel'  ? (power[type]['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / plantingAcresHour :
+                                  power[type][desc + ' ($/hour)'] / plantingAcresHour;
     } else {
-      return desc === 'Labor' ? 0 :
-             desc === 'Fuel'  ? (power[type]['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / tillageAcresHour:
-                                 power[type][desc + ' ($/hour)'] / tillageAcresHour;
+      result = desc === 'Labor' ? 0 :
+               desc === 'Fuel'  ? (power[type]['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / tillageAcresHour :
+                                   power[type][desc + ' ($/hour)'] / tillageAcresHour;
     }
+
+    return result;
   } // powerCost
 
   const totalCost = (type, desc, lookup) => {
@@ -73,11 +38,11 @@ const Activity = ({setScreen, db, parms, ps, sets}) => {
   } // totalCost
 
   const relevantCost = (type, desc, lookup) => {
-    return parms['include' + desc] ? totalCost(type, desc, lookup) : 0;
+    return parms['include' + desc] === 'true' ? totalCost(type, desc, lookup) : 0;
   } // relevantCost
 
   const Costs = ({desc, lookup}) => {
-    const d = desc.replace('Repairs', 'Repair').replace('Storage shed', 'Shed');
+    const d = desc.replace('Storage shed', 'Storage');
     const iCost = {};
     const pCost = {};
     const total = {};
@@ -91,9 +56,13 @@ const Activity = ({setScreen, db, parms, ps, sets}) => {
       relevant[type] = '$' + relevantCost(type, d, lookup).toFixed(2);
     });
 
+    const style = parms[`include${d}`] === 'false' ? {background: '#ddd', color: '#888'}  : {};
+
     return (
-      <tr>
-        <td>{desc}</td>
+      <tr style={style}>
+        <td>
+          <label><input {...ps(`include${d}`)} type="checkbox" /> {desc}</label>
+        </td>
         <td>{iCost.tillage ? '$' + iCost.tillage.toFixed(2) : ''}</td>
         <td>{pCost.tillage ? '$' + pCost.tillage.toFixed(2) : ''}</td>
         <td>{total.tillage}</td>
@@ -103,30 +72,6 @@ const Activity = ({setScreen, db, parms, ps, sets}) => {
         <td>{pCost.planting ? '$' + pCost.planting.toFixed(2) : ''}</td>
         <td>{total.planting}</td>
         <td>{relevant.planting}</td>
-      </tr>
-    )
-
-    return (
-      <tr>
-        <td>{desc}</td>
-        {
-          ['tillage', 'planting'].map(type => {
-            const iCost = implementCost(type, d, lookup);
-            const pCost = powerCost(type, d, lookup);
-        
-            const total    = '$' + totalCost(type, d, lookup).toFixed(2);
-            const relevant = '$' + relevantCost(type, d, lookup).toFixed(2);
-        
-            return (
-              <>
-                <td>{iCost ? '$' + iCost.toFixed(2) : ''}</td>
-                <td>{pCost ? '$' + pCost.toFixed(2) : ''}</td>
-                <td>{total}</td>
-                <td>{relevant}</td>
-              </>
-            )
-          })
-        }
       </tr>
     )
   } // Costs
@@ -160,38 +105,40 @@ const Activity = ({setScreen, db, parms, ps, sets}) => {
     implementCost(type, 'Labor',         'Labor (hr/acre)') +
     implementCost(type, 'Depreciation',  'Depreciation ($/acre)') + 
     implementCost(type, 'Interest',      'Interest ($/acre)') + 
-    implementCost(type, 'Repair',        'Repair ($/acre)') + 
+    implementCost(type, 'Repairs',       'Repair ($/acre)') + 
     implementCost(type, 'Taxes',         'Taxes ($/acre)') + 
     implementCost(type, 'Insurance',     'Insurance ($/acre)') + 
-    implementCost(type, 'Shed',          'Shed ($/acre)')
+    implementCost(type, 'Storage',       'Shed ($/acre)')
   ); // totalImplementCost
 
   const totalPowerCost = (type) => (
-    powerCost(type, 'Fuel',          '') +
-    powerCost(type, 'Depreciation',  'Depreciation ($/acre)') + 
-    powerCost(type, 'Interest',      'Interest ($/acre)') + 
-    powerCost(type, 'Repair',        'Repair ($/acre)') + 
-    powerCost(type, 'Taxes',         'Taxes ($/acre)') + 
-    powerCost(type, 'Insurance',     'Insurance ($/acre)') + 
-    powerCost(type, 'Shed',          'Shed ($/acre)')
+    powerCost(type, 'Fuel') +
+    powerCost(type, 'Depreciation') + 
+    powerCost(type, 'Interest') + 
+    powerCost(type, 'Repairs') + 
+    powerCost(type, 'Taxes') + 
+    powerCost(type, 'Insurance') +
+    powerCost(type, 'Storage')
   ); // totalPowerCost
 
   const relativeCost = (type) => (
     relevantCost(type, 'Labor',         'Labor (hr/acre)') +
-    relevantCost(type, 'Fuel',          '') +
+    relevantCost(type, 'Fuel') +
     relevantCost(type, 'Depreciation',  'Depreciation ($/acre)') + 
     relevantCost(type, 'Interest',      'Interest ($/acre)') + 
-    relevantCost(type, 'Repair',        'Repair ($/acre)') + 
+    relevantCost(type, 'Repairs',       'Repair ($/acre)') + 
     relevantCost(type, 'Taxes',         'Taxes ($/acre)') + 
     relevantCost(type, 'Insurance',     'Insurance ($/acre)') + 
-    relevantCost(type, 'Shed',          'Shed ($/acre)')
+    relevantCost(type, 'Storage',       'Shed ($/acre)')
   ); // relativeCost
 
   const T5 = parms.T3 === 'Self' ? relativeCost('tillage').toFixed(2) : db.costDefaults['Seedbed preparation'].cost;
-  const T7 = parms.T1 === 'No' || parms.T2 === 'Yes' ? 0 : parms.T6 || T5;
+  sets.T5(T5);
+  sets.T7(parms.T1 === 'No' || parms.T2 === 'Yes' ? 0 : parms.T6 || parms.T5);
 
   const P5 = parms.P3 === 'Self' ? relativeCost('planting').toFixed(2) : db.costDefaults['Planting'].cost;
-  const P7 = parms.P6 || P5;
+  sets.P5(P5);
+  sets.P7(parms.P6 || parms.P5);
 
   return (
     <div className="Planting">
