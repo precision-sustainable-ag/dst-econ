@@ -19,6 +19,7 @@ import { tillage, planting, cropMaint, harvest} from './implement';
 // Screens
 import Home         from './Home';
 import Species      from './Species';
+import Seedbed      from './Seedbed';
 import Planting     from './Planting';
 import Termination  from './Termination';
 import Tillage      from './Tillage';
@@ -50,13 +51,14 @@ const Help = ({parms}) => {
 
 const Screens = ({parms, setSpecies, setRate, setPrice}) => {
   // let [screen, setScreen2] = React.useState('Home');
-  let [screen, setScreen2] = React.useState('Species');
-  // let [screen, setScreen2] = React.useState('Planting');
+  // let [screen, setScreen2] = React.useState('Species');
+  let [screen, setScreen2] = React.useState('Seedbed');
 
   const screens = {
     Home,
     Modules: {
       Species,
+      Seedbed,
       Planting,
       Termination,
       Tillage,
@@ -115,6 +117,11 @@ const Screens = ({parms, setSpecies, setRate, setPrice}) => {
       } else {
         sets[id](val);
       }
+      if (id === 'T1' && val === 'No') {
+        setScreen('Planting');
+        return;
+      }
+  
       console.log(id, val);
     } catch(ee) {
       console.log(e.target.id, ee.message);

@@ -39,7 +39,7 @@ const Logic = ({q, a, id, cond=true, ps, parms}) => {
   )
 } // Logic
 
-const Planting = ({setScreen, db, parms, ps, sets}) => {
+const Seedbed = ({setScreen, db, parms, ps, sets}) => {
   const implementCost = (type, desc, lookup) => {
     let result = (+db[type][type === 'tillage' ? parms.T4 : parms.P4] || {})[lookup] || 0;
   
@@ -197,7 +197,7 @@ const Planting = ({setScreen, db, parms, ps, sets}) => {
 
   return (
     <div className="Planting">
-      <h1>Economic Decision Aid for Cover Crops: Planting Decisions</h1>
+      <h1>Economic Decision Aid for Cover Crops: Seedbed Preparation</h1>
       <div id="About">
         Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
         Only activities that are incurred because a cover crop is planted are charged to the cover crop.
@@ -209,73 +209,85 @@ const Planting = ({setScreen, db, parms, ps, sets}) => {
       <table>
         <tbody>
           <tr>
-            <th colSpan="2">Planting</th>
+            <th colSpan="2">Seedbed preparation</th>
           </tr>
+          <Logic
+            id="T1"
+            q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
+            a={['Yes', 'No']}
+            parms={parms}
+            ps={ps}
+          />
 
           <Logic
-            id="P3"
+            id="T2"
+            q="Would you do this field activity if not planting a cover crop?"
+            a={['Yes', 'No']}
+            parms={parms}
+            cond={parms.T1 === 'Yes'}
+            ps={ps}
+          />
+
+          <Logic
+            id="T3"
             q="Who will do this activity?"
             a={['Self', 'Custom Operator']}
             parms={parms}
+            cond={parms.T1 === 'Yes' && parms.T2 === 'No'}
             ps={ps}
           />
 
           <Logic
-            id="P4"
+            id="T4"
             q="What type of seedbed preparation will be done?"
-            a={['', ...Object.keys(db.planting)]}
+            a={['', ...Object.keys(db.tillage)]}
             parms={parms}
-            ps={ps}
-            cond={parms.P3 === 'Self'}
-          />
-
-          <Logic
-            id="P5"
-            q={parms.P3 === 'Self' ? 'Estimated relevant cost ($/acre)' : 'Estimated custom cost ($/acre)'}
-            a={P5}
-            parms={parms}
+            cond={parms.T1 === 'Yes' && parms.T2 === 'No' && parms.T3 === 'Self'}
             ps={ps}
           />
 
           <Logic
-            id="P6"
+            id="T5"
+            q={parms.T3 === 'Self' ? 'Estimated relevant cost ($/acre)' : 'Estimated custom cost ($/acre)'}
+            a={T5}
+            parms={parms}
+            cond={parms.T1 === 'Yes' && parms.T2 === 'No'}
+            ps={ps}
+          />
+
+          <Logic
+            id="T6"
             q="Cost override"
             a={'number'}
             parms={parms}
+            cond={parms.T1 === 'Yes' && parms.T2 === 'No'}
             ps={ps}
           />
 
-          <Logic
-            id="P7"
-            q="Cost of planting activity necessary for cover cropping."
-            a={P7}
-            parms={parms}
-            ps={ps}
-          />
-
-          <Logic
-            id="Total"
-            q="Total cost of seedbed preparation and planting ($/acre)"
-            a={(+T7 + +P7).toFixed(2)}
-            parms={parms}
-            ps={ps}
-          />
-
+          {
+            parms.T1 === 'Yes' &&
+            <Logic
+              id="T7"
+              q={parms.T2 === 'Yes' ? 'There is no cost associated with cover crop seedbed preparation.' : 'Cost of seedbed preparation necessary for cover cropping.'}
+              a={T7}
+              parms={parms}
+              ps={ps}
+            />
+          }
         </tbody>
       </table>
-      
+
       <hr/>
       <div>
-        <button onClick={() => setScreen('Seedbed') }>Back</button>
+        <button onClick={() => setScreen('Planting') }>Next</button>
       </div>
       <hr/>
 
       <Activity db={db} parms={parms} ps={ps} />
     </div>
   )
-} // Planting
+} // Seedbed
 
-Planting.menu = 'Planting decisions';
+Seedbed.menu = 'Seedbed preparation';
 
-
-export default Planting;
+export default Seedbed;

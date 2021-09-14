@@ -1,5 +1,3 @@
-import Activity from './Activity';
-
 const Logic = ({q, a, id, cond=true, ps, parms}) => {
   return (
     <>
@@ -39,7 +37,7 @@ const Logic = ({q, a, id, cond=true, ps, parms}) => {
   )
 } // Logic
 
-const Planting = ({setScreen, db, parms, ps, sets}) => {
+const Activity = ({setScreen, db, parms, ps, sets}) => {
   const implementCost = (type, desc, lookup) => {
     let result = (+db[type][type === 'tillage' ? parms.T4 : parms.P4] || {})[lookup] || 0;
   
@@ -197,85 +195,105 @@ const Planting = ({setScreen, db, parms, ps, sets}) => {
 
   return (
     <div className="Planting">
-      <h1>Economic Decision Aid for Cover Crops: Planting Decisions</h1>
-      <div id="About">
-        Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
-        Only activities that are incurred because a cover crop is planted are charged to the cover crop.
-        If you were going to do the activity without planting a cover crop, its cost is not considered a cost of growing the cover crop.
-      </div>
-      <hr/>
-
-      <strong>Cover Crop Establishment</strong>
-      <table>
+      <table id="Activity" className={classes}>
+        <thead>
+          <tr>
+            <th rowSpan="2">Activity</th>
+            <th colSpan="2">Seedbed Preparation</th>
+            <th className="hidden"></th>
+            <th colSpan="2">Cover Crop Planting</th>
+            <th className="hidden"></th>
+          </tr>
+          <tr>
+            <th className="hidden">d</th>
+            <th>Implement</th><th>Power</th>
+            <th>Implement</th><th>Power</th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
-            <th colSpan="2">Planting</th>
+            <td>Implement Used</td>
+            <td>{parms.T4}</td><td></td>
+            <td>{parms.P4}</td><td></td>
           </tr>
 
-          <Logic
-            id="P3"
-            q="Who will do this activity?"
-            a={['Self', 'Custom Operator']}
-            parms={parms}
-            ps={ps}
-          />
+          <tr>
+            <td>Power Used</td>
+            <td></td><td>{tillagePowerUnit}</td>
+            <td></td><td>{plantingPowerUnit}</td>
+          </tr>
 
-          <Logic
-            id="P4"
-            q="What type of seedbed preparation will be done?"
-            a={['', ...Object.keys(db.planting)]}
-            parms={parms}
-            ps={ps}
-            cond={parms.P3 === 'Self'}
-          />
+          <tr>
+            <td>Annual Use (acres)</td>
+            <td>{tillageAnnualUseAcres}</td><td></td>
+            <td>{plantingAnnualUseAcres}</td><td></td>
+          </tr>
 
-          <Logic
-            id="P5"
-            q={parms.P3 === 'Self' ? 'Estimated relevant cost ($/acre)' : 'Estimated custom cost ($/acre)'}
-            a={P5}
-            parms={parms}
-            ps={ps}
-          />
+          <tr>
+            <td>Annual Use (hours)</td>
+            <td></td><td>{tillageAnnualUseHours}</td>
+            <td></td><td>{plantingAnnualUseHours}</td>
+          </tr>
 
-          <Logic
-            id="P6"
-            q="Cost override"
-            a={'number'}
-            parms={parms}
-            ps={ps}
-          />
-
-          <Logic
-            id="P7"
-            q="Cost of planting activity necessary for cover cropping."
-            a={P7}
-            parms={parms}
-            ps={ps}
-          />
-
-          <Logic
-            id="Total"
-            q="Total cost of seedbed preparation and planting ($/acre)"
-            a={(+T7 + +P7).toFixed(2)}
-            parms={parms}
-            ps={ps}
-          />
-
+          <tr>
+            <td>Acres/hour</td>
+            <td></td><td>{tillageAcresHour}</td>
+            <td></td><td>{plantingAcresHour}</td>
+          </tr>
         </tbody>
       </table>
-      
-      <hr/>
-      <div>
-        <button onClick={() => setScreen('Seedbed') }>Back</button>
-      </div>
-      <hr/>
 
-      <Activity db={db} parms={parms} ps={ps} />
+      <table id="Costs" className={classes}>
+        <thead>
+          <tr>
+            <th rowSpan="2">Cost Description</th>
+            <th colSpan="4">Seedbed Preparation</th>
+            <th className="hidden"></th>
+            <th className="hidden"></th>
+            <th className="hidden"></th>
+            <th colSpan="4">Cover Crop Planting</th>
+            <th className="hidden"></th>
+            <th className="hidden"></th>
+            <th className="hidden"></th>
+          </tr>
+          <tr>
+            <th className="hidden"></th>
+            <th>Implement Cost<br/>($/acre)</th>
+            <th>Power Cost<br/>($/acre)</th>
+            <th>Actual Cost<br/>($/acre)</th>
+            <th>Relevant cost<br/>($/acre)</th>
+
+            <th>Implement Cost<br/>($/acre)</th>
+            <th>Power Cost<br/>($/acre)</th>
+            <th>Actual Cost<br/>($/acre)</th>
+            <th>Relevant cost<br/>($/acre)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <Costs desc="Labor"        lookup="Labor (hr/acre)" />
+          <Costs desc="Fuel"         lookup=""/>
+          <Costs desc="Depreciation" lookup="Depreciation ($/acre)"/>
+          <Costs desc="Interest"     lookup="Interest ($/acre)"/>
+          <Costs desc="Repairs"      lookup="Repair ($/acre)"/>
+          <Costs desc="Taxes"        lookup="Taxes ($/acre)"/>
+          <Costs desc="Insurance"    lookup="Insurance ($/acre)"/>
+          <Costs desc="Storage shed" lookup="Shed ($/acre)"/>
+          <tr>
+            <td>Total</td>
+            <td>{'$' + totalImplementCost('tillage').toFixed(2)}</td>
+            <td>{'$' + totalPowerCost('tillage').toFixed(2)}</td>
+            <td>{'$' + (totalImplementCost('tillage') + totalPowerCost('tillage')).toFixed(2)}</td>
+            <td>{'$' + relativeCost('tillage').toFixed(2)}</td>
+
+            <td>{'$' + totalImplementCost('planting').toFixed(2)}</td>
+            <td>{'$' + totalPowerCost('planting').toFixed(2)}</td>
+            <td>{'$' + (totalImplementCost('planting') + totalPowerCost('planting')).toFixed(2)}</td>
+            <td>{'$' + relativeCost('planting').toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   )
-} // Planting
+} // Activity
 
-Planting.menu = 'Planting decisions';
-
-
-export default Planting;
+export default Activity;

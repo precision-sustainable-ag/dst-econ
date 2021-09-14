@@ -158,12 +158,12 @@ const Species = ({sets, setScreen, db, parms, update}) => {
         </a>
       }
       <div>
-        <button onClick={() => setScreen('Planting') }>Next</button>
+        <button onClick={() => setScreen('Seedbed') }>Next</button>
       </div>
     </div>
   )
 } // Species
 
-Species.menu = 'Cover Crop Selection';
+Species.menu = 'Cover Crop selection';
 
 export default Species;

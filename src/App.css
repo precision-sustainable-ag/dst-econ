@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 * {
   box-sizing: border-box;
 }
@@ -210,4 +214,13 @@ div.Species td:nth-child(n + 2) input {
 div.Species td:nth-child(n + 2) input:focus {
   transition: all 0.5s;
   border-bottom: 1px solid navy;
+}
+
+.MuiListSubheader-root {
+  background: #246 !important;
+  color: #eca !important;
+  font-style: italic;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  line-height: 1.5em !important;
 }
