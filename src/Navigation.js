@@ -88,7 +88,9 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
         sets[id](val);
       }
 
-      if (id === 'T1' && val === 'No') {
+      if (id === 'location') {
+        setScreen('Planting');  setScreen('Home');  // hack to force rerender. There's got to be a better way.
+      } else if (id === 'T1' && val === 'No') {
         setScreen('Planting');
         return;
       }

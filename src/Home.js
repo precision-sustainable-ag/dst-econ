@@ -1,25 +1,45 @@
 import GoogleMaps from './GoogleMaps';
 import GoogleMapReact from 'google-map-react';
 import {Navigation} from './Navigation';
+import {Input} from '@material-ui/core';
 
-import {
-  Input,
-} from '@material-ui/core';
-
-const Map = ({sets, parms, ps}) => {
+const Map = ({sets, parms, ps, update}) => {
   const mapChange = (e) => {
     sets.lat(+e.lat.toFixed(4));
     sets.lng(+e.lng.toFixed(4));
-    fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + e.lat + ',' + e.lng + '&key=AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        alert(JSON.stringify(responseJson));
+
+    const latlng = {
+      lat: e.lat,
+      lng: e.lng,
+    };
+
+    Geocoder
+      .geocode({ location: latlng })
+      .then(response => {
+        const results = response.results;
+        const location = results[0].formatted_address;
+        sets.location(location);
+
+        let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
+        if (state) {
+          state = state[0].long_name;
+          sets.state(state);
+        } else {
+          sets.state('');
+        }
+
+        update(undefined, 'location', location);
       })
+      .catch((e) => window.alert('Geocoder failed due to: ' + e));
   } // mapChange
 
   const Marker = () => (
     <img alt="marker" className="marker" src="marker.png" style={{height: '40px'}} />
   )
+
+  const initGeocoder = ({ maps }) => {
+    Geocoder = new maps.Geocoder();
+  };
 
   return (
     <>
@@ -32,6 +52,8 @@ const Map = ({sets, parms, ps}) => {
             center={{lat: +parms.lat, lng: +parms.lng}}
             zoom={parms.mapZoom}
 
+            onGoogleApiLoaded={initGeocoder}
+            
             yesIWantToUseGoogleMapApiInternals
             onClick={mapChange}
             onZoomAnimationEnd={sets.mapZoom}
@@ -61,7 +83,7 @@ const Map = ({sets, parms, ps}) => {
   );
 } // Map
 
-const Home = ({ps, sets, parms, setScreen}) => (
+const Home = ({ps, sets, parms, setScreen, update}) => (
   <div>
     <h1 id="H1">Economic Decision Aid for Cover Crops</h1>
     <h2>Where is your field located?</h2>
@@ -70,7 +92,7 @@ const Home = ({ps, sets, parms, setScreen}) => (
       You can then zoom in and click to pinpoint it on the map.
     </p>
     
-    <Map sets={sets} parms={parms} ps={ps} />
+    <Map sets={sets} parms={parms} ps={ps} update={update} />
     
     <div>
       Latitude:&nbsp;
@@ -86,5 +108,7 @@ const Home = ({ps, sets, parms, setScreen}) => (
     <Navigation setScreen={setScreen} current={Home} />
   </div>
 ) // Home
+
+let Geocoder;
 
 export default Home;
