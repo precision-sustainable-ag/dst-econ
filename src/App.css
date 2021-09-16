@@ -224,3 +224,27 @@ div.Species td:nth-child(n + 2) input:focus {
   border-bottom: 1px solid #aaa;
   line-height: 1.5em !important;
 }
+
+.MuiButton-label {
+  text-transform: none;
+}
+
+div.navigation {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+div.navigation button {
+  margin-right: 2rem
+}
+
+[data-scr=Home], [data-scr=Resources] {
+  padding-left: 0 !important;
+  font-weight: bold !important;
+}
+
+nav strong, [data-scr=Resources] {
+  display: block;
+  border-top: 1px solid #bbb !important;
+  padding-top: 0.5em;
+}

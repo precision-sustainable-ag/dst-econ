@@ -2,7 +2,6 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import throttle from 'lodash/throttle';
-import stateRegions from './stateRegions';
 
 const autocompleteService = { current: null };
 
@@ -78,7 +77,7 @@ const GoogleMaps = ({parms, sets}) => {
             address: newValue.description,
             region: 'en-US',
           }, (results, status) => {
-            let state = results ? results[0].address_components.filter(obj => obj.types[0] == 'administrative_area_level_1') : '';
+            let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
             if (state) {
               state = state[0].long_name;
               sets.state(state);

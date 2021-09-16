@@ -1,15 +1,20 @@
 import GoogleMaps from './GoogleMaps';
 import GoogleMapReact from 'google-map-react';
+import {Navigation} from './Navigation';
 
 import {
   Input,
-  OutlinedInput,
 } from '@material-ui/core';
 
 const Map = ({sets, parms, ps}) => {
   const mapChange = (e) => {
     sets.lat(+e.lat.toFixed(4));
     sets.lng(+e.lng.toFixed(4));
+    fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + e.lat + ',' + e.lng + '&key=AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        alert(JSON.stringify(responseJson));
+      })
   } // mapChange
 
   const Marker = () => (
@@ -77,6 +82,8 @@ const Home = ({ps, sets, parms, setScreen}) => (
     <p id="D2">
       <em>This worksheet is for educational purposes only. The user assumes all risks associated with its use.</em>
     </p>
+
+    <Navigation setScreen={setScreen} current={Home} />
   </div>
 ) // Home
 

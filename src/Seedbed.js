@@ -1,4 +1,5 @@
 import Activity from './Activity';
+import {Navigation} from './Navigation';
 
 const Logic = ({q, a, id, cond=true, ps, parms}) => {
   return (
@@ -122,11 +123,7 @@ const Seedbed = ({setScreen, db, parms, ps, sets}) => {
         </tbody>
       </table>
 
-      <hr/>
-      <div>
-        <button onClick={() => setScreen('Planting') }>Next</button>
-      </div>
-      <hr/>
+      <Navigation setScreen={setScreen} current={Seedbed} />
 
       <Activity db={db} parms={parms} ps={ps} sets={sets} />
     </div>

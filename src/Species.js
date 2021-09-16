@@ -2,6 +2,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import {TextField} from '@material-ui/core';
 import NumberFormat from 'react-number-format';
 
+import {Navigation} from './Navigation';
+
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const SpeciesRow = ({db, n, parms, update}) => {
@@ -59,7 +61,6 @@ const SpeciesRow = ({db, n, parms, update}) => {
           decimalScale={2}
           fixedDecimalScale={true}
           thousandSeparator={true}
-          prefix={'$'}
         />
       </td>
       <td>
@@ -157,9 +158,8 @@ const Species = ({sets, setScreen, db, parms, update}) => {
           {region} Cover Crops Council Species Selector
         </a>
       }
-      <div>
-        <button onClick={() => setScreen('Seedbed') }>Next</button>
-      </div>
+
+      <Navigation setScreen={setScreen} current={Species} />
     </div>
   )
 } // Species
