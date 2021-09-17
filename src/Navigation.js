@@ -52,9 +52,10 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
         return;
       }
 
-      if (id === 'T1' && val === 'No') {
-        sets.T4('');
-      } if (/^include/.test(id)) {
+      if (id === 'seedbed1' && val === 'No') {
+        sets.seedbed4('');
+        sets.seedbed7(0);
+      } if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(id)) {
         sets[id](e.target.checked ? 'true' : 'false');
       } else if (/^species\d/.test(id)) {
         const n = id.match(/\d+/)[0];
@@ -65,7 +66,8 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
           });
           
           setPrice(arr => {
-            arr[n] = (db.seedList[val] || {}).price;
+            arr[n] = (db.seedList[val] || {}).price
+            ;
             return [...arr];
           });
         
@@ -90,7 +92,7 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
 
       if (id === 'location') {
         setScreen('Planting');  setScreen('Home');  // hack to force rerender. There's got to be a better way.
-      } else if (id === 'T1' && val === 'No') {
+      } else if (id === 'seedbed1' && val === 'No') {
         setScreen('Planting');
         return;
       }
@@ -249,7 +251,7 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
       
       <Help parms={parms} />
 
-      <div style={{marginLeft: '15em'}}>
+      <div style={{marginLeft: '15em', width: 'calc(100vw - 30em)'}}>
         {find(screens, screen)({
           ps: ps,
           sets: sets,

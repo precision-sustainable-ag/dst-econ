@@ -1,4 +1,4 @@
-const tillage = `
+const seedbed = `
 ImplName	Size1	Unit1	Size2	Unit2	ImplDescription	Default Power Unit	Purchase Price (2020)	List Discount	List Price	Expected Life (years)	Expected Use (hr/yr)	Defaulty ASABE Category	Field Speed (m/h)	Field Efficiency	Tractor (hr/impl)	Labor (hr/trac)	LaborType	Shed (ft^2)	RF1	RF2	RV1	RV2	RV3	RV4	RV5	Trade-in (%)	Trade-in ($)	Annual Depreciation	Accumulated Repairs ($)	Annual Repairs ($)	Acres/hour	Acres/year	Depreciation ($/acre)	Interest ($/acre)	Repair ($/acre)	Taxes ($/acre)	Insurance ($/acre)	Labor (hr/acre)	Shed ($/acre)
 Chisel Plow	15	Ft			Chisel Plow; 15 Ft	130 HP MFWD Tractor	24000	0.1	26666.66667	12	60	Chisel plow	5	0.85	1	1.02	Unskilled	225	0.28	1.4	0.6927	0.0703	0	0.0012	0.1223	0.320984985	8559.599612	1286.700032	4714.029095	392.8357579	7.727272727	463.6363636	2.775235364	1.460036455	0.847292811	0.182504557	0.310257747	0.132	0.470356262
 Chisel Plow	23	Ft			Chisel Plow; 23 Ft	200 HP MFWD Tractor	43000	0.1	47777.77778	12	60	Chisel plow	5	0.85	1	1.02	Unskilled	250	0.28	1.4	0.6927	0.0703	0	0.0012	0.1223	0.320984985	15335.9493	2305.337558	8445.968794	703.8307329	11.84848485	710.9090909	3.242802191	1.706020858	0.99004323	0.213252607	0.362529432	0.086086957	0.340837871
@@ -75,7 +75,7 @@ Grain Cart	30	Ft			Grain Cart; 30 Ft	225 HP MFWD Tractor	123000	0.1	136666.6667	
 `;
 
 export {
-  tillage,
+  seedbed,
   planting,
   cropMaint,
   harvest

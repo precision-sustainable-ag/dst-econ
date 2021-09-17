@@ -79,12 +79,12 @@ td, th {
   border-bottom: 1px solid #bbb;
 }
 
-div.Planting th {
+div.Planting th {  /* unused */
   text-align: left;
   background: #eee;
 }
 
-.T7, .P7, .Total {
+.seedbed7, .planting7, .Total {
   font-weight: bold;
 }
 
@@ -115,12 +115,12 @@ label {
 
 #Activity tr > *,
 #Costs tr > * {
-  display: none;
+  zdisplay: none;
 }
 
-#Activity.tillage tr > :nth-child(1):not(.hidden),
-#Activity.tillage tr > :nth-child(2):not(.hidden),
-#Activity.tillage tr > :nth-child(3):not(.hidden) {
+#Activity.seedbed tr > :nth-child(1):not(.hidden),
+#Activity.seedbed tr > :nth-child(2):not(.hidden),
+#Activity.seedbed tr > :nth-child(3):not(.hidden) {
   display: table-cell;
 }
 
@@ -130,11 +130,11 @@ label {
   display: table-cell;
 }
 
-#Costs.tillage tr > :nth-child(1):not(.hidden),
-#Costs.tillage tr > :nth-child(2):not(.hidden),
-#Costs.tillage tr > :nth-child(3):not(.hidden),
-#Costs.tillage tr > :nth-child(4):not(.hidden),
-#Costs.tillage tr > :nth-child(5):not(.hidden) {
+#Costs.seedbed tr > :nth-child(1):not(.hidden),
+#Costs.seedbed tr > :nth-child(2):not(.hidden),
+#Costs.seedbed tr > :nth-child(3):not(.hidden),
+#Costs.seedbed tr > :nth-child(4):not(.hidden),
+#Costs.seedbed tr > :nth-child(5):not(.hidden) {
   display: table-cell;
 }
 
@@ -182,7 +182,7 @@ div.Species tr:not(:last-child) td:nth-child(n + 2) {
   background: #efe;
 }
 
-div.Species tr > :nth-child(n + 4) {
+zdiv.Species tr > :nth-child(n + 4) {
   display: none;
 }
 
@@ -247,4 +247,23 @@ nav strong, [data-scr=Resources] {
   display: block;
   border-top: 1px solid #bbb !important;
   padding-top: 0.5em;
+}
+
+#Summary {
+  position: fixed;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 0.8rem;
+}
+
+#Summary thead {
+  background: #eee;
+}
+
+#Summary tfoot {
+  background: yellow
+}
+
+#Summary tr > :nth-child(2) {
+  text-align: right;
 }

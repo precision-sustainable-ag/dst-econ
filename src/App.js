@@ -15,7 +15,7 @@ import rates              from './rates';
 import coefficients       from './coefficients';
 import power              from './power';
 import stateRegions       from './stateRegions';
-import { tillage, planting, cropMaint, harvest} from './implement';
+import { seedbed, planting, cropMaint, harvest} from './implement';
 
 const App = () => {
   // can't do useState in a loop unless it's in a component, even if that component is unused
@@ -117,7 +117,7 @@ const alias = {
   'stateRegions': {
 
   },
-  'tillage': {
+  'seedbed': {
     ImplName: 'name',
     ImplDescription: 'description'
   },
@@ -146,7 +146,7 @@ const db = {
   rates,
   coefficients,
   power,
-  tillage,
+  seedbed,
   planting,
   cropMaint,
   harvest,
@@ -154,7 +154,7 @@ const db = {
 }
 
 Object.keys(db).forEach(key => {
-  if (/tillage|planting|cropMaint|harvest/.test(key)) {
+  if (/seedbed|planting|cropMaint|harvest/.test(key)) {
     toTable(key, db[key], 5);
   } else if (/power/.test(key)) {
     toTable(key, db[key], 2);
@@ -171,7 +171,7 @@ Object.keys(db).forEach(key => {
 // toTable('herbicides', herbicides);
 // toTable('expenseTypes', expenseTypes);
 // toTable('rates', rates);
-// toTable('tillage', tillage);
+// toTable('seedbed', seedbed);
 
 
 let parms = {
@@ -181,18 +181,19 @@ let parms = {
   species             : [],
   rates               : [],
   prices              : [],
-  T1                  : '',
-  T2                  : 'No',
-  T3                  : 'Self',
-  T4                  : '',
-  T5                  : '',
-  T6                  : '',
-  T7                  : '',
-  P3                  : 'Self',
-  P4                  : '',
-  P5                  : '',
-  P6                  : '',
-  P7                  : '',
+  coverCropTotal      : 0,
+  seedbed1            : '', // 'Yes',
+  seedbed2            : 'No',
+  seedbed3            : 'Self',
+  seedbed4            : '',  // 'Chisel Plow; 37 Ft'
+  seedbed5            : '',
+  seedbed6            : '',
+  seedbed7            : '',
+  planting3           : 'Self',
+  planting4           : '',
+  planting5           : '',
+  planting6           : '',
+  planting7           : '',
   lat                 : 40.7849,
   lng                 : -74.8073,
   mapZoom             : 13,
@@ -200,6 +201,25 @@ let parms = {
   location            : '',
   state               : '',
   USDARegion          : '',
+  
+  seedbedLabor        : 'true',
+  seedbedFuel         : 'true',
+  seedbedDepreciation : 'true',
+  seedbedInterest     : 'true',
+  seedbedRepairs      : 'true',
+  seedbedTaxes        : 'true',
+  seedbedInsurance    : 'true',
+  seedbedStorage      : 'true',
+  
+  plantingLabor       : 'true',
+  plantingFuel        : 'true',
+  plantingDepreciation: 'true',
+  plantingInterest    : 'true',
+  plantingRepairs     : 'true',
+  plantingTaxes       : 'true',
+  plantingInsurance   : 'true',
+  plantingStorage     : 'true',
+  
   includeLabor        : 'true',
   includeFuel         : 'true',
   includeDepreciation : 'true',
