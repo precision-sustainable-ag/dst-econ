@@ -44,6 +44,10 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
   // let [screen, setScreen2] = React.useState('Seedbed');
 
   const setScreen = (scr) => {
+    if (scr !== 'Resources') {
+      sets.previousScreen(scr);
+      console.log(scr);
+    }
     setScreen2(scr);
   } // setScreen
 
@@ -266,7 +270,7 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
   )
 } // Screens
 
-const Navigation = ({setScreen, current}) => {
+const Navigation = ({setScreen, current, parms}) => {
   let last = 'Home';
   let back;
   let backDesc;
@@ -291,6 +295,11 @@ const Navigation = ({setScreen, current}) => {
       last = module;
     }
   };
+
+  if (current === Resources) {
+    back = parms.previousScreen;
+    backDesc = mods[back].menu || back;
+  }
 
   return (
     <div className="navigation">

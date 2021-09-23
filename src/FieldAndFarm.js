@@ -84,7 +84,7 @@ const Map = ({sets, parms, ps, update}) => {
 } // Map
 
 const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
-  <div class="fieldAndFarm">
+  <div className="fieldAndFarm">
     <h1 id="H1">Economic Decision Aid for Cover Crops: Field and Farm</h1>
     
     <p>
@@ -103,7 +103,7 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
       <tbody>
         <tr>
           <td>What is the name of your Farm?</td>
-          <td><Input {...ps('farm')} autoFocus="true" /></td>
+          <td><Input {...ps('farm')} autoFocus={true} /></td>
           <td rowSpan="6">
             Where is your Field located?
             <p>

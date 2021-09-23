@@ -236,6 +236,7 @@ let parms = {
   cashCrop            : '',
   otherCashCrop       : '',
   labor               : '',
+  previousScreen      : 'Home',
 }
 
 const ps = (s) => ({
