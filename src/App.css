@@ -267,3 +267,15 @@ nav strong, [data-scr=Resources] {
 #Summary tr > :nth-child(2) {
   text-align: right;
 }
+
+.fieldAndFarm tr {
+  vertical-align: top;
+}
+
+.fieldAndFarm td {
+  height: 4em;
+}
+
+.fieldAndFarm tr:last-child td {
+  height: auto;
+}

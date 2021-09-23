@@ -228,6 +228,14 @@ let parms = {
   includeTaxes        : 'true',
   includeInsurance    : 'true',
   includeStorage      : 'true',
+  farm                : '',
+  acres               : '',
+  description         : '',
+  priorCrop           : '',
+  otherPriorCrop      : '',
+  cashCrop            : '',
+  otherCashCrop       : '',
+  labor               : '',
 }
 
 const ps = (s) => ({

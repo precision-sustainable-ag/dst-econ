@@ -4,6 +4,7 @@ import './App.css';
 
 // Screens
 import Home         from './Home';
+import FieldAndFarm from './FieldAndFarm';
 import Species      from './Species';
 import Seedbed      from './Seedbed';
 import Planting     from './Planting';
@@ -77,13 +78,13 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
       } else if (/^rates\d/.test(id)) {
         const n = id.match(/\d+/)[0];
         setRate(arr => {
-          arr[n] = val.match(/[\d.]+/)[0];
+          arr[n] = (val.match(/[\d.]+/) || [])[0];
           return [...arr];
         });
       } else if (/^prices\d/.test(id)) {
         const n = id.match(/\d+/)[0];
         setPrice(arr => {
-          arr[n] = val.match(/[\d.]+/)[0];
+          arr[n] = (val.match(/[\d.]+/) || [])[0];
           return [...arr];
         });
       } else {
@@ -91,7 +92,7 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
       }
 
       if (id === 'location') {
-        setScreen('Planting');  setScreen('Home');  // hack to force rerender. There's got to be a better way.
+        setScreen('Planting');  setScreen('FieldAndFarm');  // hack to force rerender. There's got to be a better way.
       } else if (id === 'seedbed1' && val === 'No') {
         setScreen('Planting');
         return;
@@ -301,6 +302,11 @@ const Navigation = ({setScreen, current}) => {
         next &&
         <Button variant="contained" color="primary" onClick={() => setScreen(next) }>NEXT: {nextDesc} </Button>
       }
+
+      {
+        current !== Resources && next !== 'Resources' &&
+        <Button variant="contained" color="primary" onClick={() => setScreen('Resources') }>Resources </Button>
+      }
     </div>
   )
 } // Navigation
@@ -308,6 +314,7 @@ const Navigation = ({setScreen, current}) => {
 const screens = {
   Home,
   Modules: {
+    FieldAndFarm,
     Species,
     Seedbed,
     Planting,

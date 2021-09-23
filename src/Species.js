@@ -111,14 +111,13 @@ const Species = ({sets, setScreen, db, parms, ps, update}) => {
         <h1 id="H1">Economic Decision Aid for Cover Crops: Species Selection</h1>
 
         <div id="About">
-          <p>
-            Species selection and planting rate are important decisions for successful cover cropping experience.
-            You can access several selection tools by clicking on the links below.
-          </p>
-          <p>
-            The information in the green cells are common rates and prices for the species you selected.
-            You can use them or change them to make this analysis specific to your farm.
-          </p>
+          <p>In this section, you will select a cover crop and seeding rates as well as an estimated cost of the cover crop seed ($/pound).</p>
+
+          <p>A common strategy for selecting a cover crop is to base your decision upon the need for a specific change you wish to make in a field or farm.  For example, if you wish to build soil organic matter you may want to select a cover crop with high levels of biomass and a fibrous root structure.  Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.   If you already know which cover crop you wish to consider, please select from the drop-down menu.  If you are new to the use of cover crops or still have questions, please consider using the [Cover Crop Council LINK or the Cover Crop Selection Tool LINK].</p>
+
+          <p>After selecting a cover crop species, please select a seeding rate.  Seeding rate selection will depend upon whether you are using a single species or a mix.  In addition, you may adjust seeding rates even for single species based upon your intended purpose.  For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control, but may plant a higher rate if you seek to maximize grazing potential.  You may use the common rate listed in the grey shaded boxes or input your own rate.  If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".</p>
+
+          <p>Prices for cover crops may vary widely based upon your geography and availability from season to season.  You may utilize the default value or enter specific pricing from your region.</p>
         </div>
 
         <table>
