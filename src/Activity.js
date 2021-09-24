@@ -117,6 +117,10 @@ const Activity = ({sets, db, parms, ps, type}) => {
     sets[type + 5](f5);
     sets[type + 7](parms[type + 6] || parms[type + 5]);
 
+    if (!(+parms[type + 6])) {
+      sets[type + 6](f5);
+    }
+
     const heading = {
       seedbed: 'Seedbed Preparation',
       planting: 'Cover Crop Planting',

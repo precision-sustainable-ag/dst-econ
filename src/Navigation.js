@@ -60,6 +60,8 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
       if (id === 'seedbed1' && val === 'No') {
         sets.seedbed4('');
         sets.seedbed7(0);
+      } else if (/planting4|seedbed4/.test(id)) {
+        sets[id.replace(4, 6)]('');  // clear override so it can be recalculated
       } if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(id)) {
         sets[id](e.target.checked ? 'true' : 'false');
       } else if (/^species\d/.test(id)) {

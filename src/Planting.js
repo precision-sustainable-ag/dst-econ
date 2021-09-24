@@ -1,44 +1,8 @@
 import Activity from './Activity';
 import {Navigation} from './Navigation';
+import Logic from './Logic';
 
-const Logic = ({q, a, id, cond=true, ps, parms}) => {
-  return (
-    <>
-      {cond && 
-        <tr className={id}>
-          <td>{q}</td>
-          <td>
-            {
-              a instanceof Array ?
-                a.length < 3 ? 
-                <>
-                  {
-                    a.map(a => (
-                      <label key={a}>
-                        <input key={a} type="radio" name={id} id={id} value={a} checked={a === parms[id]}/>{a}
-                        <br/>
-                      </label>
-                    ))
-                  }
-                </>
-                :
-                <select {...ps(id)} >
-                  {a.map(a => <option key={a}>{a}</option>)}
-                </select> 
-              :
-              a === 'number' ?
-                <input {...ps(id)} /> :
-              isFinite(a) ? 
-                '$' + (+a).toFixed(2)
-              :
-                ''
-            }
-          </td>
-        </tr>
-      }
-    </>
-  )
-} // Logic
+const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const Planting = ({setScreen, db, parms, ps, sets}) => {
   return (
@@ -77,28 +41,30 @@ const Planting = ({setScreen, db, parms, ps, sets}) => {
             />
 
             <Logic
-              id="planting5"
-              q={parms.planting3 === 'Self' ? 'Estimated relevant cost ($/acre)' : 'Estimated custom cost ($/acre)'}
-              a={parms.planting5}
-              parms={parms}
-              ps={ps}
-            />
-
-            <Logic
               id="planting6"
-              q="Cost override"
+              q={parms.planting3 === 'Self' ? `Estimated relevant cost (${dollars(parms.planting5)}/acre)` : `Estimated custom cost (${dollars(parms.planting5)}/acre)`}
               a={'number'}
               parms={parms}
               ps={ps}
             />
 
-            <Logic
-              id="planting7"
-              q="Cost of planting activity necessary for cover cropping."
-              a={parms.planting7}
-              parms={parms}
-              ps={ps}
-            />
+            {/*
+              <Logic
+                id="planting6"
+                q="Cost override"
+                a={'number'}
+                parms={parms}
+                ps={ps}
+              />
+
+              <Logic
+                id="planting7"
+                q="Cost of planting activity necessary for cover cropping."
+                a={parms.planting7}
+                parms={parms}
+                ps={ps}
+              />
+            */}
           </tbody>
         </table>
       </div>
@@ -110,6 +76,5 @@ const Planting = ({setScreen, db, parms, ps, sets}) => {
 } // Planting
 
 Planting.menu = 'Planting decisions';
-
 
 export default Planting;

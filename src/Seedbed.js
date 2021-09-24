@@ -1,44 +1,8 @@
 import Activity from './Activity';
 import {Navigation} from './Navigation';
+import Logic from './Logic';
 
-const Logic = ({q, a, id, cond=true, ps, parms}) => {
-  return (
-    <>
-      {cond && 
-        <tr className={id}>
-          <td>{q}</td>
-          <td>
-            {
-              a instanceof Array ?
-                a.length < 3 ? 
-                <>
-                  {
-                    a.map(a => (
-                      <label key={a}>
-                        <input key={a} type="radio" name={id} id={id} value={a} checked={a === parms[id]}/>{a}
-                        <br/>
-                      </label>
-                    ))
-                  }
-                </>
-                :
-                <select {...ps(id)} >
-                  {a.map(a => <option key={a}>{a}</option>)}
-                </select>
-              :
-              a === 'number' ?
-                <input {...ps(id)} /> :
-              isFinite(a) ? 
-                '$' + (+a).toFixed(2)
-              :
-                ''
-            }
-          </td>
-        </tr>
-      }
-    </>
-  )
-} // Logic
+const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const Seedbed = ({setScreen, db, parms, ps, sets}) => {
   return (
@@ -94,33 +58,34 @@ const Seedbed = ({setScreen, db, parms, ps, sets}) => {
             />
 
             <Logic
-              id="seedbed5"
-              q={parms.seedbed3 === 'Self' ? 'Estimated relevant cost ($/acre)' : 'Estimated custom cost ($/acre)'}
-              a={parms.seedbed5}
-              parms={parms}
-              cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No'}
-              ps={ps}
-            />
-
-            <Logic
               id="seedbed6"
-              q="Cost override"
+              q={parms.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(parms.seedbed5)}/acre)` : `Estimated custom cost (${dollars(parms.seedbed5)}/acre)`}
               a={'number'}
               parms={parms}
               cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No'}
               ps={ps}
             />
-
-            {
-              parms.seedbed1 === 'Yes' &&
+            {/*
               <Logic
-                id="seedbed7"
-                q={parms.seedbed2 === 'Yes' ? 'There is no cost associated with cover crop seedbed preparation.' : 'Cost of seedbed preparation necessary for cover cropping.'}
-                a={parms.seedbed7}
+                id="seedbed6"
+                q="Cost override"
+                a={'number'}
                 parms={parms}
+                cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No'}
                 ps={ps}
               />
-            }
+
+              {
+                parms.seedbed1 === 'Yes' &&
+                <Logic
+                  id="seedbed7"
+                  q={parms.seedbed2 === 'Yes' ? 'There is no cost associated with cover crop seedbed preparation.' : 'Cost of seedbed preparation necessary for cover cropping.'}
+                  a={parms.seedbed7}
+                  parms={parms}
+                  ps={ps}
+                />
+              }
+            */}
           </tbody>
         </table>
       </div>
