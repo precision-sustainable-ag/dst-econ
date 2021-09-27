@@ -1,21 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-
 import {Screens} from './Navigation';
-
-// Tables
-import counties           from './counties';
-import regions            from './regions';
-import seedList           from './seedlist';
-import costDefaults       from './costDefaults';
-import fertilizerProducts from './fertilizerProducts';
-import herbicides         from './herbicides';
-import expenseTypes       from './expenseTypes';
-import rates              from './rates';
-import coefficients       from './coefficients';
-import power              from './power';
-import stateRegions       from './stateRegions';
-import { seedbed, planting, cropMaint, harvest} from './implement';
 
 const App = () => {
   // can't do useState in a loop unless it's in a component, even if that component is unused
@@ -46,132 +31,6 @@ const App = () => {
     </div>
   );
 } // App
-
-const countiesTable = (key, data) => {
-  const obj = db[key];
-
-  counties.trim().split(/[\n\r]+/).slice(1).forEach(data => {
-    data = data.split('\t');
-    obj[data[0] + ' ' + data[1]] = {
-      county: data[0],
-      state: data[1],
-      code: data[2]
-    }
-  });
-} // countiesTable
-
-const toTable = (key, data, n = 0) => {
-  db[key] = {};
-  const obj = db[key];
-
-  data = data.trim().split(/[\n\r]+/).map(d => d.trim().split('\t'));
-  const cols = data[0].map(col => alias[key][col] || col);
-
-  data.slice(1).forEach(data => {
-    obj[data[n]] = {};
-
-    cols.slice(1).forEach((col, i) => {
-      obj[data[n]][col] = data[i + 1];
-    })
-  });
-} // toTable
-
-const alias = {
-  'regions': {
-    'Cover Crop Region': 'coverCrop',
-    'USDA Crop Production Region': 'usda'
-  },
-  'seedList': {
-    'Typical Seeding Rate (lb/ac)': 'seedingRate',
-    'Estimated Price ($/lb)': 'price',
-    'Legume?': 'legume',
-    'N credit': 'NCredit',
-    'Erosion benefit': 'erosion'
-  },
-  'costDefaults': {
-    'Defaults': 'defaults',
-    '$/acre': 'cost'
-  },
-  'fertilizerProducts': {
-    '$/unit nutrient': 'cost',
-  },
-  'herbicides': {
-    'Rate': 'rate',
-    'Unit (rate)': 'unitRate',
-    'Cost/unit': 	'cost',
-    'Unit (cost)': 'unitCost'
-  },
-  'expenseTypes': {
-    'Cash': 'cash',
-    'non-cash': 'nonCash'
-  },
-  'rates': {
-    'Value': 'value'
-  },
-  'coefficients': {
-
-  },
-  'power': {
-
-  },
-  'stateRegions': {
-
-  },
-  'seedbed': {
-    ImplName: 'name',
-    ImplDescription: 'description'
-  },
-  'planting': {
-    ImplName: 'name',
-    ImplDescription: 'description'
-  },
-  'cropMaint': {
-    ImplName: 'name',
-    ImplDescription: 'description'
-  },
-  'harvest': {
-    ImplName: 'name',
-    ImplDescription: 'description'
-  },
-}
-
-const db = {
-  // counties,
-  regions,
-  seedList,
-  costDefaults,
-  fertilizerProducts,
-  herbicides,
-  expenseTypes,
-  rates,
-  coefficients,
-  power,
-  seedbed,
-  planting,
-  cropMaint,
-  harvest,
-  stateRegions,
-}
-
-Object.keys(db).forEach(key => {
-  if (/seedbed|planting|cropMaint|harvest/.test(key)) {
-    toTable(key, db[key], 5);
-  } else if (/power/.test(key)) {
-    toTable(key, db[key], 2);
-    console.log(db.power);
-  } else {
-    toTable(key, db[key]);
-  }
-});
-
-// toTable('regions', regions);
-// toTable('seedList', seedList);
-// toTable('costDefaults', costDefaults);
-// toTable('fertilizerProducts', fertilizerProducts);
-// toTable('herbicides', herbicides);
-// toTable('expenseTypes', expenseTypes);
-// toTable('rates', rates);
-// toTable('seedbed', seedbed);
 
 let parms = {
   help                : '',
@@ -255,4 +114,42 @@ console.error = (msg, ...subst) => {
   }
 }
 
+const loadData = async(table) => {
+  const alias = (col) => {
+    // 'Typical Seeding Rate (lb/ac) [seedingRate]' becomes 'seedingRate'
+    return col.includes('[') ? col.split(/[\[\]]/)[1] : col;
+  }
+
+  db[table] = {};
+
+  let response = await fetch(`https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2`);
+  let rec = await response.json();
+
+  const data = rec.records.map(r => r.fields);
+  const cols = Object.keys(data[0]);
+
+  data.forEach(rec => {
+    const obj = db[table][rec.key] = {};
+    cols.forEach(col => {
+      obj[alias(col)] = rec[col];
+    });
+  });
+
+  console.log(db[table]);
+} // loadData
+
+const db = {};
+
+loadData('coefficients');
+loadData('power');
+loadData('seedList');
+loadData('costDefaults');
+loadData('rates');
+loadData('stateRegions');
+loadData('seedbed');
+loadData('planting');
+loadData('cropMaint');
+loadData('harvest');
+
+setTimeout(() => console.log(db.rates), 1000)
 export default App;
