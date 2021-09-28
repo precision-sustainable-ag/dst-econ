@@ -1,7 +1,7 @@
 import GoogleMaps from './GoogleMaps';
 import GoogleMapReact from 'google-map-react';
 import {Navigation} from './Navigation';
-import {Input} from '@material-ui/core';
+import {Input, Select, MenuItem} from '@material-ui/core';
 
 const Map = ({sets, parms, ps, update}) => {
   const mapChange = (e) => {
@@ -46,7 +46,7 @@ const Map = ({sets, parms, ps, update}) => {
       <GoogleMaps sets={sets} ps={ps} parms={parms} />
       {
         parms.lat && parms.lng &&
-        <div style={{ height: '400px', width: '100%' }}>
+        <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
             center={{lat: +parms.lat, lng: +parms.lng}}
@@ -58,6 +58,14 @@ const Map = ({sets, parms, ps, update}) => {
             onClick={mapChange}
             onZoomAnimationEnd={sets.mapZoom}
             onMapTypeIdChange={sets.mapType}
+
+            onLoad={
+              // prevent tabbing through map
+              // got to be a better way than setting a timeout
+              setTimeout(() => {
+                document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex','-1'));
+              }, 1000)
+            }
 
             options={(map) => ({
               mapTypeId: parms.mapType,
@@ -99,7 +107,7 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
       Please answer all of the following:
     </p>
 
-    <table>
+    <table class="fullWidth">
       <tbody>
         <tr>
           <td>What is the name of your Farm?</td>
@@ -114,10 +122,10 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
     
             <div>
               Latitude:&nbsp;
-              <Input {...ps('lat')} />
+              <Input {...ps('lat')} inputProps={{ tabIndex: "-1" }} />
               &nbsp;&nbsp;&nbsp;
               Longitude:&nbsp;
-              <Input {...ps('lng')} />
+              <Input {...ps('lng')} inputProps={{ tabIndex: "-1" }} />
             </div>
           </td>
 
@@ -131,33 +139,33 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
         <tr>
           <td>Which of the following options best describes your Field?</td>
           <td>
-            <select {...ps('description')}>
-              <option></option>
-              <option value="hw">Hill ground; well-drained</option>
-              <option value="hp">Hill ground; poorly-drained</option>
-              <option value="bw">Bottom land; well-drained</option>
-              <option value="bp">Bottom land; poorly-drained</option>
-            </select>
+            <Select {...ps('description')} style={{width: '100%'}} >
+              <MenuItem></MenuItem>
+              <MenuItem value="hw">Hill ground; well-drained</MenuItem>
+              <MenuItem value="hp">Hill ground; poorly-drained</MenuItem>
+              <MenuItem value="bw">Bottom land; well-drained</MenuItem>
+              <MenuItem value="bp">Bottom land; poorly-drained</MenuItem>
+            </Select>
           </td>
         </tr>
 
         <tr>
           <td>What was the Prior Crop planted on this Field?</td>
           <td>
-            <select {...ps('priorCrop')} >
-              <option></option>
-              <option value="corn">Corn</option>
-              <option value="soybeans">Soybeans</option>
-              <option value="wheat">Wheat</option>
-              <option value="sorghum">Grain Sorghum (milo)</option>
-              <option value="cotton">Cotton</option>
-              <option value="rice">Rice</option>
-              <option value="sunflowers">Sunflowers</option>
-              <option value="canola">Canola</option>
-              <option value="fallow">Fallow</option>
-              <option value="prevent">Prevent Plant Acres</option>
-              <option value="other">Other</option>
-            </select>
+            <Select {...ps('priorCrop')} style={{width: '100%'}} >
+              <MenuItem></MenuItem>
+              <MenuItem value="corn">Corn</MenuItem>
+              <MenuItem value="soybeans">Soybeans</MenuItem>
+              <MenuItem value="wheat">Wheat</MenuItem>
+              <MenuItem value="sorghum">Grain Sorghum (milo)</MenuItem>
+              <MenuItem value="cotton">Cotton</MenuItem>
+              <MenuItem value="rice">Rice</MenuItem>
+              <MenuItem value="sunflowers">Sunflowers</MenuItem>
+              <MenuItem value="canola">Canola</MenuItem>
+              <MenuItem value="fallow">Fallow</MenuItem>
+              <MenuItem value="prevent">Prevent Plant Acres</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
             <br/>
             {
               parms.priorCrop === 'other' && 
@@ -169,18 +177,18 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
         <tr>
           <td>What is your intended Cash Crop for this Field?</td>
           <td>
-            <select {...ps('cashCrop')} >
-              <option></option>
-              <option value="corn">Corn</option>
-              <option value="soybeans">Soybeans</option>
-              <option value="wheat">Wheat</option>
-              <option value="sorghum">Grain Sorghum (milo)</option>
-              <option value="cotton">Cotton</option>
-              <option value="rice">Rice</option>
-              <option value="sunflowers">Sunflowers</option>
-              <option value="canola">Canola</option>
-              <option value="other">Other </option>
-            </select>
+            <Select {...ps('cashCrop')} style={{width: '100%'}} >
+              <MenuItem></MenuItem>
+              <MenuItem value="corn">Corn</MenuItem>
+              <MenuItem value="soybeans">Soybeans</MenuItem>
+              <MenuItem value="wheat">Wheat</MenuItem>
+              <MenuItem value="sorghum">Grain Sorghum (milo)</MenuItem>
+              <MenuItem value="cotton">Cotton</MenuItem>
+              <MenuItem value="rice">Rice</MenuItem>
+              <MenuItem value="sunflowers">Sunflowers</MenuItem>
+              <MenuItem value="canola">Canola</MenuItem>
+              <MenuItem value="other">Other </MenuItem>
+            </Select>
             <br/>
             {
               parms.cashCrop === 'other' && 
@@ -190,7 +198,7 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
         </tr>
         
         <tr>
-          <td>What is your Labor Value for Analysis?</td>
+          <td>What is your Labor Value for Analysis? ($/hour)</td>
           <td><Input {...ps('labor')} autoComplete="off" /></td>
         </tr>
       </tbody>

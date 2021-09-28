@@ -100,7 +100,11 @@ let parms = {
 const ps = (s) => ({
   id: s,
   value: parms[s],
-  checked: parms[s] === 'true'
+  checked: parms[s] === 'true',
+  name: s,
+  onChange: (e) => {  // for Material-UI components that don't bubble, like Select:
+    sets[e.target.name](e.target.value);
+  }
 });
 
 const sets = {};

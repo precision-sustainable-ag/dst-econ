@@ -279,3 +279,22 @@ nav strong, [data-scr=Resources] {
 .fieldAndFarm tr:last-child td {
   height: auto;
 }
+
+.fieldAndFarm td {
+  width: 25%;
+}
+
+.fieldAndFarm td:nth-child(3) {
+  border-left: 2px solid black;
+  background: #f8f8f8;
+  width: auto;
+}
+
+.MuiSelect-root * {
+  width: 100% !important;
+  display: none !important;
+}
+
+.fullWidth {
+  width: calc(100vw - 16em);
+}
