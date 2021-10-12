@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const Activity = ({sets, db, parms, ps, type}) => {
@@ -67,7 +69,7 @@ const Activity = ({sets, db, parms, ps, type}) => {
   } else {
     data = db[type][parms[type + 4]] || {};
 
-    const powerUnit  = data['Default Power Unit'];
+    const powerUnit = data['Default Power Unit'];
     
     power = db.power[powerUnit] || {};
 
@@ -126,6 +128,12 @@ const Activity = ({sets, db, parms, ps, type}) => {
       planting: 'Cover Crop Planting',
     }[type];
 
+    // useEffect(() => {
+    //   sets[type + 'Power'](13);
+    //   }, [parms[type + 4]]
+    // );
+    
+
     breakdown = parms[type + 4] &&
       <div className={type}>
         <table id="Activity">
@@ -143,12 +151,21 @@ const Activity = ({sets, db, parms, ps, type}) => {
           <tbody>
             <tr>
               <td>Implement Used</td>
-              <td>{parms[type + 4]}</td><td></td>
+              <td>
+                <select {...ps(type + '4')}>
+                  {Object.keys(db[type]).map(key => <option key={key}>{key}</option>)}
+                </select>
+              </td>
+              <td></td>
             </tr>
 
             <tr>
               <td>Power Used</td>
-              <td></td><td>{powerUnit}</td>
+              <td></td>
+              <td style={{whiteSpace: 'nowrap'}}>
+                <input {...ps(type + 'Power')} style={{width: '5em'}}/>
+                {powerUnit.replace(/\d+/, '')}
+              </td>
             </tr>
 
             <tr>

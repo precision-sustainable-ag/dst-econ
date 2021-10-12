@@ -1,7 +1,8 @@
 import GoogleMaps from './GoogleMaps';
 import GoogleMapReact from 'google-map-react';
 import {Navigation} from './Navigation';
-import {Input, Select, MenuItem} from '@material-ui/core';
+import {Input} from '@material-ui/core';
+import {MyAutocomplete} from './MyAutocomplete';
 
 const Map = ({sets, parms, ps, update}) => {
   const mapChange = (e) => {
@@ -107,7 +108,7 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
       Please answer all of the following:
     </p>
 
-    <table class="fullWidth">
+    <table className="fullWidth">
       <tbody>
         <tr>
           <td>What is the name of your Farm?</td>
@@ -128,7 +129,6 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
               <Input {...ps('lng')} inputProps={{ tabIndex: "-1" }} />
             </div>
           </td>
-
         </tr>
 
         <tr>
@@ -139,36 +139,44 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
         <tr>
           <td>Which of the following options best describes your Field?</td>
           <td>
-            <Select {...ps('description')} style={{width: '100%'}} >
-              <MenuItem></MenuItem>
-              <MenuItem value="hw">Hill ground; well-drained</MenuItem>
-              <MenuItem value="hp">Hill ground; poorly-drained</MenuItem>
-              <MenuItem value="bw">Bottom land; well-drained</MenuItem>
-              <MenuItem value="bp">Bottom land; poorly-drained</MenuItem>
-            </Select>
+            <MyAutocomplete
+              {...ps('description')}
+              options={
+                [
+                  {label: 'Hill ground; well-drained'  , value: 'hw'},
+                  {label: 'Hill ground; poorly-drained', value: 'hp'},
+                  {label: 'Bottom land; well-drained'  , value: 'bw'},
+                  {label: 'Bottom land; poorly-drained', value: 'hp'},
+                ]
+              }
+            />
           </td>
         </tr>
 
         <tr>
           <td>What was the Prior Crop planted on this Field?</td>
           <td>
-            <Select {...ps('priorCrop')} style={{width: '100%'}} >
-              <MenuItem></MenuItem>
-              <MenuItem value="corn">Corn</MenuItem>
-              <MenuItem value="soybeans">Soybeans</MenuItem>
-              <MenuItem value="wheat">Wheat</MenuItem>
-              <MenuItem value="sorghum">Grain Sorghum (milo)</MenuItem>
-              <MenuItem value="cotton">Cotton</MenuItem>
-              <MenuItem value="rice">Rice</MenuItem>
-              <MenuItem value="sunflowers">Sunflowers</MenuItem>
-              <MenuItem value="canola">Canola</MenuItem>
-              <MenuItem value="fallow">Fallow</MenuItem>
-              <MenuItem value="prevent">Prevent Plant Acres</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
-            </Select>
+            <MyAutocomplete
+              {...ps('priorCrop')}
+              options={
+                [
+                  {label: 'Corn'},
+                  {label: 'Soybeans'},
+                  {label: 'Wheat'},
+                  {label: 'Grain Sorghum (milo)'},
+                  {label: 'Cotton'},
+                  {label: 'Rice'},
+                  {label: 'Sunflowers'},
+                  {label: 'Canola'},
+                  {label: 'Fallow'},
+                  {label: 'Prevent Plant Acres'},
+                  {label: 'Other'},
+                ]
+              }
+            />
             <br/>
             {
-              parms.priorCrop === 'other' && 
+              parms.priorCrop.label === 'Other' && 
               <Input {...ps('otherPriorCrop')} placeholder="Enter crop here" />
             }
           </td>
@@ -177,18 +185,22 @@ const FieldAndFarm = ({ps, sets, parms, setScreen, update}) => (
         <tr>
           <td>What is your intended Cash Crop for this Field?</td>
           <td>
-            <Select {...ps('cashCrop')} style={{width: '100%'}} >
-              <MenuItem></MenuItem>
-              <MenuItem value="corn">Corn</MenuItem>
-              <MenuItem value="soybeans">Soybeans</MenuItem>
-              <MenuItem value="wheat">Wheat</MenuItem>
-              <MenuItem value="sorghum">Grain Sorghum (milo)</MenuItem>
-              <MenuItem value="cotton">Cotton</MenuItem>
-              <MenuItem value="rice">Rice</MenuItem>
-              <MenuItem value="sunflowers">Sunflowers</MenuItem>
-              <MenuItem value="canola">Canola</MenuItem>
-              <MenuItem value="other">Other </MenuItem>
-            </Select>
+            <MyAutocomplete
+              {...ps('cashCrop')} 
+              options={
+                [
+                  {label: 'Corn'},
+                  {label: 'Soybeans'},
+                  {label: 'Wheat'},
+                  {label: 'Grain Sorghum (milo)'},
+                  {label: 'Cotton'},
+                  {label: 'Rice'},
+                  {label: 'Sunflowers'},
+                  {label: 'Canola'},
+                  {label: 'Other'},
+                ]
+              }
+            />
             <br/>
             {
               parms.cashCrop === 'other' && 

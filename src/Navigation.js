@@ -57,12 +57,20 @@ const Screens = ({parms, setSpecies, setRate, setPrice, sets, db, ps}) => {
         return;
       }
 
-      if (id === 'seedbed1' && val === 'No') {
+      if ((id === 'seedbed1' && val === 'No') || (id === 'seedbed2' && val === 'Yes')) {
         sets.seedbed4('');
+        sets.seedbed6(0);
         sets.seedbed7(0);
       } else if (/planting4|seedbed4/.test(id)) {
+        const type = id.replace('4', '');
+        const data = db[type][val] || {};
+        console.log(data);
+        const powerUnit = data['Default Power Unit'].match(/\d+/)[0];
         sets[id.replace(4, 6)]('');  // clear override so it can be recalculated
+        sets[type + 'Power'](powerUnit);
       } if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(id)) {
+        sets.planting6('');
+        sets.seedbed6('');
         sets[id](e.target.checked ? 'true' : 'false');
       } else if (/^species\d/.test(id)) {
         const n = id.match(/\d+/)[0];
@@ -307,7 +315,7 @@ const Navigation = ({setScreen, current, parms}) => {
     <div className="navigation">
       {
         back &&
-        <Button variant="contained" color="primary" onClick={() => setScreen(back) }>BACK: {backDesc} </Button>
+        <Button variant="contained" color="primary" onClick={() => setScreen(back) } tabIndex="-1">BACK: {backDesc} </Button>
       }
       {
         next &&

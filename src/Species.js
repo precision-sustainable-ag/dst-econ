@@ -151,7 +151,7 @@ const Species = ({sets, setScreen, db, parms, ps, update}) => {
         
         {
           link &&
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noreferrer">
             {region} Cover Crops Council Species Selector
           </a>
         }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import {Screens} from './Navigation';
 
@@ -68,6 +68,7 @@ let parms = {
   seedbedTaxes        : 'true',
   seedbedInsurance    : 'true',
   seedbedStorage      : 'true',
+  seedbedPower        : '15',
   
   plantingLabor       : 'true',
   plantingFuel        : 'true',
@@ -77,6 +78,7 @@ let parms = {
   plantingTaxes       : 'true',
   plantingInsurance   : 'true',
   plantingStorage     : 'true',
+  plantingPower       : '',
   
   includeLabor        : 'true',
   includeFuel         : 'true',
@@ -99,11 +101,24 @@ let parms = {
 
 const ps = (s) => ({
   id: s,
+  name: s,
   value: parms[s],
   checked: parms[s] === 'true',
-  name: s,
-  onChange: (e) => {  // for Material-UI components that don't bubble, like Select:
-    sets[e.target.name](e.target.value);
+  /*
+    Handle change events for Material-UI components that don't bubble, such as Autocomplete and Select.
+    MUI is incredibly inconsistent in its event handlers.
+    For example:
+      Here's the Autocomplete onChange callback: function(event: React.SyntheticEvent, value: T | Array<T>, reason: string, details?: string)
+      Here's the Select onChange callback:       function(event: SelectChangeEvent<T>, child?: object)
+  */
+  onChange: ({target}, value) => {
+    try {
+      const id = (target.id || target.name).split('-')[0];  // Autocomplete adds a hyphen and extra text to the ID
+      console.log(id, value);
+      sets[id](value);
+    } catch(ee) {
+      console.log(target);
+    }
   }
 });
 
@@ -121,7 +136,7 @@ console.error = (msg, ...subst) => {
 const loadData = async(table) => {
   const alias = (col) => {
     // 'Typical Seeding Rate (lb/ac) [seedingRate]' becomes 'seedingRate'
-    return col.includes('[') ? col.split(/[\[\]]/)[1] : col;
+    return col.includes('[') ? col.split(/[[\]]/)[1] : col;
   }
 
   db[table] = {};
@@ -155,5 +170,4 @@ loadData('planting');
 loadData('cropMaint');
 loadData('harvest');
 
-setTimeout(() => console.log(db.rates), 1000)
 export default App;

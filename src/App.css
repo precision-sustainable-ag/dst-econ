@@ -92,6 +92,11 @@ label {
   cursor: pointer;
 }
 
+#Activity td:nth-child(n + 2) {
+  width: 15em !important;
+  text-align: left !important;
+}
+
 #Activity th, #Costs th {
   text-align: center;
 }
