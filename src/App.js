@@ -1,137 +1,226 @@
-import React, {useState} from 'react';
+// npm i --no-optional
+
+// https://itnext.io/fixing-security-vulnerabilities-in-npm-dependencies-in-less-than-3-mins-a53af735261d
+// npm i minimist --save-dev
+// "resolutions": {
+//   "minimist": "^1.2.5"
+// }
+// "scripts": {
+//   "preinstall": "npx npm-force-resolutions"
+// }
+// npm i
+
+// TODO: Inputs.js for everything
+// TODO: Google Maps already loaded outside @googlemaps/js-api-loader.
+// TODO: Editable crops/prices
+// TODO: https://wlazarus.cfans.umn.edu/william-f-lazarus-farm-machinery-management
+// TODO: MACHDATA
+// TODO: Plant Data Service:  Disregard, build own
+
+// WAIT: Soil Erosion Control
+// WAIT: Additional Considerations
+
+// DONE: material-ui -> mui
+// DONE: Don't autofill
+// DONE: npm install warnings
+// DONE: npm audit warnings
+// DONE: Autocomplete height
+// DONE: Next to Resources, Back should be Revenue Impact
+// DONE: Warning: Cannot update a component (`App`) while rendering a different component (`Screens`).
+
+import React, { useCallback, useEffect } from 'react';
 import './App.css';
-import {Screens} from './Navigation';
+import {Screens} from './components/Navigation';
+import {defaults} from './defaults';
 
 const App = () => {
-  // can't do useState in a loop unless it's in a component, even if that component is unused
-  const State = (parm, value) => {
-    [parms[parm], sets[parm]] = React.useState(value);
-  }
+  const change = (parm, value, target, index) => {
+    console.log(parm);
+    if ((parm === 'seedbed1' && value === 'No') || (parm === 'seedbed2' && value === 'Yes')) {
+      set.seedbed4('');
+      set.seedbed6(0);
+      set.seedbed7(0);
+      set.screen('Planting');
+      set.previousScreen('Planting');
+    } else if (/planting4|seedbed4/.test(parm)) {
+      const type = parm.replace('4', '');
+      const data = db[type][value] || {};
+      const powerUnit = data['Default Power Unit'].match(/\d+/)[0];
+      set[type + 6]('');  // clear override so it can be recalculated
+      set[type + 'Power'](powerUnit);
+    } else if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(parm)) {
+      const type = parm.match(/[a-z]+/)
+      set[type + 6]('');
+      set[parm](target.checked ? 'true' : 'false');
+    } else if (parm === 'species') {
+      set.rates(arr => {
+        arr[index] = (db.seedList[value] || {}).seedingRate;
+        return [...arr];
+      });
 
-  let setSpecies;
-  [parms.species, setSpecies] = useState([]);
-
-  let setRate;
-  [parms.rates, setRate] = useState([]);
-
-  let setPrice;
-  [parms.prices, setPrice] = useState([]);
-
-  for (const [parm, value] of Object.entries(parms)) {
-    if (Array.isArray(value)) {
-
-    } else {
-      State(parm, value);
+      set.prices(arr => {
+        arr[index] = (db.seedList[value] || {}).price;
+        return [...arr];
+      });
     }
-  }
+  } // change
+
+  let {parms, set, props} = defaults(
+    change,
+    {
+      species             : [],
+      rates               : [],
+      prices              : [],
+      coverCropTotal      : 0,
+      seedbed1            : '', // 'Yes',
+      seedbed2            : 'No',
+      seedbed3            : 'Self',
+      seedbed4            : '',  // 'Chisel Plow; 37 Ft'
+      seedbed5            : '',
+      seedbed6            : '',
+      seedbed7            : '',
+      planting3           : 'Self',
+      planting4           : '',
+      planting5           : '',
+      planting6           : '',
+      planting7           : '',
+      USDARegion          : '',
+      
+      seedbedLabor        : 'true',
+      seedbedFuel         : 'true',
+      seedbedDepreciation : 'true',
+      seedbedInterest     : 'true',
+      seedbedRepairs      : 'true',
+      seedbedTaxes        : 'true',
+      seedbedInsurance    : 'true',
+      seedbedStorage      : 'true',
+      seedbedPower        : '15',
+      
+      plantingLabor       : 'true',
+      plantingFuel        : 'true',
+      plantingDepreciation: 'true',
+      plantingInterest    : 'true',
+      plantingRepairs     : 'true',
+      plantingTaxes       : 'true',
+      plantingInsurance   : 'true',
+      plantingStorage     : 'true',
+      plantingPower       : '',
+      
+      farm                : '',
+      acres               : '',
+      description         : 'hp',
+      priorCrop           : '',
+      otherPriorCrop      : '',
+      cashCrop            : '',
+      otherCashCrop       : '',
+      labor               : '',
+      previousScreen      : 'Home',
+    }
+  );
+
+  const costs = useCallback(type => {
+    let data;
+    let power;
+    let acresHour;
+
+    const implementCost = (desc, lookup) => {
+      let result;
+
+      if (data[lookup]) {
+        result = +data[lookup];
+      } else {
+        result = 0;
+      }
+  
+      if (desc === 'Labor') {
+        result *= db.rates.skilled.value;
+      }
+
+      return result;
+    } // implementCost
+  
+    const powerCost = (desc) => {
+      let result;
+  
+      result = desc === 'Labor' ? 0 :
+               desc === 'Fuel'  ? (power['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
+                                  power[desc + ' ($/hour)'] / acresHour;
+  
+      return result;
+    } // powerCost
+  
+    const totalCost = (desc, lookup) => {
+      return (implementCost(desc, lookup) || 0) + (powerCost(desc, lookup) || 0);
+    } // totalCost
+  
+    const relevantCost = (desc, lookup) => {
+      return parms[type + desc] === 'true' ? totalCost(desc, lookup) : 0;
+    } // relevantCost
+
+    data = db[type][parms[type + 4]];
+    if (!data) {
+      return;
+    }
+
+    const powerUnit = data['Default Power Unit'];
+    
+    power = db.power[powerUnit] || {};
+
+    acresHour  = (+data['Acres/hour']).toFixed(1);
+
+    const relativeCost = () => (
+      relevantCost('Labor',         'Labor (hr/acre)') +
+      relevantCost('Fuel') +
+      relevantCost('Depreciation',  'Depreciation ($/acre)') + 
+      relevantCost('Interest',      'Interest ($/acre)') + 
+      relevantCost('Repairs',       'Repair ($/acre)') + 
+      relevantCost('Taxes',         'Taxes ($/acre)') + 
+      relevantCost('Insurance',     'Insurance ($/acre)') + 
+      relevantCost('Storage',       'Shed ($/acre)')
+    ); // relativeCost
+
+    const costdb = {
+      seedbed: 'Seedbed preparation',
+      planting: 'Planting'
+    }[type];
+
+    const f5 = parms[type + 3] === 'Self' ? relativeCost(type).toFixed(2) : db.costDefaults[costdb].cost;
+    set[type + 5](f5);
+    set[type + 7](parms[type + 6] || f5);
+
+    if (!(+parms[type + 6])) {
+      set[type + 6](f5);
+    }
+  }, [parms, set]) // costs
+
+  useEffect(() => {
+    costs('seedbed');
+    costs('planting');
+  }, [costs]);
+
+  useEffect(() => {
+    let total = 0;
+    parms.species.forEach((s, n) => {
+      if (s) {
+        total += (+parms.rates[n] || 0) * (+parms.prices[n] || 0)
+      }
+    });
+    set.coverCropTotal(total);
+  }, [set, parms.species, parms.rates, parms.prices]);
 
   return (
-    <div>
-      <Screens sets={sets} db={db} parms={parms} setSpecies={setSpecies} setRate={setRate} setPrice={setPrice} ps={ps} />
-    </div>
+    <Screens set={set} db={db} parms={parms} props={props} />
   );
 } // App
 
-let parms = {
-  help                : '',
-  helpX               : 0,
-  helpY               : 0,
-  species             : [],
-  rates               : [],
-  prices              : [],
-  coverCropTotal      : 0,
-  seedbed1            : '', // 'Yes',
-  seedbed2            : 'No',
-  seedbed3            : 'Self',
-  seedbed4            : '',  // 'Chisel Plow; 37 Ft'
-  seedbed5            : '',
-  seedbed6            : '',
-  seedbed7            : '',
-  planting3           : 'Self',
-  planting4           : '',
-  planting5           : '',
-  planting6           : '',
-  planting7           : '',
-  lat                 : 40.7849,
-  lng                 : -74.8073,
-  mapZoom             : 13,
-  mapType             : 'hybrid',
-  location            : '',
-  state               : '',
-  USDARegion          : '',
-  
-  seedbedLabor        : 'true',
-  seedbedFuel         : 'true',
-  seedbedDepreciation : 'true',
-  seedbedInterest     : 'true',
-  seedbedRepairs      : 'true',
-  seedbedTaxes        : 'true',
-  seedbedInsurance    : 'true',
-  seedbedStorage      : 'true',
-  seedbedPower        : '15',
-  
-  plantingLabor       : 'true',
-  plantingFuel        : 'true',
-  plantingDepreciation: 'true',
-  plantingInterest    : 'true',
-  plantingRepairs     : 'true',
-  plantingTaxes       : 'true',
-  plantingInsurance   : 'true',
-  plantingStorage     : 'true',
-  plantingPower       : '',
-  
-  includeLabor        : 'true',
-  includeFuel         : 'true',
-  includeDepreciation : 'true',
-  includeInterest     : 'true',
-  includeRepairs      : 'true',
-  includeTaxes        : 'true',
-  includeInsurance    : 'true',
-  includeStorage      : 'true',
-  farm                : '',
-  acres               : '',
-  description         : '',
-  priorCrop           : '',
-  otherPriorCrop      : '',
-  cashCrop            : '',
-  otherCashCrop       : '',
-  labor               : '',
-  previousScreen      : 'Home',
-}
-
-const ps = (s) => ({
-  id: s,
-  name: s,
-  value: parms[s],
-  checked: parms[s] === 'true',
-  /*
-    Handle change events for Material-UI components that don't bubble, such as Autocomplete and Select.
-    MUI is incredibly inconsistent in its event handlers.
-    For example:
-      Here's the Autocomplete onChange callback: function(event: React.SyntheticEvent, value: T | Array<T>, reason: string, details?: string)
-      Here's the Select onChange callback:       function(event: SelectChangeEvent<T>, child?: object)
-  */
-  onChange: ({target}, value) => {
-    try {
-      const id = (target.id || target.name).split('-')[0];  // Autocomplete adds a hyphen and extra text to the ID
-      console.log(id, value);
-      sets[id](value);
-    } catch(ee) {
-      console.log(target);
-    }
-  }
-});
-
-const sets = {};
-
 document.title = 'Econ DST';
 
-const holdError = console.error;
-console.error = (msg, ...subst) => {
-  if (!/You provided a/.test(msg)) {
-    holdError(msg, ...subst)
-  }
-}
+// const holdError = console.error;
+// console.error = (msg, ...subst) => {
+//   if (!/You provided a/.test(msg)) {
+//     holdError(msg, ...subst)
+//   }
+// }
 
 const loadData = async(table) => {
   const alias = (col) => {
@@ -154,7 +243,7 @@ const loadData = async(table) => {
     });
   });
 
-  console.log(db[table]);
+  // console.log(db[table]);
 } // loadData
 
 const db = {};

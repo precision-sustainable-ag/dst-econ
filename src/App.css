@@ -206,19 +206,19 @@ div.Species tr > td:nth-child(3) {
   border-bottom: none;
 }
 
-div.Species td:nth-child(n + 2) input {
+[inputmode="numeric"] {
   border: none;
   font-size: 110%;
   border-bottom: 1px solid silver;
   background: transparent !important;
   text-align: right;
-  width: 100%;
+  max-width: 8em;
   outline: none;
 }
 
-div.Species td:nth-child(n + 2) input:focus {
-  transition: all 0.5s;
-  border-bottom: 1px solid navy;
+[inputmode="numeric"]:focus {
+  transition: all 0.2s;
+  border-bottom: 2px solid navy;
 }
 
 .MuiListSubheader-root {

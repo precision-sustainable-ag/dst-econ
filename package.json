@@ -4,32 +4,32 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.4.1",
+    "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/lab": "^4.0.0-alpha.60",
-    "@mui/material": "^5.0.3",
+    "@mui/material": "^5.0.4",
+    "@mui/styles": "^5.0.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "google-map-react": "^2.1.10",
-    "google-maps-react": "^2.0.6",
-    "material-ui": "^0.20.2",
-    "material-ui-autocomplete-google-places": "^2.3.0",
+    "npm-force-resolutions": "0.0.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-geocode": "^0.2.3",
-    "react-google-autocomplete": "^2.4.2",
+    "react-google-autocomplete": "^2.4.3",
     "react-number-format": "^4.7.3",
     "react-places-autocomplete": "^7.3.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
+    "tsutils": "^3.21.0",
+    "typescript": "^4.4.4",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "preinstall": "npx npm-force-resolutions"
   },
   "eslintConfig": {
     "extends": [
@@ -48,5 +48,22 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.0",
+    "ansi-html": "^0.0.8",
+    "browserslist": "^4.17.4",
+    "glob-parent": "^6.0.2",
+    "immer": "^9.0.6",
+    "nth-check": "^2.0.1",
+    "set-value": "^4.1.0"
+  },
+  "resolutions": {
+    "ansi-html": "https://registry.yarnpkg.com/ansi-html-community/-/ansi-html-community-0.0.8.tgz#69fbc4d6ccbe383f9736934ae34c3f8290f1bf41",
+    "browserslist": "^4.17.4",
+    "glob-parent": "^6.0.2",
+    "immer": "^9.0.6",
+    "nth-check": "^2.0.1",
+    "set-value": "^4.1.0"
   }
 }
