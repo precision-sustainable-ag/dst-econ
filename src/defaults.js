@@ -1,6 +1,7 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 const defaults = (change, p) => {
+  console.log('defaults');
   const set = {};
 
   const parms = {  // default parameters
@@ -17,21 +18,16 @@ const defaults = (change, p) => {
     ...p
   }
 
-  // Would love to be able to do this:
-  //   for (const [parm, value] of Object.entries(parms)) {
-  //     State(parm, value);
-  //   }
-  // However, that gives the error:
-  //    "React Hook "useState" may be executed more than once. Possibly because it is called in a loop."
-  // The following code gets around this problem:
+  Object.keys(parms).forEach(parm => {
+    if (parm !== 'effects') {
+      [parms[parm], set[parm]] = useState(parms[parm]);
+      // useEffect(change, [parms[parm]]);
+    }
+  });
 
-  const State = (parm, value) => {
-    [parms[parm], set[parm]] = useState(value);
-  }
-  
-  for (const [parm, value] of Object.entries(parms)) {
-    State(parm, value);
-  }
+  Object.keys(p.effects).forEach(key => {
+    useEffect(() => p.effects[key](key), [key, parms[key]]);
+  }); 
 
   const props = (parm) => ({
     id: parm,                                         // allows the parameter to be styled in CSS
@@ -68,7 +64,7 @@ const defaults = (change, p) => {
     set,
     props
   }
-}
+} // defaults
 
 export {
   defaults

@@ -7,7 +7,7 @@ const Logic = ({q, a, id, cond=true, props, parms}) => {
       <td>{q}</td>
       <td>
         {
-          a instanceof Array ?
+          Array.isArray(a) ?
             a.length < 3 ? 
             <>
               {
@@ -29,21 +29,17 @@ const Logic = ({q, a, id, cond=true, props, parms}) => {
             />
           :
           
-          a === 'number' ?
+          /number|dollar/.test(a) ?
             <Input 
-              type="number"
+              type={a}
               {...props(id)} 
             /> 
           :
-          a === 'dollar' ?
-            <Input
-              type="dollar"
-              {...props(id)}
-            /> 
-          :
+          
           isFinite(a) ? 
             '$' + (+a).toFixed(2)
           :
+          
           ''
         }
       </td>

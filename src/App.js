@@ -28,27 +28,137 @@
 // DONE: Next to Resources, Back should be Revenue Impact
 // DONE: Warning: Cannot update a component (`App`) while rendering a different component (`Screens`).
 
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import {Screens} from './components/Navigation';
 import {defaults} from './defaults';
 
 const App = () => {
-  const change = (parm, value, target, index) => {
-    console.log(parm);
-    if ((parm === 'seedbed1' && value === 'No') || (parm === 'seedbed2' && value === 'Yes')) {
+  const updateSpeciesTotal = () => {
+    let total = 0;
+    parms.species.forEach((s, n) => {
+      if (s) {
+        total += (+parms.rates[n] || 0) * (+parms.prices[n] || 0)
+      }
+    });
+    set.coverCropTotal(total);
+  } // updateSpeciesTotal
+
+  const updateCosts = (type) => {
+    type = type.replace('6', '');
+
+    let data;
+    let power;
+    let acresHour;
+
+    const implementCost = (desc, lookup) => {
+      let result;
+
+      if (data[lookup]) {
+        result = +data[lookup];
+      } else {
+        result = 0;
+      }
+  
+      if (desc === 'Labor') {
+        result *= db.rates.skilled.value;
+      }
+
+      return result;
+    } // implementCost
+  
+    const powerCost = (desc) => {
+      let result;
+  
+      result = desc === 'Labor' ? 0 :
+               desc === 'Fuel'  ? (power['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
+                                  power[desc + ' ($/hour)'] / acresHour;
+  
+      return result;
+    } // powerCost
+  
+    const totalCost = (desc, lookup) => {
+      return (implementCost(desc, lookup) || 0) + (powerCost(desc, lookup) || 0);
+    } // totalCost
+  
+    const relevantCost = (desc, lookup) => {
+      return parms[type + desc] === 'true' ? totalCost(desc, lookup) : 0;
+    } // relevantCost
+
+    data = db[type][parms[type + 4]];
+
+    if (!data) {
+      set[type + 7](parms[type + 6]);
+      return;
+    }
+
+    const powerUnit = data['Default Power Unit'];
+    console.log(powerUnit)
+    
+    power = db.power[powerUnit] || {};
+
+    acresHour  = (+data['Acres/hour']).toFixed(1);
+
+    const relativeCost = () => (
+      relevantCost('Labor',         'Labor (hr/acre)') +
+      relevantCost('Fuel') +
+      relevantCost('Depreciation',  'Depreciation ($/acre)') + 
+      relevantCost('Interest',      'Interest ($/acre)') + 
+      relevantCost('Repairs',       'Repair ($/acre)') + 
+      relevantCost('Taxes',         'Taxes ($/acre)') + 
+      relevantCost('Insurance',     'Insurance ($/acre)') + 
+      relevantCost('Storage',       'Shed ($/acre)')
+    ); // relativeCost
+
+    const costdb = {
+      seedbed: 'Seedbed preparation',
+      planting: 'Planting'
+    }[type];
+
+    const f5 = parms[type + 3] === 'Self' ? relativeCost(type).toFixed(2) : db.costDefaults[costdb].cost;
+    set[type + 5](f5);
+    set[type + 7](parms[type + 6] || f5);
+
+    if (!(+parms[type + 6])) {
+      set[type + 6](f5);
+    }
+  } // updateCosts
+
+  const testSeedbed = () => {
+    if (parms.seedbed1 === 'No' || parms.seedbed2 === 'Yes') {
       set.seedbed4('');
       set.seedbed6(0);
       set.seedbed7(0);
       set.screen('Planting');
       set.previousScreen('Planting');
-    } else if (/planting4|seedbed4/.test(parm)) {
+    }
+  } // testSeedbed
+
+  const powerUnits = (parm) => {
+    try {
       const type = parm.replace('4', '');
+      const value = parms[parm];
+
       const data = db[type][value] || {};
       const powerUnit = data['Default Power Unit'].match(/\d+/)[0];
       set[type + 6]('');  // clear override so it can be recalculated
       set[type + 'Power'](powerUnit);
-    } else if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(parm)) {
+      updateCosts(type);
+    } catch(ee) {
+      console.log(ee.message);
+    }
+  } // powerUnits
+
+  const costFilters = (parm) => {
+    // const type = parm.match(/[a-z]+/)
+    // const value = parms[parm];
+    // console.log(value);
+    // set[type + 6]('');
+    // set[parm](!value);
+  } // costFilters
+
+  const change = (parm, value, target, index) => {
+    if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(parm)) {
       const type = parm.match(/[a-z]+/)
       set[type + 6]('');
       set[parm](target.checked ? 'true' : 'false');
@@ -115,98 +225,37 @@ const App = () => {
       otherCashCrop       : '',
       labor               : '',
       previousScreen      : 'Home',
+      effects: {
+        species             : updateSpeciesTotal,
+        rates               : updateSpeciesTotal,
+        prices              : updateSpeciesTotal,
+        seedbed1            : testSeedbed,
+        seedbed2            : testSeedbed,
+        seedbed6            : updateCosts,
+        planting6           : updateCosts,
+        seedbed4            : powerUnits,
+        planting4           : powerUnits,
+        seedbedLabor        : costFilters,
+        seedbedFuel         : costFilters,
+        seedbedDepreciation : costFilters,
+        seedbedInterest     : costFilters,
+        seedbedRepairs      : costFilters,
+        seedbedTaxes        : costFilters,
+        seedbedInsurance    : costFilters,
+        seedbedStorage      : costFilters,
+        seedbedPower        : costFilters,
+        plantingLabor       : costFilters,
+        plantingFuel        : costFilters,
+        plantingDepreciation: costFilters,
+        plantingInterest    : costFilters,
+        plantingRepairs     : costFilters,
+        plantingTaxes       : costFilters,
+        plantingInsurance   : costFilters,
+        plantingStorage     : costFilters,
+        plantingPower       : costFilters,        
+      }
     }
   );
-
-  const costs = useCallback(type => {
-    let data;
-    let power;
-    let acresHour;
-
-    const implementCost = (desc, lookup) => {
-      let result;
-
-      if (data[lookup]) {
-        result = +data[lookup];
-      } else {
-        result = 0;
-      }
-  
-      if (desc === 'Labor') {
-        result *= db.rates.skilled.value;
-      }
-
-      return result;
-    } // implementCost
-  
-    const powerCost = (desc) => {
-      let result;
-  
-      result = desc === 'Labor' ? 0 :
-               desc === 'Fuel'  ? (power['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
-                                  power[desc + ' ($/hour)'] / acresHour;
-  
-      return result;
-    } // powerCost
-  
-    const totalCost = (desc, lookup) => {
-      return (implementCost(desc, lookup) || 0) + (powerCost(desc, lookup) || 0);
-    } // totalCost
-  
-    const relevantCost = (desc, lookup) => {
-      return parms[type + desc] === 'true' ? totalCost(desc, lookup) : 0;
-    } // relevantCost
-
-    data = db[type][parms[type + 4]];
-    if (!data) {
-      return;
-    }
-
-    const powerUnit = data['Default Power Unit'];
-    
-    power = db.power[powerUnit] || {};
-
-    acresHour  = (+data['Acres/hour']).toFixed(1);
-
-    const relativeCost = () => (
-      relevantCost('Labor',         'Labor (hr/acre)') +
-      relevantCost('Fuel') +
-      relevantCost('Depreciation',  'Depreciation ($/acre)') + 
-      relevantCost('Interest',      'Interest ($/acre)') + 
-      relevantCost('Repairs',       'Repair ($/acre)') + 
-      relevantCost('Taxes',         'Taxes ($/acre)') + 
-      relevantCost('Insurance',     'Insurance ($/acre)') + 
-      relevantCost('Storage',       'Shed ($/acre)')
-    ); // relativeCost
-
-    const costdb = {
-      seedbed: 'Seedbed preparation',
-      planting: 'Planting'
-    }[type];
-
-    const f5 = parms[type + 3] === 'Self' ? relativeCost(type).toFixed(2) : db.costDefaults[costdb].cost;
-    set[type + 5](f5);
-    set[type + 7](parms[type + 6] || f5);
-
-    if (!(+parms[type + 6])) {
-      set[type + 6](f5);
-    }
-  }, [parms, set]) // costs
-
-  useEffect(() => {
-    costs('seedbed');
-    costs('planting');
-  }, [costs]);
-
-  useEffect(() => {
-    let total = 0;
-    parms.species.forEach((s, n) => {
-      if (s) {
-        total += (+parms.rates[n] || 0) * (+parms.prices[n] || 0)
-      }
-    });
-    set.coverCropTotal(total);
-  }, [set, parms.species, parms.rates, parms.prices]);
 
   return (
     <Screens set={set} db={db} parms={parms} props={props} />
