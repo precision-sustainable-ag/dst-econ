@@ -17,7 +17,7 @@ const Seedbed = ({db, parms, props, set}) => {
         <hr/>
 
         <strong>Cover Crop Establishment</strong>
-        <table>
+        <table class="seedbed">
           <tbody>
             <tr>
               <th colSpan="2">Seedbed preparation</th>

@@ -108,10 +108,13 @@ const Autocomplete = (props) => {
   value = props.options.find(option => option === value || (option.value && option.value === value) || (option.label && option.label === value));
   value = value ? value.label || value : null;
 
+  const max = Math.max.apply(Math, props.options.map(option => option.length));
+
   return (
     <MUIAutocomplete
       onKeyPress={(e) => keyPress(e, props)}
 
+      sx={{width: (max * 0.8) + 'rem'}}
       isOptionEqualToValue={(option, value) => {
         return option === value || (option.value && option.value === value) || (option.label && option.label === value);
       }}

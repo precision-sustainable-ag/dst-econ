@@ -303,3 +303,13 @@ nav strong, [data-scr=Resources] {
 .fullWidth {
   width: calc(100vw - 16em);
 }
+
+table.seedbed td:nth-child(1),
+table.planting td:nth-child(1) {
+  width: 30rem;
+}
+
+table.seedbed td:nth-child(2),
+table.planting td:nth-child(2) {
+  width: 30rem;
+}
