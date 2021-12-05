@@ -17,7 +17,7 @@ const Planting = ({db, parms, props, set}) => {
         <hr/>
 
         <strong>Cover Crop Establishment</strong>
-        <table class="planting">
+        <table className="planting">
           <tbody>
             <tr>
               <th colSpan="2">Planting</th>

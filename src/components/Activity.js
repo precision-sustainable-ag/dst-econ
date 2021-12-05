@@ -48,13 +48,12 @@ const Activity = ({db, parms, props, type}) => {
   
     data = db[type][parms[type + 4]] || {};
 
-    const powerUnit = data['Default Power Unit'];
-    
+    const powerUnit = parms[type + 'Power'] || data['Default Power Unit'];
     power = db.power[powerUnit] || {};
+    console.log(power);
+    const annualUseAcres = Math.round(data['Acres/year']);
 
-    const annualUseAcres  = Math.round(data['Acres/year']);
-
-    const annualUseHours  = power['Expected Use (Hr/yr)'];
+    const annualUseHours = power['Expected Use (Hr/yr)'];
 
     acresHour  = (+data['Acres/hour']).toFixed(1);
 
@@ -146,8 +145,12 @@ const Activity = ({db, parms, props, type}) => {
               <td>Power Used</td>
               <td></td>
               <td style={{whiteSpace: 'nowrap'}}>
-                <Input {...props(type + 'Power')} style={{width: '5em'}}/>
-                {powerUnit.replace(/\d+/, '')}
+                <Autocomplete
+                  {...props(type + 'Power')}
+                  options={Object.keys(db.power)}
+                />
+
+                {/* <Input {...props(type + 'Power')} style={{width: '100%'}}/> */}
               </td>
             </tr>
 

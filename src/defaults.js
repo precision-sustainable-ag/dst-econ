@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 
 const defaults = (change, p) => {
-  console.log('defaults');
   const set = {};
 
   const parms = {  // default parameters
@@ -25,9 +24,15 @@ const defaults = (change, p) => {
     }
   });
 
-  Object.keys(p.effects).forEach(key => {
-    useEffect(() => p.effects[key](key), [key, parms[key]]);
-  }); 
+  if (p.effects) {
+    Object.keys(p.effects).forEach(key => {
+      useEffect(() => {
+        [].concat(p.effects[key]).forEach(fnc => {
+          fnc(key);
+        })
+      }, [key, parms[key]]);
+    }); 
+  }
 
   const props = (parm) => ({
     id: parm,                                         // allows the parameter to be styled in CSS

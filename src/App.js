@@ -92,7 +92,7 @@ const App = () => {
       return;
     }
 
-    const powerUnit = data['Default Power Unit'];
+    const powerUnit = parms[type + 'Power'] || data['Default Power Unit'];
     console.log(powerUnit)
     
     power = db.power[powerUnit] || {};
@@ -140,12 +140,12 @@ const App = () => {
       const value = parms[parm];
 
       const data = db[type][value] || {};
-      const powerUnit = data['Default Power Unit'].match(/\d+/)[0];
+      const powerUnit = data['Default Power Unit']; //.match(/\d+/)[0];
       set[type + 6]('');  // clear override so it can be recalculated
       set[type + 'Power'](powerUnit);
       updateCosts(type);
     } catch(ee) {
-      console.log(ee.message);
+      console.log(parm, ee.message);
     }
   } // powerUnits
 
@@ -204,7 +204,7 @@ const App = () => {
       seedbedTaxes        : 'true',
       seedbedInsurance    : 'true',
       seedbedStorage      : 'true',
-      seedbedPower        : '15',
+      seedbedPower        : '',
       
       plantingLabor       : 'true',
       plantingFuel        : 'true',
@@ -233,8 +233,11 @@ const App = () => {
         seedbed2            : testSeedbed,
         seedbed6            : updateCosts,
         planting6           : updateCosts,
+        seedbedPower        : [powerUnits, costFilters, updateCosts],
+        plantingPower       : [powerUnits, costFilters, updateCosts],
         seedbed4            : powerUnits,
         planting4           : powerUnits,
+        
         seedbedLabor        : costFilters,
         seedbedFuel         : costFilters,
         seedbedDepreciation : costFilters,
@@ -244,6 +247,7 @@ const App = () => {
         seedbedInsurance    : costFilters,
         seedbedStorage      : costFilters,
         seedbedPower        : costFilters,
+        
         plantingLabor       : costFilters,
         plantingFuel        : costFilters,
         plantingDepreciation: costFilters,
@@ -252,7 +256,7 @@ const App = () => {
         plantingTaxes       : costFilters,
         plantingInsurance   : costFilters,
         plantingStorage     : costFilters,
-        plantingPower       : costFilters,        
+        plantingPower       : costFilters,
       }
     }
   );
