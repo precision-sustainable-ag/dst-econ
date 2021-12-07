@@ -41,30 +41,48 @@ const Planting = ({db, parms, props, set}) => {
             />
 
             <Logic
-              id="planting6"
-              q={parms.planting3 === 'Self' ? `Estimated relevant cost (${dollars(parms.planting5)}/acre)` : `Estimated custom cost (${dollars(parms.planting5)}/acre)`}
+              id="plantingPower"
+              q="What power will be used?"
+              a={['', ...Object.keys(db.power)]}
+              parms={parms}
+              props={props}
+              cond={parms.planting4 && parms.planting3 === 'Self'}
+            />
+
+            <Logic
+              id="plantingAnnualUseAcres"
+              q="Annual Use (acres)"
+              a={parms.plantingAnnualUseAcres.toString()}
+              parms={parms}
+              props={props}
+              cond={parms.planting4 && parms.planting3 === 'Self'}
+            />
+
+            <Logic
+              id="plantingAnnualUseHours"
+              q="Annual Use (hours)"
+              a={parms.plantingAnnualUseHours.toString()}
+              parms={parms}
+              props={props}
+              cond={parms.planting4 && parms.planting3 === 'Self'}
+            />
+
+            <Logic
+              id="plantingAcresHour"
+              q="Acres/hour"
+              a={parms.plantingAcresHour.toString()}
+              parms={parms}
+              props={props}
+              cond={parms.planting4 && parms.planting3 === 'Self'}
+            />
+
+            <Logic
+              id="plantingTotal"
+              q={parms.planting3 === 'Self' ? `Estimated relevant cost (${dollars(parms.plantingEstimated)}/acre)` : `Estimated custom cost (${dollars(parms.plantingTotal)}/acre)`}
               a={'dollar'}
               parms={parms}
               props={props}
             />
-
-            {/*
-              <Logic
-                id="planting6"
-                q="Cost override"
-                a={'number'}
-                parms={parms}
-                props={props}
-              />
-
-              <Logic
-                id="planting7"
-                q="Cost of planting activity necessary for cover cropping."
-                a={parms.planting7}
-                parms={parms}
-                props={props}
-              />
-            */}
           </tbody>
         </table>
       </div>

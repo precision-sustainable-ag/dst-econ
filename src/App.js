@@ -10,6 +10,7 @@
 // }
 // npm i
 
+// TODO: autofocus map
 // TODO: Inputs.js for everything
 // TODO: Google Maps already loaded outside @googlemaps/js-api-loader.
 // TODO: Editable crops/prices
@@ -44,8 +45,8 @@ const App = () => {
     set.coverCropTotal(total);
   } // updateSpeciesTotal
 
-  const updateCosts = (type) => {
-    type = type.replace('6', '');
+  const updateCosts = (otype) => {
+    const type = otype.match(/[a-z]+/g)[0];
 
     let data;
     let power;
@@ -88,18 +89,20 @@ const App = () => {
     data = db[type][parms[type + 4]];
 
     if (!data) {
-      set[type + 7](parms[type + 6]);
       return;
     }
 
     const powerUnit = parms[type + 'Power'] || data['Default Power Unit'];
-    console.log(powerUnit)
     
     power = db.power[powerUnit] || {};
 
-    acresHour  = (+data['Acres/hour']).toFixed(1);
+    set[type + 'AnnualUseAcres'](Math.round(data['Acres/year']));
+    set[type + 'AnnualUseHours'](power['Expected Use (Hr/yr)']);
 
-    const relativeCost = () => (
+    acresHour  = (+data['Acres/hour']).toFixed(1);
+    set[type + 'AcresHour'](acresHour);
+
+    const totalRelevantCost = () => (
       relevantCost('Labor',         'Labor (hr/acre)') +
       relevantCost('Fuel') +
       relevantCost('Depreciation',  'Depreciation ($/acre)') + 
@@ -108,27 +111,23 @@ const App = () => {
       relevantCost('Taxes',         'Taxes ($/acre)') + 
       relevantCost('Insurance',     'Insurance ($/acre)') + 
       relevantCost('Storage',       'Shed ($/acre)')
-    ); // relativeCost
+    ); // totalRelevantCost
 
     const costdb = {
       seedbed: 'Seedbed preparation',
       planting: 'Planting'
     }[type];
 
-    const f5 = parms[type + 3] === 'Self' ? relativeCost(type).toFixed(2) : db.costDefaults[costdb].cost;
-    set[type + 5](f5);
-    set[type + 7](parms[type + 6] || f5);
+    const total = parms[type + 3] === 'Self' ? totalRelevantCost(type).toFixed(2) : db.costDefaults[costdb].cost;
 
-    if (!(+parms[type + 6])) {
-      set[type + 6](f5);
-    }
+    set[type + 'Estimated'](total);
+    set[type + 'Total'](total);
   } // updateCosts
 
   const testSeedbed = () => {
     if (parms.seedbed1 === 'No' || parms.seedbed2 === 'Yes') {
       set.seedbed4('');
-      set.seedbed6(0);
-      set.seedbed7(0);
+      set.seedbedTotal(0);
       set.screen('Planting');
       set.previousScreen('Planting');
     }
@@ -141,7 +140,7 @@ const App = () => {
 
       const data = db[type][value] || {};
       const powerUnit = data['Default Power Unit']; //.match(/\d+/)[0];
-      set[type + 6]('');  // clear override so it can be recalculated
+      set[type + 'Total'](0);  // clear override so it can be recalculated
       set[type + 'Power'](powerUnit);
       updateCosts(type);
     } catch(ee) {
@@ -149,18 +148,10 @@ const App = () => {
     }
   } // powerUnits
 
-  const costFilters = (parm) => {
-    // const type = parm.match(/[a-z]+/)
-    // const value = parms[parm];
-    // console.log(value);
-    // set[type + 6]('');
-    // set[parm](!value);
-  } // costFilters
-
   const change = (parm, value, target, index) => {
     if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage)$/.test(parm)) {
       const type = parm.match(/[a-z]+/)
-      set[type + 6]('');
+      set[type + 'Total'](0);
       set[parm](target.checked ? 'true' : 'false');
     } else if (parm === 'species') {
       set.rates(arr => {
@@ -186,13 +177,9 @@ const App = () => {
       seedbed2            : 'No',
       seedbed3            : 'Self',
       seedbed4            : '',  // 'Chisel Plow; 37 Ft'
-      seedbed5            : '',
-      seedbed6            : '',
       seedbed7            : '',
       planting3           : 'Self',
       planting4           : '',
-      planting5           : '',
-      planting6           : '',
       planting7           : '',
       USDARegion          : '',
       
@@ -205,6 +192,11 @@ const App = () => {
       seedbedInsurance    : 'true',
       seedbedStorage      : 'true',
       seedbedPower        : '',
+      seedbedAnnualUseAcres    : 0,
+      seedbedAnnualUseHours    : 0,
+      seedbedAcresHour         : 0,
+      seedbedEstimated    : 0,
+      seedbedTotal        : 0,
       
       plantingLabor       : 'true',
       plantingFuel        : 'true',
@@ -215,6 +207,11 @@ const App = () => {
       plantingInsurance   : 'true',
       plantingStorage     : 'true',
       plantingPower       : '',
+      plantingAnnualUseAcres   : 0,
+      plantingAnnualUseHours   : 0,
+      plantingAcresHour        : 0,
+      plantingEstimated   : 0,
+      plantingTotal       : 0,
       
       farm                : '',
       acres               : '',
@@ -229,34 +226,32 @@ const App = () => {
         species             : updateSpeciesTotal,
         rates               : updateSpeciesTotal,
         prices              : updateSpeciesTotal,
+
         seedbed1            : testSeedbed,
         seedbed2            : testSeedbed,
-        seedbed6            : updateCosts,
-        planting6           : updateCosts,
-        seedbedPower        : [powerUnits, costFilters, updateCosts],
-        plantingPower       : [powerUnits, costFilters, updateCosts],
+
         seedbed4            : powerUnits,
         planting4           : powerUnits,
+
+        seedbedLabor        : updateCosts,
+        seedbedFuel         : updateCosts,
+        seedbedDepreciation : updateCosts,
+        seedbedInterest     : updateCosts,
+        seedbedRepairs      : updateCosts,
+        seedbedTaxes        : updateCosts,
+        seedbedInsurance    : updateCosts,
+        seedbedStorage      : updateCosts,
+        seedbedPower        : updateCosts,
         
-        seedbedLabor        : costFilters,
-        seedbedFuel         : costFilters,
-        seedbedDepreciation : costFilters,
-        seedbedInterest     : costFilters,
-        seedbedRepairs      : costFilters,
-        seedbedTaxes        : costFilters,
-        seedbedInsurance    : costFilters,
-        seedbedStorage      : costFilters,
-        seedbedPower        : costFilters,
-        
-        plantingLabor       : costFilters,
-        plantingFuel        : costFilters,
-        plantingDepreciation: costFilters,
-        plantingInterest    : costFilters,
-        plantingRepairs     : costFilters,
-        plantingTaxes       : costFilters,
-        plantingInsurance   : costFilters,
-        plantingStorage     : costFilters,
-        plantingPower       : costFilters,
+        plantingLabor       : updateCosts,
+        plantingFuel        : updateCosts,
+        plantingDepreciation: updateCosts,
+        plantingInterest    : updateCosts,
+        plantingRepairs     : updateCosts,
+        plantingTaxes       : updateCosts,
+        plantingInsurance   : updateCosts,
+        plantingStorage     : updateCosts,
+        plantingPower       : updateCosts,
       }
     }
   );
@@ -287,9 +282,9 @@ const loadData = async(table) => {
   let rec = await response.json();
 
   const data = rec.records.map(r => r.fields);
-  const cols = Object.keys(data[0]);
 
   data.forEach(rec => {
+    const cols = Object.keys(rec);
     const obj = db[table][rec.key] = {};
     cols.forEach(col => {
       obj[alias(col)] = rec[col];

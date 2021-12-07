@@ -59,8 +59,44 @@ const Seedbed = ({db, parms, props, set}) => {
             />
 
             <Logic
-              id="seedbed6"
-              q={parms.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(parms.seedbed5)}/acre)` : `Estimated custom cost (${dollars(parms.seedbed5)}/acre)`}
+              id="seedbedPower"
+              q="What power will be used?"
+              a={['', ...Object.keys(db.power)]}
+              parms={parms}
+              props={props}
+              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+            />
+
+            <Logic
+              id="seedbedAnnualUseAcres"
+              q="Annual Use (acres)"
+              a={parms.seedbedAnnualUseAcres.toString()}
+              parms={parms}
+              props={props}
+              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+            />
+
+            <Logic
+              id="seedbedAnnualUseHours"
+              q="Annual Use (hours)"
+              a={parms.seedbedAnnualUseHours.toString()}
+              parms={parms}
+              props={props}
+              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+            />
+
+            <Logic
+              id="seedbedAcresHour"
+              q="Acres/hour"
+              a={parms.seedbedAcresHour.toString()}
+              parms={parms}
+              props={props}
+              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+            />
+
+            <Logic
+              id="seedbedTotal"
+              q={parms.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(parms.seedbedEstimated)}/acre)` : `Estimated custom cost (${dollars(parms.seedbedTotal)}/acre)`}
               a={'dollar'}
               parms={parms}
               cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No'}

@@ -36,6 +36,10 @@ const Logic = ({q, a, id, cond=true, props, parms}) => {
             /> 
           :
           
+          typeof a === 'string' ? 
+            a
+          :
+          
           isFinite(a) ? 
             '$' + (+a).toFixed(2)
           :

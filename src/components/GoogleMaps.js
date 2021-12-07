@@ -1,10 +1,11 @@
 import React from 'react';
 import {TextField, Autocomplete} from '@mui/material';
+import {Input} from './Inputs';
 import throttle from 'lodash/throttle';
 
 const autocompleteService = { current: null };
 
-const GoogleMaps = ({props, parms, set}) => {
+const GoogleMaps = ({props, parms, set, autoFocus=false}) => {
   const [location, setValue] = React.useState(parms.location, null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -55,54 +56,69 @@ const GoogleMaps = ({props, parms, set}) => {
   }, [location, inputValue, fetch]);
 
   return (
-    <Autocomplete
-      {...props('location')}
-      getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-      options={options}
-      autoComplete
-      includeInputInList
-      filterSelectedOptions
-      // getOptionSelected={(option, value) => option.id === value.id}  // avoids warning, per https://stackoverflow.com/a/65347275/3903374, but prevents re-entry of data
-      
-      onChange={(_, newValue) => {
-        setOptions(newValue ? [newValue, ...options] : options);
-        if (newValue) {
-          set.location(newValue.description);
-          setValue(newValue.description);
-          const geocoder = new window.google.maps.Geocoder();
+    <>
+      <Autocomplete
+        {...props('location')}
+        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+        options={options}
+        autoComplete
+        includeInputInList
+        filterSelectedOptions
+        autoFocus={autoFocus}  // not working
 
-          geocoder.geocode({
-            address: newValue.description,
-            region: 'en-US',
-          }, (results, status) => {
-            let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
-            if (state) {
-              state = state[0].long_name;
-              set.state(state);
-            } else {
-              set.state('');
-            }
-            
-            if (results && results[0]) {
-              set.lat(results[0].geometry.location.lat().toFixed(4));
-              set.lng(results[0].geometry.location.lng().toFixed(4));
-            }
-          });
-        }
-      }}
+        // getOptionSelected={(option, value) => option.id === value.id}  // avoids warning, per https://stackoverflow.com/a/65347275/3903374, but prevents re-entry of data
+        
+        onChange={(_, newValue) => {
+          setOptions(newValue ? [newValue, ...options] : options);
+          if (newValue) {
+            set.location(newValue.description);
+            setValue(newValue.description);
+            const geocoder = new window.google.maps.Geocoder();
 
-      onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue);
-      }}
+            geocoder.geocode({
+              address: newValue.description,
+              region: 'en-US',
+            }, (results, status) => {
+              let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
+              if (state) {
+                state = state[0].long_name;
+                set.state(state);
+              } else {
+                set.state('');
+              }
+              
+              if (results && results[0]) {
+                set.lat(results[0].geometry.location.lat().toFixed(4));
+                set.lng(results[0].geometry.location.lng().toFixed(4));
+              }
+            });
+          }
+        }}
 
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Find your Location"
-          variant="outlined" 
-        />
-      )}
-    />
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+
+        renderInput={(params) => (
+          <>
+            <TextField
+              {...params}
+              label="Find your Location"
+              variant="outlined" 
+            />
+          </>
+        )}
+      />
+      <small>
+        If you know your exact coordinates, you can enter them here:
+        &nbsp;
+        Latitude:&nbsp;
+        <Input {...props('lat')} inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}} />
+        &nbsp;&nbsp;&nbsp;
+        Longitude:&nbsp;
+        <Input {...props('lng')} inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}}/>
+      </small>
+    </>
   );
 }
 

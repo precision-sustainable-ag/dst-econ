@@ -1,8 +1,6 @@
-import {Autocomplete, Input} from './Inputs';
-
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
-const Activity = ({db, parms, props, type}) => {
+const Activity = ({db, parms, props, type, set}) => {
   let breakdown;
 
   if (type === 'species') {
@@ -50,14 +48,10 @@ const Activity = ({db, parms, props, type}) => {
 
     const powerUnit = parms[type + 'Power'] || data['Default Power Unit'];
     power = db.power[powerUnit] || {};
-    console.log(power);
-    const annualUseAcres = Math.round(data['Acres/year']);
-
-    const annualUseHours = power['Expected Use (Hr/yr)'];
 
     acresHour  = (+data['Acres/hour']).toFixed(1);
 
-    const totalImplementCost = (type) => (
+    const totalImplementCost = () => (
       implementCost('Labor',         'Labor (hr/acre)') +
       implementCost('Depreciation',  'Depreciation ($/acre)') + 
       implementCost('Interest',      'Interest ($/acre)') + 
@@ -67,7 +61,7 @@ const Activity = ({db, parms, props, type}) => {
       implementCost('Storage',       'Shed ($/acre)')
     ); // totalImplementCost
 
-    const totalPowerCost = (type) => (
+    const totalPowerCost = () => (
       powerCost('Fuel') +
       powerCost('Depreciation') + 
       powerCost('Interest') + 
@@ -76,17 +70,6 @@ const Activity = ({db, parms, props, type}) => {
       powerCost('Insurance') +
       powerCost('Storage')
     ); // totalPowerCost
-
-    const relativeCost = () => (
-      relevantCost('Labor',         'Labor (hr/acre)') +
-      relevantCost('Fuel') +
-      relevantCost('Depreciation',  'Depreciation ($/acre)') + 
-      relevantCost('Interest',      'Interest ($/acre)') + 
-      relevantCost('Repairs',       'Repair ($/acre)') + 
-      relevantCost('Taxes',         'Taxes ($/acre)') + 
-      relevantCost('Insurance',     'Insurance ($/acre)') + 
-      relevantCost('Storage',       'Shed ($/acre)')
-    ); // relativeCost
 
     const heading = {
       seedbed: 'Seedbed Preparation',
@@ -117,60 +100,6 @@ const Activity = ({db, parms, props, type}) => {
 
     breakdown = parms[type + 4] &&
       <div className={type}>
-        <table id="Activity">
-          <thead>
-            <tr>
-              <th rowSpan="2">Activity</th>
-              <th colSpan="2">{heading}</th>
-              <th className="hidden"></th>
-            </tr>
-            <tr>
-              <th className="hidden">d</th>
-              <th>Implement</th><th>Power</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Implement Used</td>
-              <td>
-                <Autocomplete
-                  {...props(type + '4')}
-                  options={Object.keys(db[type])}
-                />
-              </td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>Power Used</td>
-              <td></td>
-              <td style={{whiteSpace: 'nowrap'}}>
-                <Autocomplete
-                  {...props(type + 'Power')}
-                  options={Object.keys(db.power)}
-                />
-
-                {/* <Input {...props(type + 'Power')} style={{width: '100%'}}/> */}
-              </td>
-            </tr>
-
-            <tr>
-              <td>Annual Use (acres)</td>
-              <td>{annualUseAcres}</td><td></td>
-            </tr>
-
-            <tr>
-              <td>Annual Use (hours)</td>
-              <td></td><td>{annualUseHours}</td>
-            </tr>
-
-            <tr>
-              <td>Acres/hour</td>
-              <td></td><td>{acresHour}</td>
-            </tr>
-          </tbody>
-        </table>
-
         <table id="Costs">
           <thead>
             <tr>
@@ -197,12 +126,12 @@ const Activity = ({db, parms, props, type}) => {
             <Costs desc="Taxes"        lookup="Taxes ($/acre)"/>
             <Costs desc="Insurance"    lookup="Insurance ($/acre)"/>
             <Costs desc="Storage shed" lookup="Shed ($/acre)"/>
-            <tr>
+            <tr className="total">
               <td>Total</td>
               <td>{'$' + totalImplementCost(type).toFixed(2)}</td>
               <td>{'$' + totalPowerCost(type).toFixed(2)}</td>
               <td>{'$' + (totalImplementCost(type) + totalPowerCost(type)).toFixed(2)}</td>
-              <td>{'$' + relativeCost(type).toFixed(2)}</td>
+              <td>{'$' + (+parms[type + 'Estimated']).toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
@@ -213,7 +142,7 @@ const Activity = ({db, parms, props, type}) => {
     +parms[parm] ? <tr><td>{desc}</td><td>{dollars(parms[parm])}</td></tr> : null
   ) // SummaryRow
 
-  const total = +parms.coverCropTotal + +parms.seedbed7 + +parms.planting7;
+  const total = +parms.coverCropTotal + +parms.seedbedTotal + +parms.plantingTotal;
 
   const summary = (
     total > 0 &&
@@ -224,8 +153,8 @@ const Activity = ({db, parms, props, type}) => {
       </thead>
       <tbody>
         <SummaryRow parm="coverCropTotal" desc="Cover crop seed" />
-        <SummaryRow parm="seedbed7"       desc="Seedbed preparation" />
-        <SummaryRow parm="planting7"      desc="Planting activity" />
+        <SummaryRow parm="seedbedTotal"   desc="Seedbed preparation" />
+        <SummaryRow parm="plantingTotal"  desc="Planting activity" />
       </tbody>
       <tfoot>
         <tr><td>Total</td><td>{dollars(total)}</td></tr>

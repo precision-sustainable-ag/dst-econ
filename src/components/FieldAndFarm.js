@@ -41,7 +41,7 @@ const Map = ({set, parms, props}) => {
 
   return (
     <>
-      <GoogleMaps set={set} props={props} parms={parms} />
+      <GoogleMaps set={set} props={props} parms={parms} autoFocus />
       {
         parms.lat && parms.lng &&
         <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
@@ -98,6 +98,7 @@ const FieldAndFarm = ({props, set, parms}) => (
     </p>
     <p>
       If you are a registered user, this information will be saved to your account but not utilized for any other purpose.
+      <br/>
       If you are a guest user, the information will not be saved and cannot be accessed by you again if you close out of the DST.
     </p>
 
@@ -108,34 +109,35 @@ const FieldAndFarm = ({props, set, parms}) => (
     <table className="fullWidth">
       <tbody>
         <tr>
-          <td>What is the name of your Farm?</td>
-          <td><Input {...props('farm')} autoFocus={true} /></td>
           <td rowSpan="6">
-            Where is your Field located?
+            <strong>Where is your Field located?</strong>
             <p>
               Enter your address or zip code to determine your field's location.<br/>
               You can then zoom in and click to pinpoint it on the map.
             </p>
-            <Map set={set} parms={parms} props={props} />
-    
-            <div>
-              Latitude:&nbsp;
-              <Input {...props('lat')} inputProps={{ tabIndex: -1 }} />
-              &nbsp;&nbsp;&nbsp;
-              Longitude:&nbsp;
-              <Input {...props('lng')} inputProps={{ tabIndex: -1 }} />
-            </div>
+            <Map set={set} parms={parms} props={props} autofocus/>
+          </td>
+          <td>
+            <strong>What is the name of your Farm?</strong>
+            <br/>
+            <Input {...props('farm')} />
           </td>
         </tr>
 
         <tr>
-          <td>How many acres are in your Field?</td>
-          <td><Input {...props('acres')} type="number" /></td>
+          <td className="hidden" />
+          <td>
+            <strong>How many acres are in your Field?</strong>
+            <br/>
+            <Input {...props('acres')} type="number" />
+          </td>
         </tr>
 
         <tr>
-          <td>Which of the following options best describes your Field?</td>
+          <td className="hidden" />
           <td>
+            <strong>Which of the following options best describes your Field?</strong>
+            <br/>
             <Autocomplete
               {...props('description')}
               options={
@@ -151,8 +153,10 @@ const FieldAndFarm = ({props, set, parms}) => (
         </tr>
 
         <tr>
-          <td>What was the Prior Crop planted on this Field?</td>
+          <td className="hidden" />
           <td>
+            <strong>What was the Prior Crop planted on this Field?</strong>
+            <br/>
             <Autocomplete
               {...props('priorCrop')}
               options={
@@ -180,8 +184,10 @@ const FieldAndFarm = ({props, set, parms}) => (
         </tr>
 
         <tr>
-          <td>What is your intended Cash Crop for this Field?</td>
+          <td className="hidden" />
           <td>
+            <strong>What is your intended Cash Crop for this Field?</strong>
+            <br/>
             <Autocomplete
               {...props('cashCrop')} 
               options={
@@ -207,12 +213,15 @@ const FieldAndFarm = ({props, set, parms}) => (
         </tr>
         
         <tr>
-          <td>What is your Labor Value for Analysis? ($/hour)</td>
+          <td className="hidden" />
           <td>
+            <strong>What is your Labor Value for Analysis? ($/hour)</strong>
+            <br/>
             <Input 
               {...props('labor')}
               type="dollar"
-            /></td>
+            />
+          </td>
         </tr>
       </tbody>
     </table>

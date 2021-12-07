@@ -63,8 +63,9 @@ div.caption {
   text-align: center;
 }
 
-.th {
+.th, th {
   text-align: center;
+  background: #eee;
 }
 
 table {
@@ -79,12 +80,7 @@ td, th {
   border-bottom: 1px solid #bbb;
 }
 
-div.Planting th {  /* unused */
-  text-align: left;
-  background: #eee;
-}
-
-.seedbed7, .planting7, .Total {
+.Total {
   font-weight: bold;
 }
 
@@ -278,7 +274,7 @@ nav strong, [data-scr=Resources] {
 }
 
 .fieldAndFarm td {
-  height: 4em;
+  height: 5em;
 }
 
 .fieldAndFarm tr:last-child td {
@@ -286,11 +282,12 @@ nav strong, [data-scr=Resources] {
 }
 
 .fieldAndFarm td {
-  width: 25%;
+  width: 50%;
+  border-bottom: 1px solid #eee;
 }
 
-.fieldAndFarm td:nth-child(3) {
-  border-left: 2px solid black;
+.fieldAndFarm td:nth-child(1) {
+  border-right: 2px solid black;
   background: #f8f8f8;
   width: auto;
 }
@@ -312,4 +309,8 @@ table.planting td:nth-child(1) {
 table.seedbed td:nth-child(2),
 table.planting td:nth-child(2) {
   width: 30rem;
+}
+
+tr.seedbedTotal, tr.plantingTotal, .total {
+  background: yellow;
 }
