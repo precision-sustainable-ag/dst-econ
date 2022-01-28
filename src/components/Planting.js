@@ -34,7 +34,7 @@ const Planting = ({db, parms, props, set}) => {
             <Logic
               id="planting4"
               q="What type of seedbed preparation will be done?"
-              a={['', ...Object.keys(db.planting)]}
+              a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Planting').sort()]}
               parms={parms}
               props={props}
               cond={parms.planting3 === 'Self'}
@@ -51,7 +51,7 @@ const Planting = ({db, parms, props, set}) => {
 
             <Logic
               id="plantingAnnualUseAcres"
-              q="Annual Use (acres)"
+              q="Annual Use (acres on implement)"
               a={parms.plantingAnnualUseAcres.toString()}
               parms={parms}
               props={props}
@@ -60,7 +60,7 @@ const Planting = ({db, parms, props, set}) => {
 
             <Logic
               id="plantingAnnualUseHours"
-              q="Annual Use (hours)"
+              q="Annual Use (hours on power)"
               a={parms.plantingAnnualUseHours.toString()}
               parms={parms}
               props={props}

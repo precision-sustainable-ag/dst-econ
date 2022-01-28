@@ -1,93 +1,6 @@
-import GoogleMaps from './GoogleMaps';
-import GoogleMapReact from 'google-map-react';
+import Map from './GoogleMaps';
 import {Navigation} from './Navigation';
 import {Autocomplete, Input} from './Inputs';
-
-const Map = ({set, parms, props}) => {
-  const mapChange = (e) => {
-    set.lat(+e.lat.toFixed(4));
-    set.lng(+e.lng.toFixed(4));
-
-    const latlng = {
-      lat: e.lat,
-      lng: e.lng,
-    };
-
-    Geocoder
-      .geocode({ location: latlng })
-      .then(response => {
-        const results = response.results;
-        const location = results[0].formatted_address;
-        set.location(location);
-
-        let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
-        if (state) {
-          state = state[0].long_name;
-          set.state(state);
-        } else {
-          set.state('');
-        }
-      })
-      .catch((e) => window.alert('Geocoder failed due to: ' + e));
-  } // mapChange
-
-  const Marker = () => (
-    <img alt="marker" className="marker" src="marker.png" style={{height: '40px'}} />
-  )
-
-  const initGeocoder = ({ maps }) => {
-    Geocoder = new maps.Geocoder();
-  };
-
-  return (
-    <>
-      <GoogleMaps set={set} props={props} parms={parms} autoFocus />
-      {
-        parms.lat && parms.lng &&
-        <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
-            center={{lat: +parms.lat, lng: +parms.lng}}
-            zoom={parms.mapZoom}
-
-            onGoogleApiLoaded={initGeocoder}
-            
-            yesIWantToUseGoogleMapApiInternals
-            onClick={mapChange}
-            onZoomAnimationEnd={set.mapZoom}
-            onMapTypeIdChange={set.mapType}
-
-            onLoad={
-              // prevent tabbing through map
-              // got to be a better way than setting a timeout
-              setTimeout(() => {
-                document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex', -1));
-              }, 1000)
-            }
-
-            options={(map) => ({
-              mapTypeId: parms.mapType,
-              fullscreenControl: false,
-              scaleControl: true,
-              mapTypeControl: true,
-              mapTypeControlOptions: {
-                style: map.MapTypeControlStyle.HORIZONTAL_BAR,
-                mapTypeIds: [
-                  'roadmap',
-                  'satellite',
-                  'hybrid',
-                  'terrain'
-                ]
-              },
-            })}
-          >
-            <Marker lat={+parms.lat} lng={+parms.lng} />
-          </GoogleMapReact>
-        </div>
-      }
-    </>
-  );
-} // Map
 
 const FieldAndFarm = ({props, set, parms}) => (
   <div className="fieldAndFarm">
@@ -231,7 +144,5 @@ const FieldAndFarm = ({props, set, parms}) => (
 ) // FieldAndFarm
 
 FieldAndFarm.menu = 'Field and Farm';
-
-let Geocoder;
 
 export default FieldAndFarm;

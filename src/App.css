@@ -88,6 +88,13 @@ label {
   cursor: pointer;
 }
 
+#Breakdown.noImplementCost tr > :nth-child(2),
+#Breakdown.noPowerCost tr > :nth-child(3),
+#Breakdown.noImplementCost.noPowerCost tr > :nth-child(4) {
+  background: #ddd;
+  color: #888;
+}
+
 #Activity td:nth-child(n + 2) {
   width: 15em !important;
   text-align: left !important;

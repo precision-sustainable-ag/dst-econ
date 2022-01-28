@@ -11,6 +11,10 @@ const Activity = ({db, parms, props, type, set}) => {
     let acresHour;
   
     const implementCost = (desc, lookup) => {
+      if (parms[type + 'ImplementCost'] === 'false') {
+        return 0;
+      }
+
       let result;
       
       if (data[lookup]) {
@@ -27,6 +31,10 @@ const Activity = ({db, parms, props, type, set}) => {
     } // implementCost
   
     const powerCost = (desc) => {
+      if (parms[type + 'PowerCost'] === 'false') {
+        return 0;
+      }
+
       let result;
   
       result = desc === 'Labor' ? 0 :
@@ -44,12 +52,12 @@ const Activity = ({db, parms, props, type, set}) => {
       return parms[type + desc] === 'true' ? totalCost(desc, lookup) : 0;
     } // relevantCost
   
-    data = db[type][parms[type + 4]] || {};
+    data = db.implements[parms[type + 4]] || {};
 
-    const powerUnit = parms[type + 'Power'] || data['Default Power Unit'];
+    const powerUnit = parms[type + 'Power'] || data['default power unit'];
     power = db.power[powerUnit] || {};
 
-    acresHour  = (+data['Acres/hour']).toFixed(1);
+    acresHour  = (+data['acres/hour']).toFixed(1);
 
     const totalImplementCost = () => (
       implementCost('Labor',         'Labor (hr/acre)') +
@@ -98,8 +106,19 @@ const Activity = ({db, parms, props, type, set}) => {
       )
     } // Costs
 
-    breakdown = parms[type + 4] &&
-      <div className={type}>
+    let cname = type;
+    if (parms[`${type}ImplementCost`] === 'false') {
+      cname += ' noImplementCost';
+    }
+
+    if (parms[`${type}PowerCost`] === 'false') {
+      cname += ' noPowerCost';
+    }
+
+    breakdown = parms[type + 3] !== 'Custom Operator' &&
+                parms[type + 4] &&
+                parms[type + 'Estimated'] === parms[type + 'Total'] &&
+      <div className={cname} id="Breakdown">
         <table id="Costs">
           <thead>
             <tr>
@@ -111,8 +130,20 @@ const Activity = ({db, parms, props, type, set}) => {
             </tr>
             <tr>
               <th className="hidden"></th>
-              <th>Implement Cost<br/>($/acre)</th>
-              <th>Power Cost<br/>($/acre)</th>
+              <th>
+                <label>
+                  Implement Cost<br/>($/acre)
+                  <br/>
+                  <input {...props(`${type}ImplementCost`)} type="checkbox"/>
+                </label>
+              </th>
+              <th>
+                <label>
+                  Power Cost<br/>($/acre)
+                  <br/>
+                  <input {...props(`${type}PowerCost`)} type="checkbox"/>
+                </label>
+              </th>
               <th>Actual Cost<br/>($/acre)</th>
               <th>Relevant cost<br/>($/acre)</th>
             </tr>

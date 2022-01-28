@@ -111,7 +111,7 @@ const Species = ({set, db, parms, props}) => {
           </thead>
           <tbody>
             {
-              parms.species.map((s, n) => 
+              [].concat(parms.species).map((s, n) => 
                 s &&
                 <SpeciesRow key={s} n={n} parms={parms} props={props} />
               )

@@ -102,11 +102,14 @@ const Input = (props) => {
 
 const Autocomplete = (props) => {
   let value = props.value;
-  if (Array.isArray(props.value)) {
+  if (Array.isArray(props.value) && isFinite(props.index)) {
     value = props.value[props.index];
   }
-  value = props.options.find(option => option === value || (option.value && option.value === value) || (option.label && option.label === value));
-  value = value ? value.label || value : null;
+
+  if (!props.multiple) {
+    value = props.options.find(option => option === value || (option.value && option.value === value) || (option.label && option.label === value));
+    value = value ? value.label || value : null;
+  }
 
   const max = Math.max.apply(Math, props.options.map(option => option.length));
 

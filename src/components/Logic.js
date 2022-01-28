@@ -1,6 +1,6 @@
 import {Autocomplete, Input} from './Inputs';
 
-const Logic = ({q, a, id, cond=true, props, parms}) => {
+const Logic = ({q, a, id, cond=true, props, parms, suffix=''}) => {
   return (
     cond && 
     <tr className={id}>
@@ -46,6 +46,7 @@ const Logic = ({q, a, id, cond=true, props, parms}) => {
           
           ''
         }
+        {' ' + suffix}
       </td>
     </tr>
   )
