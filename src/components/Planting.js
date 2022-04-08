@@ -1,10 +1,14 @@
-import Activity from './Activity';
+import Activity from './NewActivity';
 import {Navigation} from './Navigation';
-import Logic from './Logic';
+import Logic from './NewLogic';
+import {Context, db} from './Store';
+import {useContext} from 'react';
 
-const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
+const Planting = ({props, set}) => {
+  const {state, change, match, data, powerUnit, power, dollars} = useContext(Context);
 
-const Planting = ({db, parms, props, set}) => {
+  change('change', 'current', 'planting');
+
   return (
     <>
       <div className="Planting">
@@ -27,68 +31,71 @@ const Planting = ({db, parms, props, set}) => {
               id="planting3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
-              parms={parms}
-              props={props}
+              initial="Self"
             />
 
             <Logic
               id="planting4"
               q="What type of seedbed preparation will be done?"
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Planting').sort()]}
-              parms={parms}
-              props={props}
-              cond={parms.planting3 === 'Self'}
+              cond={match('planting3', 'Self')}
+              onInput={() => {
+                change('change', 'plantingPower', '');
+                change('change', 'plantingTotal', '');
+                change('change', 'plantingEdited', false);
+              }}
             />
 
             <Logic
               id="plantingPower"
               q="What power will be used?"
               a={['', ...Object.keys(db.power)]}
-              parms={parms}
-              props={props}
-              cond={parms.planting4 && parms.planting3 === 'Self'}
+              cond={state.planting4}
+              value={powerUnit}
+              onInput={() => {
+                change('change', 'plantingTotal', '');
+                change('change', 'plantingEdited', false);
+              }}
             />
 
             <Logic
               id="plantingAnnualUseAcres"
               q="Annual Use (acres on implement)"
-              a={parms.plantingAnnualUseAcres.toString()}
-              parms={parms}
-              props={props}
-              cond={parms.planting4 && parms.planting3 === 'Self'}
+              a={state.plantingAnnualUseAcres}
+              cond={state.planting4}
+              value={data('acres/year', 0)}
             />
 
             <Logic
               id="plantingAnnualUseHours"
               q="Annual Use (hours on power)"
-              a={parms.plantingAnnualUseHours.toString()}
-              parms={parms}
-              props={props}
-              cond={parms.planting4 && parms.planting3 === 'Self'}
+              a={state.plantingAnnualUseHours}
+              cond={state.planting4}
+              value={power('expected use (hr/yr)')}
             />
 
             <Logic
               id="plantingAcresHour"
               q="Acres/hour"
-              a={parms.plantingAcresHour.toString()}
-              parms={parms}
-              props={props}
-              cond={parms.planting4 && parms.planting3 === 'Self'}
+              a={data('acres/hour', 1)}
+              cond={state.planting4}
             />
 
             <Logic
               id="plantingTotal"
-              q={parms.planting3 === 'Self' ? `Estimated relevant cost (${dollars(parms.plantingEstimated)}/acre)` : `Estimated custom cost (${dollars(parms.plantingTotal)}/acre)`}
+              q={state.planting3 === 'Self' ? `Estimated relevant cost (${dollars(state.plantingEstimated)}/acre)` : `Estimated custom cost (${dollars(state.plantingTotal)}/acre)`}
               a={'dollar'}
-              parms={parms}
-              props={props}
+              onInput={() => {
+                change('change', 'plantingEdited', true);
+              }}
             />
           </tbody>
         </table>
       </div>
+
       <Navigation set={set} current={Planting} />
 
-      <Activity db={db} parms={parms} props={props} set={set} type="planting" />
+      <Activity props={props} type="planting" />
     </>
   )
 } // Planting

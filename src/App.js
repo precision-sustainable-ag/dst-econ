@@ -33,6 +33,7 @@ import React from 'react';
 import './App.css';
 import {Screens} from './components/Navigation';
 import {defaults} from './defaults';
+import Store, {db} from './components/Store';
 
 const App = () => {
   const updateSpeciesTotal = () => {
@@ -48,19 +49,17 @@ const App = () => {
   const updateCosts = (otype) => {
     const type = otype.match(/[a-z]+/g)[0];
 
-    let data;
-    let power;
     let acresHour;
 
-    const implementCost = (desc, lookup) => {
+    const implementCost = (desc) => {
       if (parms[type + 'ImplementCost'] === 'false') {
         return 0;
       }
 
       let result;
 
-      if (data[lookup]) {
-        result = +data[lookup];
+      if (data[desc]) {
+        result = +data[desc];
       } else {
         result = 0;
       }
@@ -80,21 +79,22 @@ const App = () => {
       let result;
   
       result = desc === 'Labor' ? 0 :
-               desc === 'Fuel'  ? (power['Fuel (gal/hour)'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
-                                  power[desc + ' ($/hour)'] / acresHour;
+               desc === 'Fuel'  ? (power['Fuel'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
+                                  power[desc] / acresHour;
   
       return result;
     } // powerCost
   
-    const totalCost = (desc, lookup) => {
-      return (implementCost(desc, lookup) || 0) + (powerCost(desc, lookup) || 0);
+    const totalCost = (desc) => {
+      return (implementCost(desc) || 0) + (powerCost(desc) || 0);
     } // totalCost
   
-    const relevantCost = (desc, lookup) => {
-      return parms[type + desc] === 'true' ? totalCost(desc, lookup) : 0;
+    const relevantCost = (desc) => {
+      return parms[type + desc] === 'true' ? totalCost(desc) : 0;
     } // relevantCost
 
-    data = db.implements[parms[type + 4]];
+    const ds = /Chemical/.test(otype) ? otype.match(/[A-Z][a-z]+/)[0] : 4;
+    const data = db.implements[parms[type + ds]];
 
     if (!data) {
       return;
@@ -102,23 +102,23 @@ const App = () => {
 
     const powerUnit = parms[type + 'Power'] || data['default power unit'];
 
-    power = db.power[powerUnit] || {};
+    const power = db.power[powerUnit] || {};
 
     set[type + 'AnnualUseAcres'](Math.round(data['acres/year']));
-    set[type + 'AnnualUseHours'](power['Expected Use (Hr/yr)']);
+    set[type + 'AnnualUseHours'](power['expected use (hr/yr)']);
 
     acresHour  = (+data['acres/hour']).toFixed(1);
     set[type + 'AcresHour'](acresHour);
 
     const totalRelevantCost = () => (
-      relevantCost('Labor',         'Labor (hr/acre)') +
+      relevantCost('Labor') +
       relevantCost('Fuel') +
-      relevantCost('Depreciation',  'Depreciation ($/acre)') + 
-      relevantCost('Interest',      'Interest ($/acre)') + 
-      relevantCost('Repairs',       'Repair ($/acre)') + 
-      relevantCost('Taxes',         'Taxes ($/acre)') + 
-      relevantCost('Insurance',     'Insurance ($/acre)') + 
-      relevantCost('Storage',       'Shed ($/acre)')
+      relevantCost('Depreciation') +
+      relevantCost('Interest') + 
+      relevantCost('Repairs') + 
+      relevantCost('Taxes') + 
+      relevantCost('Insurance') + 
+      relevantCost('Storage')
     ); // totalRelevantCost
 
     const costdb = {
@@ -128,8 +128,32 @@ const App = () => {
 
     const total = parms[type + 3] === 'Self' ? totalRelevantCost(type).toFixed(2) : db.costDefaults[costdb].cost;
 
+    console.log(implementCost('Depreciation'), powerCost('Depreciation'), parms[type + 'Power'], type + 'Power');
+
     set[type + 'Estimated'](total);
     set[type + 'Total'](total);
+
+    if (type === 'termination') {
+      const terminationUnitCost = dbvalue('herbicides', parms.terminationProduct, 'Cost ($)'); // done
+      const terminationRate     = dbvalue('herbicides', parms.terminationProduct, 'Rate');     // done
+
+      switch (otype) {
+        case 'terminationProduct' :
+          set.terminationUnitCost(terminationUnitCost);
+          set.terminationUnit    (dbvalue('herbicides', parms.terminationProduct, 'Unit (cost)'));
+          set.terminationRate    (terminationRate);
+          set.terminationRateUnit(dbvalue('herbicides', parms.terminationProduct, 'Unit (rate)'));
+          break;
+        case 'terminationUnitCost' :
+        case 'terminationRate' :
+          set.terminationProductCost((terminationUnitCost * terminationRate).toFixed(2));
+          break;
+        case 'terminationRoller' :
+          set.terminationRollerCost(total);
+          break;
+        default: ;
+      }
+    }
   } // updateCosts
 
   const testSeedbed = () => {
@@ -141,45 +165,16 @@ const App = () => {
     }
   } // testSeedbed
 
-  const powerUnits = (parm) => {
-    try {
-      const type = parm.replace('4', '');
-      const value = parms[parm];
-
-      const data = db.implements[value] || {};
-
-      const powerUnit = data['default power unit']; //.match(/\d+/)[0];
-      set[type + 'Total'](0);  // clear override so it can be recalculated
-      set[type + 'Power'](powerUnit);
-      updateCosts(type);
-    } catch(ee) {
-      console.log(parm, ee.message);
+  const testTermination = () => {
+    if (parms.termination2 === 'Yes') {
+      set.screen('Tillage');
+      set.previousScreen('Tillage');
     }
-  } // powerUnits
+  } // testTermination
 
   const dbvalue = (table, key, parm) => {
     return db[table][key] ? db[table][key][parm] : '';
   } // dbvalue
-
-  const updateTermination = (otype) => {
-    switch (otype) {
-      case 'terminationMethod' :
-        break;
-      case 'terminationProduct' :
-        set.terminationUnitCost(dbvalue('herbicides', parms.terminationProduct, 'Cost ($)'));
-        set.terminationUnit    (dbvalue('herbicides', parms.terminationProduct, 'Unit (cost)'));
-        set.terminationRate    (dbvalue('herbicides', parms.terminationProduct, 'Rate'));
-        set.terminationRateUnit(dbvalue('herbicides', parms.terminationProduct, 'Unit (rate)'));
-        break;
-      case 'terminationUnitCost' :
-        set.terminationProductCost((parms.terminationUnitCost * parms.terminationRate).toFixed(2));
-        break;
-      case 'terminationRate' :
-        set.terminationProductCost((parms.terminationUnitCost * parms.terminationRate).toFixed(2));
-        break;
-      default: ;
-    }
-  } // updateTermination
 
   const change = (parm, value, target, index) => {
     if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage|ImplementCost|PowerCost)$/.test(parm)) {
@@ -207,34 +202,44 @@ const App = () => {
   let {parms, set, props} = defaults(
     change,
     {
-      species             : [],
-      rates               : [],
-      prices              : [],
-      coverCropTotal      : 0,
-      USDARegion          : '',
+      species                 : [],
+      rates                   : [],
+      prices                  : [],
+      coverCropTotal          : 0,
+      USDARegion              : '',
       
-      seedbed1            : '', // 'Yes',
-      seedbed2            : 'No',
-      seedbed3            : 'Self',
-      seedbed4            : '',  // 'Chisel Plow; 37 Ft'
-      seedbed7            : '',
+      seedbed1                : '', // 'Yes',
+      seedbed2                : 'No',
+      seedbed3                : 'Self',
+      seedbed4                : '',  // 'Chisel Plow; 37 Ft'
+      seedbed7                : '',
       
-      planting3           : 'Self',
-      planting4           : '',
-      planting7           : '',
+      planting3               : 'Self',
+      planting4               : '',
+      planting7               : '',
 
-      termination2        : 'No', // 'No',
-      termination3        : 'Self', // 'Self'
-      terminationMethod   : 'Herbicide application', // 'Herbicide application'
-      terminationProduct  : 'liberty', // 'liberty'
-      terminationUnitCost : '',
-      terminationUnit     : '',
-      terminationRate     : '',
-      terminationRateUnit : '',
-      terminationProductCost : '',
-      terminationCustomCost  : '',
-      terminationChemicalEquipment : '',
-      
+      termination2            : 'No', // 'No',
+      termination3            : 'Self', // 'Self'
+      terminationMethod       : '', // 'Herbicide application'
+      terminationProduct      : '', // 'liberty'
+      terminationUnitCost     : '',
+      terminationUnit         : '',
+      terminationRate         : '',
+      terminationRateUnit     : '',
+      terminationProductCost  : '',
+      terminationCustomCost   : '',
+      terminationChemical     : '',
+      terminationChemicalCost : '',
+      terminationRoller       : '',
+      terminationRollerCost   : '',
+      terminationTillage      : '',
+      terminationTillageCost  : '',
+      terminationTillagePower : '',
+      terminationTillageAnnualUseAcres : '',
+      terminationTillageAnnualUseHours : '',
+      terminationTillageAcresHour : '',
+      terminationTillageTotal : '',
+
       seedbedLabor            : 'true',
       seedbedFuel             : 'true',
       seedbedDepreciation     : 'true',
@@ -268,16 +273,34 @@ const App = () => {
       plantingAcresHour       : 0,
       plantingEstimated       : 0,
       plantingTotal           : 0,
+
+      terminationLabor           : 'true',
+      terminationFuel            : 'true',
+      terminationDepreciation    : 'true',
+      terminationInterest        : 'true',
+      terminationRepairs         : 'true',
+      terminationTaxes           : 'true',
+      terminationInsurance       : 'true',
+      terminationStorage         : 'true',
+      terminationImplementCost   : 'true',
+      terminationPowerCost       : 'true',
+      terminationPower           : '',
+      terminationAnnualUseAcres  : 0,
+      terminationAnnualUseHours  : 0,
+      terminationAcresHour       : 0,
+      terminationEstimated       : 0,
+      terminationTotal           : 0,
+      terminationTillage4        : 0,
       
-      farm                : '',
-      acres               : '',
-      description         : '',
-      priorCrop           : '',
-      otherPriorCrop      : '',
-      cashCrop            : '',
-      otherCashCrop       : '',
-      labor               : '',
-      previousScreen      : 'Home',
+      farm                       : '',
+      acres                      : '',
+      description                : '',
+      priorCrop                  : '',
+      otherPriorCrop             : '',
+      cashCrop                   : '',
+      otherCashCrop              : '',
+      labor                      : '',
+      previousScreen             : 'Home',
       effects: {
         species                 : updateSpeciesTotal,
         rates                   : updateSpeciesTotal,
@@ -286,8 +309,8 @@ const App = () => {
         seedbed1                : testSeedbed,
         seedbed2                : testSeedbed,
 
-        seedbed4                : powerUnits,
-        planting4               : powerUnits,
+        seedbed4                : updateCosts,
+        planting4               : updateCosts,
 
         seedbedLabor            : updateCosts,
         seedbedFuel             : updateCosts,
@@ -313,92 +336,37 @@ const App = () => {
         plantingImplementCost   : updateCosts,
         plantingPowerCost       : updateCosts,
 
-        terminationMethod       : updateTermination,
-        terminationProduct      : updateTermination,
-        terminationUnitCost     : updateTermination,
-        terminationRate         : updateTermination,
+        termination2            : testTermination,
+        terminationLabor        : updateCosts,
+        terminationFuel         : updateCosts,
+        terminationDepreciation : updateCosts,
+        terminationInterest     : updateCosts,
+        terminationRepairs      : updateCosts,
+        terminationTaxes        : updateCosts,
+        terminationInsurance    : updateCosts,
+        terminationStorage      : updateCosts,
+        terminationPower        : updateCosts,
+        terminationImplementCost: updateCosts,
+        terminationPowerCost    : updateCosts,
+
+        terminationMethod       : updateCosts,
+        terminationProduct      : updateCosts,
+        terminationUnitCost     : updateCosts,
+        terminationRate         : updateCosts,
+        terminationRoller       : updateCosts,
+        terminationTillage4     : updateCosts,
+
       }
     }
   );
 
   return (
-    <Screens set={set} db={db} parms={parms} props={props} />
+    <Store>
+      <Screens set={set} db={db} parms={parms} props={props} />
+    </Store>
   );
 } // App
 
 document.title = 'Econ DST';
-
-// const holdError = console.error;
-// console.error = (msg, ...subst) => {
-//   if (!/You provided a/.test(msg)) {
-//     holdError(msg, ...subst)
-//   }
-// }
-
-const loadData = async(table) => {
-  const alias = (col) => {
-    // 'Typical Seeding Rate (lb/ac) [seedingRate]' becomes 'seedingRate'
-    return col.includes('[') ? col.split(/[[\]]/)[1] : col;
-  }
-
-  db[table] = {};
-
-  let response = await fetch(`https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2`);
-  let rec = await response.json();
-
-  const data = rec.records.map(r => r.fields);
-
-  data.forEach(rec => {
-    const cols = Object.keys(rec);
-    const obj = db[table][rec.key] = {};
-    cols.forEach(col => {
-      obj[alias(col)] = rec[col];
-    });
-  });
-
-  if (table === 'implements') {
-    Object.keys(db.implements).forEach(key => {
-      const c = db.implements[key];
-      c.RF1 = db.coefficients[c['defaulty ASABE category']].RF1;
-      c.RF2 = db.coefficients[c['defaulty ASABE category']].RF2;
-      c.RV1 = db.coefficients[c['defaulty ASABE category']].RV1;
-      c.RV2 = db.coefficients[c['defaulty ASABE category']].RV2;
-      c.RV3 = db.coefficients[c['defaulty ASABE category']].RV3;
-      c.RV4 = db.coefficients[c['defaulty ASABE category']].RV4;
-      c.RV5 = db.coefficients[c['defaulty ASABE category']].RV5;
-
-      c['tradein%'] = (c.RV1 - c.RV2 * c['expected life (years)'] ** 0.5 - c.RV3 * c['expected use (hr/yr)'] ** 0.5 + c.RV4 * db.rates.projected.value) ** 2 + 0.25 * c.RV5;
-      c['listprice'] = c['purchase price 2020'] / (1 - c['list discount']);
-      c['tradein$'] = c['tradein%'] * c['listprice'];
-      c['annualdepreciation'] = (c['purchase price 2020'] - c['tradein$']) / c['expected life (years)'];
-      c['accumulatedrepairs'] = c['listprice'] * (c.RF1 * (c['expected life (years)'] * c['expected use (hr/yr)'] / 1000) ** c.RF2);
-      c['annualrepairs'] = c['accumulatedrepairs'] / c['expected life (years)'];
-      c['acres/hour'] = c.size1 * c['field speed (m/h)'] * c['field efficiency'] / db.rates.conversion.value;
-      c['acres/year'] = c['acres/hour'] * c['expected use (hr/yr)'];
-      c['depreciation'] = c['annualdepreciation'] / c['acres/year'];
-      c['interest'] = (c['purchase price 2020'] + c['tradein$'] + c['annualdepreciation']) / 2 * db.rates.interest.value / c['acres/year'];
-      c['repair'] = c['annualrepairs'] / c['acres/year'];
-      c['taxes'] = (c['purchase price 2020'] + c['tradein$'] + c['annualdepreciation']) / 2 * db.rates.property.value / c['acres/year'];
-      c['insurance'] = (c['purchase price 2020'] + c['tradein$'] + c['annualdepreciation']) / 2 * db.rates.insurance.value / c['acres/year'];
-      c['labor'] = (c['tractor (hr/impl)'] * c['labor (hr/trac)']) / c['acres/hour'];
-      c['shed$'] = db.rates.storage.value * c['shed (ft^2)'] / c['acres/year'];
-      // console.log(key);
-      // console.log(c);
-    });
-
-    console.log(db.implements);
-  }
-} // loadData
-
-const db = {};
-
-loadData('coefficients');
-loadData('power');
-loadData('seedList');
-loadData('costDefaults');
-loadData('rates');
-loadData('stateRegions');
-loadData('herbicides');
-loadData('implements');
 
 export default App;

@@ -41,6 +41,8 @@ const defaults = (change, p) => {
     checked: parms[parm] === 'true',                  // handle checkboxes
     set: set,                                         // the parameter's useState function
     onChange: ({target}, value=target.value, index) => {
+      console.log(parm, value);
+
       if (value !== null) {
         value = value.value || value.label || value;  // Autocomplete
       }
@@ -51,10 +53,11 @@ const defaults = (change, p) => {
           return [...arr];
         });
       } else {
+        if (!set[parm]) {
+          alert(parm);
+        }
         set[parm](value);
       }
-
-      console.log(parm, value);
 
       try {
         change(parm, value, target, index);

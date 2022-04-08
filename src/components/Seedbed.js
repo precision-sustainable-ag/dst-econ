@@ -1,10 +1,14 @@
-import Activity from './Activity';
+import Activity from './NewActivity';
 import {Navigation} from './Navigation';
-import Logic from './Logic';
+import Logic from './NewLogic';
+import {Context, db} from './Store';
+import {useContext} from 'react';
 
-const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
+const Seedbed = ({props, set}) => {
+  const {state, change, match, data, powerUnit, power, dollars} = useContext(Context);
 
-const Seedbed = ({db, parms, props, set}) => {
+  change('change', 'current', 'seedbed');
+
   return (
     <>
       <div>
@@ -27,87 +31,98 @@ const Seedbed = ({db, parms, props, set}) => {
               id="seedbed1"
               q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
               a={['Yes', 'No']}
-              parms={parms}
-              props={props}
+              onInput={(e) => {
+                if (e.target.value === 'No') {
+                  set.screen('Planting');
+                  set.previousScreen('Planting');
+                }
+              }}
             />
 
             <Logic
               id="seedbed2"
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
-              parms={parms}
-              cond={parms.seedbed1 === 'Yes'}
-              props={props}
+              cond={match('seedbed1', 'Yes')}
+              initial="No"
+              onInput={(e) => {
+                if (e.target.value === 'Yes') {
+                  set.screen('Planting');
+                  set.previousScreen('Planting');
+                }
+              }}
             />
 
             <Logic
               id="seedbed3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
-              parms={parms}
-              cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No'}
-              props={props}
+              cond={match('seedbed2', 'No')}
+              initial="Self"
             />
 
             <Logic
               id="seedbed4"
               q="What type of seedbed preparation will be done?"
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
-              parms={parms}
-              cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No' && parms.seedbed3 === 'Self'}
-              props={props}
+              cond={match('seedbed3', 'Self')}
+              onInput={() => {
+                change('change', 'seedbedPower', '');
+                change('change', 'seedbedTotal', '');
+                change('change', 'seedbedEdited', false);
+              }}
             />
 
             <Logic
               id="seedbedPower"
               q="What power will be used?"
               a={['', ...Object.keys(db.power)]}
-              parms={parms}
-              props={props}
-              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+              cond={state.seedbed4}
+              value={powerUnit}
+              onInput={() => {
+                change('change', 'seedbedTotal', '');
+                change('change', 'seedbedEdited', false);
+              }}
             />
 
             <Logic
               id="seedbedAnnualUseAcres"
               q="Annual Use (acres on implement)"
-              a={parms.seedbedAnnualUseAcres.toString()}
-              parms={parms}
-              props={props}
-              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+              a={state.seedbedAnnualUseAcres}
+              cond={state.seedbed4}
+              value={data('acres/year', 0)}
             />
 
             <Logic
               id="seedbedAnnualUseHours"
               q="Annual Use (hours on power)"
-              a={parms.seedbedAnnualUseHours.toString()}
-              parms={parms}
-              props={props}
-              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+              a={state.seedbedAnnualUseHours}
+              cond={state.seedbed4}
+              value={power('expected use (hr/yr)')}              
             />
 
             <Logic
               id="seedbedAcresHour"
               q="Acres/hour"
-              a={parms.seedbedAcresHour.toString()}
-              parms={parms}
-              props={props}
-              cond={parms.seedbed4 && parms.seedbed3 === 'Self'}
+              a={data('acres/hour', 1)}
+              cond={state.seedbed4}
             />
 
             <Logic
               id="seedbedTotal"
-              q={parms.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(parms.seedbedEstimated)}/acre)` : `Estimated custom cost (${dollars(parms.seedbedTotal)}/acre)`}
+              q={state.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(state.seedbedEstimated)}/acre)` : `Estimated custom cost (${dollars(state.seedbedTotal)}/acre)`}
               a={'dollar'}
-              parms={parms}
-              cond={parms.seedbed1 === 'Yes' && parms.seedbed2 === 'No'}
-              props={props}
+              onInput={() => {
+                change('change', 'seedbedEdited', true);
+              }}
             />
           </tbody>
         </table>
       </div>
+      
       <Navigation set={set} current={Seedbed} />
 
-      <Activity db={db} parms={parms} props={props} set={set} type="seedbed" />
+      <Activity props={props} type="seedbed" />
     </>
   )
 } // Seedbed
