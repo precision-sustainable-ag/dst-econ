@@ -1,8 +1,22 @@
 import {Autocomplete, Input} from './Inputs';
+import {useContext} from 'react';
+import {Context} from './Store';
 
-const Logic = ({q, a, id, cond=true, props, parms, suffix=''}) => {
+const Logic = ({q, a, id, cond=true, suffix='', initial='', onInput, value}) => {
+  const {state, change} = useContext(Context);
+
+  change('addkey', id, initial);
+  
+  change('change', 'shown' + id, cond);
+  
+  if (!cond) {
+    change('change', id, initial);
+  } else if (value !== undefined) {
+    change('change', id, value);
+  }
+
   return (
-    cond && 
+    cond &&
     <tr className={id}>
       <td>{q}</td>
       <td>
@@ -13,9 +27,11 @@ const Logic = ({q, a, id, cond=true, props, parms, suffix=''}) => {
               {
                 a.map(a => (
                   <label key={a}>
-                    <input
-                      {...props(id)}
-                      key={a} type="radio" name={id} value={a} checked={a === parms[id]}
+                    <Input
+                      onInput={onInput}
+                      type="radio"
+                      id={id}
+                      value={a}
                     />{a}
                     <br/>
                   </label>
@@ -24,16 +40,19 @@ const Logic = ({q, a, id, cond=true, props, parms, suffix=''}) => {
             </>
             :
             <Autocomplete
-              {...props(id)}
+              onInput={onInput}
               options={a}
+              id={id}
+              value={state[id] || initial}
             />
           :
           
           /number|dollar/.test(a) ?
-            <Input 
+            <Input
+              onInput={onInput}
               type={a}
-              {...props(id)} 
-            /> 
+              id={id}
+            />
           :
           
           typeof a === 'string' ? 

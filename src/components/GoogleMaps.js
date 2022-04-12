@@ -3,11 +3,15 @@ import {TextField, Autocomplete, OutlinedInput, Icon} from '@mui/material';
 import {Input} from './Inputs';
 import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
+import {useContext} from 'react';
+import {Context} from './Store';
 
 const autocompleteService = { current: null };
 
-const GoogleMaps = ({props, parms, set, autoFocus=false, field=false}) => {
-  const [location, setValue] = React.useState(parms.location, null);
+const GoogleMaps = ({autoFocus=false, field=false}) => {
+  const {state, change} = useContext(Context);
+
+  const [location, setValue] = React.useState(state.location, null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
 
@@ -59,7 +63,7 @@ const GoogleMaps = ({props, parms, set, autoFocus=false, field=false}) => {
   return (
     <>
       <Autocomplete
-        {...props('location')}
+        id="location"
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
         options={options}
         autoComplete
@@ -72,7 +76,7 @@ const GoogleMaps = ({props, parms, set, autoFocus=false, field=false}) => {
         onChange={(_, newValue) => {
           setOptions(newValue ? [newValue, ...options] : options);
           if (newValue) {
-            set.location(newValue.description);
+            change('change', 'location', newValue.description);
             setValue(newValue.description);
             const geocoder = new window.google.maps.Geocoder();
 
@@ -83,14 +87,14 @@ const GoogleMaps = ({props, parms, set, autoFocus=false, field=false}) => {
               let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
               if (state) {
                 state = state[0].long_name;
-                set.state(state);
+                change('change', 'state', state);
               } else {
-                set.state('');
+                change('change', 'state', '');
               }
               
               if (results && results[0]) {
-                set.lat(results[0].geometry.location.lat().toFixed(4));
-                set.lon(results[0].geometry.location.lng().toFixed(4));
+                change('change', 'lat', results[0].geometry.location.lat().toFixed(4));
+                change('change', 'lon', results[0].geometry.location.lng().toFixed(4));
               }
             });
           }
@@ -119,7 +123,7 @@ const GoogleMaps = ({props, parms, set, autoFocus=false, field=false}) => {
             className="field"
             label="Name your Field"
             notched={true}
-            {...props('field')}
+            id="field"
             autoComplete="off"
             style={{width: 'calc(50% - 2em)'}}
           />
@@ -145,20 +149,22 @@ const GoogleMaps = ({props, parms, set, autoFocus=false, field=false}) => {
           If you know your exact coordinates, you can enter them here:
           &nbsp;
           Latitude:&nbsp;
-          <Input {...props('lat')} inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}} />
+          <Input id="lat" inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}} />
           &nbsp;&nbsp;&nbsp;
           Longitude:&nbsp;
-          <Input {...props('lon')} inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}}/>
+          <Input id="lon" inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}}/>
         </small>
       </div>
     </>
   );
 }
 
-const Map = ({set, parms, props, field=false}) => {
+const Map = ({field=false}) => {
+  const {state, change} = useContext(Context);
+
   const mapChange = (e) => {
-    set.lat(+e.lat.toFixed(4));
-    set.lon(+e.lng.toFixed(4));
+    change('change', 'lat', +e.lat.toFixed(4));
+    change('change', 'lon', +e.lng.toFixed(4));
 
     const latlng = {
       lat: e.lat,
@@ -170,14 +176,14 @@ const Map = ({set, parms, props, field=false}) => {
       .then(response => {
         const results = response.results;
         const location = results[0].formatted_address;
-        set.location(location);
+        change('change', 'location', location);
 
         let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
         if (state) {
           state = state[0].long_name;
-          set.state(state);
+          change('change', 'state', state);
         } else {
-          set.state('');
+          change('change', 'state', '');
         }
       })
       .catch((e) => window.alert('Geocoder failed due to: ' + e));
@@ -193,22 +199,22 @@ const Map = ({set, parms, props, field=false}) => {
 
   return (
     <>
-      <GoogleMaps set={set} props={props} parms={parms} field={field} />
+      <GoogleMaps field={field} />
 
       {
-        parms.lat && parms.lon &&
+        state.lat && state.lon &&
         <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
-            center={{lat: +parms.lat, lng: +parms.lon}}
-            zoom={parms.mapZoom}
+            center={{lat: +state.lat, lng: +state.lon}}
+            zoom={state.mapZoom}
 
             onGoogleApiLoaded={initGeocoder}
             
             yesIWantToUseGoogleMapApiInternals
             onClick={mapChange}
-            onZoomAnimationEnd={set.mapZoom}
-            onMapTypeIdChange={set.mapType}
+            onZoomAnimationEnd={state.mapZoom}
+            onMapTypeIdChange={state.mapType}
 
             onLoad={
               // prevent tabbing through map
@@ -219,7 +225,7 @@ const Map = ({set, parms, props, field=false}) => {
             }
 
             options={(map) => ({
-              mapTypeId: parms.mapType,
+              mapTypeId: state.mapType,
               fullscreenControl: false,
               scaleControl: true,
               mapTypeControl: true,
@@ -234,7 +240,7 @@ const Map = ({set, parms, props, field=false}) => {
               },
             })}
           >
-            <Marker lat={+parms.lat} lng={+parms.lon} />
+            <Marker lat={+state.lat} lng={+state.lon} />
           </GoogleMapReact>
         </div>
       }

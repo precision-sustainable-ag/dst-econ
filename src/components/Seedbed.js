@@ -1,10 +1,10 @@
-import Activity from './NewActivity';
+import Activity from './Activity';
 import {Navigation} from './Navigation';
-import Logic from './NewLogic';
+import Logic from './Logic';
 import {Context, db} from './Store';
 import {useContext} from 'react';
 
-const Seedbed = ({props, set}) => {
+const Seedbed = () => {
   const {state, change, match, data, powerUnit, power, dollars} = useContext(Context);
 
   change('change', 'current', 'seedbed');
@@ -33,8 +33,8 @@ const Seedbed = ({props, set}) => {
               a={['Yes', 'No']}
               onInput={(e) => {
                 if (e.target.value === 'No') {
-                  set.screen('Planting');
-                  set.previousScreen('Planting');
+                  change('change', 'screen', 'Planting');
+                  change('change', 'previousScreen', 'Planting');
                 }
               }}
             />
@@ -47,8 +47,8 @@ const Seedbed = ({props, set}) => {
               initial="No"
               onInput={(e) => {
                 if (e.target.value === 'Yes') {
-                  set.screen('Planting');
-                  set.previousScreen('Planting');
+                  change('change', 'screen', 'Planting');
+                  change('change', 'screen', 'Planting');
                 }
               }}
             />
@@ -120,9 +120,9 @@ const Seedbed = ({props, set}) => {
         </table>
       </div>
       
-      <Navigation set={set} current={Seedbed} />
+      <Navigation current={Seedbed} />
 
-      <Activity props={props} type="seedbed" />
+      <Activity type="seedbed" />
     </>
   )
 } // Seedbed

@@ -1,16 +1,25 @@
 import React, { createContext, useReducer } from "react";
 
-const initialState = {};
+const initialState = {
+  screen        : 'Home',
+  previousScreen: 'Home',  
+  help          : '',
+  helpX         : 0,
+  helpY         : 0,
+  mapZoom       : 13,
+  mapType       : 'hybrid',
+  lat           : 40.7849,
+  lon           : -74.8073,
+  location      : '',
+  state         : '',
+  priorCrop : {
+    label: ''  // TODO
+  },
+};
 
 const reducer = (state, action, value = action && action.data && action.data.value) => {
+  // alert(action.type);
   switch (action.type) {
-    case 'TEST': {
-      return {
-        ...state,
-        test: true
-      }
-    }
-    
     case 'change': {
       if (state[action.e] === value) {
         return state;
@@ -19,6 +28,16 @@ const reducer = (state, action, value = action && action.data && action.data.val
         ...state,
         [action.e]: value
       }
+    }
+
+    case 'delete': {
+      alert('ok');
+      console.log(state);
+      console.log(action);
+      console.log(value);
+      const st = {...state};
+      delete st[value];
+      return st;
     }
 
     case 'addkey': {
@@ -43,7 +62,13 @@ const Store = ({ children }) => {
   const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
   const change = (type, e, value = e && e.target.value) => {
-    if (typeof value === 'object') {
+    if (value === undefined) {
+      dispatch({
+        type,
+        e,
+        data: e
+      });
+    } else if (typeof value === 'object') {
       dispatch({
         type,
         e,
@@ -177,7 +202,10 @@ const loadData = async(table) => {
 } // loadData
 
 export const Context = createContext(initialState);
-export const db = {};
+export const db = {
+  rate : (species) => (db.seedList[species] || {}).seedingRate || '',
+  price: (species) => (db.seedList[species] || {}).price || ''
+};
 export default Store;
 
 loadData('coefficients');

@@ -2,9 +2,14 @@ import {Autocomplete, Input} from './Inputs';
 import {Navigation} from './Navigation';
 import Activity from './Activity';
 
+import {Context, db} from './Store';
+import {useContext} from 'react';
+
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
-const SpeciesRow = ({n, parms, props}) => {
+const SpeciesRow = ({n}) => {
+  const {state, change} = useContext(Context);
+
   const species = {
     Other:      ['Commercial mix'],
     Brassica:   ['Brassica, Forage', 'Mustard', 'Radish, Forage', 'Radish, Oilseed', 'Rape, Oilseed, Spring', 'Rape, Oilseed, Winter', 'Rapeseed, Forage', 'Turnip, Forage', 'Turnip, Purple Top'],
@@ -19,13 +24,13 @@ const SpeciesRow = ({n, parms, props}) => {
     ...species.Legume,
     ...species.Brassica,
     ...species.Broadleaf,
-  ].filter(s => s === parms.species[n] || !parms.species.includes(s));
+  ].filter(s => s === state['species' + n] || !Object.values(state).includes(s));
 
   return (
-    <tr>
+    <tr key={`row${n}`}>
       <td>
         <Autocomplete
-          {...props('species')}
+          id={'species' + n}
           index={n}
           groupBy={
             (option) => species.Other.includes(option)     ? '-' :
@@ -35,21 +40,42 @@ const SpeciesRow = ({n, parms, props}) => {
                         species.Legume.includes(option)    ? 'Legume' :
                                                              'ERROR'
           }
-          
           options={options}
+
+          onInputChange={(event, sp, reason) => {
+            if (state.changingScreen) {
+              change('change', 'changingScreen', false);
+              return;
+            } else if (reason === 'clear') {
+              setTimeout(() => {  // timeout needed for the cleared species element
+                ['species', 'rates', 'prices'].forEach(type => {
+                  const obj = Object.keys(state)
+                                .filter(key => new RegExp(type + '\\d').test(key))
+                                .filter((_, i) => i !== n);
+  
+                  obj.forEach((value, i) => {
+                    change('change', type + i, state[value] || '');
+                  });
+                });
+              }, 1);
+            } else {
+              change('change', 'rates'  + n, db.rate(sp));
+              change('change', 'prices' + n, db.price(sp));
+            }
+          }}
         />
       </td>
       <td>
         <Input
           type="number"
-          {...props('rates')}
+          id={'rates' + n}
           index={n}
         />
       </td>
       <td>
         <Input
           type="dollar"
-          {...props('prices')}
+          id={'prices' + n}
           index={n}
         />
       </td>
@@ -57,23 +83,15 @@ const SpeciesRow = ({n, parms, props}) => {
   )
 } // SpeciesRow
 
-const Species = ({set, db, parms, props}) => {
-//  let total = 0;
-//
-//  parms.species
-//    .forEach((s, n) => {
-//      if (s) {
-//        total += (+parms.rates[n] || 0) * (+parms.prices[n] || 0)
-//      }
-//    });
-//
-//  set.coverCropTotal(total);
+const Species = () => {
+  const {state, change} = useContext(Context);
 
-  let rec = db.stateRegions[parms.state.toUpperCase()];
-  let region = rec ? db.stateRegions[parms.state.toUpperCase()].ccRegion.toLowerCase() : '';
+  let rec = db.stateRegions[state.state.toUpperCase()];
+  let region = rec ? db.stateRegions[state.state.toUpperCase()].ccRegion.toLowerCase() : '';
   if (region) {
     region = region[0].toUpperCase() + region.slice(1);
   }
+
   const link = {
     Midwest:    'https://mccc.msu.edu/selector-tool/',
     Northeast:  'http://northeastcovercrops.com/decision-tool/',
@@ -81,8 +99,21 @@ const Species = ({set, db, parms, props}) => {
     Western:    'https://westerncovercrops.org/category/resources/selection/'
   }[region];
 
+  const species = Object.keys(state).filter(key => /^species\d/.test(key) && state[key]);
+
+  let total = 0;
+
+  species
+    .forEach((s, n) => {
+      if (s) {
+        total += (+state['rates' + n] || 0) * (+state['prices' + n] || 0);
+      }
+    });
+
+  change('change', 'coverCropTotal', total);
+
   return (
-    <>
+    <form>
       <div className="Species">
         <h1 id="H1">Economic Decision Aid for Cover Crops: Species Selection</h1>
 
@@ -111,16 +142,18 @@ const Species = ({set, db, parms, props}) => {
           </thead>
           <tbody>
             {
-              [].concat(parms.species).map((s, n) => 
-                s &&
-                <SpeciesRow key={s} n={n} parms={parms} props={props} />
-              )
+              species.map((s, n) => {
+                return (
+                  s &&
+                  <SpeciesRow n={n}/>
+                )
+              })
             }
-            <SpeciesRow key={`row${parms.species.length}`} n={parms.species.length} parms={parms} props={props} />
+            <SpeciesRow n={species.length}/>
             <tr>
               <td colSpan="2"><strong>Cost of Cover crop seed ($/acre)</strong></td>
               <td className="hidden"></td>
-              <td><strong>{dollars(parms.coverCropTotal)}</strong></td>
+              <td><strong>{dollars(state.coverCropTotal)}</strong></td>
             </tr>
           </tbody>
         </table>
@@ -133,9 +166,9 @@ const Species = ({set, db, parms, props}) => {
         }
 
       </div>
-      <Navigation set={set} current={Species} />
-      <Activity db={db} parms={parms} props={props} set={set} type="species" />
-    </>
+      <Navigation current={Species} />
+      <Activity db={db} type="species" />
+    </form>
   )
 } // Species
 

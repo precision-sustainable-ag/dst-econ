@@ -1,10 +1,10 @@
-import Activity from './NewActivity';
+import Activity from './Activity';
 import {Navigation} from './Navigation';
-import Logic from './NewLogic';
+import Logic from './Logic';
 import {Context, db} from './Store';
 import {useContext} from 'react';
 
-const Planting = ({props, set}) => {
+const Planting = () => {
   const {state, change, match, data, powerUnit, power, dollars} = useContext(Context);
 
   change('change', 'current', 'planting');
@@ -93,9 +93,9 @@ const Planting = ({props, set}) => {
         </table>
       </div>
 
-      <Navigation set={set} current={Planting} />
+      <Navigation current={Planting} />
 
-      <Activity props={props} type="planting" />
+      <Activity type="planting" />
     </>
   )
 } // Planting

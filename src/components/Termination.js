@@ -1,7 +1,6 @@
 import Activity from './Activity';
 import {Navigation} from './Navigation';
 import Logic from './Logic';
-import NewLogic from './NewLogic';
 import {Context} from './Store';
 import {useContext} from 'react';
 
@@ -28,7 +27,7 @@ const Termination = ({db, parms, props, set}) => {
             <th colSpan="2">Termination</th>
           </tr>
 
-          <NewLogic
+          <Logic
             id="termination2"
             q="Would you do this field activity if you did not have a cover crop?"
             zinitial="z"
@@ -42,7 +41,7 @@ const Termination = ({db, parms, props, set}) => {
             }}
           />
 
-          <NewLogic
+          <Logic
             id="termination3"
             q="Who will do this activity?"
             zinitial="z"
@@ -51,14 +50,14 @@ const Termination = ({db, parms, props, set}) => {
             cond={match('termination2', 'No')}
           />
 
-          <NewLogic
+          <Logic
             id="terminationCustomCost"
             q="Custom operator cost ($/acre)"
             a={'dollar'}
             cond={match('termination3', 'Custom Operator')}
           />
 
-          <NewLogic
+          <Logic
             id="terminationMethod"
             q="Cover Crop termination method"
             a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
@@ -66,7 +65,7 @@ const Termination = ({db, parms, props, set}) => {
             cond={match('termination2', 'No')}
           />
 
-          <NewLogic
+          <Logic
             id="terminationProduct"
             q="Product"
             a={['', ...Object.keys(db.herbicides).sort()]}
@@ -77,7 +76,7 @@ const Termination = ({db, parms, props, set}) => {
           {
             (match('terminationMethod', 'Herbicide application') || match('terminationMethod', 'Roller with follow-up herbicide')) && (
               <>
-                <NewLogic
+                <Logic
                   id="terminationUnitCost"
                   q="Cost per unit of product"
                   a={'dollar'}
@@ -85,7 +84,7 @@ const Termination = ({db, parms, props, set}) => {
                   suffix={dbvalue('herbicides', state.terminationProduct, 'Unit (cost)')}
                 />
       
-                <NewLogic
+                <Logic
                   id="terminationRate"
                   q="Application rate"
                   a={'number'}
@@ -93,19 +92,19 @@ const Termination = ({db, parms, props, set}) => {
                   suffix={dbvalue('herbicides', state.terminationProduct, 'Unit (rate)')}
                 />
       
-                <NewLogic
+                <Logic
                   id="terminationProductCost"
                   q="Product cost"
                   a={state.terminationProductCost}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationChemical"
                   q="What chemical spray equipment will be used?"
                   a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Chemical').sort()]}
                 />
         
-                <NewLogic
+                <Logic
                   id="terminationChemicalCost"
                   q="Chemical spray equipment cost ($/acre)"
                   a={'dollar'}
@@ -117,13 +116,13 @@ const Termination = ({db, parms, props, set}) => {
           {
             (match('terminationMethod', 'Roller') || match('terminationMethod', 'Roller with follow-up herbicide')) && (
               <>
-                <NewLogic
+                <Logic
                   id="terminationRoller"
                   q="What roller equipment will be used?"
                   a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Termination').sort()]}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationRollerCost"
                   q="Roller equipment cost ($/acre)"
                   a={'dollar'}
@@ -135,41 +134,41 @@ const Termination = ({db, parms, props, set}) => {
           {
             match('terminationMethod', 'Tillage') && (
               <>
-                <NewLogic
+                <Logic
                   id="terminationTillage4"
                   q="What type of seedbed preparation will be done?"
                   a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationTillagePower"
                   q="What power will be used?"
                   a={['', ...Object.keys(db.power)]}
                   cond={state.terminationTillage4}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationTillageAnnualUseAcres"
                   q="Annual Use (acres on implement)"
                   a={state.seedbedAnnualUseAcres.toString()}
                   cond={state.terminationTillage4}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationTillageAnnualUseHours"
                   q="Annual Use (hours on power)"
                   a={state.seedbedAnnualUseHours.toString()}
                   cond={state.terminationTillage4}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationTillageAcresHour"
                   q="Acres/hour"
                   a={state.seedbedAcresHour.toString()}
                   cond={state.terminationTillage4}
                 />
 
-                <NewLogic
+                <Logic
                   id="terminationTillageTotal"
                   q={state.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(state.seedbedEstimated)}/acre)` : `Estimated custom cost (${dollars(state.seedbedTotal)}/acre)`}
                   a={'dollar'}

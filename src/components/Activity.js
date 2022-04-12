@@ -1,6 +1,12 @@
+import {useContext} from 'react';
+import {Context, db} from './Store';
+import {Input} from './Inputs';
+
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
-const Activity = ({db, parms, props, type, ds = 4}) => {
+const Activity = ({type, ds = 4}) => {
+  const {state, change} = useContext(Context);
+
   let breakdown;
 
   if (type === 'species') {
@@ -11,7 +17,7 @@ const Activity = ({db, parms, props, type, ds = 4}) => {
     let acresHour;
   
     const implementCost = (desc) => {
-      if (parms[type + 'ImplementCost'] === 'false') {
+      if (!state[type + 'ImplementCost']) {
         return 0;
       }
 
@@ -31,7 +37,7 @@ const Activity = ({db, parms, props, type, ds = 4}) => {
     } // implementCost
   
     const powerCost = (desc) => {
-      if (desc === 'Labor' || parms[type + 'PowerCost'] === 'false') {
+      if (desc === 'Labor' || !state[type + 'PowerCost']) {
         return 0;
       }
 
@@ -53,38 +59,42 @@ const Activity = ({db, parms, props, type, ds = 4}) => {
     } // totalCost
   
     const relevantCost = (desc, lookup) => {
-      return parms[type + desc] === 'true' ? totalCost(desc, lookup) : 0;
+      return state[type + desc] ? totalCost(desc, lookup) : 0;
     } // relevantCost
   
-    data = db.implements[parms[type + ds]] || {};
-console.log(type + ds);
-    const powerUnit = parms[type + 'Power'] || data['default power unit'];
+    data = db.implements[state[type + ds]] || {};
+
+    const powerUnit = state[type + 'Power'] || data['default power unit'];
     power = db.power[powerUnit] || {};
 
     acresHour  = (+data['acres/hour']).toFixed(1);
 
     const totalImplementCost = () => {
       return (
-        (parms[type + 'Labor']        === 'true') * implementCost('Labor') +
-        (parms[type + 'Depreciation'] === 'true') * implementCost('Depreciation') + 
-        (parms[type + 'Interest']     === 'true') * implementCost('Interest') + 
-        (parms[type + 'Repairs']      === 'true') * implementCost('Repairs') + 
-        (parms[type + 'Taxes']        === 'true') * implementCost('Taxes') + 
-        (parms[type + 'Insurance']    === 'true') * implementCost('Insurance') + 
-        (parms[type + 'Storage']      === 'true') * implementCost('Storage')
+        (state[type + 'Labor']        ) * implementCost('Labor') +
+        (state[type + 'Depreciation'] ) * implementCost('Depreciation') + 
+        (state[type + 'Interest']     ) * implementCost('Interest') + 
+        (state[type + 'Repairs']      ) * implementCost('Repairs') + 
+        (state[type + 'Taxes']        ) * implementCost('Taxes') + 
+        (state[type + 'Insurance']    ) * implementCost('Insurance') + 
+        (state[type + 'Storage']      ) * implementCost('Storage')
       );
     }; // totalImplementCost
 
     const totalPowerCost = () => (
-      (parms[type + 'Fuel']         === 'true') * powerCost('Fuel') +
-      (parms[type + 'Depreciation'] === 'true') * powerCost('Depreciation') + 
-      (parms[type + 'Interest']     === 'true') * powerCost('Interest') + 
-      (parms[type + 'Repairs']      === 'true') * powerCost('Repairs') +
-      (parms[type + 'Taxes']        === 'true') * powerCost('Taxes') + 
-      (parms[type + 'Insurance']    === 'true') * powerCost('Insurance') +
-      (parms[type + 'Storage']      === 'true') * powerCost('Storage')
+      (state[type + 'Fuel']         ) * powerCost('Fuel') +
+      (state[type + 'Depreciation'] ) * powerCost('Depreciation') + 
+      (state[type + 'Interest']     ) * powerCost('Interest') + 
+      (state[type + 'Repairs']      ) * powerCost('Repairs') +
+      (state[type + 'Taxes']        ) * powerCost('Taxes') + 
+      (state[type + 'Insurance']    ) * powerCost('Insurance') +
+      (state[type + 'Storage']      ) * powerCost('Storage')
     ); // totalPowerCost
 
+    console.log(data);
+    console.log(totalImplementCost());
+    console.log(totalPowerCost());
+    
     const heading = {
       seedbed: 'Seedbed Preparation',
       planting: 'Cover Crop Planting',
@@ -95,35 +105,50 @@ console.log(type + ds);
       const iCost = implementCost(d, lookup);
       const pCost = powerCost(d, lookup);
       const total    = '$' + totalCost(d, lookup).toFixed(2);
-      const relevant = '$' + relevantCost(d, lookup).toFixed(2);
   
-      const style = parms[`${type}${d}`] === 'false' ? {background: '#ddd', color: '#888'}  : {};
+      const style = !state[`${type}${d}`] ? {background: '#ddd', color: '#888'}  : {};
   
       return (
         <tr style={style}>
           <td>
-            <label><input {...props(`${type}${d}`)} type="checkbox" /> {desc}</label>
+            <label>
+              <Input
+                id={type + d}
+                type="checkbox"
+                defaultChecked
+                onInput={() => change('change', type + 'Total', '')}
+              />
+              {desc}
+            </label>
           </td>
           <td>{iCost ? '$' + iCost.toFixed(2) : ''}</td>
           <td>{pCost ? '$' + pCost.toFixed(2) : ''}</td>
           <td>{total}</td>
-          <td>{relevant}</td>
         </tr>
       )
     } // Costs
 
     let cname = type;
-    if (parms[`${type}ImplementCost`] === 'false') {
+    if (!state[`${type}ImplementCost`]) {
       cname += ' noImplementCost';
     }
 
-    if (parms[`${type}PowerCost`] === 'false') {
+    if (!state[`${type}PowerCost`]) {
       cname += ' noPowerCost';
     }
 
-    breakdown = parms[type + 3] !== 'Custom Operator' &&
-                parms[type + ds] &&
-                parms[type + 'Estimated'] === parms[type + 'Total'] &&
+    if (Object.keys(data).length) {    
+      change('change', type + 'Estimated', totalImplementCost(type) + totalPowerCost(type));
+      if (!state[type + 'Total']) {
+        change('change', type + 'Total', totalImplementCost(type) + totalPowerCost(type));
+      }
+    }
+
+    breakdown = ((
+                  state[type + 3] !== 'Custom Operator' &&
+                  state[type + ds] &&
+                  !state[type + 'Edited']
+                )) &&
       <div className={cname} id="Breakdown">
         <table id="Costs">
           <thead>
@@ -140,18 +165,27 @@ console.log(type + ds);
                 <label>
                   Implement Cost<br/>($/acre)
                   <br/>
-                  <input {...props(`${type}ImplementCost`)} type="checkbox"/>
+                  <Input
+                    id={type + 'ImplementCost'}
+                    type="checkbox"
+                    defaultChecked
+                    onInput={() => change('change', type + 'Total', '')}
+                  />
                 </label>
               </th>
               <th>
                 <label>
                   Power Cost<br/>($/acre)
                   <br/>
-                  <input {...props(`${type}PowerCost`)} type="checkbox"/>
+                  <Input
+                    id={type + 'PowerCost'}
+                    type="checkbox"
+                    defaultChecked
+                    onInput={() => change('change', type + 'Total', '')}
+                  />
                 </label>
               </th>
-              <th>Actual Cost<br/>($/acre)</th>
-              <th>Relevant cost<br/>($/acre)</th>
+              <th>Relevant Cost<br/>($/acre)</th>
             </tr>
           </thead>
           <tbody>
@@ -168,7 +202,6 @@ console.log(type + ds);
               <td>{'$' + totalImplementCost(type).toFixed(2)}</td>
               <td>{'$' + totalPowerCost(type).toFixed(2)}</td>
               <td>{'$' + (totalImplementCost(type) + totalPowerCost(type)).toFixed(2)}</td>
-              <td>{'$' + (+parms[type + 'Estimated']).toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
@@ -176,10 +209,10 @@ console.log(type + ds);
   }
 
   const SummaryRow = ({parm, desc}) => (
-    +parms[parm] ? <tr><td>{desc}</td><td>{dollars(parms[parm])}</td></tr> : null
+    +state[parm] ? <tr><td>{desc}</td><td>{dollars(state[parm])}</td></tr> : null
   ) // SummaryRow
 
-  const total = +parms.coverCropTotal + +parms.seedbedTotal + +parms.plantingTotal;
+  const total = +(state.coverCropTotal || 0) + +(state.seedbedTotal || 0) + +(state.plantingTotal || 0);
 
   const summary = (
     total > 0 &&

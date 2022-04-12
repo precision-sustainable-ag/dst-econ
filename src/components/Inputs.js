@@ -1,7 +1,12 @@
+import {useContext} from 'react';
+import {Context} from './Store';
+
 import {
   Input as MUIInput,
   Autocomplete as MUIAutocomplete,
-  TextField
+  TextField,
+  Radio,
+  Checkbox,
 } from '@mui/material';
 
 import NumberFormat from 'react-number-format';
@@ -23,54 +28,99 @@ const focus = (obj) => {
   }
 } // focus
 
-const keyPress = (e, props) => {
-  if (e.key === 'Enter') {
-    focus(props.next);
+const keyPress = (event, props) => {
+  return;
+  if (event.key === 'Enter') {
+    const form = event.target.form;
+    const index = Array.prototype.indexOf.call(form, event.target);
+    form.elements[index + 1].focus();
+    event.preventDefault();    
+    // focus(props.next);
   }
 } // keyPress
 
-const Input = (props) => {
-  let value = props.value;
-  if (Array.isArray(props.value)) {
-    value = props.value[props.index];
+const Input = ({type, id, value, defaultChecked, onInput}) => {
+  const {state, change} = useContext(Context);
+
+  value = value !== undefined ? value : state[id]; // || defaultChecked;
+
+  if (state[id] === undefined) {
+    state[id] = value || defaultChecked;
+  }
+
+  if (value || defaultChecked) {
+    change('addkey', id, value || defaultChecked);
+  }
+
+  if (!(id in state)) {
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    value = state[id][state['index' + id]];
   }
 
   return (
-    props.type === 'number' ?
+    type === 'radio' ? 
+      <Radio
+        checked={state[id] === value}
+        value={value}
+        style={{padding: 0}}
+        onChange={(e) => {
+          change('change', id, e.target.value);
+          if (onInput) {
+            onInput(e);
+          }
+        }}
+      />    
+      :
+    type === 'checkbox' ? 
+      <Checkbox
+        checked={value}
+        style={{padding: 0}}
+        onChange={(e) => {
+          change('change', id, e.target.checked);
+          if (onInput) {
+            onInput(e);
+          }
+        }}
+      />    
+      :
+    type === 'number' ?
       <NumberFormat
         autoComplete="off"
         
         onKeyPress={(e) => {
-          return keyPress(e, props)
+          return keyPress(e)
         }}
-        
-        {...props}
         
         value={value}
 
-        onChange={(event) => {
-          const value = event.target.value;
-          props.onChange(event, value, props.index);
+        onChange={(e) => {
+          change('change', id, e.target.value)
+          if (onInput) {
+            onInput(e);
+          }
         }}
 
         type="text"
       />
       :
-    props.type === 'dollar' ?
+    type === 'dollar' ?
       <NumberFormat
         autoComplete="off"
         
         onKeyPress={(e) => {
-          return keyPress(e, props)
+          return keyPress(e)
         }}
-        
-        {...props}
         
         value={value}
 
-        onChange={(event) => {
-          const value = event.target.value;
-          props.onChange(event, value.replace('$', ''), props.index);
+        onChange={(e) => {
+          change('change', id, e.target.value.replace('$', ''));
+          if (onInput) {
+            onInput(e);
+          }
         }}
 
         decimalScale={2}
@@ -84,15 +134,16 @@ const Input = (props) => {
         autoComplete="off"
         
         onKeyPress={(e) => {
-          return keyPress(e, props)
+          return keyPress(e)
         }}
         
-        {...props}
-
         value={value}
 
-        onChange={(event, value) => {
-          props.onChange(event, value, props.index);
+        onChange={(e, value) => {
+          change('change', id, value.replace('$', ''))
+          if (onInput) {
+            onInput(e);
+          }
         }}
 
         type="text"
@@ -100,41 +151,62 @@ const Input = (props) => {
   )
 } // Input
 
-const Autocomplete = (props) => {
-  let value = props.value;
-  if (Array.isArray(props.value) && isFinite(props.index)) {
-    value = props.value[props.index];
+const Autocomplete = ({id, options, value, onInput, onInputChange, groupBy}) => {
+  const {state, change} = useContext(Context);
+
+  value = value !== undefined ? value : state[id];
+
+  if (state[id] === undefined) {
+    state[id] = value;
   }
 
-  if (!props.multiple) {
-    value = props.options.find(option => option === value || (option.value && option.value === value) || (option.label && option.label === value));
-    value = value ? value.label || value : null;
+  if (value) {
+    change('addkey', id, value);
   }
 
-  const max = Math.max.apply(Math, props.options.map(option => option.length));
+  if (!(id in state)) {
+    return;
+  }
+
+  // console.log(id);
+  // console.log(value);
+  // console.log(state[id]);
+  // console.log(JSON.stringify(state));
+
+  const max = Math.max.apply(Math, options.map(option => option.length));
 
   return (
     <MUIAutocomplete
-      onKeyPress={(e) => keyPress(e, props)}
+      onKeyPress={(e) => keyPress(e)}
 
       sx={{width: (max * 0.8) + 'rem'}}
+
       isOptionEqualToValue={(option, value) => {
         return option === value || (option.value && option.value === value) || (option.label && option.label === value);
       }}
 
-      renderInput={(params) => (
-        <TextField
-          variant="standard"
-          {...params}
-        />
-      )}
+      groupBy={groupBy}
+
+      onInputChange={onInputChange}
+
+      renderInput={(params) => {
+        return (
+          <TextField
+            variant="standard"
+            {...params}
+          />
+        )
+      }}
       
-      {...props}
+      options={options}
 
       value={value}
       
-      onChange={(event, value) => {
-        props.onChange(event, value, props.index);
+      onChange={(e, value) => {
+        change('change', id, value);
+        if (onInput) {
+          onInput(e);
+        }
       }}
     />
   )

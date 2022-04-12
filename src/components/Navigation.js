@@ -19,33 +19,41 @@ import Practices    from './Practices';
 import Revenue      from './Revenue';
 import Resources    from './Resources';
 
-const Help = ({parms}) => {
+import {Context} from './Store';
+import {useContext} from 'react';
+
+const Help = () => {
+  const {state} = useContext(Context);
+
   const style = {
-    left: parms.helpX,
-    top: parms.helpY
+    left: state.helpX,
+    top: state.helpY
   }
 
   return (
-    parms.help &&
+    state.help &&
     <div
       className="help"
       style={style}
-      dangerouslySetInnerHTML={{ __html: parms.help }}
+      dangerouslySetInnerHTML={{ __html: state.help }}
     />
   )
 } // Help
 
-const Screens = ({parms, set, db, props}) => {
+const Screens = ({props}) => {
+  const {state, change} = useContext(Context);
+
   const changeScreen = (e) => {
     const menu = e.target;
 
     if (menu.tagName === 'LI') {
       const scr = menu.dataset.scr;
       if (scr !== 'Resources') {
-        set.previousScreen(scr);
+        change('change', 'previousScreen', scr);
       }
-      set.screen(scr);
+      change('change', 'screen', scr);
     }
+    change('change', 'changingScreen', true);
   } // changeScreen
 
   const find = (screens, scr) => {
@@ -66,12 +74,13 @@ const Screens = ({parms, set, db, props}) => {
   } // find
 
   const MyMenu = (s) => {
+    const {state} = useContext(Context);
     return (
       Object.keys(s).map(scr => {
         if (typeof s[scr] === 'object') {
           return <strong key={scr}>{scr} {MyMenu(s[scr])}</strong>
         } else {
-          return <MenuItem data-scr={scr} key={scr} className={scr === parms.screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
+          return <MenuItem data-scr={scr} key={scr} className={scr === state.screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
         }
       })
     )
@@ -93,7 +102,7 @@ const Screens = ({parms, set, db, props}) => {
 //  const [styleSheet, setStylesheet] = useState('');
 //
 //  useEffect(() => {
-//    fetch(`${parms.screen}.txt`)
+//    fetch(`${state.screen}.txt`)
 //      .then(response => response.text())
 //      .then(layout => {
 //        if (/DOCTYPE/.test(layout)) return;
@@ -154,23 +163,23 @@ const Screens = ({parms, set, db, props}) => {
 //        setStylesheet(css);
 //        console.log(css);
 //      })
-//  }, [parms.screen]);
+//  }, [state.screen]);
 
   return (
     <div
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
-          set.help('');
+          change('change', 'help', '');
         }
       }}
 
       onClick={(e) => {
         if (/^help/.test(e.target.innerHTML)) {
-          set.help(e.target.innerHTML.slice(4));
-          set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400));
-          set.helpY(e.pageY - 20);
+          change('change', 'help', e.target.innerHTML.slice(4));
+          change('change', 'helpX', Math.min(e.pageX + 20, window.innerWidth - 400));
+          change('change', 'helpY', e.pageY - 20);
         } else {
-          set.help('');
+          change('change', 'help', '');
         }
       }}
 
@@ -182,21 +191,19 @@ const Screens = ({parms, set, db, props}) => {
         {MyMenu(screens)}
       </nav>
       
-      <Help parms={parms} />
+      <Help/>
 
       <div style={{marginLeft: '15em', width: 'calc(100vw - 30em)'}}>
-        {find(screens, parms.screen)({
-          props,
-          set,
-          parms,
-          db
+        {find(screens, state.screen)({
+          props
         })}
       </div>
     </div>
   )
 } // Screens
 
-const Navigation = ({parms={}, set, current }) => {
+const Navigation = ({current}) => {
+  const {state, change} = useContext(Context);  
   let last = 'Home';
   let back;
   let backDesc;
@@ -223,7 +230,7 @@ const Navigation = ({parms={}, set, current }) => {
   };
 
   if (current === Resources) {
-    back = parms.previousScreen;
+    back = state.previousScreen;
     backDesc = mods[back].menu || back;
   }
 
@@ -235,8 +242,9 @@ const Navigation = ({parms={}, set, current }) => {
           variant="contained"
           color="primary"
           onClick={() => {
-            set.screen(back);
-            set.previousScreen(back);
+            change('change', 'screen', back);
+            change('change', 'previousScreen', back);
+            change('change', 'changingScreen', true);
           }}
           tabIndex={-1}
         >
@@ -249,8 +257,11 @@ const Navigation = ({parms={}, set, current }) => {
           variant="contained"
           color="primary" 
           onClick={() => {
-            set.screen(next);
-            if (next !== 'Resources') set.previousScreen(next);
+            change('change', 'screen', next);
+            change('change', 'changingScreen', true);
+            if (next !== 'Resources') {
+              change('change', 'previousScreen', next);
+            }
           }}
         >
           NEXT: {nextDesc}
@@ -259,7 +270,15 @@ const Navigation = ({parms={}, set, current }) => {
 
       {
         current !== Resources && next !== 'Resources' &&
-        <Button variant="contained" color="primary" onClick={() => set.screen('Resources') }>Resources </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            change('change', 'screen', 'Resources');
+          }}
+        >
+          Resources
+        </Button>
       }
     </div>
   )
