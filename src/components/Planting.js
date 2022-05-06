@@ -1,14 +1,21 @@
 import Activity from './Activity';
 import Logic from './Logic';
-import {useStore} from '../store/Store';
-import { useEffect } from 'react';
+import {useEffect} from 'react';
+
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set, db, dollars, data, power, match, totalRelevantCost} from '../app/store';
 
 const Planting = () => {
-  const {state, change, match, data, powerUnit, power, dollars, db} = useStore();
+  const dispatch = useDispatch();
+  const current  = 'planting';
+  const state    = useSelector(get[current]);
 
   useEffect(() => {
-    change('change', 'current', 'planting');
+    dispatch(set.current(current));
   });
+
+  const total     = state.total;
+  const estimated = current ? totalRelevantCost() : 0;
 
   return (
     <>
@@ -22,78 +29,72 @@ const Planting = () => {
         <hr/>
 
         <strong>Cover Crop Establishment</strong>
-        <table className="planting">
+        <table className={current}>
           <tbody>
             <tr>
               <th colSpan="2">Planting</th>
             </tr>
 
             <Logic
-              id="planting3"
+              id="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
             />
 
             <Logic
-              id="planting4"
+              id="q4"
               q="What type of seedbed preparation will be done?"
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Planting').sort()]}
-              cond={match('planting3', 'Self')}
+              shown={match('q3', 'Self', current)}
               onInput={() => {
-                change('change', 'plantingPower', '');
-                change('change', 'plantingTotal', '');
-                change('change', 'plantingEdited', false);
+                dispatch(set[current]({key: 'power', value: data('default power unit')}));
+                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
+                dispatch(set[current]({key: 'edited', value: false}));
               }}
             />
 
             <Logic
-              id="plantingPower"
+              id="power"
               q="What power will be used?"
               a={['', ...Object.keys(db.power)]}
-              cond={state.planting4}
-              value={powerUnit}
+              shown={state.q4}
               onInput={() => {
-                change('change', 'plantingTotal', '');
-                change('change', 'plantingEdited', false);
+                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
+                dispatch(set[current]({key: 'edited', value: false}));
               }}
             />
 
             <Logic
-              id="plantingAnnualUseAcres"
               q="Annual Use (acres on implement)"
-              a={state.plantingAnnualUseAcres}
-              cond={state.planting4}
-              value={data('acres/year', 0)}
+              a={data('acres/year', 0)}
+              shown={state.q4}
             />
 
             <Logic
-              id="plantingAnnualUseHours"
               q="Annual Use (hours on power)"
-              a={state.plantingAnnualUseHours}
-              cond={state.planting4}
-              value={power('expected use (hr/yr)')}
+              a={power('expected use (hr/yr)')}
+              shown={state.q4}
             />
 
             <Logic
-              id="plantingAcresHour"
               q="Acres/hour"
               a={data('acres/hour', 1)}
-              cond={state.planting4}
+              shown={state.q4}
             />
 
             <Logic
-              id="plantingTotal"
-              q={state.planting3 === 'Self' ? `Estimated relevant cost (${dollars(state.plantingEstimated)}/acre)` : `Estimated custom cost (${dollars(state.plantingTotal)}/acre)`}
+              id="total"
+              q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
               a={'dollar'}
-              onInput={() => {
-                change('change', 'plantingEdited', true);
+              onInput={(e) => {
+                dispatch(set[current]({key: 'edited', value: e.target.value > ''}));
               }}
             />
           </tbody>
         </table>
       </div>
 
-      <Activity type="planting"/>
+      <Activity type={current}/>
     </>
   )
 } // Planting

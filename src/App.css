@@ -10,9 +10,6 @@ html, body {
   margin: 0;
   padding: 0;
   max-width: 1400px;
-}
-
-body {
   display: none;
 }
 
@@ -171,20 +168,20 @@ li.selected {
   background: #ccc;
 }
 
-div.Species td:nth-child(1) {
-  width: 15em;
+form.Species td:nth-child(1) {
+  width: 18rem;
 }
 
-div.Species td:nth-child(n + 2) {
+form.Species td:nth-child(n + 2) {
   text-align: right;
   width: 8em;
 }
 
-div.Species th {
+form.Species th {
   background: #eee;
 }
 
-div.Species tr:not(:last-child) td:nth-child(n + 2) {
+form.Species tr:not(:last-child) td:nth-child(n + 2) {
   background: #efe;
 }
 
@@ -192,18 +189,18 @@ zdiv.Species tr > :nth-child(n + 4) {
   display: none;
 }
 
-div.Species tr:last-child td {
+form.Species tr:last-child td {
   border-top: 1px solid #666;
   background: #eee;
 }
 
-div.Species tr > :nth-child(4) {
+form.Species tr > :nth-child(4) {
   border-left: 1px solid black;
 }
 
-div.Species tr > td:nth-child(1),
-div.Species tr > td:nth-child(2),
-div.Species tr > td:nth-child(3) {
+form.Species tr > td:nth-child(1),
+form.Species tr > td:nth-child(2),
+form.Species tr > td:nth-child(3) {
   border-bottom: none;
 }
 
@@ -274,27 +271,30 @@ nav strong, [data-scr=Resources] {
   text-align: right;
 }
 
-.FieldAndFarm tr {
+.Field tr {
   vertical-align: top;
 }
 
-.FieldAndFarm td {
+.Field td {
   height: 5em;
 }
 
-.FieldAndFarm tr:last-child td {
+.Field tr:last-child td {
   height: auto;
 }
 
-.FieldAndFarm td {
+.Field td {
   width: 50%;
-  border-bottom: 1px solid #eee;
 }
 
-.FieldAndFarm td:nth-child(1) {
+.Field td:nth-child(1) {
   border-right: 2px solid black;
   background: #f8f8f8;
-  width: auto;
+}
+
+.Field td:nth-child(2) {
+  border-right: 2px solid black;
+  background: #f0f4fc;
 }
 
 .MuiSelect-root * {
@@ -320,15 +320,39 @@ tr.seedbedTotal, tr.plantingTotal, .total {
   background: yellow;
 }
 
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 /*
 #Main > * {
   display: none;
 }
 
 #Main.Home > .Home, 
-#Main.FieldAndFarm > .FieldAndFarm,
+#Main.Field > .Field,
 #Main.Species > .Species,
 #Main.Resources > .Resources {
   display: block !important;
 }
 */
+
+.MuiAutocomplete-inputRoot {
+  padding: 0 !important;
+}
+
+.MuiAutocomplete-inputRoot > * {
+  padding: 0.3rem !important;
+}
+
+.Field h2 {
+  font-size: 100%;
+  margin-bottom: 0.3rem;
+  margin-top: 0.8rem;
+}

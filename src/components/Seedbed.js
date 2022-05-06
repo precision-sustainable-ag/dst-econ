@@ -1,18 +1,25 @@
 import Activity from './Activity';
 import Logic from './Logic';
-import {useStore} from '../store/Store';
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 
-const Seedbed = ({setScreen}) => {
-  const {state, change, match, data, powerUnit, power, dollars, db} = useStore();
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set, db, dollars, data, power, match, totalRelevantCost} from '../app/store';
+
+const Seedbed = () => {
+  const dispatch = useDispatch();
+  const current  = 'seedbed';
+  const state    = useSelector(get[current]);
 
   useEffect(() => {
-    change('change', 'current', 'seedbed');
+    dispatch(set.current(current));
   });
+
+  const total     = state.total;
+  const estimated = current ? totalRelevantCost() : 0;
 
   return (
     <>
-      <div>
+      <form>
         <h1>Economic Decision Aid for Cover Crops: Seedbed Preparation</h1>
         <div id="About">
           Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
@@ -22,102 +29,96 @@ const Seedbed = ({setScreen}) => {
         <hr/>
 
         <strong>Cover Crop Establishment</strong>
-        <table className="seedbed">
+        <table className={current}>
           <tbody>
             <tr>
               <th colSpan="2">Seedbed preparation</th>
             </tr>
             
             <Logic
-              id="seedbed1"
+              id="q1"
               q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
               a={['Yes', 'No']}
               onInput={(e) => {
                 if (e.target.value === 'No') {
-                  setScreen('Planting');
+                  dispatch(set.screen('Planting'));
                 }
               }}
             />
 
             <Logic
-              id="seedbed2"
+              id="q2"
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
-              cond={match('seedbed1', 'Yes')}
+              shown={match('q1', 'Yes', current)}
               onInput={(e) => {
                 if (e.target.value === 'Yes') {
-                  setScreen('Planting');
+                  dispatch(set.screen('Planting'));
                 }
               }}
             />
 
             <Logic
-              id="seedbed3"
+              id="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
-              cond={match('seedbed2', 'No')}
+              shown={match('q2', 'No', current)}
             />
 
             <Logic
-              id="seedbed4"
+              id="q4"
               q="What type of seedbed preparation will be done?"
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
-              cond={match('seedbed3', 'Self')}
+              shown={match('q3', 'Self', current)}
               onInput={() => {
-                change('change', 'seedbedPower', '');
-                change('change', 'seedbedTotal', '');
-                change('change', 'seedbedEdited', false);
+                dispatch(set[current]({key: 'power', value: data('default power unit')}));
+                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
+                dispatch(set[current]({key: 'edited', value: false}));
               }}
             />
 
             <Logic
-              id="seedbedPower"
+              id="power"
               q="What power will be used?"
               a={['', ...Object.keys(db.power)]}
-              cond={state.seedbed4}
-              value={powerUnit}
+              shown={state.q4}
               onInput={() => {
-                change('change', 'seedbedTotal', '');
-                change('change', 'seedbedEdited', false);
+                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
+                dispatch(set[current]({key: 'edited', value: false}));
               }}
             />
 
             <Logic
-              id="seedbedAnnualUseAcres"
               q="Annual Use (acres on implement)"
-              a={state.seedbedAnnualUseAcres}
-              cond={state.seedbed4}
-              value={data('acres/year', 0)}
+              a={data('acres/year', 0)}
+              shown={state.q4}
             />
 
             <Logic
-              id="seedbedAnnualUseHours"
               q="Annual Use (hours on power)"
-              a={state.seedbedAnnualUseHours}
-              cond={state.seedbed4}
-              value={power('expected use (hr/yr)')}              
+              a={power('expected use (hr/yr)')}
+              shown={state.q4}
             />
 
             <Logic
-              id="seedbedAcresHour"
               q="Acres/hour"
               a={data('acres/hour', 1)}
-              cond={state.seedbed4}
+              shown={state.q4}
             />
 
             <Logic
-              id="seedbedTotal"
-              q={state.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(state.seedbedEstimated)}/acre)` : `Estimated custom cost (${dollars(state.seedbedTotal)}/acre)`}
+              id="total"
+              q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
               a={'dollar'}
-              onInput={() => {
-                change('change', 'seedbedEdited', true);
+              onInput={(e) => {
+                dispatch(set[current]({key: 'edited', value: e.target.value > ''}));
               }}
             />
           </tbody>
         </table>
-      </div>
-      
-      <Activity type="seedbed"/>
+      </form>
+
+      <Activity type={current}/>
     </>
   )
 } // Seedbed

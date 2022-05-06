@@ -1,37 +1,11 @@
-// npm i --no-optional
-
-// https://itnext.io/fixing-security-vulnerabilities-in-npm-dependencies-in-less-than-3-mins-a53af735261d
-// npm i minimist --save-dev
-// "resolutions": {
-//   "minimist": "^1.2.5"
-// }
-// "scripts": {
-//   "preinstall": "npx npm-force-resolutions"
-// }
-// npm i
-
-// TODO: autofocus map
-// TODO: Inputs.js for everything
-// TODO: Google Maps already loaded outside @googlemaps/js-api-loader.
-// TODO: Editable crops/prices
-// TODO: https://wlazarus.cfans.umn.edu/william-f-lazarus-farm-machinery-management
-// TODO: MACHDATA
-// TODO: Plant Data Service:  Disregard, build own
-
-// WAIT: Soil Erosion Control
-// WAIT: Additional Considerations
-
-// DONE: material-ui -> mui
-// DONE: Don't autofill
-// DONE: npm install warnings
-// DONE: npm audit warnings
-// DONE: Autocomplete height
-// DONE: Next to Resources, Back should be Revenue Impact
-// DONE: Warning: Cannot update a component (`App`) while rendering a different component (`Screens`).
-
-import React, {useState} from 'react';
 import './App.css';
+
+import React from 'react';
 import {MenuItem, Button} from '@mui/material';
+
+import {useSelector, useDispatch} from 'react-redux';
+
+import {get, set} from './app/store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';
@@ -50,60 +24,7 @@ import Practices    from './components/Practices';
 import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
 
-const App = () => {
-/*
-  const updateSpeciesTotal = () => {
-    let total = 0;
-    parms.species.forEach((s, n) => {
-      if (s) {
-        total += (+parms.rates[n] || 0) * (+parms.prices[n] || 0)
-      }
-    });
-    set.coverCropTotal(total);
-  } // updateSpeciesTotal
-*/
-
-/*
-  const updateCosts = (otype) => {
-    const ds = /Chemical/.test(otype) ? otype.match(/[A-Z][a-z]+/)[0] : 4;
-    const data = db.implements[parms[type + ds]];
-
-    const costdb = {
-      seedbed: 'Seedbed preparation',
-      planting: 'Planting'
-    }[type];
-
-    const total = parms[type + 3] === 'Self' ? totalRelevantCost(type).toFixed(2) : db.costDefaults[costdb].cost;
-
-    console.log(implementCost('Depreciation'), powerCost('Depreciation'), parms[type + 'Power'], type + 'Power');
-
-    set[type + 'Estimated'](total);
-    set[type + 'Total'](total);
-
-    if (type === 'termination') {
-      const terminationUnitCost = dbvalue('herbicides', parms.terminationProduct, 'Cost ($)'); // done
-      const terminationRate     = dbvalue('herbicides', parms.terminationProduct, 'Rate');     // done
-
-      switch (otype) {
-        case 'terminationProduct' :
-          set.terminationUnitCost(terminationUnitCost);
-          set.terminationUnit    (dbvalue('herbicides', parms.terminationProduct, 'Unit (cost)'));
-          set.terminationRate    (terminationRate);
-          set.terminationRateUnit(dbvalue('herbicides', parms.terminationProduct, 'Unit (rate)'));
-          break;
-        case 'terminationUnitCost' :
-        case 'terminationRate' :
-          set.terminationProductCost((terminationUnitCost * terminationRate).toFixed(2));
-          break;
-        case 'terminationRoller' :
-          set.terminationRollerCost(total);
-          break;
-        default: ;
-      }
-    }
-  } // updateCosts
-*/
-
+function App() {
   const screens = {
     Home,
     Modules: {
@@ -139,6 +60,42 @@ const App = () => {
     )
   } // MyMenu
 
+  const Screen = () => {
+    switch (screen) {
+      case 'Home'         : return <Home />;
+      case 'Field'        : return <Field />;
+      case 'Species'      : return <Species />;
+      case 'Seedbed'      : return <Seedbed />;
+      case 'Planting'     : return <Planting />;
+      case 'Termination'  : return <Termination />;
+      case 'Tillage'      : return <Tillage />;
+      case 'Fertility'    : return <Fertility />;
+      case 'Herbicide'    : return <Herbicide />;
+      case 'Pests'        : return <Pests />;
+      case 'Erosion'      : return <Erosion />;
+      case 'Additional'   : return <Additional />;
+      case 'Yield'        : return <Yield />;
+      case 'Practices'    : return <Practices />;
+      case 'Revenue'      : return <Revenue />;
+      case 'Resources'    : return <Resources/>;
+      default: 
+    }
+  } // Screen
+
+  const changeScreen = (e) => {
+    const menu = e.target;
+
+    if (menu.tagName === 'LI') {
+      const scr = menu.dataset.scr;
+
+      if (scr !== 'Resources') {
+        dispatch(set.previousScreen(scr));
+      }
+     
+      dispatch(set.screen(scr));
+    }
+  } // changeScreen
+
   const Navigation = ({current}) => {
     let back;
     let backDesc;
@@ -172,8 +129,8 @@ const App = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              setScreen(back);
-              setPreviousScreen(back);
+              dispatch(set.screen(back));
+              dispatch(set.previousScreen(back));
             }}
             tabIndex={-1}
           >
@@ -186,9 +143,9 @@ const App = () => {
             variant="contained"
             color="primary" 
             onClick={() => {
-              setScreen(next);
+              dispatch(set.screen(next));
               if (next !== 'Resources') {
-                setPreviousScreen(next);
+                dispatch(set.previousScreen(next));
               }
             }}
           >
@@ -202,7 +159,7 @@ const App = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              setScreen('Resources');
+              dispatch(set.screen('Resources'));
             }}
           >
             Resources
@@ -211,48 +168,15 @@ const App = () => {
       </div>
     )
   } // Navigation
-    
-  const changeScreen = (e) => {
-    const menu = e.target;
 
-    if (menu.tagName === 'LI') {
-      const scr = menu.dataset.scr;
+  const dispatch = useDispatch();
+  const screen = useSelector(get.screen);
+  const previousScreen = useSelector(get.previousScreen);
 
-      if (scr !== 'Resources') {
-        setPreviousScreen(scr);
-      }
-     
-      setScreen(scr);
-    }
-  } // changeScreen
-
-  const [screen, setScreen] = useState('Home');
-  const [previousScreen, setPreviousScreen] = useState('Home');
-
-  const Screen = () => {
-    switch (screen) {
-      case 'Home'         : return <Home />;
-      case 'Field'        : return <Field />;
-      case 'Species'      : return <Species />;
-      case 'Seedbed'      : return <Seedbed />;
-      case 'Planting'     : return <Planting />;
-      case 'Termination'  : return <Termination />;
-      case 'Tillage'      : return <Tillage />;
-      case 'Fertility'    : return <Fertility />;
-      case 'Herbicide'    : return <Herbicide />;
-      case 'Pests'        : return <Pests />;
-      case 'Erosion'      : return <Erosion />;
-      case 'Additional'   : return <Additional />;
-      case 'Yield'        : return <Yield />;
-      case 'Practices'    : return <Practices />;
-      case 'Revenue'      : return <Revenue />;
-      case 'Resources'    : return <Resources/>;
-      default: 
-    }
-  } // Screen
+  console.log('App');
 
   return (
-    <>
+    <div className="App">
       <nav onClick={changeScreen}>
         {MyMenu(screens)}
       </nav>
@@ -261,18 +185,16 @@ const App = () => {
         <Screen/>
         <Navigation current={screen} />
       </div>
-    </>
+    </div>
   );
-} // App
+}
 
 const originalWarn = console.warn;
 
-console.warn = (s) => {  
-  if (!/Google Maps already loaded/.test(s)) { // annoying
+console.warn = (s) => {
+  if (!/The value provided to Autocomplete is invalid./.test(s)) { // annoying
     originalWarn(s);
   }
 }
-
-document.title = 'Econ DST';
 
 export default App;

@@ -1,9 +1,21 @@
 import Activity from './Activity';
 import Logic from './Logic';
-import {useStore} from '../store/Store';
+import {useEffect} from 'react';
 
-const Termination = ({setScreen}) => {
-  const {state, match, dollars, db} = useStore();
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set, db, dollars, data, power, match, totalRelevantCost} from '../app/store';
+
+const Termination = () => {
+  const dispatch = useDispatch();
+  const current  = 'termination';
+  const state    = useSelector(get[current]);
+
+  useEffect(() => {
+    dispatch(set.current(current));
+  });
+
+  const total     = state.total;
+  const estimated = current ? totalRelevantCost() : 0;
 
   const dbvalue = (table, key, parm) => {
     return db[table][key] ? db[table][key][parm] : '';
@@ -13,90 +25,84 @@ const Termination = ({setScreen}) => {
     <div className="Termination">
       <h1>Economic Decision Aid for Cover Crops: Termination</h1>
       <strong>Cover Crop Establishment</strong>
-      <table className="termination">
+      <table className={current}>
         <tbody>
           <tr>
             <th colSpan="2">Termination</th>
           </tr>
 
           <Logic
-            id="termination2"
+            id="q2"
             q="Would you do this field activity if you did not have a cover crop?"
-            initial="No"
-            zzinitial="No"
             a={['Yes', 'No']}
             onInput={(e) => {
               if (e.target.value === 'Yes') {
-                setScreen('Tillage');
+                dispatch(set.screen('Tillage'));
               }
             }}
           />
 
           <Logic
-            id="termination3"
+            id="q3"
             q="Who will do this activity?"
-            zinitial="z"
-            initial="Self"
             a={['Self', 'Custom Operator']}
-            cond={match('termination2', 'No')}
+            shown={match('q2', 'No', current)}
           />
 
           <Logic
-            id="terminationCustomCost"
+            id="customCost"
             q="Custom operator cost ($/acre)"
             a={'dollar'}
-            cond={match('termination3', 'Custom Operator')}
+            shown={match('q3', 'Custom Operator', current)}
           />
 
           <Logic
-            id="terminationMethod"
+            id="method"
             q="Cover Crop termination method"
             a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
-            initial="Herbicide application"
-            cond={match('termination2', 'No')}
+            shown={match('q2', 'No', current)}
           />
 
           <Logic
-            id="terminationProduct"
+            id="product"
             q="Product"
             a={['', ...Object.keys(db.herbicides).sort()]}
-            initial="atrazine"
-            cond={match('terminationMethod', 'Herbicide application')}
+            shown={match('method', 'Herbicide application', current)}
           />
 
           {
-            (match('terminationMethod', 'Herbicide application') || match('terminationMethod', 'Roller with follow-up herbicide')) && (
+            (match('method', 'Herbicide application', current) || match('method', 'Roller with follow-up herbicide', current)) && (
               <>
                 <Logic
-                  id="terminationUnitCost"
+                  id="unitCost"
                   q="Cost per unit of product"
                   a={'dollar'}
-                  value={dbvalue('herbicides', state.terminationProduct, 'Cost ($)')}
-                  suffix={dbvalue('herbicides', state.terminationProduct, 'Unit (cost)')}
+                  value={dbvalue('herbicides', state.product, 'Cost ($)')}
+                  suffix={dbvalue('herbicides', state.product, 'Unit (cost)')}
                 />
       
                 <Logic
-                  id="terminationRate"
+                  id="rate"
                   q="Application rate"
                   a={'number'}
-                  value={dbvalue('herbicides', state.terminationProduct, 'Rate')}
-                  suffix={dbvalue('herbicides', state.terminationProduct, 'Unit (rate)')}
+                  value={dbvalue('herbicides', state.product, 'Rate')}
+                  suffix={dbvalue('herbicides', state.product, 'Unit (rate)')}
                 />
       
                 <Logic
-                  id="terminationProductCost"
+                  id="productCost"
                   q="Product cost"
-                  a={state.terminationProductCost}
+                  a={state.productCost}
                 />
 
                 <Logic
-                  id="terminationChemical"
+                  id="chemical"
                   q="What chemical spray equipment will be used?"
                   a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Chemical').sort()]}
                 />
         
                 <Logic
-                  id="terminationChemicalCost"
+                  id="chemicalCost"
                   q="Chemical spray equipment cost ($/acre)"
                   a={'dollar'}
                 />
@@ -105,16 +111,16 @@ const Termination = ({setScreen}) => {
           }
 
           {
-            (match('terminationMethod', 'Roller') || match('terminationMethod', 'Roller with follow-up herbicide')) && (
+            (match('method', 'Roller', current) || match('method', 'Roller with follow-up herbicide', current)) && (
               <>
                 <Logic
-                  id="terminationRoller"
+                  id="roller"
                   q="What roller equipment will be used?"
                   a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Termination').sort()]}
                 />
 
                 <Logic
-                  id="terminationRollerCost"
+                  id="rollerCost"
                   q="Roller equipment cost ($/acre)"
                   a={'dollar'}
                 />
@@ -123,46 +129,55 @@ const Termination = ({setScreen}) => {
           }
 
           {
-            match('terminationMethod', 'Tillage') && (
+            match('method', 'Tillage', current) && (
               <>
                 <Logic
-                  id="terminationTillage4"
+                  id="q4"
                   q="What type of seedbed preparation will be done?"
                   a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
+                  onInput={() => {
+                    dispatch(set[current]({key: 'power', value: data('default power unit')}));
+                    dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
+                    dispatch(set[current]({key: 'edited', value: false}));
+                  }}
                 />
 
                 <Logic
-                  id="terminationTillagePower"
+                  id="power"
                   q="What power will be used?"
                   a={['', ...Object.keys(db.power)]}
-                  cond={state.terminationTillage4}
+                  shown={state.q4}
+                  onInput={() => {
+                    dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
+                    dispatch(set[current]({key: 'edited', value: false}));
+                  }}
                 />
 
                 <Logic
-                  id="terminationTillageAnnualUseAcres"
                   q="Annual Use (acres on implement)"
-                  a={state.seedbedAnnualUseAcres.toString()}
-                  cond={state.terminationTillage4}
+                  a={data('acres/year', 0)}
+                  shown={state.q4}
                 />
 
                 <Logic
-                  id="terminationTillageAnnualUseHours"
                   q="Annual Use (hours on power)"
-                  a={state.seedbedAnnualUseHours.toString()}
-                  cond={state.terminationTillage4}
+                  a={power('expected use (hr/yr)')}
+                  shown={state.q4}
                 />
 
                 <Logic
-                  id="terminationTillageAcresHour"
                   q="Acres/hour"
-                  a={state.seedbedAcresHour.toString()}
-                  cond={state.terminationTillage4}
+                  a={data('acres/hour', 1)}
+                  shown={state.q4}
                 />
 
                 <Logic
-                  id="terminationTillageTotal"
-                  q={state.seedbed3 === 'Self' ? `Estimated relevant cost (${dollars(state.seedbedEstimated)}/acre)` : `Estimated custom cost (${dollars(state.seedbedTotal)}/acre)`}
+                  id="total"
+                  q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
                   a={'dollar'}
+                  onInput={(e) => {
+                    dispatch(set[current]({key: 'edited', value: e.target.value > ''}));
+                  }}
                 />
               </>
             )
@@ -171,7 +186,7 @@ const Termination = ({setScreen}) => {
       </table>
 
       <Activity type="termination" ds="Chemical"/>
-      <Activity type="termination" ds="Tillage4"/>
+      <Activity type="termination" ds="q4"/>
       <Activity type="termination" ds="Product" />
     </div>
   )

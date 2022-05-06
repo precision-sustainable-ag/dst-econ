@@ -1,16 +1,22 @@
 import React from 'react';
 
-import {TextField, Autocomplete, OutlinedInput, Icon} from '@mui/material';
-import {Input} from './Inputs';
+import {TextField, OutlinedInput, Icon} from '@mui/material';
+import {Input, Autocomplete} from './NewInputs';
 import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
-import {useStore} from '../store/Store';
+
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set} from '../app/store';
 
 const autocompleteService = { current: null };
 
 const GoogleMaps = ({autoFocus=false, field=false}) => {
-  const {state, change} = useStore();  
-  const [location, setValue] = React.useState(state.location, null);
+  const dispatch = useDispatch();
+
+  const lat = useSelector(get.lat);
+  const lon = useSelector(get.lon);
+  const location = useSelector(get.location);
+
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
 
@@ -24,7 +30,6 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
   React.useEffect(() => {
     let active = true;
-
     if (!autocompleteService.current && window.google) {
       autocompleteService.current = new window.google.maps.places.AutocompleteService();
     }
@@ -34,25 +39,15 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
     }
 
     if (inputValue === '') {
-      setOptions(location ? [location] : []);
-      return undefined;
+      setOptions([]);
+      return;
+    } else {
+      fetch({input: inputValue}, (results) => {
+        if (active) {
+          setOptions(results || []);
+        }
+      });
     }
-
-    fetch({ input: inputValue }, (results) => {
-      if (active) {
-        let newOptions = [];
-
-        if (location) {
-          newOptions = [location];
-        }
-
-        if (results) {
-          newOptions = [...newOptions, ...results];
-        }
-
-        setOptions(newOptions);
-      }
-    });
 
     return () => {
       active = false;
@@ -69,14 +64,12 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
         includeInputInList
         filterSelectedOptions
 
-        value={state.location}
-        // getOptionSelected={(option, value) => option.id === value.id}  // avoids warning, per https://stackoverflow.com/a/65347275/3903374, but prevents re-entry of data
+        isOptionEqualToValue={(option, value) => {return false;}}  // TODO
         
         onChange={(_, newValue) => {
           setOptions(newValue ? [newValue, ...options] : options);
           if (newValue) {
-            change('change', 'location', newValue.description);
-            setValue(newValue);
+            dispatch(set.location(newValue.description));
             const geocoder = new window.google.maps.Geocoder();
 
             geocoder.geocode({
@@ -86,20 +79,20 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
               let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
               if (state) {
                 state = state[0].long_name;
-                change('change', 'state', state);
+                dispatch(set.state(state));
               } else {
-                change('change', 'state', '');
+                dispatch(set.state(''));
               }
               
               if (results && results[0]) {
-                change('change', 'lat', results[0].geometry.location.lat().toFixed(4));
-                change('change', 'lon', results[0].geometry.location.lng().toFixed(4));
+                dispatch(set.lat(results[0].geometry.location.lat().toFixed(4)));
+                dispatch(set.lon(results[0].geometry.location.lng().toFixed(4)));
               }
             });
           }
         }}
 
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_, newInputValue) => {
           setInputValue(newInputValue);
         }}
 
@@ -110,7 +103,6 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
                 {...params}
                 autoFocus={autoFocus}
                 label="Find your Location"
-                variant="outlined" 
                 style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
               />
             </>
@@ -124,7 +116,6 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
           <OutlinedInput
             className="field"
             label="Name your Field"
-            notched={true}
             id="field"
             autoComplete="off"
             style={{width: 'calc(50% - 2em)'}}
@@ -149,23 +140,20 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
       <p/>
       <div tabIndex="-1">
         If you know your exact coordinates, you can enter them here:
-        &nbsp;
+        <br/>
         <Input
-          className="field"
-          label="Latitude"
-          notched={true}
           id="lat"
-          autoComplete="off"
-          style={{width: '8em'}}
+          value={lat}
+          label="Latitude"
           type="number"
+          sx={{margin: 1}}
         />
         <Input
-          className="field"
-          label="Longitude"
-          notched={true}
           id="lon"
-          autoComplete="off"
-          style={{width: '8em'}}
+          value={lon}
+          label="Longitude"
+          type="number"
+          sx={{margin: 1}}
         />
       </div>
     </>
@@ -173,10 +161,15 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 }
 
 const Map = ({field=false, autoFocus}) => {
-  const {state, change} = useStore();
+  const dispatch = useDispatch();
+  const lat = useSelector(get.lat);
+  const lon = useSelector(get.lon);
+  const mapType = useSelector(get.mapType);
+  const mapZoom = useSelector(get.mapZoom);
+
   const mapChange = (e) => {
-    change('change', 'lat', +e.lat.toFixed(4));
-    change('change', 'lon', +e.lng.toFixed(4));
+    dispatch(set.lat(e.lat.toFixed(4)));
+    dispatch(set.lon(e.lng.toFixed(4)));
 
     const latlng = {
       lat: e.lat,
@@ -188,14 +181,14 @@ const Map = ({field=false, autoFocus}) => {
       .then(response => {
         const results = response.results;
         const location = results[0].formatted_address;
-        change('change', 'location', location);
+        dispatch(set.location(location));
 
         let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
         if (state) {
           state = state[0].long_name;
-          change('change', 'state', state);
+          dispatch(set.state(state));
         } else {
-          change('change', state, '');
+          dispatch(set.state(''));
         }
       })
       .catch((e) => window.alert('Geocoder failed due to: ' + e));
@@ -209,23 +202,32 @@ const Map = ({field=false, autoFocus}) => {
     Geocoder = new maps.Geocoder();
   };
 
+  if (false) {
+    return (
+      <>
+        <GoogleMaps field={field} autoFocus={autoFocus}/>
+        work in progress
+      </>
+    )
+  }
+
   return (
     <>
       <GoogleMaps field={field} autoFocus={autoFocus}/>
       {
-        state.lat && state.lon &&
+        false && lat && lon &&
         <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
-            center={{lat: +state.lat, lng: +state.lon}}
-            zoom={state.mapZoom}
+            center={{lat: +lat, lng: +lon}}
+            zoom={mapZoom}
 
             onGoogleApiLoaded={initGeocoder}
             
             yesIWantToUseGoogleMapApiInternals
             onClick={mapChange}
-            onZoomAnimationEnd={(zoom) => change('change', 'mapZoom', zoom)}
-            onMapTypeIdChange={(type) => change('change', 'mapType', type)}
+            onZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
+            onMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
 
             onLoad={
               // prevent tabbing through map
@@ -236,7 +238,7 @@ const Map = ({field=false, autoFocus}) => {
             }
 
             options={(map) => ({
-              mapTypeId: state.mapType,
+              mapTypeId: mapType,
               fullscreenControl: false,
               scaleControl: true,
               mapTypeControl: true,
@@ -251,7 +253,7 @@ const Map = ({field=false, autoFocus}) => {
               },
             })}
           >
-            <Marker lat={+state.lat} lng={+state.lon} />
+            <Marker lat={+lat} lng={+lon} />
           </GoogleMapReact>
         </div>
       }

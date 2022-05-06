@@ -1,5 +1,4 @@
 import React, {useReducer, useContext} from 'react';
-import { configureStore } from '@reduxjs/toolkit';
 
 const Store = React.createContext();
 Store.displayName = 'Store';
@@ -175,9 +174,3 @@ loadData('stateRegions');
 loadData('herbicides');
 loadData('power');
 loadData('implements');
-
-export const store = configureStore({
-  reducer: {
-    test: () => null
-  },
-});

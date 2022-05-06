@@ -1,24 +1,30 @@
-import {Autocomplete, Input} from './Inputs';
-import {useStore} from '../store/Store';
-import { useEffect } from 'react';
+import {Autocomplete, Input} from './NewInputs';
+import {useEffect} from 'react';
 
-const Logic = ({q, a, id, cond=true, suffix='', initial='', onInput, value}) => {
-  const {state, change} = useStore();
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set} from '../app/store';
+
+const Logic = ({q, a, id, shown=true, suffix='', initial='', onInput, value}) => {
+  const dispatch = useDispatch();  
+  const context = useSelector(get.current);
 
   useEffect(() => {
-    change('addkey', id, initial, true);
-  
-    change('change', 'shown' + id, cond, true);
+    if (!context) return;
     
-    if (!cond) {
-      change('change', id, initial, true);
+    dispatch(set.shown({
+      key: context + id,
+      value: shown || false
+    }));
+
+    if (!shown) { // TODO
+      dispatch(set[context]({key: id, value: initial}));
     } else if (value !== undefined) {
-      change('change', id, value, true);
+      dispatch(set[context]({key: id, value}));
     }
   });
 
   return (
-    cond ?
+    context && shown ?
     <tr className={id}>
       <td>{q}</td>
       <td>
@@ -31,6 +37,7 @@ const Logic = ({q, a, id, cond=true, suffix='', initial='', onInput, value}) => 
                   <label key={a}>
                     <Input
                       onInput={onInput}
+                      context={context}
                       type="radio"
                       id={id}
                       value={a}
@@ -43,15 +50,16 @@ const Logic = ({q, a, id, cond=true, suffix='', initial='', onInput, value}) => 
             :
             <Autocomplete
               onInput={onInput}
+              context={context}
               options={a}
               id={id}
-              value={state[id] || initial}
             />
           :
           
           /number|dollar/.test(a) ?
             <Input
               onInput={onInput}
+              context={context}
               type={a}
               id={id}
             />

@@ -45,7 +45,6 @@ const keyPress = (event) => {
 const Input = ({type, id, value, defaultChecked, onInput, style}) => {
   const {state, change} = useStore();
 
-  
   value = value !== undefined ? value : state[id]; // || defaultChecked;
 
   if (state[id] === undefined) {
@@ -134,7 +133,7 @@ const Input = ({type, id, value, defaultChecked, onInput, style}) => {
           const value = e.target.value || '';
           change('change', id, value.replace('$', ''));
           if (onInput) {
-            onInput(e);
+            // onInput(e);
           }
         }}
 

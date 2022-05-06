@@ -1,28 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
-import './index.css';
+import {store} from './app/store';
 import App from './App';
-import { StoreProvider } from './store/Store';
-import {store} from './store/Store';
-import { initialState, Reducer } from './store/Reducer';
+import './index.css';
 
-if (true) {
-  ReactDOM.render(
-    <React.StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
-  );
-} else {
-  ReactDOM.render(
-    <React.StrictMode>
-      <StoreProvider initialState={initialState} reducer={Reducer}>
-        <App />
-      </StoreProvider>      
-    </React.StrictMode>,
-    document.getElementById('root')
-  );
-}
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);

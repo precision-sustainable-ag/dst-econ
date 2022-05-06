@@ -1,38 +1,30 @@
 {
-  "homepage": ".",
-  "name": "econ",
+  "name": "cc-econ2",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
-    "@googlemaps/js-api-loader": "^1.14.0",
-    "@mui/material": "^5.0.4",
-    "@mui/styles": "^5.0.1",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.6.3",
+    "@mui/styled-engine": "^5.6.1",
+    "@mui/system": "^5.6.3",
     "@reduxjs/toolkit": "^1.8.1",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.1.1",
+    "@testing-library/user-event": "^14.1.1",
     "google-map-react": "^2.1.10",
-    "npm-force-resolutions": "0.0.10",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-geocode": "^0.2.3",
-    "react-google-autocomplete": "^2.4.3",
-    "react-number-format": "^4.7.3",
-    "react-places-autocomplete": "^7.3.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-number-format": "^4.9.3",
     "react-redux": "^8.0.1",
-    "react-scripts": "^4.0.3",
-    "tsutils": "^3.21.0",
-    "typescript": "^4.4.4",
-    "web-vitals": "^1.1.2"
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "preinstall": "npx npm-force-resolutions"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -42,32 +34,14 @@
   },
   "browserslist": {
     "production": [
-      ">0.3%",
+      ">0.2%",
       "not dead",
       "not op_mini all"
     ],
     "development": [
-      ">0.3%",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.13.0",
-    "ansi-html": "^0.0.8",
-    "browserslist": "^4.17.4",
-    "glob-parent": "^6.0.2",
-    "immer": "^9.0.6",
-    "nth-check": "^2.0.1",
-    "set-value": "^4.1.0"
-  },
-  "resolutions": {
-    "ansi-html": "https://registry.yarnpkg.com/ansi-html-community/-/ansi-html-community-0.0.8.tgz#69fbc4d6ccbe383f9736934ae34c3f8290f1bf41",
-    "browserslist": "^4.17.4",
-    "glob-parent": "^6.0.2",
-    "immer": "^9.0.6",
-    "nth-check": "^2.0.1",
-    "set-value": "^4.1.0"
   }
 }

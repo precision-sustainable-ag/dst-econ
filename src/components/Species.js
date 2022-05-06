@@ -1,12 +1,15 @@
-import {Autocomplete, Input} from './Inputs';
-import Activity from './Activity';
-import {useStore} from '../store/Store';
 import {useEffect} from 'react';
 
+import {Autocomplete, Input} from './NewInputs';
+import Activity from './Activity';
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set, db, dollars} from '../app/store';
+
 const SpeciesRow = ({n}) => {
-  const {state, change, db} = useStore();
+  const dispatch = useDispatch();
+  const species = useSelector(get.species);
   
-  const species = {
+  const speciesList = {
     Other:      ['Commercial mix'],
     Brassica:   ['Brassica, Forage', 'Mustard', 'Radish, Forage', 'Radish, Oilseed', 'Rape, Oilseed, Spring', 'Rape, Oilseed, Winter', 'Rapeseed, Forage', 'Turnip, Forage', 'Turnip, Purple Top'],
     Broadleaf:  ['Buckwheat', 'Phacelia', 'Sunflower'],
@@ -15,42 +18,46 @@ const SpeciesRow = ({n}) => {
   };
 
   const options = [
-    ...species.Other,
-    ...species.Grass,
-    ...species.Legume,
-    ...species.Brassica,
-    ...species.Broadleaf,
-  ].filter(s => s === state['species' + n] || !Object.values(state).includes(s));
+    ...speciesList.Other,
+    ...speciesList.Grass,
+    ...speciesList.Legume,
+    ...speciesList.Brassica,
+    ...speciesList.Broadleaf,
+  ].filter((s, i) => i === n || !species.includes(s));
 
   return (
     <tr>
       <td>
         <Autocomplete
-          id={'species' + n}
+          id="species"
+          index={n}
           groupBy={
-            (option) => species.Other.includes(option)     ? '-' :
-                        species.Brassica.includes(option)  ? 'Brassica' :
-                        species.Broadleaf.includes(option) ? 'Broadleaf' :
-                        species.Grass.includes(option)     ? 'Grass' :
-                        species.Legume.includes(option)    ? 'Legume' :
-                                                             'ERROR'
+            (option) => speciesList.Other.includes(option)     ? '-' :
+                        speciesList.Brassica.includes(option)  ? 'Brassica' :
+                        speciesList.Broadleaf.includes(option) ? 'Broadleaf' :
+                        speciesList.Grass.includes(option)     ? 'Grass' :
+                        speciesList.Legume.includes(option)    ? 'Legume' :
+                                                                 'ERROR'
           }
           options={options}
 
-          onInputChange={(event, sp, reason) => {
+          onChange={(event, sp, reason) => {
             if (!event) {  // changing screen
               return;
-            } else if (reason === 'clear') {
-              setTimeout(() => {  // timeout needed for the cleared species element
-                for (let i = n; state['species' + i]; i++) {
-                  change('change', 'species' + i, state['species' + (i + 1)] || '');
-                  change('change', 'rates'   + i, state['rates'   + (i + 1)] || '');
-                  change('change', 'prices'  + i, state['prices'  + (i + 1)] || '');
-                }
-              }, 1);
+            } else if (reason === 'zclear') { // TODO?
+              dispatch(set.removespecies(n));
+              dispatch(set.removerates(n));
+              dispatch(set.removeprices(n));
             } else {
-              change('change', 'rates'  + n, db.rate(sp));
-              change('change', 'prices' + n, db.price(sp));
+              dispatch(set.rates({
+                value: db.rate(sp),
+                index: n
+              }));
+
+              dispatch(set.prices({
+                value: db.price(sp),
+                index: n
+              }));
             }
           }}
         />
@@ -58,13 +65,15 @@ const SpeciesRow = ({n}) => {
       <td>
         <Input
           type="number"
-          id={'rates' + n}
+          id="rates"
+          index={n}
         />
       </td>
       <td>
         <Input
           type="dollar"
-          id={'prices' + n}
+          id="prices"
+          index={n}
         />
       </td>
     </tr>
@@ -72,10 +81,16 @@ const SpeciesRow = ({n}) => {
 } // SpeciesRow
 
 const Species = () => {
-  const {state, change, dollars, db} = useStore();
+  const dispatch = useDispatch();
+  const species         = useSelector(get.species);
+  const rates           = useSelector(get.rates);
+  const prices          = useSelector(get.prices);
+  const coverCropTotal  = useSelector(get.coverCropTotal);
+  const state           = useSelector(get.state);
 
-  let rec = db.stateRegions[state.state.toUpperCase()];
-  let region = rec ? db.stateRegions[state.state.toUpperCase()].ccRegion.toLowerCase() : '';
+  let rec = db.stateRegions[state.toUpperCase()];
+
+  let region = rec ? db.stateRegions[state.toUpperCase()].ccRegion.toLowerCase() : '';
   if (region) {
     region = region[0].toUpperCase() + region.slice(1);
   }
@@ -87,78 +102,78 @@ const Species = () => {
     Western:    'https://westerncovercrops.org/category/resources/selection/'
   }[region];
 
-  const species = Object.keys(state).filter(key => /^species\d/.test(key) && state[key]);
-
   let total = 0;
 
   species
     .forEach((s, n) => {
       if (s) {
-        total += (+state['rates' + n] || 0) * (+state['prices' + n] || 0);
+        total += (+rates[n] || 0) * (+prices[n] || 0);
       }
     });
 
+  console.log(total);
   useEffect(() => {
-    change('change', 'coverCropTotal', total);
+    dispatch(set.coverCropTotal(total));
   });
 
   return (
-    <form className="Species">
-      <div>
-        <h1 id="H1">Economic Decision Aid for Cover Crops: Species Selection</h1>
+    <>
+      <form className="Species">
+        <div>
+          <h1 id="H1">Economic Decision Aid for Cover Crops: Species Selection</h1>
 
-        <div id="About">
-          <p>In this section, you will select a cover crop and seeding rates as well as an estimated cost of the cover crop seed ($/pound).</p>
+          <div id="About">
+            <p>In this section, you will select a cover crop and seeding rates as well as an estimated cost of the cover crop seed ($/pound).</p>
 
-          <p>A common strategy for selecting a cover crop is to base your decision upon the need for a specific change you wish to make in a field or farm.  For example, if you wish to build soil organic matter you may want to select a cover crop with high levels of biomass and a fibrous root structure.  Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.   If you already know which cover crop you wish to consider, please select from the drop-down menu.  If you are new to the use of cover crops or still have questions, please consider using the [Cover Crop Council LINK or the Cover Crop Selection Tool LINK].</p>
+            <p>A common strategy for selecting a cover crop is to base your decision upon the need for a specific change you wish to make in a field or farm.  For example, if you wish to build soil organic matter you may want to select a cover crop with high levels of biomass and a fibrous root structure.  Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.   If you already know which cover crop you wish to consider, please select from the drop-down menu.  If you are new to the use of cover crops or still have questions, please consider using the [Cover Crop Council LINK or the Cover Crop Selection Tool LINK].</p>
 
-          <p>After selecting a cover crop species, please select a seeding rate.  Seeding rate selection will depend upon whether you are using a single species or a mix.  In addition, you may adjust seeding rates even for single species based upon your intended purpose.  For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control, but may plant a higher rate if you seek to maximize grazing potential.  You may use the common rate listed in the grey shaded boxes or input your own rate.  If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".</p>
+            <p>After selecting a cover crop species, please select a seeding rate.  Seeding rate selection will depend upon whether you are using a single species or a mix.  In addition, you may adjust seeding rates even for single species based upon your intended purpose.  For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control, but may plant a higher rate if you seek to maximize grazing potential.  You may use the common rate listed in the grey shaded boxes or input your own rate.  If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".</p>
 
-          <p>Prices for cover crops may vary widely based upon your geography and availability from season to season.  You may utilize the default value or enter specific pricing from your region.</p>
+            <p>Prices for cover crops may vary widely based upon your geography and availability from season to season.  You may utilize the default value or enter specific pricing from your region.</p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th colSpan="3">User Input</th>
+                <td className="hidden"></td>
+                <td className="hidden"></td>
+              </tr>
+              <tr>
+                <th>Cover Crop Species</th>
+                <th>Seeding Rate<br/>(lb/ac)</th>
+                <th>Price<br/>($/lb)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                species.map((s, n) => {
+                  return (
+                    s &&
+                    <SpeciesRow key={n} n={n}/>
+                  )
+                })
+              }
+              <SpeciesRow key={species.length} n={species.length}/>
+              <tr>
+                <td colSpan="2"><strong>Cost of Cover crop seed ($/acre)</strong></td>
+                <td className="hidden"></td>
+                <td><strong>{dollars(coverCropTotal)}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          {
+            link &&
+            <a href={link} target="_blank" rel="noreferrer">
+              {region} Cover Crops Council Species Selector
+            </a>
+          }
+
         </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th colSpan="3">User Input</th>
-              <td className="hidden"></td>
-              <td className="hidden"></td>
-            </tr>
-            <tr>
-              <th>Cover Crop Species</th>
-              <th>Seeding Rate<br/>(lb/ac)</th>
-              <th>Price<br/>($/lb)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              species.map((s, n) => {
-                return (
-                  s &&
-                  <SpeciesRow key={n} n={n}/>
-                )
-              })
-            }
-            <SpeciesRow key={species.length} n={species.length}/>
-            <tr>
-              <td colSpan="2"><strong>Cost of Cover crop seed ($/acre)</strong></td>
-              <td className="hidden"></td>
-              <td><strong>{dollars(state.coverCropTotal)}</strong></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        {
-          link &&
-          <a href={link} target="_blank" rel="noreferrer">
-            {region} Cover Crops Council Species Selector
-          </a>
-        }
-
-      </div>
-
+      </form>
       <Activity type="species"/>
-    </form>
+    </>
   )
 } // Species
 
