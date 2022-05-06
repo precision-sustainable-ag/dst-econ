@@ -32,13 +32,14 @@ const keyPress = (event) => {
 } // keyPress
 
 const Input = ({type, id, index, value, onInput, style, context, immediate, ...props}) => {
-  // console.log(`Render: Input ${id}`);
   const dispatch = useDispatch();
   const focus = useSelector(get.focus);
-  const changed = useSelector(get.changed)[id];
+
+  const changed = useSelector(get.changed)[context || id];
+
   const focusRef = useRef(null);
 
-  const sel = context ? get[context] : get[id];
+  const sel = get[context || id];
   if (!sel) {
     alert('Unknown Input: ' + id);
   }
@@ -121,7 +122,7 @@ const Input = ({type, id, index, value, onInput, style, context, immediate, ...p
         {...props}
         id={id}
         checked={val === value}
-        value={v}
+        value={value}
         style={{padding: 0}}
         onChange={(e) => {
           change(e.target.value);

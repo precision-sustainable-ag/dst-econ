@@ -39,11 +39,11 @@ const initialState = {
   lon: -74.8073,
   mapType: 'hybrid',
   mapZoom: 13,
-  location: '2',
+  location: '',
   state: '',
   farm: '',
-  labor: '342',
-  acres: '423',
+  labor: '',
+  acres: '',
   priorCrop: '',
   otherPriorCrop: '',
   otherCashCrop: '',
@@ -63,7 +63,7 @@ const initialState = {
   shown: {},
 };
 
-if (true) {
+if (false) {
   initialState.current = 'seedbed';
   initialState.seedbed.q1 = 'Yes';
   initialState.seedbed.q2 = 'No';
