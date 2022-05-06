@@ -1,4 +1,6 @@
-const Resources = () => (
+import {Navigation} from './Navigation';
+
+const Resources = ({set, parms}) => (
   <div className="Resources">
     <h1>Economic Decision Aid for Cover Crops: Resources</h1>
     <p>
@@ -20,6 +22,8 @@ const Resources = () => (
       <li>Additional considerations</li>
       <li>Yield</li>
     </ul>
+
+    <Navigation set={set} current={Resources} parms={parms} />
   </div>
 ) // Resources
 

@@ -1,16 +1,14 @@
 import Map from './GoogleMaps';
-import Activity from './Activity';
+import {Navigation} from './Navigation';
 import {Autocomplete, Input} from './Inputs';
-import {useStore} from '../store/Store';
-
-import { useSelector, useDispatch } from 'react-redux';
-
+import {Context} from './Store';
+import {useContext} from 'react';
 
 const FieldAndFarm = () => {
-  const {state} = useStore();
+  const {state} = useContext(Context);
 
   return (
-    <div className="FieldAndFarm">
+    <div className="fieldAndFarm">
       <h1 id="H1">Economic Decision Aid for Cover Crops: Field and Farm</h1>
       
       <p>
@@ -81,23 +79,23 @@ const FieldAndFarm = () => {
                 id="priorCrop"
                 options={
                   [
-                    'Corn',
-                    'Soybeans',
-                    'Wheat',
-                    'Grain Sorghum (milo)',
-                    'Cotton',
-                    'Rice',
-                    'Sunflowers',
-                    'Canola',
-                    'Fallow',
-                    'Prevent Plant Acres',
-                    'Other',
+                    {label: 'Corn'},
+                    {label: 'Soybeans'},
+                    {label: 'Wheat'},
+                    {label: 'Grain Sorghum (milo)'},
+                    {label: 'Cotton'},
+                    {label: 'Rice'},
+                    {label: 'Sunflowers'},
+                    {label: 'Canola'},
+                    {label: 'Fallow'},
+                    {label: 'Prevent Plant Acres'},
+                    {label: 'Other'},
                   ]
                 }
               />
               <br/>
               {
-                state.priorCrop === 'Other' && 
+                state.priorCrop.label === 'Other' && 
                 <Input id="otherPriorCrop" placeholder="Enter crop here" />
               }
             </td>
@@ -146,7 +144,7 @@ const FieldAndFarm = () => {
         </tbody>
       </table>
 
-      <Activity type="species"/>
+      <Navigation current={FieldAndFarm} />
     </div>
   )
 } // FieldAndFarm

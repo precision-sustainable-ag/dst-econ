@@ -1,22 +1,24 @@
 import {Autocomplete, Input} from './Inputs';
-import {useContext} from 'react';
-import {Context} from './Store';
+import {useStore} from '../store/Store';
+import { useEffect } from 'react';
 
 const Logic = ({q, a, id, cond=true, suffix='', initial='', onInput, value}) => {
-  const {state, change} = useContext(Context);
+  const {state, change} = useStore();
 
-  change('addkey', id, initial);
+  useEffect(() => {
+    change('addkey', id, initial, true);
   
-  change('change', 'shown' + id, cond);
-  
-  if (!cond) {
-    change('change', id, initial);
-  } else if (value !== undefined) {
-    change('change', id, value);
-  }
+    change('change', 'shown' + id, cond, true);
+    
+    if (!cond) {
+      change('change', id, initial, true);
+    } else if (value !== undefined) {
+      change('change', id, value, true);
+    }
+  });
 
   return (
-    cond &&
+    cond ?
     <tr className={id}>
       <td>{q}</td>
       <td>
@@ -67,7 +69,8 @@ const Logic = ({q, a, id, cond=true, suffix='', initial='', onInput, value}) => 
         }
         {' ' + suffix}
       </td>
-    </tr>
+    </tr> :
+    null
   )
 } // Logic
 

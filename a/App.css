@@ -12,10 +12,6 @@ html, body {
   max-width: 1400px;
 }
 
-body {
-  display: none;
-}
-
 .selected {
   color: white;
   background: navy;
@@ -29,6 +25,7 @@ nav {
   position: fixed;
   top: 0;
   width: 14em;
+  zheight: 100vh;
   margin-right: 1em;
   padding: 0.5em;
   background: #eee;
@@ -122,6 +119,11 @@ label {
 
 .hidden {
   display: none;
+}
+
+#Activity tr > *,
+#Costs tr > * {
+  zdisplay: none;
 }
 
 #Activity.seedbed tr > :nth-child(1):not(.hidden),
@@ -274,24 +276,24 @@ nav strong, [data-scr=Resources] {
   text-align: right;
 }
 
-.FieldAndFarm tr {
+.fieldAndFarm tr {
   vertical-align: top;
 }
 
-.FieldAndFarm td {
+.fieldAndFarm td {
   height: 5em;
 }
 
-.FieldAndFarm tr:last-child td {
+.fieldAndFarm tr:last-child td {
   height: auto;
 }
 
-.FieldAndFarm td {
+.fieldAndFarm td {
   width: 50%;
   border-bottom: 1px solid #eee;
 }
 
-.FieldAndFarm td:nth-child(1) {
+.fieldAndFarm td:nth-child(1) {
   border-right: 2px solid black;
   background: #f8f8f8;
   width: auto;
@@ -319,16 +321,3 @@ table.planting td:nth-child(2) {
 tr.seedbedTotal, tr.plantingTotal, .total {
   background: yellow;
 }
-
-/*
-#Main > * {
-  display: none;
-}
-
-#Main.Home > .Home, 
-#Main.FieldAndFarm > .FieldAndFarm,
-#Main.Species > .Species,
-#Main.Resources > .Resources {
-  display: block !important;
-}
-*/

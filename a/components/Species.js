@@ -1,11 +1,15 @@
 import {Autocomplete, Input} from './Inputs';
+import {Navigation} from './Navigation';
 import Activity from './Activity';
-import {useStore} from '../store/Store';
-import {useEffect} from 'react';
+
+import {Context, db} from './Store';
+import {useContext} from 'react';
+
+const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const SpeciesRow = ({n}) => {
-  const {state, change, db} = useStore();
-  
+  const {state, change} = useContext(Context);
+
   const species = {
     Other:      ['Commercial mix'],
     Brassica:   ['Brassica, Forage', 'Mustard', 'Radish, Forage', 'Radish, Oilseed', 'Rape, Oilseed, Spring', 'Rape, Oilseed, Winter', 'Rapeseed, Forage', 'Turnip, Forage', 'Turnip, Purple Top'],
@@ -23,10 +27,11 @@ const SpeciesRow = ({n}) => {
   ].filter(s => s === state['species' + n] || !Object.values(state).includes(s));
 
   return (
-    <tr>
+    <tr key={`row${n}`}>
       <td>
         <Autocomplete
           id={'species' + n}
+          index={n}
           groupBy={
             (option) => species.Other.includes(option)     ? '-' :
                         species.Brassica.includes(option)  ? 'Brassica' :
@@ -38,15 +43,20 @@ const SpeciesRow = ({n}) => {
           options={options}
 
           onInputChange={(event, sp, reason) => {
-            if (!event) {  // changing screen
+            if (state.changingScreen) {
+              change('change', 'changingScreen', false);
               return;
             } else if (reason === 'clear') {
               setTimeout(() => {  // timeout needed for the cleared species element
-                for (let i = n; state['species' + i]; i++) {
-                  change('change', 'species' + i, state['species' + (i + 1)] || '');
-                  change('change', 'rates'   + i, state['rates'   + (i + 1)] || '');
-                  change('change', 'prices'  + i, state['prices'  + (i + 1)] || '');
-                }
+                ['species', 'rates', 'prices'].forEach(type => {
+                  const obj = Object.keys(state)
+                                .filter(key => new RegExp(type + '\\d').test(key))
+                                .filter((_, i) => i !== n);
+  
+                  obj.forEach((value, i) => {
+                    change('change', type + i, state[value] || '');
+                  });
+                });
               }, 1);
             } else {
               change('change', 'rates'  + n, db.rate(sp));
@@ -59,12 +69,14 @@ const SpeciesRow = ({n}) => {
         <Input
           type="number"
           id={'rates' + n}
+          index={n}
         />
       </td>
       <td>
         <Input
           type="dollar"
           id={'prices' + n}
+          index={n}
         />
       </td>
     </tr>
@@ -72,7 +84,7 @@ const SpeciesRow = ({n}) => {
 } // SpeciesRow
 
 const Species = () => {
-  const {state, change, dollars, db} = useStore();
+  const {state, change} = useContext(Context);
 
   let rec = db.stateRegions[state.state.toUpperCase()];
   let region = rec ? db.stateRegions[state.state.toUpperCase()].ccRegion.toLowerCase() : '';
@@ -98,13 +110,11 @@ const Species = () => {
       }
     });
 
-  useEffect(() => {
-    change('change', 'coverCropTotal', total);
-  });
+  change('change', 'coverCropTotal', total);
 
   return (
-    <form className="Species">
-      <div>
+    <form>
+      <div className="Species">
         <h1 id="H1">Economic Decision Aid for Cover Crops: Species Selection</h1>
 
         <div id="About">
@@ -135,11 +145,11 @@ const Species = () => {
               species.map((s, n) => {
                 return (
                   s &&
-                  <SpeciesRow key={n} n={n}/>
+                  <SpeciesRow n={n}/>
                 )
               })
             }
-            <SpeciesRow key={species.length} n={species.length}/>
+            <SpeciesRow n={species.length}/>
             <tr>
               <td colSpan="2"><strong>Cost of Cover crop seed ($/acre)</strong></td>
               <td className="hidden"></td>
@@ -156,8 +166,8 @@ const Species = () => {
         }
 
       </div>
-
-      <Activity type="species"/>
+      <Navigation current={Species} />
+      <Activity db={db} type="species" />
     </form>
   )
 } // Species

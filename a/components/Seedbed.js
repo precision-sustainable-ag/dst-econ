@@ -1,14 +1,13 @@
 import Activity from './Activity';
+import {Navigation} from './Navigation';
 import Logic from './Logic';
-import {useStore} from '../store/Store';
-import { useEffect } from 'react';
+import {Context, db} from './Store';
+import {useContext} from 'react';
 
-const Seedbed = ({setScreen}) => {
-  const {state, change, match, data, powerUnit, power, dollars, db} = useStore();
+const Seedbed = () => {
+  const {state, change, match, data, powerUnit, power, dollars} = useContext(Context);
 
-  useEffect(() => {
-    change('change', 'current', 'seedbed');
-  });
+  change('change', 'current', 'seedbed');
 
   return (
     <>
@@ -34,7 +33,8 @@ const Seedbed = ({setScreen}) => {
               a={['Yes', 'No']}
               onInput={(e) => {
                 if (e.target.value === 'No') {
-                  setScreen('Planting');
+                  change('change', 'screen', 'Planting');
+                  change('change', 'previousScreen', 'Planting');
                 }
               }}
             />
@@ -44,9 +44,11 @@ const Seedbed = ({setScreen}) => {
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
               cond={match('seedbed1', 'Yes')}
+              initial="No"
               onInput={(e) => {
                 if (e.target.value === 'Yes') {
-                  setScreen('Planting');
+                  change('change', 'screen', 'Planting');
+                  change('change', 'screen', 'Planting');
                 }
               }}
             />
@@ -56,6 +58,7 @@ const Seedbed = ({setScreen}) => {
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
               cond={match('seedbed2', 'No')}
+              initial="Self"
             />
 
             <Logic
@@ -117,7 +120,9 @@ const Seedbed = ({setScreen}) => {
         </table>
       </div>
       
-      <Activity type="seedbed"/>
+      <Navigation current={Seedbed} />
+
+      <Activity type="seedbed" />
     </>
   )
 } // Seedbed

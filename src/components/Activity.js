@@ -1,133 +1,143 @@
-import {useContext} from 'react';
-import {Context, db} from './Store';
+import {useEffect} from 'react';
+import {useStore} from '../store/Store';
+
 import {Input} from './Inputs';
 
 const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
 
 const Activity = ({type, ds = 4}) => {
-  const {state, change} = useContext(Context);
+  const {state, change, db} = useStore();
 
+  let data;
+  let power;
+  let acresHour;
+
+  const implementCost = (desc) => {
+    if (!state[type + 'ImplementCost']) {
+      return 0;
+    }
+
+    let result;
+    
+    if (data[desc]) {
+      result = +data[desc];
+    } else {
+      result = 0;
+    }
+
+    if (desc === 'Labor') {
+      result *= db.rates.skilled.value;
+    }
+
+    return result;
+  } // implementCost
+
+  const powerCost = (desc) => {
+    if (desc === 'Labor' || !state[type + 'PowerCost']) {
+      return 0;
+    }
+
+    let result;
+
+    result = desc === 'Labor' ? 0 :
+             desc === 'Fuel'  ? (power['Fuel'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
+                                power[desc] / acresHour;
+    
+    if (!result) {
+      // console.log(desc, power[desc], acresHour)
+      // console.log(power);
+    }
+    return result;
+  } // powerCost
+
+  const totalCost = (desc) => {
+    return (implementCost(desc) || 0) + (powerCost(desc) || 0);
+  } // totalCost
+/*  
+  const relevantCost = (desc, lookup) => {
+    return state[type + desc] ? totalCost(desc, lookup) : 0;
+  } // relevantCost
+*/  
+  data = db.implements[state[type + ds]] || {};
+
+  const powerUnit = state[type + 'Power'] || data['default power unit'];
+  power = db.power[powerUnit] || {};
+
+  acresHour  = (+data['acres/hour']).toFixed(1);
+
+  const totalImplementCost = () => {
+    return (
+      (state[type + 'Labor']        || 0) * implementCost('Labor') +
+      (state[type + 'Depreciation'] || 0) * implementCost('Depreciation') + 
+      (state[type + 'Interest']     || 0) * implementCost('Interest') + 
+      (state[type + 'Repairs']      || 0) * implementCost('Repairs') + 
+      (state[type + 'Taxes']        || 0) * implementCost('Taxes') + 
+      (state[type + 'Insurance']    || 0) * implementCost('Insurance') + 
+      (state[type + 'Storage']      || 0) * implementCost('Storage')
+    );
+  }; // totalImplementCost
+
+  const totalPowerCost = () => (
+    (state[type + 'Fuel']         || 0) * powerCost('Fuel') +
+    (state[type + 'Depreciation'] || 0) * powerCost('Depreciation') + 
+    (state[type + 'Interest']     || 0) * powerCost('Interest') + 
+    (state[type + 'Repairs']      || 0) * powerCost('Repairs') +
+    (state[type + 'Taxes']        || 0) * powerCost('Taxes') + 
+    (state[type + 'Insurance']    || 0) * powerCost('Insurance') +
+    (state[type + 'Storage']      || 0) * powerCost('Storage')
+  ); // totalPowerCost
+
+  // console.log(data);
+  // console.log(totalImplementCost());
+  // console.log(totalPowerCost());
+  
+  const heading = {
+    seedbed: 'Seedbed Preparation',
+    planting: 'Cover Crop Planting',
+  }[type];
+  
+  const Costs = ({desc, lookup}) => {
+    const d = desc.replace('Storage shed', 'Storage');
+    const iCost = implementCost(d, lookup);
+    const pCost = powerCost(d, lookup);
+    const total    = '$' + totalCost(d, lookup).toFixed(2);
+
+    const style = !state[`${type}${d}`] ? {background: '#ddd', color: '#888'}  : {};
+
+    return (
+      <tr style={style}>
+        <td>
+          <label>
+            <Input
+              id={type + d}
+              type="checkbox"
+              defaultChecked
+              onInput={() => change('change', type + 'Total', '')}
+            />
+            {desc}
+          </label>
+        </td>
+        <td>{iCost ? '$' + iCost.toFixed(2) : ''}</td>
+        <td>{pCost ? '$' + pCost.toFixed(2) : ''}</td>
+        <td>{total}</td>
+      </tr>
+    )
+  } // Costs
+
+  useEffect(() => {
+    if (Object.keys(data).length) {    
+      change('change', type + 'Estimated', totalImplementCost(type) + totalPowerCost(type));
+      if (!state[type + 'Total']) {
+        change('change', type + 'Total', totalImplementCost(type) + totalPowerCost(type));
+      }
+    }
+  });
+    
   let breakdown;
 
   if (type === 'species') {
     breakdown = '';
   } else {
-    let data;
-    let power;
-    let acresHour;
-  
-    const implementCost = (desc) => {
-      if (!state[type + 'ImplementCost']) {
-        return 0;
-      }
-
-      let result;
-      
-      if (data[desc]) {
-        result = +data[desc];
-      } else {
-        result = 0;
-      }
-  
-      if (desc === 'Labor') {
-        result *= db.rates.skilled.value;
-      }
-  
-      return result;
-    } // implementCost
-  
-    const powerCost = (desc) => {
-      if (desc === 'Labor' || !state[type + 'PowerCost']) {
-        return 0;
-      }
-
-      let result;
-  
-      result = desc === 'Labor' ? 0 :
-               desc === 'Fuel'  ? (power['Fuel'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
-                                  power[desc] / acresHour;
-      
-      if (!result) {
-        // console.log(desc, power[desc], acresHour)
-        // console.log(power);
-      }
-      return result;
-    } // powerCost
-  
-    const totalCost = (desc) => {
-      return (implementCost(desc) || 0) + (powerCost(desc) || 0);
-    } // totalCost
-  
-    const relevantCost = (desc, lookup) => {
-      return state[type + desc] ? totalCost(desc, lookup) : 0;
-    } // relevantCost
-  
-    data = db.implements[state[type + ds]] || {};
-
-    const powerUnit = state[type + 'Power'] || data['default power unit'];
-    power = db.power[powerUnit] || {};
-
-    acresHour  = (+data['acres/hour']).toFixed(1);
-
-    const totalImplementCost = () => {
-      return (
-        (state[type + 'Labor']        ) * implementCost('Labor') +
-        (state[type + 'Depreciation'] ) * implementCost('Depreciation') + 
-        (state[type + 'Interest']     ) * implementCost('Interest') + 
-        (state[type + 'Repairs']      ) * implementCost('Repairs') + 
-        (state[type + 'Taxes']        ) * implementCost('Taxes') + 
-        (state[type + 'Insurance']    ) * implementCost('Insurance') + 
-        (state[type + 'Storage']      ) * implementCost('Storage')
-      );
-    }; // totalImplementCost
-
-    const totalPowerCost = () => (
-      (state[type + 'Fuel']         ) * powerCost('Fuel') +
-      (state[type + 'Depreciation'] ) * powerCost('Depreciation') + 
-      (state[type + 'Interest']     ) * powerCost('Interest') + 
-      (state[type + 'Repairs']      ) * powerCost('Repairs') +
-      (state[type + 'Taxes']        ) * powerCost('Taxes') + 
-      (state[type + 'Insurance']    ) * powerCost('Insurance') +
-      (state[type + 'Storage']      ) * powerCost('Storage')
-    ); // totalPowerCost
-
-    console.log(data);
-    console.log(totalImplementCost());
-    console.log(totalPowerCost());
-    
-    const heading = {
-      seedbed: 'Seedbed Preparation',
-      planting: 'Cover Crop Planting',
-    }[type];
-    
-    const Costs = ({desc, lookup}) => {
-      const d = desc.replace('Storage shed', 'Storage');
-      const iCost = implementCost(d, lookup);
-      const pCost = powerCost(d, lookup);
-      const total    = '$' + totalCost(d, lookup).toFixed(2);
-  
-      const style = !state[`${type}${d}`] ? {background: '#ddd', color: '#888'}  : {};
-  
-      return (
-        <tr style={style}>
-          <td>
-            <label>
-              <Input
-                id={type + d}
-                type="checkbox"
-                defaultChecked
-                onInput={() => change('change', type + 'Total', '')}
-              />
-              {desc}
-            </label>
-          </td>
-          <td>{iCost ? '$' + iCost.toFixed(2) : ''}</td>
-          <td>{pCost ? '$' + pCost.toFixed(2) : ''}</td>
-          <td>{total}</td>
-        </tr>
-      )
-    } // Costs
-
     let cname = type;
     if (!state[`${type}ImplementCost`]) {
       cname += ' noImplementCost';
@@ -137,12 +147,14 @@ const Activity = ({type, ds = 4}) => {
       cname += ' noPowerCost';
     }
 
-    if (Object.keys(data).length) {    
-      change('change', type + 'Estimated', totalImplementCost(type) + totalPowerCost(type));
-      if (!state[type + 'Total']) {
-        change('change', type + 'Total', totalImplementCost(type) + totalPowerCost(type));
-      }
-    }
+    // useEffect(() => {
+    //   if (Object.keys(data).length) {    
+    //     change('change', type + 'Estimated', totalImplementCost(type) + totalPowerCost(type), true);
+    //     if (!state[type + 'Total']) {
+    //       change('change', type + 'Total', totalImplementCost(type) + totalPowerCost(type), true);
+    //     }
+    //   }
+    // });
 
     breakdown = ((
                   state[type + 3] !== 'Custom Operator' &&

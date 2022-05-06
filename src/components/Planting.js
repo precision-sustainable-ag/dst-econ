@@ -1,13 +1,14 @@
 import Activity from './Activity';
-import {Navigation} from './Navigation';
 import Logic from './Logic';
-import {Context, db} from './Store';
-import {useContext} from 'react';
+import {useStore} from '../store/Store';
+import { useEffect } from 'react';
 
 const Planting = () => {
-  const {state, change, match, data, powerUnit, power, dollars} = useContext(Context);
+  const {state, change, match, data, powerUnit, power, dollars, db} = useStore();
 
-  change('change', 'current', 'planting');
+  useEffect(() => {
+    change('change', 'current', 'planting');
+  });
 
   return (
     <>
@@ -31,7 +32,6 @@ const Planting = () => {
               id="planting3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
-              initial="Self"
             />
 
             <Logic
@@ -93,9 +93,7 @@ const Planting = () => {
         </table>
       </div>
 
-      <Navigation current={Planting} />
-
-      <Activity type="planting" />
+      <Activity type="planting"/>
     </>
   )
 } // Planting

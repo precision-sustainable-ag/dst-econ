@@ -1,15 +1,16 @@
 import React from 'react';
-
 import {TextField, Autocomplete, OutlinedInput, Icon} from '@mui/material';
 import {Input} from './Inputs';
 import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
-import {useStore} from '../store/Store';
+import {useContext} from 'react';
+import {Context} from './Store';
 
 const autocompleteService = { current: null };
 
 const GoogleMaps = ({autoFocus=false, field=false}) => {
-  const {state, change} = useStore();  
+  const {state, change} = useContext(Context);
+
   const [location, setValue] = React.useState(state.location, null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -68,15 +69,15 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
         autoComplete
         includeInputInList
         filterSelectedOptions
+        autoFocus={autoFocus}  // not working
 
-        value={state.location}
         // getOptionSelected={(option, value) => option.id === value.id}  // avoids warning, per https://stackoverflow.com/a/65347275/3903374, but prevents re-entry of data
         
         onChange={(_, newValue) => {
           setOptions(newValue ? [newValue, ...options] : options);
           if (newValue) {
             change('change', 'location', newValue.description);
-            setValue(newValue);
+            setValue(newValue.description);
             const geocoder = new window.google.maps.Geocoder();
 
             geocoder.geocode({
@@ -103,19 +104,16 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
           setInputValue(newInputValue);
         }}
 
-        renderInput={(params) => {
-          return (
-            <>
-              <TextField
-                {...params}
-                autoFocus={autoFocus}
-                label="Find your Location"
-                variant="outlined" 
-                style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
-              />
-            </>
-          )
-        }}
+        renderInput={(params) => (
+          <>
+            <TextField
+              {...params}
+              label="Find your Location"
+              variant="outlined" 
+              style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
+            />
+          </>
+        )}
       />
       
       {
@@ -146,34 +144,24 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
         </>
       }
 
-      <p/>
-      <div tabIndex="-1">
-        If you know your exact coordinates, you can enter them here:
-        &nbsp;
-        <Input
-          className="field"
-          label="Latitude"
-          notched={true}
-          id="lat"
-          autoComplete="off"
-          style={{width: '8em'}}
-          type="number"
-        />
-        <Input
-          className="field"
-          label="Longitude"
-          notched={true}
-          id="lon"
-          autoComplete="off"
-          style={{width: '8em'}}
-        />
+      <div>
+        <small>
+          If you know your exact coordinates, you can enter them here:
+          &nbsp;
+          Latitude:&nbsp;
+          <Input id="lat" inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}} />
+          &nbsp;&nbsp;&nbsp;
+          Longitude:&nbsp;
+          <Input id="lon" inputProps={{ tabIndex: -1 }} style={{width: '6em', fontSize: 14}}/>
+        </small>
       </div>
     </>
   );
 }
 
-const Map = ({field=false, autoFocus}) => {
-  const {state, change} = useStore();
+const Map = ({field=false}) => {
+  const {state, change} = useContext(Context);
+
   const mapChange = (e) => {
     change('change', 'lat', +e.lat.toFixed(4));
     change('change', 'lon', +e.lng.toFixed(4));
@@ -195,7 +183,7 @@ const Map = ({field=false, autoFocus}) => {
           state = state[0].long_name;
           change('change', 'state', state);
         } else {
-          change('change', state, '');
+          change('change', 'state', '');
         }
       })
       .catch((e) => window.alert('Geocoder failed due to: ' + e));
@@ -211,7 +199,8 @@ const Map = ({field=false, autoFocus}) => {
 
   return (
     <>
-      <GoogleMaps field={field} autoFocus={autoFocus}/>
+      <GoogleMaps field={field} />
+
       {
         state.lat && state.lon &&
         <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
@@ -224,8 +213,8 @@ const Map = ({field=false, autoFocus}) => {
             
             yesIWantToUseGoogleMapApiInternals
             onClick={mapChange}
-            onZoomAnimationEnd={(zoom) => change('change', 'mapZoom', zoom)}
-            onMapTypeIdChange={(type) => change('change', 'mapType', type)}
+            onZoomAnimationEnd={state.mapZoom}
+            onMapTypeIdChange={state.mapType}
 
             onLoad={
               // prevent tabbing through map

@@ -1,6 +1,5 @@
-import {useEffect} from 'react';
-
-import {useStore} from '../store/Store';
+import {useContext} from 'react';
+import {Context} from './Store';
 
 import {
   Input as MUIInput,
@@ -8,12 +7,10 @@ import {
   TextField,
   Radio,
   Checkbox,
-  OutlinedInput,
 } from '@mui/material';
 
 import NumberFormat from 'react-number-format';
 
-/*
 const focus = (obj) => {
   if (obj) {
     document.querySelector('#' + obj).focus();
@@ -30,10 +27,10 @@ const focus = (obj) => {
     });
   }
 } // focus
-*/
 
-const keyPress = (event) => {
-  if (event.key === 'ZEnter') {
+const keyPress = (event, props) => {
+  return;
+  if (event.key === 'Enter') {
     const form = event.target.form;
     const index = Array.prototype.indexOf.call(form, event.target);
     form.elements[index + 1].focus();
@@ -42,32 +39,25 @@ const keyPress = (event) => {
   }
 } // keyPress
 
-const Input = ({type, id, value, defaultChecked, onInput, style}) => {
-  const {state, change} = useStore();
+const Input = ({type, id, value, defaultChecked, onInput}) => {
+  const {state, change} = useContext(Context);
 
-  
   value = value !== undefined ? value : state[id]; // || defaultChecked;
 
   if (state[id] === undefined) {
-    // state[id] = value || defaultChecked;
+    state[id] = value || defaultChecked;
   }
 
-  useEffect(() => {
-    if (value || defaultChecked) {
-      change('addkey', id, value || defaultChecked);
-    }
-  })
+  if (value || defaultChecked) {
+    change('addkey', id, value || defaultChecked);
+  }
 
   if (!(id in state)) {
-    // return '';
+    return;
   }
 
-  if (value === undefined) {
-    value = '';
-  }
-  
-  if (type === 'checkbox' && value === '') {
-    value = false;
+  if (Array.isArray(value)) {
+    value = state[id][state['index' + id]];
   }
 
   return (
@@ -101,15 +91,13 @@ const Input = ({type, id, value, defaultChecked, onInput, style}) => {
         autoComplete="off"
         
         onKeyPress={(e) => {
-          return keyPress(e);
+          return keyPress(e)
         }}
-
+        
         value={value}
 
-        style={style}
-
         onChange={(e) => {
-          change('change', id, e.target.value);
+          change('change', id, e.target.value)
           if (onInput) {
             onInput(e);
           }
@@ -128,11 +116,8 @@ const Input = ({type, id, value, defaultChecked, onInput, style}) => {
         
         value={value}
 
-        style={style}
-
         onChange={(e) => {
-          const value = e.target.value || '';
-          change('change', id, value.replace('$', ''));
+          change('change', id, e.target.value.replace('$', ''));
           if (onInput) {
             onInput(e);
           }
@@ -147,19 +132,17 @@ const Input = ({type, id, value, defaultChecked, onInput, style}) => {
       :
       <MUIInput
         autoComplete="off"
-
+        
         onKeyPress={(e) => {
-          return keyPress(e);
+          return keyPress(e)
         }}
         
         value={value}
 
-        style={style}
-
-        onChange={(event) => {
-          change('change', id, event.target.value);
+        onChange={(e, value) => {
+          change('change', id, value.replace('$', ''))
           if (onInput) {
-            onInput(event);
+            onInput(e);
           }
         }}
 
@@ -168,20 +151,8 @@ const Input = ({type, id, value, defaultChecked, onInput, style}) => {
   )
 } // Input
 
-const Autocomplete = ({id, options, value, onInput, onInputChange, groupBy, renderInput, getOptionLabel, autoComplete, includeInputInList, filterSelectedOptions, onChange}) => {
-  const {state, change} = useStore();
-
-  if (!renderInput) {
-    renderInput = (params) => {
-      console.log(params);
-      return (
-        <TextField
-          variant="standard"
-          {...params}
-        />
-      )
-    }
-  }
+const Autocomplete = ({id, options, value, onInput, onInputChange, groupBy}) => {
+  const {state, change} = useContext(Context);
 
   value = value !== undefined ? value : state[id];
 
@@ -190,16 +161,17 @@ const Autocomplete = ({id, options, value, onInput, onInputChange, groupBy, rend
   }
 
   if (value) {
-    // change('addkey', id, value);
+    change('addkey', id, value);
   }
 
   if (!(id in state)) {
-    // return;
+    return;
   }
 
-  if (value === undefined) {
-    value = null;
-  }
+  // console.log(id);
+  // console.log(value);
+  // console.log(state[id]);
+  // console.log(JSON.stringify(state));
 
   const max = Math.max.apply(Math, options.map(option => option.length));
 
@@ -209,17 +181,15 @@ const Autocomplete = ({id, options, value, onInput, onInputChange, groupBy, rend
 
       sx={{width: (max * 0.8) + 'rem'}}
 
-      isOptionEqualToValue={(option, value) => option.value === value.value}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
+      isOptionEqualToValue={(option, value) => {
+        return option === value || (option.value && option.value === value) || (option.label && option.label === value);
+      }}
 
       groupBy={groupBy}
-      getOptionLabel={getOptionLabel}
+
       onInputChange={onInputChange}
-      autoComplete={autoComplete}
-      includeInputInList={includeInputInList}
-      filterSelectedOptions={filterSelectedOptions}
 
       renderInput={(params) => {
-        console.log(params);
         return (
           <TextField
             variant="standard"
@@ -233,15 +203,9 @@ const Autocomplete = ({id, options, value, onInput, onInputChange, groupBy, rend
       value={value}
       
       onChange={(e, value) => {
-        if (value) {
-          console.log(value);
-          change('change', id, value.description || value);
-          if (onInput) {
-            onInput(e);
-          }
-          if (onChange) {
-            onChange(e, value);
-          }
+        change('change', id, value);
+        if (onInput) {
+          onInput(e);
         }
       }}
     />

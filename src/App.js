@@ -29,13 +29,29 @@
 // DONE: Next to Resources, Back should be Revenue Impact
 // DONE: Warning: Cannot update a component (`App`) while rendering a different component (`Screens`).
 
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {Screens} from './components/Navigation';
-import {defaults} from './defaults';
-import Store, {db} from './components/Store';
+import {MenuItem, Button} from '@mui/material';
+
+import Home         from './components/Home';
+import Field        from './components/Field';
+import Species      from './components/Species';
+import Seedbed      from './components/Seedbed';
+import Planting     from './components/Planting';
+import Termination  from './components/Termination';
+import Tillage      from './components/Tillage';
+import Fertility    from './components/Fertility';
+import Herbicide    from './components/Herbicide';
+import Pests        from './components/Pests';
+import Erosion      from './components/Erosion';
+import Additional   from './components/Additional';
+import Yield        from './components/Yield';
+import Practices    from './components/Practices';
+import Revenue      from './components/Revenue';
+import Resources    from './components/Resources';
 
 const App = () => {
+/*
   const updateSpeciesTotal = () => {
     let total = 0;
     parms.species.forEach((s, n) => {
@@ -45,81 +61,12 @@ const App = () => {
     });
     set.coverCropTotal(total);
   } // updateSpeciesTotal
+*/
 
+/*
   const updateCosts = (otype) => {
-    const type = otype.match(/[a-z]+/g)[0];
-
-    let acresHour;
-
-    const implementCost = (desc) => {
-      if (parms[type + 'ImplementCost'] === 'false') {
-        return 0;
-      }
-
-      let result;
-
-      if (data[desc]) {
-        result = +data[desc];
-      } else {
-        result = 0;
-      }
-  
-      if (desc === 'Labor') {
-        result *= db.rates.skilled.value;
-      }
-
-      return result;
-    } // implementCost
-  
-    const powerCost = (desc) => {
-      if (parms[type + 'PowerCost'] === 'false') {
-        return 0;
-      }
-
-      let result;
-  
-      result = desc === 'Labor' ? 0 :
-               desc === 'Fuel'  ? (power['Fuel'] * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
-                                  power[desc] / acresHour;
-  
-      return result;
-    } // powerCost
-  
-    const totalCost = (desc) => {
-      return (implementCost(desc) || 0) + (powerCost(desc) || 0);
-    } // totalCost
-  
-    const relevantCost = (desc) => {
-      return parms[type + desc] === 'true' ? totalCost(desc) : 0;
-    } // relevantCost
-
     const ds = /Chemical/.test(otype) ? otype.match(/[A-Z][a-z]+/)[0] : 4;
     const data = db.implements[parms[type + ds]];
-
-    if (!data) {
-      return;
-    }
-
-    const powerUnit = parms[type + 'Power'] || data['default power unit'];
-
-    const power = db.power[powerUnit] || {};
-
-    set[type + 'AnnualUseAcres'](Math.round(data['acres/year']));
-    set[type + 'AnnualUseHours'](power['expected use (hr/yr)']);
-
-    acresHour  = (+data['acres/hour']).toFixed(1);
-    set[type + 'AcresHour'](acresHour);
-
-    const totalRelevantCost = () => (
-      relevantCost('Labor') +
-      relevantCost('Fuel') +
-      relevantCost('Depreciation') +
-      relevantCost('Interest') + 
-      relevantCost('Repairs') + 
-      relevantCost('Taxes') + 
-      relevantCost('Insurance') + 
-      relevantCost('Storage')
-    ); // totalRelevantCost
 
     const costdb = {
       seedbed: 'Seedbed preparation',
@@ -155,217 +102,176 @@ const App = () => {
       }
     }
   } // updateCosts
+*/
 
-  const testSeedbed = () => {
-    if (parms.seedbed1 === 'No' || parms.seedbed2 === 'Yes') {
-      set.seedbed4('');
-      set.seedbedTotal(0);
-      set.screen('Planting');
-      set.previousScreen('Planting');
+  const screens = {
+    Home,
+    Modules: {
+      Field,
+      Species,
+      Seedbed,
+      Planting,
+      Termination,
+      Tillage,
+      Fertility,
+      Herbicide,
+      Pests,
+      Erosion,
+      Additional,
+      Yield,
+    },
+    'Economic Impact': {
+      Practices,
+      Revenue
+    },
+    Resources
+  };
+
+  const MyMenu = (s) => {
+    return (
+      Object.keys(s).map(scr => {
+        if (typeof s[scr] === 'object') {
+          return <strong key={scr}>{scr} {MyMenu(s[scr])}</strong>
+        } else {
+          return <MenuItem data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
+        }
+      })
+    )
+  } // MyMenu
+
+  const Navigation = ({current}) => {
+    let back;
+    let backDesc;
+    let next;
+    let nextDesc;
+  
+    const mods = {Home, ...screens.Modules, ...screens['Economic Impact'], Resources};
+    
+    const s = ['Home','Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Pests','Erosion','Additional','Yield','Practices','Revenue','Resources'];
+  
+    if (current === 'Resources') {
+      back = previousScreen;
+    } else {
+      back = s[s.indexOf(screen) - 1];
+      next = s[s.indexOf(screen) + 1];
     }
-  } // testSeedbed
 
-  const testTermination = () => {
-    if (parms.termination2 === 'Yes') {
-      set.screen('Tillage');
-      set.previousScreen('Tillage');
+    if (back) {
+      backDesc = mods[back].menu || back;
     }
-  } // testTermination
 
-  const dbvalue = (table, key, parm) => {
-    return db[table][key] ? db[table][key][parm] : '';
-  } // dbvalue
-
-  const change = (parm, value, target, index) => {
-    if (/(Labor|Fuel|Depreciation|Interest|Repairs|Taxes|Insurance|Storage|ImplementCost|PowerCost)$/.test(parm)) {
-      const type = parm.match(/[a-z]+/)
-      set[type + 'Total'](0);
-      set[parm](target.checked ? 'true' : 'false');
-    } else if (parm === 'species') {
-      set.species(arr => {
-        arr[index] = value;
-        return [...arr];
-      });
-
-      set.rates(arr => {
-        arr[index] = (db.seedList[value] || {}).seedingRate;
-        return [...arr];
-      });
-
-      set.prices(arr => {
-        arr[index] = (db.seedList[value] || {}).price;
-        return [...arr];
-      });
+    if (next) {
+      nextDesc = mods[next].menu || next;
     }
-  } // change
 
-  let {parms, set, props} = defaults(
-    change,
-    {
-      species                 : [],
-      rates                   : [],
-      prices                  : [],
-      coverCropTotal          : 0,
-      USDARegion              : '',
-      
-      seedbed1                : '', // 'Yes',
-      seedbed2                : 'No',
-      seedbed3                : 'Self',
-      seedbed4                : '',  // 'Chisel Plow; 37 Ft'
-      seedbed7                : '',
-      
-      planting3               : 'Self',
-      planting4               : '',
-      planting7               : '',
+    return (
+      <div className="navigation">
+        {
+          back &&
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setScreen(back);
+              setPreviousScreen(back);
+            }}
+            tabIndex={-1}
+          >
+            BACK: {backDesc}
+          </Button>
+        }
+        {
+          next &&
+          <Button
+            variant="contained"
+            color="primary" 
+            onClick={() => {
+              setScreen(next);
+              if (next !== 'Resources') {
+                setPreviousScreen(next);
+              }
+            }}
+          >
+            NEXT: {nextDesc}
+          </Button>
+        }
+  
+        {
+          current !== 'Resources' && next !== 'Resources' &&
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setScreen('Resources');
+            }}
+          >
+            Resources
+          </Button>
+        }
+      </div>
+    )
+  } // Navigation
+    
+  const changeScreen = (e) => {
+    const menu = e.target;
 
-      termination2            : 'No', // 'No',
-      termination3            : 'Self', // 'Self'
-      terminationMethod       : '', // 'Herbicide application'
-      terminationProduct      : '', // 'liberty'
-      terminationUnitCost     : '',
-      terminationUnit         : '',
-      terminationRate         : '',
-      terminationRateUnit     : '',
-      terminationProductCost  : '',
-      terminationCustomCost   : '',
-      terminationChemical     : '',
-      terminationChemicalCost : '',
-      terminationRoller       : '',
-      terminationRollerCost   : '',
-      terminationTillage      : '',
-      terminationTillageCost  : '',
-      terminationTillagePower : '',
-      terminationTillageAnnualUseAcres : '',
-      terminationTillageAnnualUseHours : '',
-      terminationTillageAcresHour : '',
-      terminationTillageTotal : '',
+    if (menu.tagName === 'LI') {
+      const scr = menu.dataset.scr;
 
-      seedbedLabor            : 'true',
-      seedbedFuel             : 'true',
-      seedbedDepreciation     : 'true',
-      seedbedInterest         : 'true',
-      seedbedRepairs          : 'true',
-      seedbedTaxes            : 'true',
-      seedbedInsurance        : 'true',
-      seedbedStorage          : 'true',
-      seedbedImplementCost    : 'true',
-      seedbedPowerCost        : 'true',
-      seedbedPower            : '',
-      seedbedAnnualUseAcres   : 0,
-      seedbedAnnualUseHours   : 0,
-      seedbedAcresHour        : 0,
-      seedbedEstimated        : 0,
-      seedbedTotal            : 0,
-      
-      plantingLabor           : 'true',
-      plantingFuel            : 'true',
-      plantingDepreciation    : 'true',
-      plantingInterest        : 'true',
-      plantingRepairs         : 'true',
-      plantingTaxes           : 'true',
-      plantingInsurance       : 'true',
-      plantingStorage         : 'true',
-      plantingImplementCost   : 'true',
-      plantingPowerCost       : 'true',
-      plantingPower           : '',
-      plantingAnnualUseAcres  : 0,
-      plantingAnnualUseHours  : 0,
-      plantingAcresHour       : 0,
-      plantingEstimated       : 0,
-      plantingTotal           : 0,
-
-      terminationLabor           : 'true',
-      terminationFuel            : 'true',
-      terminationDepreciation    : 'true',
-      terminationInterest        : 'true',
-      terminationRepairs         : 'true',
-      terminationTaxes           : 'true',
-      terminationInsurance       : 'true',
-      terminationStorage         : 'true',
-      terminationImplementCost   : 'true',
-      terminationPowerCost       : 'true',
-      terminationPower           : '',
-      terminationAnnualUseAcres  : 0,
-      terminationAnnualUseHours  : 0,
-      terminationAcresHour       : 0,
-      terminationEstimated       : 0,
-      terminationTotal           : 0,
-      terminationTillage4        : 0,
-      
-      farm                       : '',
-      acres                      : '',
-      description                : '',
-      priorCrop                  : '',
-      otherPriorCrop             : '',
-      cashCrop                   : '',
-      otherCashCrop              : '',
-      labor                      : '',
-      previousScreen             : 'Home',
-      effects: {
-        species                 : updateSpeciesTotal,
-        rates                   : updateSpeciesTotal,
-        prices                  : updateSpeciesTotal,
-
-        seedbed1                : testSeedbed,
-        seedbed2                : testSeedbed,
-
-        seedbed4                : updateCosts,
-        planting4               : updateCosts,
-
-        seedbedLabor            : updateCosts,
-        seedbedFuel             : updateCosts,
-        seedbedDepreciation     : updateCosts,
-        seedbedInterest         : updateCosts,
-        seedbedRepairs          : updateCosts,
-        seedbedTaxes            : updateCosts,
-        seedbedInsurance        : updateCosts,
-        seedbedStorage          : updateCosts,
-        seedbedPower            : updateCosts,
-        seedbedImplementCost    : updateCosts,
-        seedbedPowerCost        : updateCosts,
-        
-        plantingLabor           : updateCosts,
-        plantingFuel            : updateCosts,
-        plantingDepreciation    : updateCosts,
-        plantingInterest        : updateCosts,
-        plantingRepairs         : updateCosts,
-        plantingTaxes           : updateCosts,
-        plantingInsurance       : updateCosts,
-        plantingStorage         : updateCosts,
-        plantingPower           : updateCosts,
-        plantingImplementCost   : updateCosts,
-        plantingPowerCost       : updateCosts,
-
-        termination2            : testTermination,
-        terminationLabor        : updateCosts,
-        terminationFuel         : updateCosts,
-        terminationDepreciation : updateCosts,
-        terminationInterest     : updateCosts,
-        terminationRepairs      : updateCosts,
-        terminationTaxes        : updateCosts,
-        terminationInsurance    : updateCosts,
-        terminationStorage      : updateCosts,
-        terminationPower        : updateCosts,
-        terminationImplementCost: updateCosts,
-        terminationPowerCost    : updateCosts,
-
-        terminationMethod       : updateCosts,
-        terminationProduct      : updateCosts,
-        terminationUnitCost     : updateCosts,
-        terminationRate         : updateCosts,
-        terminationRoller       : updateCosts,
-        terminationTillage4     : updateCosts,
-
+      if (scr !== 'Resources') {
+        setPreviousScreen(scr);
       }
+     
+      setScreen(scr);
     }
-  );
+  } // changeScreen
+
+  const [screen, setScreen] = useState('Home');
+  const [previousScreen, setPreviousScreen] = useState('Home');
+
+  const Screen = () => {
+    switch (screen) {
+      case 'Home'         : return <Home />;
+      case 'Field'        : return <Field />;
+      case 'Species'      : return <Species />;
+      case 'Seedbed'      : return <Seedbed />;
+      case 'Planting'     : return <Planting />;
+      case 'Termination'  : return <Termination />;
+      case 'Tillage'      : return <Tillage />;
+      case 'Fertility'    : return <Fertility />;
+      case 'Herbicide'    : return <Herbicide />;
+      case 'Pests'        : return <Pests />;
+      case 'Erosion'      : return <Erosion />;
+      case 'Additional'   : return <Additional />;
+      case 'Yield'        : return <Yield />;
+      case 'Practices'    : return <Practices />;
+      case 'Revenue'      : return <Revenue />;
+      case 'Resources'    : return <Resources/>;
+      default: 
+    }
+  } // Screen
 
   return (
-    <Store>
-      <Screens set={set} db={db} parms={parms} props={props} />
-    </Store>
+    <>
+      <nav onClick={changeScreen}>
+        {MyMenu(screens)}
+      </nav>
+
+      <div id="Main" style={{marginLeft: '15em', width: 'calc(100vw - 30em)'}}>
+        <Screen/>
+        <Navigation current={screen} />
+      </div>
+    </>
   );
 } // App
+
+const originalWarn = console.warn;
+
+console.warn = (s) => {  
+  if (!/Google Maps already loaded/.test(s)) { // annoying
+    originalWarn(s);
+  }
+}
 
 document.title = 'Econ DST';
 

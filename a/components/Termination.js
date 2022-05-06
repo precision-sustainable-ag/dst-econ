@@ -1,13 +1,21 @@
 import Activity from './Activity';
+import {Navigation} from './Navigation';
 import Logic from './Logic';
-import {useStore} from '../store/Store';
+import {Context} from './Store';
+import {useContext} from 'react';
 
-const Termination = ({setScreen}) => {
-  const {state, match, dollars, db} = useStore();
+const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
+
+const Termination = ({db, parms, props, set}) => {
+  const {state, change, match} = useContext(Context);
 
   const dbvalue = (table, key, parm) => {
     return db[table][key] ? db[table][key][parm] : '';
   } // dbvalue
+  
+  console.log(Object.keys(Context));
+  console.log(JSON.stringify(state));
+  console.log(JSON.stringify(change));
 
   return (
     <div className="Termination">
@@ -22,12 +30,13 @@ const Termination = ({setScreen}) => {
           <Logic
             id="termination2"
             q="Would you do this field activity if you did not have a cover crop?"
+            zinitial="z"
             initial="No"
-            zzinitial="No"
             a={['Yes', 'No']}
             onInput={(e) => {
               if (e.target.value === 'Yes') {
-                setScreen('Tillage');
+                set.screen('Tillage');
+                set.previousScreen('Tillage');
               }
             }}
           />
@@ -169,10 +178,11 @@ const Termination = ({setScreen}) => {
           }
         </tbody>
       </table>
+      <Navigation set={set} current={Termination} />
 
-      <Activity type="termination" ds="Chemical"/>
-      <Activity type="termination" ds="Tillage4"/>
-      <Activity type="termination" ds="Product" />
+      <Activity db={db} parms={parms} props={props} set={set} type="termination" ds="Chemical"/>
+      <Activity db={db} parms={parms} props={props} set={set} type="termination" ds="Tillage4"/>
+      <Activity db={db} parms={parms} props={props} set={set} type="termination" ds="Product"/>
     </div>
   )
 } // Termination
