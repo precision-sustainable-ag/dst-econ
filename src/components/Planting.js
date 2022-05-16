@@ -3,16 +3,18 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, dollars, data, power, match, totalRelevantCost} from '../app/store';
+import {get, set, db, data, match, totalRelevantCost} from '../store/store';
 
 const Planting = () => {
+  console.log('Render: Planting');
   const dispatch = useDispatch();
   const current  = 'planting';
-  const state    = useSelector(get[current]);
+  useSelector(get.current);
+  const state = useSelector(get[current]);
 
   useEffect(() => {
     dispatch(set.current(current));
-  });
+  }, [dispatch, current]);
 
   const total     = state.total;
   const estimated = current ? totalRelevantCost() : 0;
@@ -29,69 +31,39 @@ const Planting = () => {
         <hr/>
 
         <strong>Cover Crop Establishment</strong>
-        <table className={current}>
-          <tbody>
-            <tr>
-              <th colSpan="2">Planting</th>
-            </tr>
+        <form>
+          <table className={current + ' inputs'}>
+            <tbody>
+              <tr>
+                <th colSpan="2">Planting</th>
+              </tr>
 
-            <Logic
-              id="q3"
-              q="Who will do this activity?"
-              a={['Self', 'Custom Operator']}
-            />
+              <Logic
+                property="q3"
+                q="Who will do this activity?"
+                a={['Self', 'Custom Operator']}
+              />
 
-            <Logic
-              id="q4"
-              q="What type of seedbed preparation will be done?"
-              a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Planting').sort()]}
-              shown={match('q3', 'Self', current)}
-              onInput={() => {
-                dispatch(set[current]({key: 'power', value: data('default power unit')}));
-                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
-                dispatch(set[current]({key: 'edited', value: false}));
-              }}
-            />
+              <Logic
+                property="q4"
+                q="What type of seedbed preparation will be done?"
+                a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Planting').sort()]}
+                shown={match('q3', 'Self', current)}
+                onInput={() => {
+                  dispatch(set[current]({property: 'power', value: data('default power unit')}));
+                  dispatch(set[current]({property: 'total', value: totalRelevantCost()}));
+                  dispatch(set[current]({property: 'edited', value: false}));
+                }}
+              />
 
-            <Logic
-              id="power"
-              q="What power will be used?"
-              a={['', ...Object.keys(db.power)]}
-              shown={state.q4}
-              onInput={() => {
-                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
-                dispatch(set[current]({key: 'edited', value: false}));
-              }}
-            />
-
-            <Logic
-              q="Annual Use (acres on implement)"
-              a={data('acres/year', 0)}
-              shown={state.q4}
-            />
-
-            <Logic
-              q="Annual Use (hours on power)"
-              a={power('expected use (hr/yr)')}
-              shown={state.q4}
-            />
-
-            <Logic
-              q="Acres/hour"
-              a={data('acres/hour', 1)}
-              shown={state.q4}
-            />
-
-            <Logic
-              id="total"
-              q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
-              a={'dollar'}
-              onInput={(e) => {
-                dispatch(set[current]({key: 'edited', value: e.target.value > ''}));
-              }}
-            />
-          </tbody>
-        </table>
+              <Logic question="power" />
+              <Logic question="Annual Use (acres on implement)" />
+              <Logic question="Annual Use (hours on power)" />
+              <Logic question="Acres/hour" />
+              <Logic question="Estimated" total={total} estimated={estimated} />
+            </tbody>
+          </table>
+        </form>
       </div>
 
       <Activity type={current}/>

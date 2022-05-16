@@ -1,12 +1,12 @@
 import React from 'react';
 
 import {TextField, OutlinedInput, Icon} from '@mui/material';
-import {Input, Autocomplete} from './NewInputs';
+import {Input, Autocomplete} from './Inputs';
 import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../app/store';
+import {get, set} from '../store/store';
 
 const autocompleteService = { current: null };
 

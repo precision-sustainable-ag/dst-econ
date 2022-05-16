@@ -1,11 +1,12 @@
-import {Input} from './NewInputs';
+import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, implementCost, powerCost, totalCost, totalRelevantCost} from '../app/store';
+import {get, set, dollars, implementCost, powerCost, totalCost, totalRelevantCost} from '../store/store';
 
 const Activity = ({type, ds = 'q4'}) => {
   const dispatch = useDispatch();
   const state           = useSelector(get[type]);
+
   const edited          = state.edited;
   const imp             = state[ds];
   const ImplementCost   = state.implementCost;
@@ -21,6 +22,7 @@ const Activity = ({type, ds = 'q4'}) => {
   const coverCropTotal  = useSelector(get.coverCropTotal) || 0;
   const seedbedTotal    = useSelector(get.seedbed).total;
   const plantingTotal   = useSelector(get.planting).total;
+  const fertilityTotal  = useSelector(get.fertility).total;
   const state3          = useSelector(get[type]).q3;
 
   const totalImplementCost = () => {
@@ -66,10 +68,10 @@ const Activity = ({type, ds = 'q4'}) => {
         <td>
           <label>
             <Input
-              id={d}
+              id={type}
+              property={d}
               type="checkbox"
-              context={type}
-              onInput={() => dispatch(set[type]({key: 'total', value: totalRelevantCost()}))}
+              onInput={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
             />
             {desc}
           </label>
@@ -135,12 +137,12 @@ const Activity = ({type, ds = 'q4'}) => {
                   Implement Cost<br/>($/acre)
                   <br/>
                   <Input
-                    id={'implementCost'}
-                    context={type}
+                    id={type}
+                    property={'implementCost'}
                     type="checkbox"
                     onInput={() => {
                       console.log(totalRelevantCost());
-                      dispatch(set[type]({key: 'total', value: totalRelevantCost()}))
+                      dispatch(set[type]({property: 'total', value: totalRelevantCost()}))
                     }}
                   />
                 </label>
@@ -150,10 +152,10 @@ const Activity = ({type, ds = 'q4'}) => {
                   Power Cost<br/>($/acre)
                   <br/>
                   <Input
-                    id={'powerCost'}
-                    context={type}
+                    id={type}
+                    property={'powerCost'}
                     type="checkbox"
-                    onInput={() => dispatch(set[type]({key: 'total', value: totalRelevantCost()}))}
+                    onInput={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
                   />
                 </label>
               </th>
@@ -184,7 +186,7 @@ const Activity = ({type, ds = 'q4'}) => {
     return parm ? <tr><td>{desc}</td><td>{dollars(parm)}</td></tr> : null;
   } // SummaryRow
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal;
 
   const summary = (
     total > 0 &&
@@ -197,6 +199,7 @@ const Activity = ({type, ds = 'q4'}) => {
         <SummaryRow parm={coverCropTotal} desc="Cover crop seed" />
         <SummaryRow parm={seedbedTotal}   desc="Seedbed preparation" />
         <SummaryRow parm={plantingTotal}  desc="Planting activity" />
+        <SummaryRow parm={fertilityTotal} desc="Fertility" />
       </tbody>
       <tfoot>
         <tr><td>Total</td><td>{dollars(total)}</td></tr>

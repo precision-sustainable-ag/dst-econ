@@ -1,6 +1,6 @@
 import {useEffect, useState, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../app/store';
+import {get, set} from '../store/store';
 
 import {
   Autocomplete as MUIAutocomplete,

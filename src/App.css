@@ -330,6 +330,15 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+.inputs {
+  width: 100% !important;
+  max-width: 1000px;
+}
+
+.inputs td:nth-child(1) {
+  width: 50%;
+}
+
 /*
 #Main > * {
   display: none;

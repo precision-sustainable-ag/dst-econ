@@ -1,74 +1,304 @@
-import React, {useReducer, useContext} from 'react';
+import {configureStore, createSlice} from '@reduxjs/toolkit';
 
-const Store = React.createContext();
-Store.displayName = 'Store';
+const shared = {
+  q1: '',
+  q2: '',
+  q3: '',
+  q4: '',
+  power: '',
+  method: '',
+  product: '',
+  customCost: 0,
+  unitCost: 0,
+  rate: 0,
+  productCost: 0,
+  chemical: '',
+  chemicalCost: 0,
+  roller: '',
+  rollerCost: 0,
+  total: 0,
+  edited: false,
+  implementCost: true,
+  powerCost: true,
+  Labor: true,
+  Fuel: true,
+  Depreciation: true,
+  Interest: true,
+  Repairs: true,
+  Taxes: true,
+  Insurance: true,
+  Storage: true,
+};
 
-export const useStore = () => useContext(Store);
+const initialState = {
+  screen: 'Home',
+  previousScreen: 'Home',
+  lat: 40.7849,
+  lon: -74.8073,
+  mapType: 'hybrid',
+  mapZoom: 13,
+  location: '',
+  state: 'New Jersey',
+  farm: '',
+  labor: '',
+  acres: '',
+  priorCrop: '',
+  otherPriorCrop: '',
+  otherCashCrop: '',
+  cashCrop: '',
+  description: null,
+  species: [],
+  rates: [],
+  prices: [],
+  coverCropTotal: 0,
+  plantingTotal: 0,
+  species3: '',
+  species4: '',
+  current: '',
+  useFertilizer: '',
+  fertN: 0,
+  fertP: 0,
+  fertK: 0,
+  $fertN: 0,
+  $fertP: 0,
+  $fertK: 0,
+  fertNAdded: 0,
+  fertPAdded: 0,
+  fertKAdded: 0,
+  $fertApplication: '',
+  seedbed: {...shared},
+  planting: {...shared},
+  termination: {...shared},
+  fertility: {...shared},
+  shown: {},
+};
 
-export const StoreProvider = ({ children, initialState, reducer }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+if (false) {
+  initialState.current = 'seedbed';
+  initialState.seedbed.q1 = 'Yes';
+  initialState.seedbed.q2 = 'No';
+  initialState.seedbed.q3 = 'Self';
+  initialState.seedbed.q4 = 'Chisel Plow; 15 Ft';
+  initialState.seedbed.power = '350 HP Tracked Tractor';
+  initialState.species = ['Clover, Crimson', 'Clover, Berseem'];
+  initialState.rates = [17, 5];
+  initialState.prices = [14, 3.13];
+}
 
-  const change = (type, e, value = e && e.target.value) => {
-    if (value === undefined) {
-      dispatch({
-        type,
-        e,
-        data: e
-      });
-    } else if (typeof value === 'object') {
-      dispatch({
-        type,
-        e,
-        data: value
-      });
-    } else {
-      dispatch({
-        type,
-        e,
-        data: {
-          value
+for (const key in initialState.seedbed) {
+  initialState.shown['seedbed' + key] = initialState.seedbed[key];
+}
+
+const sets = {};
+const gets = {};
+
+Object.keys(initialState).forEach(key => {
+  initialState['_changed' + key] = false;
+  initialState['_focus'   + key] = false;
+});
+
+Object.keys(initialState).forEach(key => {
+  const isArray = Array.isArray(initialState[key]);
+  const isObject = !isArray && initialState[key] !== null && typeof initialState[key] === 'object';
+
+  sets[key] = (state, action) => {
+    if (isArray) {
+      const value = action.payload.value;
+      const index = action.payload.index;
+
+      if (state[key][index] === value ||
+          (state[key][index] === undefined && value === '')
+         ) {
+        return state;
+      } else {
+        const a = [...state[key]];
+        a[index] = value;
+        return {
+          ...state,
+          [key]: a,
+          ['_changed' + key]: true
         }
-      });
-      // alert(JSON.stringify({type,data: {value}}))
-    }
-  } // change
+      }
+    } else if (isObject) {
+      const value = action.payload.value;
+      if (state[key][action.payload.key] === value) {
+        return state;
+      } else {
+        const o = {...state[key]};
+        o[action.payload.property] = value;
 
-  const match = (key, value) => {
-    return state['shown' + key] && state[key] === value;
+        return {
+          ...state,
+          [key]: o,
+          ['_changed' + key]: true
+        }
+      }
+    } else {
+      if (state[key] === action.payload) {
+        return state;
+      } else {
+        return {
+          ...state,
+          [key]: action.payload,
+          ['_changed' + key]: true
+        }
+      }
+    }
   }
 
-  const data = (parm, round) => {
-    if (!db.implements) {
-      return '';
+  sets.focus = (state, action) => {
+    return {
+      ...state,
+      ['_focus' + action.payload]: true
     }
+  }
 
-    const d = db.implements[state[state.current + 4]] || {};
+  if (isArray) {
+    sets['remove' + key] = (state, action) => {
+      console.log(key);
+      console.log(action);
+      const a = [...state[key]];
+      a.splice(action.payload, 1);
+      return {
+        ...state,
+        [key]: a
+      }
+    }
+  }
 
-    if (isFinite(round) && d[parm]) {
-      return (+d[parm]).toFixed(round);
+  gets[key] = (state) => {
+    if (!(key in state.reducer)) {
+      console.log('Unknown key: ' + key);
+      console.log(JSON.stringify(state.reducer, null, 2));
+      alert('Unknown key: ' + key);
     } else {
-      return d[parm];
+      return state.reducer[key];
     }
-  } // data
+  }
+});
 
-  const powerUnit = state[state.current + 'Power'] || data('default power unit');
+const slice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    ...sets,
+  },
+});
 
-  const power = (parm) => {
-    const p = db.power[powerUnit] || {};
+const mystore = configureStore({
+  reducer: {
+    reducer: slice.reducer
+  },
+});
 
-    return (p[parm] || '').toString();
-  } // power
+export const store = mystore;
+export const set = slice.actions;
+export const get = gets;
 
-  const dollars = (n) => isFinite(n) ? '$' + (+n).toFixed(2) : '';
+const state = (parm) => mystore.getState().reducer[parm];
 
-  return (
-    <Store.Provider
-      value={{state, dispatch, change, match, data, power, dollars, db}}
-    >
-      {children}
-    </Store.Provider>
-  );
+const current = () => mystore.getState().reducer.current;
+
+export const match = (key, value, context) => {
+  // console.log(key, value, context, mystore.getState().reducer[context][key] === value);
+
+  if (context) {
+    return !!(mystore.getState().reducer.shown[context + key] && mystore.getState().reducer[context][key] === value);
+  } else {
+    return !!(mystore.getState().reducer.shown[key] && mystore.getState().reducer[key] === value);
+  }
+}
+
+export const implementCost = (desc) => {
+  console.log(current());
+  if (!state(current()).implementCost) {
+    return 0;
+  }
+
+  let result;
+
+  if (data(desc)) {
+    result = +data(desc);
+  } else {
+    result = 0;
+  }
+
+  if (desc === 'Labor') {
+    result *= db.rates.skilled.value;
+  }
+
+  return result;
+} // implementCost
+
+export const powerCost = (desc) => {
+  if (desc === 'Labor' || !state(current()).powerCost) {
+    return 0;
+  }
+
+  const acresHour = data('acres/hour', 1); 
+  let result = desc === 'Fuel'  ? (power('Fuel') * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
+                                  power(desc) / acresHour;
+
+  return result;
+} // powerCost
+
+export const totalCost = (desc) => {
+  return (implementCost(desc) || 0) + (powerCost(desc) || 0);
+} // totalCost
+
+const relevantCost = (desc) => {
+  if (!current()) {
+    return 0;
+  }
+
+  return state(current())[desc] ? totalCost(desc) : 0;
+} // relevantCost
+
+export const totalRelevantCost = () => {
+  const result = 
+    relevantCost('Labor') +
+    relevantCost('Fuel') +
+    relevantCost('Depreciation') +
+    relevantCost('Interest') + 
+    relevantCost('Repairs') + 
+    relevantCost('Taxes') + 
+    relevantCost('Insurance') + 
+    relevantCost('Storage');
+  
+  return result;
+} // totalRelevantCost
+
+export const data = (parm, round) => {
+  if (!current()) {
+    return '';
+  }
+
+  const c4 = mystore.getState().reducer[current()].q4;
+
+  const d = db.implements[c4] || {};
+
+  // console.log(parm, c4, d, d[parm]);
+
+  if (isFinite(round) && d[parm]) {
+    return (+d[parm]).toFixed(round);
+  } else {
+    return d[parm];
+  }
+} // data
+
+export const powerUnit = () => {
+  if (!current()) {
+    return '';
+  }
+
+  return mystore.getState().reducer[current()].power;
 };
+
+export const power = (parm) => {
+  const p = db.power[powerUnit()] || {};
+
+  return (p[parm] || '').toString();
+} // power
 
 const loadData = async(table) => {
   const alias = (col) => {
@@ -155,15 +385,19 @@ const loadData = async(table) => {
       });
       // console.log(db.power['130 Self Propelled']);
     }
+
     if (Object.keys(db).length === 10) {
+      document.querySelector('html').style.display = 'block';
       document.querySelector('body').style.display = 'block';
+      console.log('here');
     }
   }
 } // loadData
 
 export const db = {
   rate : (species) => (db.seedList[species] || {}).seedingRate || '',
-  price: (species) => (db.seedList[species] || {}).price || ''
+  price: (species) => (db.seedList[species] || {}).price || '',
+  NCredit: (species) => (db.seedList[species] || {}).NCredit || ''
 };
 
 loadData('coefficients');
@@ -174,3 +408,17 @@ loadData('stateRegions');
 loadData('herbicides');
 loadData('power');
 loadData('implements');
+
+setTimeout(() => {
+  console.log(db.costDefaults['Custom Fertilizer Appl'].cost);
+}, 1000);
+
+export const dollars = (n) => {
+  if (!isFinite(n)) {
+    return '';
+  } else if (+n < 0) {
+    return <span style={{color: 'red'}}>(${(-n).toFixed(2)})</span>;
+  } else {
+    return '$' + (+n).toFixed(2);
+  }
+}

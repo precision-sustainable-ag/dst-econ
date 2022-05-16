@@ -5,7 +5,7 @@ import {MenuItem, Button} from '@mui/material';
 
 import {useSelector, useDispatch} from 'react-redux';
 
-import {get, set} from './app/store';
+import {get, set} from './store/store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';
@@ -191,7 +191,7 @@ function App() {
 
 const originalWarn = console.warn;
 
-console.warn = (s) => {
+console.zwarn = (s) => {
   if (!/The value provided to Autocomplete is invalid./.test(s)) { // annoying
     originalWarn(s);
   }

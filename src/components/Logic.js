@@ -1,30 +1,70 @@
-import {Autocomplete, Input} from './NewInputs';
+import {Autocomplete, Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../app/store';
+import {get, set, data, power, match, dollars, db, totalRelevantCost} from '../store/store';
 
-const Logic = ({q, a, id, shown=true, suffix='', initial='', onInput, value}) => {
+const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onInput, value, estimated, total}) => {
   const dispatch = useDispatch();  
-  const context = useSelector(get.current);
+  const id = useSelector(get.current);
+  const state = useSelector(id ? get[id] : get.screen);
+
+  switch (question) {
+    case 'Annual Use (acres on implement)':
+      q = q || question;
+      a = data('acres/year', 0);
+      shown = state.q4;
+      break;
+    case 'Annual Use (hours on power)':
+      q = q || question;
+      a= power('expected use (hr/yr)');
+      shown = state.q4;
+      break;
+    case 'Acres/hour':
+      q = q || question;
+      a = data('acres/hour', 1);
+      shown = state.q4;
+      break;
+    case 'power':
+      property = 'power';
+      q = q || 'What power will be used?';
+      a = ['', ...Object.keys(db.power)];
+      shown = state.q4;
+      onInput = () => {
+        dispatch(set[id]({property: 'total', value: totalRelevantCost()}));
+        dispatch(set[id]({property: 'edited', value: false}));
+      };
+      break;
+
+    case 'Estimated':
+      property = 'total';
+      q = q || question;
+      q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
+      a = 'dollar';
+      onInput= (e) => {
+        dispatch(set[id]({property: 'edited', value: e.target.value > ''}));
+      }
+      break;
+    default:
+  }
 
   useEffect(() => {
-    if (!context) return;
-    
+    if (!id) return;
+
     dispatch(set.shown({
-      key: context + id,
+      property: id + property,
       value: shown || false
     }));
 
     if (!shown) { // TODO
-      dispatch(set[context]({key: id, value: initial}));
+      dispatch(set[id]({property, value: initial}));
     } else if (value !== undefined) {
-      dispatch(set[context]({key: id, value}));
+      dispatch(set[id]({property, value}));
     }
-  });
+  }, [dispatch, id, value, property, shown, initial]);
 
   return (
-    context && shown ?
+    id && shown ?
     <tr className={id}>
       <td>{q}</td>
       <td>
@@ -36,10 +76,10 @@ const Logic = ({q, a, id, shown=true, suffix='', initial='', onInput, value}) =>
                 a.map(a => (
                   <label key={a}>
                     <Input
-                      onInput={onInput}
-                      context={context}
-                      type="radio"
                       id={id}
+                      property={property}
+                      onInput={onInput}
+                      type="radio"
                       value={a}
                     />{a}
                     <br/>
@@ -49,19 +89,19 @@ const Logic = ({q, a, id, shown=true, suffix='', initial='', onInput, value}) =>
             </>
             :
             <Autocomplete
-              onInput={onInput}
-              context={context}
-              options={a}
               id={id}
+              property={property}
+              onInput={onInput}
+              options={a}
             />
           :
           
           /number|dollar/.test(a) ?
             <Input
-              onInput={onInput}
-              context={context}
-              type={a}
               id={id}
+              property={property}
+              onInput={onInput}
+              type={a}
             />
           :
           

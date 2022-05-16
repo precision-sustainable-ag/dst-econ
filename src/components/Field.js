@@ -1,13 +1,12 @@
 import Map from './GoogleMaps';
 import Activity from './Activity';
-import {Autocomplete, Input} from './NewInputs';
+import {Autocomplete, Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../app/store';
+import {get, set} from '../store/store';
 
 const Field = () => {
   const dispatch = useDispatch();
-
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop = useSelector(get.cashCrop);
 

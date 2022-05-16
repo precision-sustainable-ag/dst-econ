@@ -3,16 +3,17 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, dollars, data, power, match, totalRelevantCost} from '../app/store';
+import {get, set, db, data, match, totalRelevantCost} from '../store/store';
 
 const Seedbed = () => {
   const dispatch = useDispatch();
-  const current  = 'seedbed';
-  const state    = useSelector(get[current]);
-
+  const current = 'seedbed';
+  useSelector(get.current);
+  const state = useSelector(get[current]);
+  
   useEffect(() => {
     dispatch(set.current(current));
-  });
+  }, [dispatch, current]);
 
   const total     = state.total;
   const estimated = current ? totalRelevantCost() : 0;
@@ -29,14 +30,14 @@ const Seedbed = () => {
         <hr/>
 
         <strong>Cover Crop Establishment</strong>
-        <table className={current}>
+        <table className={current + ' inputs'}>
           <tbody>
             <tr>
               <th colSpan="2">Seedbed preparation</th>
             </tr>
             
             <Logic
-              id="q1"
+              property="q1"
               q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
               a={['Yes', 'No']}
               onInput={(e) => {
@@ -47,7 +48,7 @@ const Seedbed = () => {
             />
 
             <Logic
-              id="q2"
+              property="q2"
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
               shown={match('q1', 'Yes', current)}
@@ -59,66 +60,53 @@ const Seedbed = () => {
             />
 
             <Logic
-              id="q3"
+              property="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
               shown={match('q2', 'No', current)}
             />
 
             <Logic
-              id="q4"
+              property="q4"
               q="What type of seedbed preparation will be done?"
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
               shown={match('q3', 'Self', current)}
               onInput={() => {
-                dispatch(set[current]({key: 'power', value: data('default power unit')}));
-                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
-                dispatch(set[current]({key: 'edited', value: false}));
+                dispatch(set[current]({property: 'power', value: data('default power unit')}));
+                dispatch(set[current]({property: 'total', value: totalRelevantCost()}));
+                dispatch(set[current]({property: 'edited', value: false}));
               }}
             />
 
-            <Logic
-              id="power"
-              q="What power will be used?"
-              a={['', ...Object.keys(db.power)]}
-              shown={state.q4}
-              onInput={() => {
-                dispatch(set[current]({key: 'total', value: totalRelevantCost()}));
-                dispatch(set[current]({key: 'edited', value: false}));
-              }}
-            />
-
-            <Logic
-              q="Annual Use (acres on implement)"
-              a={data('acres/year', 0)}
-              shown={state.q4}
-            />
-
-            <Logic
-              q="Annual Use (hours on power)"
-              a={power('expected use (hr/yr)')}
-              shown={state.q4}
-            />
-
-            <Logic
-              q="Acres/hour"
-              a={data('acres/hour', 1)}
-              shown={state.q4}
-            />
-
-            <Logic
-              id="total"
-              q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
-              a={'dollar'}
-              onInput={(e) => {
-                dispatch(set[current]({key: 'edited', value: e.target.value > ''}));
-              }}
-            />
+            <Logic question="power" />
+            <Logic question="Annual Use (acres on implement)" />
+            <Logic question="Annual Use (hours on power)" />
+            <Logic question="Acres/hour" />
+            <Logic question="Estimated" total={total} estimated={estimated} />
           </tbody>
         </table>
       </form>
+      <button
+        onClick={() => {
+          dispatch(set.seedbed({property: 'q1', value: 'Yes'}));
+          dispatch(set.seedbed({property: 'q2', value: 'No'}));
+          dispatch(set.seedbed({property: 'q3', value: 'Self'}));
+          dispatch(set.seedbed({property: 'q4', value: 'Chisel Plow; 15 Ft'}));
+          dispatch(set.seedbed({property: 'power', value: '350 HP Tracked Tractor'}));
 
-      <Activity type={current}/>
+          // TODO:
+            dispatch(set.screen('Home'));
+            setTimeout(() => {dispatch(set.screen('Seedbed'))}, 10);
+            setTimeout(() => {dispatch(set.screen('Home'))}, 20);
+            setTimeout(() => {dispatch(set.screen('Seedbed'))}, 30);
+            setTimeout(() => {dispatch(set.screen('Home'))}, 40);
+            setTimeout(() => {dispatch(set.screen('Seedbed'))}, 50);
+        }}
+      >
+        Test data
+      </button>
+
+      <Activity type={current} />
     </>
   )
 } // Seedbed
