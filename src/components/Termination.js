@@ -39,7 +39,7 @@ const Termination = () => {
                 property="q2"
                 q="Would you do this field activity if you did not have a cover crop?"
                 a={['Yes', 'No']}
-                onInput={(e) => {
+                onChange={(e) => {
                   if (e.target.value === 'Yes') {
                     dispatch(set.screen('Tillage'));
                   }
@@ -51,7 +51,7 @@ const Termination = () => {
                 q="Who will do this activity?"
                 a={['Self', 'Custom Operator']}
                 shown={match('q2', 'No', current)}
-                onInput={(e) => {  // TODO
+                onChange={(e) => {  // TODO
                   if (e.target.value === 'Self') {
                     dispatch(set.focus('termination.method'));
                   } else {
@@ -146,7 +146,7 @@ const Termination = () => {
                       property="q4"
                       q="What type of seedbed preparation will be done?"
                       a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
-                      onInput={() => {
+                      onChange={() => {
                         dispatch(set[current]({property: 'power', value: data('default power unit')}));
                         dispatch(set[current]({property: 'total', value: totalRelevantCost()}));
                         dispatch(set[current]({property: 'edited', value: false}));
@@ -162,7 +162,7 @@ const Termination = () => {
                       property="total"
                       q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
                       a={'dollar'}
-                      onInput={(e) => {
+                      onChange={(e) => {
                         dispatch(set[current]({property: 'edited', value: e.target.value > ''}));
                       }}
                     />

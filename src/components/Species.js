@@ -186,11 +186,12 @@ const Species = () => {
       </form>
       <button
         onClick={() => {
-          dispatch(set.seedbed({id: 'q1', value: 'Yes'}));
-          dispatch(set.seedbed({id: 'q2', value: 'Yes'}));
-          dispatch(set.seedbed({id: 'q3', value: 'Yes'}));
-          dispatch(set.seedbed({id: 'q4', value: 'Yes'}));
-          dispatch(set.seedbed({id: 'power', value: 'Yes'}));
+          dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
+          dispatch(set.rates({index: 0, value: 17}));
+          dispatch(set.prices({index: 0, value: 14}));
+          dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
+          dispatch(set.rates({index: 1, value: 5}));
+          dispatch(set.prices({index: 1, value: 3.13}));
         }}
       >
         Test data

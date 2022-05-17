@@ -49,7 +49,7 @@ const Planting = () => {
                 q="What type of seedbed preparation will be done?"
                 a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Planting').sort()]}
                 shown={match('q3', 'Self', current)}
-                onInput={() => {
+                onChange={() => {
                   dispatch(set[current]({property: 'power', value: data('default power unit')}));
                   dispatch(set[current]({property: 'total', value: totalRelevantCost()}));
                   dispatch(set[current]({property: 'edited', value: false}));

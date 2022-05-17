@@ -71,7 +71,7 @@ const Activity = ({type, ds = 'q4'}) => {
               id={type}
               property={d}
               type="checkbox"
-              onInput={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
+              onChange={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
             />
             {desc}
           </label>
@@ -94,7 +94,7 @@ const Activity = ({type, ds = 'q4'}) => {
 
   let breakdown;
 
-  if (type === 'species') {
+  if (/species|fertility/.test(type)) {
     breakdown = '';
   } else {
     let cname = type;
@@ -140,7 +140,7 @@ const Activity = ({type, ds = 'q4'}) => {
                     id={type}
                     property={'implementCost'}
                     type="checkbox"
-                    onInput={() => {
+                    onChange={() => {
                       console.log(totalRelevantCost());
                       dispatch(set[type]({property: 'total', value: totalRelevantCost()}))
                     }}
@@ -155,7 +155,7 @@ const Activity = ({type, ds = 'q4'}) => {
                     id={type}
                     property={'powerCost'}
                     type="checkbox"
-                    onInput={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
+                    onChange={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
                   />
                 </label>
               </th>

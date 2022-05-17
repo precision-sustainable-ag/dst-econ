@@ -8,7 +8,7 @@ import {get, set, db, dollars} from '../store/store';
 const Fertility = () => {
   const dispatch = useDispatch();
   const current  = 'fertility';
-  const useFertilizer = useSelector(get.useFertilizer);
+  const useFertilizer = useSelector(get.useFertilizer) === 'Yes';
 
   const fertN       = useSelector(get.fertN) || 0;
   const fertP       = useSelector(get.fertP) || 0;
@@ -37,7 +37,12 @@ const Fertility = () => {
     if (!$fertApplication) {
       dispatch(set.$fertApplication(db.costDefaults['Custom Fertilizer Appl'].cost));
     }
-  }, [dispatch, $fertN, $fertApplication]);
+    if (!useFertilizer) {
+      dispatch(set.fertNAdded(0));
+      dispatch(set.fertPAdded(0));
+      dispatch(set.fertKAdded(0));
+    }
+  }, [dispatch, $fertN, $fertApplication, useFertilizer]);
 
   return (
     <div className="Fertility">
@@ -82,7 +87,7 @@ const Fertility = () => {
             </tr>
 
             {
-              useFertilizer !== 'Yes' ? null :
+              !useFertilizer ? null :
               (
                 <>
                   <tr>

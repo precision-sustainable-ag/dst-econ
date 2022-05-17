@@ -3,14 +3,16 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, data, match, totalRelevantCost} from '../store/store';
+import {get, set, db, data, match, totalRelevantCost, queue} from '../store/store';
 
 const Seedbed = () => {
+  console.log('Render: Seedbed');
   const dispatch = useDispatch();
   const current = 'seedbed';
   useSelector(get.current);
+  useSelector(get.shown);
   const state = useSelector(get[current]);
-  
+
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
@@ -40,7 +42,7 @@ const Seedbed = () => {
               property="q1"
               q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
               a={['Yes', 'No']}
-              onInput={(e) => {
+              onChange={(e) => {
                 if (e.target.value === 'No') {
                   dispatch(set.screen('Planting'));
                 }
@@ -52,7 +54,7 @@ const Seedbed = () => {
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
               shown={match('q1', 'Yes', current)}
-              onInput={(e) => {
+              onChange={(e) => {
                 if (e.target.value === 'Yes') {
                   dispatch(set.screen('Planting'));
                 }
@@ -71,7 +73,7 @@ const Seedbed = () => {
               q="What type of seedbed preparation will be done?"
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
               shown={match('q3', 'Self', current)}
-              onInput={() => {
+              onChange={() => {
                 dispatch(set[current]({property: 'power', value: data('default power unit')}));
                 dispatch(set[current]({property: 'total', value: totalRelevantCost()}));
                 dispatch(set[current]({property: 'edited', value: false}));
@@ -92,15 +94,7 @@ const Seedbed = () => {
           dispatch(set.seedbed({property: 'q2', value: 'No'}));
           dispatch(set.seedbed({property: 'q3', value: 'Self'}));
           dispatch(set.seedbed({property: 'q4', value: 'Chisel Plow; 15 Ft'}));
-          dispatch(set.seedbed({property: 'power', value: '350 HP Tracked Tractor'}));
-
-          // TODO:
-            dispatch(set.screen('Home'));
-            setTimeout(() => {dispatch(set.screen('Seedbed'))}, 10);
-            setTimeout(() => {dispatch(set.screen('Home'))}, 20);
-            setTimeout(() => {dispatch(set.screen('Seedbed'))}, 30);
-            setTimeout(() => {dispatch(set.screen('Home'))}, 40);
-            setTimeout(() => {dispatch(set.screen('Seedbed'))}, 50);
+          dispatch(set.seedbed({property: 'power', value: '350 HP Tracked Tractor'}))
         }}
       >
         Test data

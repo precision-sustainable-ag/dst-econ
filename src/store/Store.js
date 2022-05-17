@@ -92,10 +92,23 @@ for (const key in initialState.seedbed) {
 const sets = {};
 const gets = {};
 
-Object.keys(initialState).forEach(key => {
-  initialState['_changed' + key] = false;
-  initialState['_focus'   + key] = false;
-});
+const cf = (obj, parent='') => {
+  Object.keys(obj).forEach((key) => {
+    const isArray = Array.isArray(obj[key]);
+    const isObject = !isArray && obj[key] !== null && typeof obj[key] === 'object';
+  
+    if (isObject) {
+      console.log(obj[key]);
+      cf(obj[key], key);
+    } else {
+      initialState['_changed' + parent + key] = false;
+      initialState['_focus'   + parent + key] = false;
+    }
+  });
+} // cf
+
+cf(initialState);
+console.log(initialState);
 
 Object.keys(initialState).forEach(key => {
   const isArray = Array.isArray(initialState[key]);
@@ -121,16 +134,17 @@ Object.keys(initialState).forEach(key => {
       }
     } else if (isObject) {
       const value = action.payload.value;
+      const property = action.payload.property;
       if (state[key][action.payload.key] === value) {
         return state;
       } else {
         const o = {...state[key]};
-        o[action.payload.property] = value;
+        o[property] = value;
 
         return {
           ...state,
           [key]: o,
-          ['_changed' + key]: true
+          ['_changed' + key + property]: true
         }
       }
     } else {
@@ -200,7 +214,13 @@ const state = (parm) => mystore.getState().reducer[parm];
 const current = () => mystore.getState().reducer.current;
 
 export const match = (key, value, context) => {
-  // console.log(key, value, context, mystore.getState().reducer[context][key] === value);
+  if (key === 'q2') {
+    // console.log('_'.repeat(40));
+    // console.log(mystore.getState().reducer.shown[context + key]);
+    // console.log(key, value, context, mystore.getState().reducer[context][key] === value);
+    // console.log(!!(mystore.getState().reducer.shown[context + key] && mystore.getState().reducer[context][key] === value));
+    // console.log('_'.repeat(40));
+  }
 
   if (context) {
     return !!(mystore.getState().reducer.shown[context + key] && mystore.getState().reducer[context][key] === value);
@@ -210,7 +230,6 @@ export const match = (key, value, context) => {
 }
 
 export const implementCost = (desc) => {
-  console.log(current());
   if (!state(current()).implementCost) {
     return 0;
   }
@@ -399,6 +418,12 @@ export const db = {
   price: (species) => (db.seedList[species] || {}).price || '',
   NCredit: (species) => (db.seedList[species] || {}).NCredit || ''
 };
+
+export const queue = (f, time=1) => {
+  setTimeout(f, queue.i++ * time);
+  setTimeout(() => queue.i = 0, 1000);
+}
+queue.i = 0;
 
 loadData('coefficients');
 loadData('seedList');

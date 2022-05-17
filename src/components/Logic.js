@@ -4,11 +4,18 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, data, power, match, dollars, db, totalRelevantCost} from '../store/store';
 
-const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onInput, value, estimated, total}) => {
-  const dispatch = useDispatch();  
+const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
+  console.log('Render: Logic ' + property);
+  const dispatch = useDispatch();
+  useSelector(get.shown);
   const id = useSelector(get.current);
   const state = useSelector(id ? get[id] : get.screen);
-
+  if (property === 'q4') {
+    console.log('_'.repeat(40));
+    console.log(shown);
+    console.log(match('q3', 'Self', 'seedbed'));
+    console.log('_'.repeat(40));
+  }
   switch (question) {
     case 'Annual Use (acres on implement)':
       q = q || question;
@@ -30,7 +37,7 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onI
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(db.power)];
       shown = state.q4;
-      onInput = () => {
+      onChange = () => {
         dispatch(set[id]({property: 'total', value: totalRelevantCost()}));
         dispatch(set[id]({property: 'edited', value: false}));
       };
@@ -41,7 +48,7 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onI
       q = q || question;
       q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
-      onInput= (e) => {
+      onInput = (e) => {
         dispatch(set[id]({property: 'edited', value: e.target.value > ''}));
       }
       break;
@@ -78,7 +85,7 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onI
                     <Input
                       id={id}
                       property={property}
-                      onInput={onInput}
+                      onChange={onChange}
                       type="radio"
                       value={a}
                     />{a}
@@ -91,7 +98,7 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onI
             <Autocomplete
               id={id}
               property={property}
-              onInput={onInput}
+              onChange={onChange}
               options={a}
             />
           :
@@ -100,6 +107,7 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onI
             <Input
               id={id}
               property={property}
+              onChange={onChange}
               onInput={onInput}
               type={a}
             />
