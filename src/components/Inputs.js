@@ -39,9 +39,11 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
   console.log(`Render: Input ${id} ${property}`);
 
   const dispatch = useDispatch();
+  const obj = property ? id + '.' + property : id;
 
-  const focus = useSelector(get['_focus' + id + (property || '')]);
-  const changed = useSelector(get['_changed' + id + (property || '')]);
+  if (!get['_focus.' + obj]) alert(obj);
+  const focus = useSelector(get['_focus.' + obj]);
+  const changed = useSelector(get['_changed.' + obj]);
   const focusRef = useRef(null);
 
   const sel = get[id];
@@ -88,16 +90,16 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
           target: {value: val}
         }
         onChange(e);
-        dispatch(set['_changed' + id + (property || '')](false));
+        dispatch(set['_changed.' + obj](false));
       }
     }
     if (focus) {
       const input = focusRef.current.querySelector('input');
       input.focus();
-      input.select();
-      dispatch(set['_focus' + id](false));
+      setTimeout(() => input.select(), 1);
+      dispatch(set['_focus.' + obj](false));
     }
-  }, [changed, property, val, focus, id, onChange, dispatch]);
+  }, [changed, obj, val, id, property, focus, onChange, dispatch]);
 
   const change = (value) => {
     setValue(value);
@@ -277,9 +279,10 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
   }
 } // Input
 
-const Autocomplete = ({id, index, options, value, onChange, isOptionEqualToValue, onInputChange, groupBy, renderInput, getOptionLabel, autoComplete, includeInputInList, filterSelectedOptions, property, ...props}) => {
+const Autocomplete = ({id, property, index, options, value, onChange, isOptionEqualToValue, onInputChange, groupBy, renderInput, getOptionLabel, autoComplete, includeInputInList, filterSelectedOptions, ...props}) => {
   const dispatch = useDispatch();
-  const changed = useSelector(get['_changed' + id + (property || '')]);
+  const obj = property ? id + '.' + property : id;
+  const changed = useSelector(get['_changed.' + obj]);
 
   const sel = get[id];
   if (!sel) {
@@ -339,10 +342,10 @@ const Autocomplete = ({id, index, options, value, onChange, isOptionEqualToValue
     if (changed) {
       if (onChange) {
         onChange({}, value);
-        dispatch(set['_changed' + id + (property || '')](false));
+        dispatch(set['_changed.' + obj](false));
       }
     }
-  }, [dispatch, onChange, value, property, id, changed]);
+  }, [dispatch, onChange, value, obj, changed]);
 
   // let max = options ? Math.max.apply(Math, options.map(option => option.description ? option.description.length : option.length)) : '100%';
   const max = '100%';

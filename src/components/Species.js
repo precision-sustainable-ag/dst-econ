@@ -8,6 +8,7 @@ import {get, set, db, dollars} from '../store/store';
 const SpeciesRow = ({n}) => {
   const dispatch = useDispatch();
   const species = useSelector(get.species);
+  const testing = useSelector(get.testing);
 
   const speciesList = {
     Other:      ['Commercial mix'],
@@ -49,15 +50,17 @@ const SpeciesRow = ({n}) => {
               dispatch(set.removerates(n));
               dispatch(set.removeprices(n));
             } else {
-              dispatch(set.rates({
-                value: db.rate(sp),
-                index: n
-              }));
+              if (!testing) {
+                dispatch(set.rates({
+                  value: db.rate(sp),
+                  index: n
+                }));
 
-              dispatch(set.prices({
-                value: db.price(sp),
-                index: n
-              }));
+                dispatch(set.prices({
+                  value: db.price(sp),
+                  index: n
+                }));
+              }
 
               if (db.NCredit(sp)) {
                 dispatch(set.fertN(db.NCredit(sp)));
@@ -86,11 +89,12 @@ const SpeciesRow = ({n}) => {
 
 const Species = () => {
   const dispatch = useDispatch();
-  const species         = useSelector(get.species);
-  const rates           = useSelector(get.rates);
-  const prices          = useSelector(get.prices);
-  const coverCropTotal  = useSelector(get.coverCropTotal);
-  const state           = useSelector(get.state);
+  const species  = useSelector(get.species);
+  const rates    = useSelector(get.rates);
+  const prices   = useSelector(get.prices);
+  const state    = useSelector(get.state);
+  const testing  = useSelector(get.testing);
+  const fertN    = useSelector(get.fertN);
 
   let rec = db.stateRegions[state.toUpperCase()];
 
@@ -117,7 +121,12 @@ const Species = () => {
 
   useEffect(() => {
     dispatch(set.coverCropTotal(total));
-  }, [dispatch, total]);
+    if (testing) {
+      console.assert(total === 253.65, `total should be $253.65: ${total}`);
+      console.assert(fertN === 30, `fertN should be 30: ${fertN}`);
+      dispatch(set.testing(false));
+    }
+  }, [dispatch, total, testing, fertN]);
 
   return (
     <>
@@ -178,7 +187,7 @@ const Species = () => {
               <tr>
                 <td colSpan="2"><strong>Cost of Cover crop seed ($/acre)</strong></td>
                 <td className="hidden"></td>
-                <td><strong>{dollars(coverCropTotal)}</strong></td>
+                <td><strong>{dollars(total)}</strong></td>
               </tr>
             </tbody>
           </table>
@@ -192,6 +201,7 @@ const Species = () => {
           dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
           dispatch(set.rates({index: 1, value: 5}));
           dispatch(set.prices({index: 1, value: 3.13}));
+          dispatch(set.testing(true));
         }}
       >
         Test data

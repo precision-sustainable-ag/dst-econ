@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, data, match, totalRelevantCost, queue} from '../store/store';
+import {get, set, db, data, match, totalRelevantCost} from '../store/store';
 
 const Seedbed = () => {
   console.log('Render: Seedbed');
@@ -95,11 +95,11 @@ const Seedbed = () => {
           dispatch(set.seedbed({property: 'q3', value: 'Self'}));
           dispatch(set.seedbed({property: 'q4', value: 'Chisel Plow; 15 Ft'}));
           dispatch(set.seedbed({property: 'power', value: '350 HP Tracked Tractor'}))
+          dispatch(set['_focus.seedbed.total'](true));
         }}
       >
         Test data
       </button>
-
       <Activity type={current} />
     </>
   )

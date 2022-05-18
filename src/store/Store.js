@@ -31,6 +31,7 @@ const shared = {
 };
 
 const initialState = {
+  testing: false,
   screen: 'Home',
   previousScreen: 'Home',
   lat: 40.7849,
@@ -101,8 +102,9 @@ const cf = (obj, parent='') => {
       console.log(obj[key]);
       cf(obj[key], key);
     } else {
-      initialState['_changed' + parent + key] = false;
-      initialState['_focus'   + parent + key] = false;
+      const o = parent ? parent + '.' + key : key;
+      initialState['_changed.' + o] = false;
+      initialState['_focus.'  + o] = false;
     }
   });
 } // cf
@@ -113,7 +115,6 @@ console.log(initialState);
 Object.keys(initialState).forEach(key => {
   const isArray = Array.isArray(initialState[key]);
   const isObject = !isArray && initialState[key] !== null && typeof initialState[key] === 'object';
-
   sets[key] = (state, action) => {
     if (isArray) {
       const value = action.payload.value;
@@ -129,7 +130,7 @@ Object.keys(initialState).forEach(key => {
         return {
           ...state,
           [key]: a,
-          ['_changed' + key]: true
+          ['_changed.' + key]: true
         }
       }
     } else if (isObject) {
@@ -144,7 +145,7 @@ Object.keys(initialState).forEach(key => {
         return {
           ...state,
           [key]: o,
-          ['_changed' + key + property]: true
+          ['_changed.' + key + '.' + property]: true
         }
       }
     } else {
@@ -154,7 +155,7 @@ Object.keys(initialState).forEach(key => {
         return {
           ...state,
           [key]: action.payload,
-          ['_changed' + key]: true
+          ['_changed.' + key]: true
         }
       }
     }
@@ -163,7 +164,7 @@ Object.keys(initialState).forEach(key => {
   sets.focus = (state, action) => {
     return {
       ...state,
-      ['_focus' + action.payload]: true
+      ['_focus.' + action.payload]: true
     }
   }
 
