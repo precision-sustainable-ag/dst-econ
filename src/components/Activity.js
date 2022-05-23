@@ -71,7 +71,7 @@ const Activity = ({type, ds = 'q4'}) => {
               id={type}
               property={d}
               type="checkbox"
-              onChange={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
+              onChange={() => dispatch(set[type].total(totalRelevantCost()))}
             />
             {desc}
           </label>
@@ -142,7 +142,7 @@ const Activity = ({type, ds = 'q4'}) => {
                     type="checkbox"
                     onChange={() => {
                       console.log(totalRelevantCost());
-                      dispatch(set[type]({property: 'total', value: totalRelevantCost()}))
+                      dispatch(set[type].total(totalRelevantCost()))
                     }}
                   />
                 </label>
@@ -155,7 +155,7 @@ const Activity = ({type, ds = 'q4'}) => {
                     id={type}
                     property={'powerCost'}
                     type="checkbox"
-                    onChange={() => dispatch(set[type]({property: 'total', value: totalRelevantCost()}))}
+                    onChange={() => dispatch(set[type].total(totalRelevantCost()))}
                   />
                 </label>
               </th>

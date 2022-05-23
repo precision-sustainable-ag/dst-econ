@@ -1,4 +1,5 @@
-import {configureStore, createSlice} from '@reduxjs/toolkit';
+import {createAction} from '@reduxjs/toolkit';
+import {configureStore, createSlice, createReducer} from '@reduxjs/toolkit';
 
 const shared = {
   q1: '',
@@ -31,7 +32,14 @@ const shared = {
 };
 
 const initialState = {
+  focus: null,
+  test: '',
+  test2: {a: {b: {c: 3}}},
   testing: false,
+  array1: ['This ', 'is ', 'a ', 'test'],
+  array2: {
+    a: [4, 3, 2, 1],
+  },
   screen: 'Home',
   previousScreen: 'Home',
   lat: 40.7849,
@@ -60,173 +68,137 @@ const initialState = {
   fertN: 0,
   fertP: 0,
   fertK: 0,
-  $fertN: 0,
+  $fertN: undefined, // db.rates.Nitrogen.value
   $fertP: 0,
   $fertK: 0,
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
-  $fertApplication: '',
+  $fertApplication: undefined, // db.costDefaults['Custom Fertilizer Appl'].cost
   seedbed: {...shared},
   planting: {...shared},
   termination: {...shared},
   fertility: {...shared},
-  shown: {},
+  shown: {
+    seedbed: {...shared}
+  },
 };
-
-if (false) {
-  initialState.current = 'seedbed';
-  initialState.seedbed.q1 = 'Yes';
-  initialState.seedbed.q2 = 'No';
-  initialState.seedbed.q3 = 'Self';
-  initialState.seedbed.q4 = 'Chisel Plow; 15 Ft';
-  initialState.seedbed.power = '350 HP Tracked Tractor';
-  initialState.species = ['Clover, Crimson', 'Clover, Berseem'];
-  initialState.rates = [17, 5];
-  initialState.prices = [14, 3.13];
-}
-
-for (const key in initialState.seedbed) {
-  initialState.shown['seedbed' + key] = initialState.seedbed[key];
-}
 
 const sets = {};
 const gets = {};
 
-const cf = (obj, parent='') => {
-  Object.keys(obj).forEach((key) => {
-    const isArray = Array.isArray(obj[key]);
-    const isObject = !isArray && obj[key] !== null && typeof obj[key] === 'object';
+const builders = (builder) => {
+  const recurse = (obj, set, get, s = '') => {
+    Object.keys(obj).forEach((key) => {
+      const isArray = Array.isArray(obj[key]);
+      const isObject = !isArray && obj[key] !== null && typeof obj[key] === 'object';
   
-    if (isObject) {
-      console.log(obj[key]);
-      cf(obj[key], key);
-    } else {
-      const o = parent ? parent + '.' + key : key;
-      initialState['_changed.' + o] = false;
-      initialState['_focus.'  + o] = false;
+      const fullkey = s ? s + '.' + key : key;
+
+      if (!get[key]) {
+        get[key] = (state) => {
+          const sp = s.split('.');
+          let st = state;
+          while (s && sp[0]) {
+            st = st[sp.shift()];
+          }
+          return st[key];
+        }
+      }
+
+      if (!set[key]) {
+        set[key] = createAction(fullkey);
+        builder
+          .addCase(set[key], (state, action) => {
+            const sp = s.split('.');
+            let st = state;
+            while (s && sp.length) {
+              st = st[sp.shift()];
+            }
+
+            if (isArray && Number.isFinite(action.payload.index)) {
+              const {index, value} = action.payload;
+              if (st[key][index] !== value) { // TODO: is this check needed?
+                st[key][index] = value;
+              }
+            } else {
+              if (st[key] !== action.payload) { // TODO: is this check needed?
+                st[key] = action.payload;
+              }
+            }
+          }
+        );
+      }
+
+      if (isObject) {
+        recurse(obj[key], set[key], get[key], fullkey);
+      }
+    });
+  } // recurse
+
+  const updateCoverCropTotal = (state) => {
+    let total = 0;
+
+    state.species
+      .forEach((s, n) => {
+        if (s) {
+          total += (+state.rates[n] || 0) * (+state.prices[n] || 0);
+        }
+      });
+    
+    state.coverCropTotal = total;
+  } // updateCoverCropTotal
+
+  sets.species = createAction('species');
+  builder.addCase(sets.species, (state, action) => {
+    const {index, value} = action.payload;
+    state.species[index] = value;
+    state.rates[index] = db.rate(value);
+    state.prices[index] = db.price(value);
+    updateCoverCropTotal(state);
+    state.focus = `rates${index}`;
+    if (db.NCredit(value)) {
+      state.fertN = db.NCredit(value);
     }
   });
-} // cf
 
-cf(initialState);
-console.log(initialState);
+  sets.rates = createAction('rates');
+  builder.addCase(sets.rates, (state, action) => {
+    const {index, value} = action.payload;
+    state.rates[index] = value;
+    updateCoverCropTotal(state);
+  });
 
-Object.keys(initialState).forEach(key => {
-  const isArray = Array.isArray(initialState[key]);
-  const isObject = !isArray && initialState[key] !== null && typeof initialState[key] === 'object';
-  sets[key] = (state, action) => {
-    if (isArray) {
-      const value = action.payload.value;
-      const index = action.payload.index;
+  sets.prices = createAction('prices');
+  builder.addCase(sets.prices, (state, action) => {
+    const {index, value} = action.payload;
+    state.prices[index] = value;
+    updateCoverCropTotal(state);
+  });
 
-      if (state[key][index] === value ||
-          (state[key][index] === undefined && value === '')
-         ) {
-        return state;
-      } else {
-        const a = [...state[key]];
-        a[index] = value;
-        return {
-          ...state,
-          [key]: a,
-          ['_changed.' + key]: true
-        }
-      }
-    } else if (isObject) {
-      const value = action.payload.value;
-      const property = action.payload.property;
-      if (state[key][action.payload.key] === value) {
-        return state;
-      } else {
-        const o = {...state[key]};
-        o[property] = value;
-
-        return {
-          ...state,
-          [key]: o,
-          ['_changed.' + key + '.' + property]: true
-        }
-      }
-    } else {
-      if (state[key] === action.payload) {
-        return state;
-      } else {
-        return {
-          ...state,
-          [key]: action.payload,
-          ['_changed.' + key]: true
-        }
-      }
-    }
-  }
-
-  sets.focus = (state, action) => {
-    return {
-      ...state,
-      ['_focus.' + action.payload]: true
-    }
-  }
-
-  if (isArray) {
-    sets['remove' + key] = (state, action) => {
-      console.log(key);
-      console.log(action);
-      const a = [...state[key]];
-      a.splice(action.payload, 1);
-      return {
-        ...state,
-        [key]: a
-      }
-    }
-  }
-
-  gets[key] = (state) => {
-    if (!(key in state.reducer)) {
-      console.log('Unknown key: ' + key);
-      console.log(JSON.stringify(state.reducer, null, 2));
-      alert('Unknown key: ' + key);
-    } else {
-      return state.reducer[key];
-    }
-  }
-});
-
-const slice = createSlice({
-  name: 'app',
-  initialState,
-  reducers: {
-    ...sets,
-  },
-});
+  recurse(initialState, sets, gets);
+} // builders
 
 const mystore = configureStore({
-  reducer: {
-    reducer: slice.reducer
-  },
+  reducer: createReducer(initialState, builders)
 });
 
 export const store = mystore;
-export const set = slice.actions;
+
+export const set = sets;
 export const get = gets;
 
-const state = (parm) => mystore.getState().reducer[parm];
+console.log(set);
 
-const current = () => mystore.getState().reducer.current;
+const state = (parm) => mystore.getState()[parm];
+
+const current = () => mystore.getState().current;
 
 export const match = (key, value, context) => {
-  if (key === 'q2') {
-    // console.log('_'.repeat(40));
-    // console.log(mystore.getState().reducer.shown[context + key]);
-    // console.log(key, value, context, mystore.getState().reducer[context][key] === value);
-    // console.log(!!(mystore.getState().reducer.shown[context + key] && mystore.getState().reducer[context][key] === value));
-    // console.log('_'.repeat(40));
-  }
-
   if (context) {
-    return !!(mystore.getState().reducer.shown[context + key] && mystore.getState().reducer[context][key] === value);
+    return !!(mystore.getState().shown[context][key] && mystore.getState()[context][key] === value);
   } else {
-    return !!(mystore.getState().reducer.shown[key] && mystore.getState().reducer[key] === value);
+    return !!(mystore.getState().shown[key] && mystore.getState()[key] === value);
   }
 }
 
@@ -293,7 +265,7 @@ export const data = (parm, round) => {
     return '';
   }
 
-  const c4 = mystore.getState().reducer[current()].q4;
+  const c4 = mystore.getState()[current()].q4;
 
   const d = db.implements[c4] || {};
 
@@ -311,7 +283,7 @@ export const powerUnit = () => {
     return '';
   }
 
-  return mystore.getState().reducer[current()].power;
+  return mystore.getState()[current()].power;
 };
 
 export const power = (parm) => {

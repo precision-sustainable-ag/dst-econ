@@ -6,9 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {get, set, db, dollars} from '../store/store';
 
 const SpeciesRow = ({n}) => {
-  const dispatch = useDispatch();
   const species = useSelector(get.species);
-  const testing = useSelector(get.testing);
 
   const speciesList = {
     Other:      ['Commercial mix'],
@@ -32,6 +30,7 @@ const SpeciesRow = ({n}) => {
         <Autocomplete
           id="species"
           index={n}
+          autoFocus={n === 0}
           groupBy={
             (option) => speciesList.Other.includes(option)     ? '-' :
                         speciesList.Brassica.includes(option)  ? 'Brassica' :
@@ -41,32 +40,6 @@ const SpeciesRow = ({n}) => {
                                                                  'ERROR'
           }
           options={options}
-
-          onChange={(event, sp, reason) => {
-            if (!event) {  // changing screen
-              return;
-            } else if (reason === 'zclear') { // TODO?
-              dispatch(set.removespecies(n));
-              dispatch(set.removerates(n));
-              dispatch(set.removeprices(n));
-            } else {
-              if (!testing) {
-                dispatch(set.rates({
-                  value: db.rate(sp),
-                  index: n
-                }));
-
-                dispatch(set.prices({
-                  value: db.price(sp),
-                  index: n
-                }));
-              }
-
-              if (db.NCredit(sp)) {
-                dispatch(set.fertN(db.NCredit(sp)));
-              }
-            }
-          }}
         />
       </td>
       <td>
@@ -88,13 +61,13 @@ const SpeciesRow = ({n}) => {
 } // SpeciesRow
 
 const Species = () => {
+  console.log('Render: Species');
   const dispatch = useDispatch();
   const species  = useSelector(get.species);
-  const rates    = useSelector(get.rates);
-  const prices   = useSelector(get.prices);
   const state    = useSelector(get.state);
   const testing  = useSelector(get.testing);
   const fertN    = useSelector(get.fertN);
+  const total    = useSelector(get.coverCropTotal);
 
   let rec = db.stateRegions[state.toUpperCase()];
 
@@ -110,17 +83,8 @@ const Species = () => {
     Western:    'https://westerncovercrops.org/category/resources/selection/'
   }[region];
 
-  let total = 0;
-
-  species
-    .forEach((s, n) => {
-      if (s) {
-        total += (+rates[n] || 0) * (+prices[n] || 0);
-      }
-    });
 
   useEffect(() => {
-    dispatch(set.coverCropTotal(total));
     if (testing) {
       console.assert(total === 253.65, `total should be $253.65: ${total}`);
       console.assert(fertN === 30, `fertN should be 30: ${fertN}`);

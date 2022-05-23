@@ -13,36 +13,28 @@ const Fertility = () => {
   const fertN       = useSelector(get.fertN) || 0;
   const fertP       = useSelector(get.fertP) || 0;
   const fertK       = useSelector(get.fertK) || 0;
-  const $fertN      = useSelector(get.$fertN) || 0;
+  const $fertN      = useSelector(get.$fertN);
   const $fertP      = useSelector(get.$fertP) || 0;
   const $fertK      = useSelector(get.$fertK) || 0;
   const fertNAdded  = useSelector(get.fertNAdded) || 0;
   const fertPAdded  = useSelector(get.fertPAdded) || 0;
   const fertKAdded  = useSelector(get.fertKAdded) || 0;
-  const $fertApplication = useSelector(get.$fertApplication) || 0;
+  const $fertApplication = useSelector(get.$fertApplication);
 
   const $fertCredit = fertN * $fertN + fertP * $fertP + fertK * $fertK;
   const $totalCost = -(fertNAdded * $fertN + fertPAdded * $fertP + fertKAdded * $fertK) - $fertApplication;
   const $fertNet = $fertCredit + $totalCost;
 
   useEffect(() => {
-    dispatch(set.current(current));
-    dispatch(set.fertility({property: 'total', value: $fertNet}));
-  }, [dispatch, current, $fertNet]);
-
-  useEffect(() => {
-    if (!$fertN) {
+    if ($fertN === undefined) {
       dispatch(set.$fertN(db.rates.Nitrogen.value));
     }
-    if (!$fertApplication) {
+    if ($fertApplication === undefined) {
       dispatch(set.$fertApplication(db.costDefaults['Custom Fertilizer Appl'].cost));
     }
-    if (!useFertilizer) {
-      dispatch(set.fertNAdded(0));
-      dispatch(set.fertPAdded(0));
-      dispatch(set.fertKAdded(0));
-    }
-  }, [dispatch, $fertN, $fertApplication, useFertilizer]);
+    // dispatch(set.fertility({property: 'total', value: $fertNet}));
+    dispatch(set.fertility_total($fertNet));
+  }, [dispatch, $fertN, $fertApplication, $fertNet]);
 
   return (
     <div className="Fertility">
@@ -71,32 +63,34 @@ const Fertility = () => {
 
             <tr>
               <td>Will you add fertilizer specifically for cover crop production?</td>
-              <Input
-                id="useFertilizer"
-                options={['Yes', 'No']}
-                type="radio"
-                row
-                onChange={(e) => {
-                  if (e.target.value === 'Yes') {
-                    dispatch(set.focus('fertNAdded'));
-                  } else {
-                    dispatch(set.focus('$fertApplication'));
-                  }
-                }}
-              />
+              <td>
+                <Input
+                  id="useFertilizer"
+                  options={['Yes', 'No']}
+                  type="radio"
+                  row
+                  onChange={(e) => {
+                    if (e.target.value === 'Yes') {
+                      dispatch(set.focus('fertNAdded'));
+                    } else {
+                      dispatch(set.fertNAdded(0));
+                      dispatch(set.fertPAdded(0));
+                      dispatch(set.fertKAdded(0));
+                      dispatch(set.focus('$fertApplication'));
+                    }
+                  }}
+                />
+              </td>
             </tr>
 
             {
-              !useFertilizer ? null :
-              (
-                <>
-                  <tr>
-                    <td>Fertilizer added for cover crop production (pounds/acre)</td>
-                    <td><Input id="fertNAdded" /></td>
-                    <td><Input id="fertPAdded" /></td>
-                    <td><Input id="fertKAdded" /></td>
-                  </tr>
-                </>
+              useFertilizer && (
+                <tr>
+                  <td>Fertilizer added for cover crop production (pounds/acre)</td>
+                  <td><Input id="fertNAdded" /></td>
+                  <td><Input id="fertPAdded" /></td>
+                  <td><Input id="fertKAdded" /></td>
+                </tr>
               )
             }
 
@@ -136,7 +130,7 @@ const Fertility = () => {
       >
         Test data
       </button>
-      <Activity type={current}/>
+      {/*<Activity type={current}/>*/}
     </div>
   )
 } // Fertility

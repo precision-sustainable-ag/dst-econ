@@ -10,14 +10,13 @@ const Seedbed = () => {
   const dispatch = useDispatch();
   const current = 'seedbed';
   useSelector(get.current);
-  useSelector(get.shown);
+  useSelector(get.shown[current]);
   const state = useSelector(get[current]);
 
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const total     = state.total;
   const estimated = current ? totalRelevantCost() : 0;
 
   return (
@@ -74,9 +73,9 @@ const Seedbed = () => {
               a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
               shown={match('q3', 'Self', current)}
               onChange={() => {
-                dispatch(set[current]({property: 'power', value: data('default power unit')}));
-                dispatch(set[current]({property: 'total', value: totalRelevantCost()}));
-                dispatch(set[current]({property: 'edited', value: false}));
+                dispatch(set[current].power(data('default power unit')));
+                dispatch(set[current].total(totalRelevantCost()));
+                dispatch(set[current].edited(false));
               }}
             />
 
@@ -84,18 +83,18 @@ const Seedbed = () => {
             <Logic question="Annual Use (acres on implement)" />
             <Logic question="Annual Use (hours on power)" />
             <Logic question="Acres/hour" />
-            <Logic question="Estimated" total={total} estimated={estimated} />
+            <Logic question="Estimated" total={state.total} estimated={estimated} />
           </tbody>
         </table>
       </form>
       <button
         onClick={() => {
-          dispatch(set.seedbed({property: 'q1', value: 'Yes'}));
-          dispatch(set.seedbed({property: 'q2', value: 'No'}));
-          dispatch(set.seedbed({property: 'q3', value: 'Self'}));
-          dispatch(set.seedbed({property: 'q4', value: 'Chisel Plow; 15 Ft'}));
-          dispatch(set.seedbed({property: 'power', value: '350 HP Tracked Tractor'}))
-          dispatch(set['_focus.seedbed.total'](true));
+          dispatch(set.seedbed.q1('Yes'));
+          dispatch(set.seedbed.q2('No'));
+          dispatch(set.seedbed.q3('Self'));
+          dispatch(set.seedbed.q4('Chisel Plow; 15 Ft'));
+          dispatch(set.seedbed.power('350 HP Tracked Tractor'));
+          dispatch(set.focus('seedbed.total'));
         }}
       >
         Test data

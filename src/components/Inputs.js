@@ -35,15 +35,16 @@ const keyPress = (event) => {
   }
 } // keyPress
 
-const Input = ({type, name, id=name, property, index, value, onChange, onInput, immediate, ...props}) => {
-  console.log(`Render: Input ${id} ${property}`);
+const Input = ({type, name, id=name, property, index='', value, onChange, onInput, immediate, ...props}) => {
+  // console.log(`Render: Input ${id} ${property}`);
 
   const dispatch = useDispatch();
-  const obj = property ? id + '.' + property : id;
+  let obj = property ? id + '.' + property : id;
+  if (Number.isFinite(index)) {
+    obj += index;
+  }
 
-  if (!get['_focus.' + obj]) alert(obj);
-  const focus = useSelector(get['_focus.' + obj]);
-  const changed = useSelector(get['_changed.' + obj]);
+  const focus = useSelector(get.focus) === obj;
   const focusRef = useRef(null);
 
   const sel = get[id];
@@ -52,6 +53,9 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
   }
   
   let sel2 = useSelector(sel);
+
+  const [v2] = useState(sel2);
+  const [changed, setChanged] = useState(false);
 
   const isArray = Array.isArray(sel2);
 
@@ -83,23 +87,23 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
   let [v, setValue] = useState(value || val);
 
   useEffect(() => {
+    if (v2 !== sel2) {
+      setChanged(true);
+    }
+  }, [v2, sel2]);
+
+  useEffect(() => {
     if (changed) {
       setValue(val);
-      if (onChange) {
-        const e = {
-          target: {value: val}
-        }
-        onChange(e);
-        dispatch(set['_changed.' + obj](false));
-      }
+      setChanged(false);
     }
-    if (focus) {
+    if (focus || props.autoFocus) { // TODO: is props.autoFocus working?
       const input = focusRef.current.querySelector('input');
       input.focus();
-      setTimeout(() => input.select(), 1);
-      dispatch(set['_focus.' + obj](false));
+      setTimeout(() => input.select(), 100);
+      dispatch(set.focus(null));
     }
-  }, [changed, obj, val, id, property, focus, onChange, dispatch]);
+  }, [changed, val, focus, dispatch, props]);
 
   const change = (value) => {
     setValue(value);
@@ -119,7 +123,7 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
         dispatch(set[id]({index, value}));
       }
     } else if (property) {
-      dispatch(set[id]({property, value}));
+      dispatch(set[id][property](value));
     } else {
       dispatch(set[id](value));
     }
@@ -184,7 +188,7 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
               onChange(e);
             }
           }}
-        />    
+        />
         :
       type === 'checkbox' ? 
         <Checkbox
@@ -254,9 +258,9 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
               change(value);
               if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
                 update(value);
-              }
-              if (onChange) {
-                onChange(e);
+                if (onChange) {
+                  onChange(e);
+                }
               }
             }}
 
@@ -265,6 +269,9 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
 
               if (!(immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate')))) {
                 update(value);
+              }
+              if (onChange) {
+                onChange(e);
               }
             }}
 
@@ -279,10 +286,12 @@ const Input = ({type, name, id=name, property, index, value, onChange, onInput, 
   }
 } // Input
 
-const Autocomplete = ({id, property, index, options, value, onChange, isOptionEqualToValue, onInputChange, groupBy, renderInput, getOptionLabel, autoComplete, includeInputInList, filterSelectedOptions, ...props}) => {
+const Autocomplete = ({id, property, index='', options, value, onChange, isOptionEqualToValue, onInputChange, groupBy, renderInput, getOptionLabel, autoComplete, includeInputInList, filterSelectedOptions, ...props}) => {
   const dispatch = useDispatch();
-  const obj = property ? id + '.' + property : id;
-  const changed = useSelector(get['_changed.' + obj]);
+  let obj = property ? id + '.' + property : id;
+  if (Number.isFinite(index)) {
+    obj += index;
+  }
 
   const sel = get[id];
   if (!sel) {
@@ -314,7 +323,7 @@ const Autocomplete = ({id, property, index, options, value, onChange, isOptionEq
     if (isArray) {
       dispatch(set[id]({index, value}));
     } else if (property) {
-      dispatch(set[id]({property, value}));
+      dispatch(set[id][property](value));
     } else {
       dispatch(set[id](value || ''));
     }
@@ -324,6 +333,7 @@ const Autocomplete = ({id, property, index, options, value, onChange, isOptionEq
     renderInput = (params) => {
       return (
         <TextField
+          autoFocus={props.autoFocus}
           variant={props.variant || 'outlined'}
           sx={{background: 'white', width: max, padding: 0}}
           {...params}
@@ -339,13 +349,12 @@ const Autocomplete = ({id, property, index, options, value, onChange, isOptionEq
   value = value !== undefined ? value : val;
 
   useEffect(() => { 
-    if (changed) {
+    if (val !== value) {
       if (onChange) {
         onChange({}, value);
-        dispatch(set['_changed.' + obj](false));
       }
     }
-  }, [dispatch, onChange, value, obj, changed]);
+  }, [dispatch, onChange, val, value, index, obj]);
 
   // let max = options ? Math.max.apply(Math, options.map(option => option.description ? option.description.length : option.length)) : '100%';
   const max = '100%';

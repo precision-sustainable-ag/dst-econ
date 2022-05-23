@@ -7,9 +7,11 @@ import {get, set, data, power, match, dollars, db, totalRelevantCost} from '../s
 const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
   console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
-  useSelector(get.shown);
+  const holdShown = useSelector(get.shown);
+  console.log(holdShown);
   const id = useSelector(get.current);
   const state = useSelector(id ? get[id] : get.screen);
+
   if (property === 'q4') {
     console.log('_'.repeat(40));
     console.log(shown);
@@ -38,8 +40,8 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onC
       a = ['', ...Object.keys(db.power)];
       shown = state.q4;
       onChange = () => {
-        dispatch(set[id]({property: 'total', value: totalRelevantCost()}));
-        dispatch(set[id]({property: 'edited', value: false}));
+        dispatch(set[id].total(totalRelevantCost()));
+        dispatch(set[id].edited(false));
       };
       break;
 
@@ -48,27 +50,30 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onC
       q = q || question;
       q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
-      onInput = (e) => {
-        dispatch(set[id]({property: 'edited', value: e.target.value > ''}));
+      onChange = (e) => {
+        dispatch(set[id].edited(e.target.value > ''));
       }
       break;
     default:
   }
 
-  useEffect(() => {
-    if (!id) return;
+  // if (property === 'q2') alert(shown)
 
-    dispatch(set.shown({
-      property: id + property,
-      value: shown || false
-    }));
+  useEffect(() => {
+    if (!id || !property) return;
+
+    // if (holdShown[id][property] !== !!shown) { // prevent infinite loop
+      dispatch(set.shown[id][property](shown || false));
+    // }
 
     if (!shown) { // TODO
-      dispatch(set[id]({property, value: initial}));
+      console.log(id);
+      console.log(property);
+      dispatch(set[id][property](initial));
     } else if (value !== undefined) {
-      dispatch(set[id]({property, value}));
+      dispatch(set[id][property](value));
     }
-  }, [dispatch, id, value, property, shown, initial]);
+  }, [dispatch, holdShown, id, value, property, shown, initial]);
 
   return (
     id && shown ?

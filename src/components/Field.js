@@ -134,7 +134,7 @@ const Field = () => {
           </tbody>
         </table>
       </form>
-      <Activity type="species"/>
+      {/*<Activity type="species"/>*/}
     </>
   )
 } // Field
