@@ -1,19 +1,18 @@
 import Map from './GoogleMaps';
 import Activity from './Activity';
-import {Autocomplete, Input} from './Inputs';
+import {Input} from './Inputs';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {useSelector} from 'react-redux';
+import {get} from '../store/store';
 
 const Field = () => {
-  const dispatch = useDispatch();
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop = useSelector(get.cashCrop);
 
   return (
     <>
       <form className="Field">
-        <h1 id="H1">Economic Decision Aid for Cover Crops: Field and Farm</h1>
+        <h1>Economic Decision Aid for Cover Crops: Field and Farm</h1>
         
         <p>
           Our first step with the <strong><em>Cover Crop Economic DST (Decision Support Tool)</em></strong> is to provide basic information on the field you wish to examine.
@@ -48,7 +47,7 @@ const Field = () => {
 
                 <h2>Which of the following options best describes your Field?</h2>
 
-                <Autocomplete
+                <Input
                   id="description"
                   options={
                     [
@@ -61,7 +60,7 @@ const Field = () => {
                 />
 
                 <h2>What was the Prior Crop planted on this Field?</h2>
-                <Autocomplete
+                <Input
                   id="priorCrop"
                   options={
                     [
@@ -78,11 +77,6 @@ const Field = () => {
                       'Other',
                     ]
                   }
-                  onChange={(_, value) => {
-                    if (value === 'Other') {
-                      dispatch(set.focus('otherPriorCrop'));
-                    }
-                  }}
                 />
                 {
                   priorCrop === 'Other' &&
@@ -95,7 +89,7 @@ const Field = () => {
                 }
 
                 <h2>What is your intended Cash Crop for this Field?</h2>
-                <Autocomplete
+                <Input
                   id="cashCrop"
                   options={
                     [
@@ -110,11 +104,6 @@ const Field = () => {
                       'Other',
                     ]
                   }
-                  onChange={(_, value) => {
-                    if (value === 'Other') {
-                      dispatch(set.focus('otherCashCrop'));
-                    }
-                  }}
                 />
                 {
                   cashCrop === 'Other' &&
@@ -125,7 +114,7 @@ const Field = () => {
                 }
 
                 <h2>What is your Labor Value for Analysis? ($/hour)</h2>
-                <Input 
+                <Input
                   id="labor"
                   type="dollar"
                 />
@@ -134,7 +123,7 @@ const Field = () => {
           </tbody>
         </table>
       </form>
-      {/*<Activity type="species"/>*/}
+      <Activity type="species"/>
     </>
   )
 } // Field

@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, data, match, totalRelevantCost} from '../store/store';
+import {get, set, match, totalRelevantCost, queue} from '../store/store';
 
 const Seedbed = () => {
   console.log('Render: Seedbed');
@@ -17,20 +17,20 @@ const Seedbed = () => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const estimated = current ? totalRelevantCost() : 0;
+  const estimated = totalRelevantCost();
 
   return (
     <>
-      <form>
-        <h1>Economic Decision Aid for Cover Crops: Seedbed Preparation</h1>
-        <div id="About">
-          Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
-          Only activities that are incurred because a cover crop is planted are charged to the cover crop.
-          If you were going to do the activity without planting a cover crop, its cost is not considered a cost of growing the cover crop.
-        </div>
-        <hr/>
+      <h1>Economic Decision Aid for Cover Crops: Seedbed Preparation</h1>
+      <div id="About">
+        Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
+        Only activities that are incurred because a cover crop is planted are charged to the cover crop.
+        If you were going to do the activity without planting a cover crop, its cost is not considered a cost of growing the cover crop.
+      </div>
+      <hr/>
 
-        <strong>Cover Crop Establishment</strong>
+      <strong>Cover Crop Establishment</strong>
+      <form>
         <table className={current + ' inputs'}>
           <tbody>
             <tr>
@@ -41,11 +41,6 @@ const Seedbed = () => {
               property="q1"
               q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
               a={['Yes', 'No']}
-              onChange={(e) => {
-                if (e.target.value === 'No') {
-                  dispatch(set.screen('Planting'));
-                }
-              }}
             />
 
             <Logic
@@ -53,11 +48,6 @@ const Seedbed = () => {
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
               shown={match('q1', 'Yes', current)}
-              onChange={(e) => {
-                if (e.target.value === 'Yes') {
-                  dispatch(set.screen('Planting'));
-                }
-              }}
             />
 
             <Logic
@@ -70,13 +60,7 @@ const Seedbed = () => {
             <Logic
               property="q4"
               q="What type of seedbed preparation will be done?"
-              a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
-              shown={match('q3', 'Self', current)}
-              onChange={() => {
-                dispatch(set[current].power(data('default power unit')));
-                dispatch(set[current].total(totalRelevantCost()));
-                dispatch(set[current].edited(false));
-              }}
+              type="Tillage"
             />
 
             <Logic question="power" />
@@ -89,12 +73,12 @@ const Seedbed = () => {
       </form>
       <button
         onClick={() => {
-          dispatch(set.seedbed.q1('Yes'));
-          dispatch(set.seedbed.q2('No'));
-          dispatch(set.seedbed.q3('Self'));
-          dispatch(set.seedbed.q4('Chisel Plow; 15 Ft'));
-          dispatch(set.seedbed.power('350 HP Tracked Tractor'));
-          dispatch(set.focus('seedbed.total'));
+          queue(() => dispatch(set.seedbed.q1('Yes')));
+          queue(() => dispatch(set.seedbed.q2('No')));
+          queue(() => dispatch(set.seedbed.q3('Self')));
+          queue(() => dispatch(set.seedbed.q4('Chisel Plow; 15 Ft')));
+          queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
+          queue(() => dispatch(set.focus('seedbed.total')));
         }}
       >
         Test data

@@ -1,23 +1,26 @@
-import {Autocomplete, Input} from './Inputs';
+import {Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, data, power, match, dollars, db, totalRelevantCost} from '../store/store';
 
-const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
+const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
   console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown = useSelector(get.shown);
-  console.log(holdShown);
   const id = useSelector(get.current);
-  const state = useSelector(id ? get[id] : get.screen);
+  const state = useSelector(id ? get[id] : get.screen); // TODO
 
   if (property === 'q4') {
-    console.log('_'.repeat(40));
-    console.log(shown);
-    console.log(match('q3', 'Self', 'seedbed'));
-    console.log('_'.repeat(40));
+    a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
+    shown = match('q3', 'Self', id);
+    onChange=() => {
+      dispatch(set[id].power(data('default power unit')));
+      dispatch(set[id].total(totalRelevantCost()));
+      dispatch(set[id].edited(false));
+    }
   }
+
   switch (question) {
     case 'Annual Use (acres on implement)':
       q = q || question;
@@ -44,7 +47,6 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onC
         dispatch(set[id].edited(false));
       };
       break;
-
     case 'Estimated':
       property = 'total';
       q = q || question;
@@ -100,7 +102,7 @@ const Logic = ({question, q, a, property, shown=true, suffix='', initial='', onC
               }
             </>
             :
-            <Autocomplete
+            <Input
               id={id}
               property={property}
               onChange={onChange}

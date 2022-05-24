@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {configureStore, createSlice, createReducer} from '@reduxjs/toolkit';
+import {configureStore, createReducer} from '@reduxjs/toolkit';
 
 const shared = {
   q1: '',
@@ -71,6 +71,8 @@ const initialState = {
   $fertN: undefined, // db.rates.Nitrogen.value
   $fertP: 0,
   $fertK: 0,
+  $fertCost: 0,
+  $fertCredit: 0,
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
@@ -80,8 +82,116 @@ const initialState = {
   termination: {...shared},
   fertility: {...shared},
   shown: {
-    seedbed: {...shared}
+    seedbed: {...shared},
+    planting: {...shared},
+    termination: {...shared},
+    fertility: {...shared},
   },
+};
+
+const updateCoverCropTotal = (state) => {
+  let total = 0;
+
+  state.species
+    .forEach((s, n) => {
+      if (s) {
+        total += (state.rates[n] || 0) * (state.prices[n] || 0);
+      }
+    });
+  
+  state.coverCropTotal = total;
+} // updateCoverCropTotal
+
+const fertTotal = (state) => {
+  state.$fertCredit = state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK;
+  console.log(state.fertNAdded);
+  console.log(state.$fertN);
+  console.log(state.fertPAdded);
+  console.log(state.$fertP);
+  console.log(state.fertKAdded);
+  console.log(state.$fertK);
+  console.log(state.$fertApplication);
+  state.$fertCost = -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication;
+  state.fertility.total = state.$fertCredit + state.$fertCost;
+} // fertTotal
+
+const other = {
+  species: (state, action) => {
+    const {index, value} = action.payload;
+    state.rates[index] = db.rate(value);
+    state.prices[index] = db.price(value);
+    updateCoverCropTotal(state);
+    state.focus = `rates${index}`;
+    if (db.NCredit(value)) {
+      state.fertN = db.NCredit(value);
+    }
+  },
+  rates: updateCoverCropTotal,
+  prices: updateCoverCropTotal,
+  priorCrop: (state, action) => {
+    if (action.payload === 'Other') {
+      state.focus = 'otherPriorCrop';
+    }
+  },
+  cashCrop: (state, action) => {
+    if (action.payload === 'Other') {
+      state.focus = 'otherCashCrop';
+    }
+  },
+  useFertilizer: (state, action) => {
+    if (action.payload === 'Yes') {
+      state.focus = 'fertNAdded';
+    } else {
+      state.fertNAdded = 0;
+      state.fertPAdded = 0;
+      state.fertKAdded = 0;
+      state.focus = '$fertApplication';
+      fertTotal(state);
+    }
+  },
+  fertN: fertTotal,
+  fertNAdded: fertTotal,
+  fertP: fertTotal,
+  fertPAdded: fertTotal,
+  $fertP: fertTotal,
+  fertK: fertTotal,
+  fertKAdded: fertTotal,
+  $fertK: fertTotal,
+  $fertN: (state, action) => {
+    if (action.payload === undefined) {
+      state.$fertN = db.rates.Nitrogen.value;
+    }
+    fertTotal(state);
+  },
+  $fertApplication: (state, action) => {
+    if (action.payload === undefined) {
+      state.$fertApplication = db.costDefaults['Custom Fertilizer Appl'].cost;
+    }
+    fertTotal(state);
+  },
+  'seedbed.q1': (state, action) => {
+    if (action.payload === 'No') {
+      state.screen = 'Planting';
+    }
+  },
+  'seedbed.q2': (state, action) => {
+    if (action.payload === 'Yes') {
+      state.screen = 'Planting';
+    }
+  },
+  'seedbed.q3': (state, action) => {
+    if (action.payload === 'Self') {
+      state.focus = 'seedbed.q4';  // TODO
+    }
+  },
+  'seedbed.q4': (state, action) => {
+    console.log(action);
+    if (action.payload) {
+      // state.seedbed.power = data('default power unit');
+      // state.seedbed.total = totalRelevantCost();
+      state.seedbed.edited = false;
+    }
+  }
 };
 
 const sets = {};
@@ -126,6 +236,9 @@ const builders = (builder) => {
                 st[key] = action.payload;
               }
             }
+            if (other[fullkey]) {
+              other[fullkey](state, action);
+            }
           }
         );
       }
@@ -135,46 +248,6 @@ const builders = (builder) => {
       }
     });
   } // recurse
-
-  const updateCoverCropTotal = (state) => {
-    let total = 0;
-
-    state.species
-      .forEach((s, n) => {
-        if (s) {
-          total += (+state.rates[n] || 0) * (+state.prices[n] || 0);
-        }
-      });
-    
-    state.coverCropTotal = total;
-  } // updateCoverCropTotal
-
-  sets.species = createAction('species');
-  builder.addCase(sets.species, (state, action) => {
-    const {index, value} = action.payload;
-    state.species[index] = value;
-    state.rates[index] = db.rate(value);
-    state.prices[index] = db.price(value);
-    updateCoverCropTotal(state);
-    state.focus = `rates${index}`;
-    if (db.NCredit(value)) {
-      state.fertN = db.NCredit(value);
-    }
-  });
-
-  sets.rates = createAction('rates');
-  builder.addCase(sets.rates, (state, action) => {
-    const {index, value} = action.payload;
-    state.rates[index] = value;
-    updateCoverCropTotal(state);
-  });
-
-  sets.prices = createAction('prices');
-  builder.addCase(sets.prices, (state, action) => {
-    const {index, value} = action.payload;
-    state.prices[index] = value;
-    updateCoverCropTotal(state);
-  });
 
   recurse(initialState, sets, gets);
 } // builders

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {TextField, OutlinedInput, Icon} from '@mui/material';
-import {Input, Autocomplete} from './Inputs';
+import {Input} from './Inputs';
 import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
 
@@ -56,7 +56,7 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
   return (
     <>
-      <Autocomplete
+      <Input
         id="location"
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
         options={options}

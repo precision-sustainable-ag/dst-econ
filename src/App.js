@@ -189,12 +189,4 @@ function App() {
   );
 }
 
-const originalWarn = console.warn;
-
-console.zwarn = (s) => {
-  if (!/The value provided to Autocomplete is invalid./.test(s)) { // annoying
-    originalWarn(s);
-  }
-}
-
 export default App;

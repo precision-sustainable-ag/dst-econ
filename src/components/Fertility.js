@@ -1,5 +1,4 @@
 import Activity from './Activity';
-import {useEffect} from 'react';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
@@ -7,34 +6,14 @@ import {get, set, db, dollars} from '../store/store';
 
 const Fertility = () => {
   const dispatch = useDispatch();
-  const current  = 'fertility';
-  const useFertilizer = useSelector(get.useFertilizer) === 'Yes';
+  const current = 'fertility';
 
-  const fertN       = useSelector(get.fertN) || 0;
-  const fertP       = useSelector(get.fertP) || 0;
-  const fertK       = useSelector(get.fertK) || 0;
-  const $fertN      = useSelector(get.$fertN);
-  const $fertP      = useSelector(get.$fertP) || 0;
-  const $fertK      = useSelector(get.$fertK) || 0;
-  const fertNAdded  = useSelector(get.fertNAdded) || 0;
-  const fertPAdded  = useSelector(get.fertPAdded) || 0;
-  const fertKAdded  = useSelector(get.fertKAdded) || 0;
-  const $fertApplication = useSelector(get.$fertApplication);
-
-  const $fertCredit = fertN * $fertN + fertP * $fertP + fertK * $fertK;
-  const $totalCost = -(fertNAdded * $fertN + fertPAdded * $fertP + fertKAdded * $fertK) - $fertApplication;
-  const $fertNet = $fertCredit + $totalCost;
-
-  useEffect(() => {
-    if ($fertN === undefined) {
-      dispatch(set.$fertN(db.rates.Nitrogen.value));
-    }
-    if ($fertApplication === undefined) {
-      dispatch(set.$fertApplication(db.costDefaults['Custom Fertilizer Appl'].cost));
-    }
-    // dispatch(set.fertility({property: 'total', value: $fertNet}));
-    dispatch(set.fertility_total($fertNet));
-  }, [dispatch, $fertN, $fertApplication, $fertNet]);
+  const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';
+  const $fertN            = useSelector(get.$fertN);
+  const $fertCost         = useSelector(get.$fertCost);
+  const total             = useSelector(get.fertility.total);
+  const $fertApplication  = useSelector(get.$fertApplication);
+  const $fertCredit       = useSelector(get.$fertCredit);
 
   return (
     <div className="Fertility">
@@ -56,7 +35,7 @@ const Fertility = () => {
             </tr>
             <tr>
               <td>Fertilizer value ($/pound of nutrient)</td>
-              <td><Input id="$fertN" /></td>
+              <td><Input id="$fertN" value={$fertN ?? db.rates.Nitrogen.value} /></td>
               <td><Input id="$fertP" /></td>
               <td><Input id="$fertK" /></td>
             </tr>
@@ -69,16 +48,6 @@ const Fertility = () => {
                   options={['Yes', 'No']}
                   type="radio"
                   row
-                  onChange={(e) => {
-                    if (e.target.value === 'Yes') {
-                      dispatch(set.focus('fertNAdded'));
-                    } else {
-                      dispatch(set.fertNAdded(0));
-                      dispatch(set.fertPAdded(0));
-                      dispatch(set.fertKAdded(0));
-                      dispatch(set.focus('$fertApplication'));
-                    }
-                  }}
                 />
               </td>
             </tr>
@@ -96,7 +65,7 @@ const Fertility = () => {
 
             <tr>
               <td>Cost of fertilizer application</td>
-              <td><Input id="$fertApplication"/></td>
+              <td><Input id="$fertApplication"  value={$fertApplication ?? db.costDefaults['Custom Fertilizer Appl'].cost}/></td>
             </tr>
             <tr>
               <td>Value of fertilizer credit from cover crops ($/acre)</td>
@@ -104,11 +73,11 @@ const Fertility = () => {
             </tr>
             <tr>
               <td>Total cost of fertilizer for cover crop production ($/acre)</td>
-              <td>{dollars($totalCost)}</td>
+              <td>{dollars($fertCost)}</td>
             </tr>
             <tr>
               <td>Net fertility impact of cover crops ($/acre)</td>
-              <td>{dollars($fertNet)}</td>
+              <td>{dollars(total)}</td>
             </tr>
           </tbody>
         </table>
@@ -130,7 +99,7 @@ const Fertility = () => {
       >
         Test data
       </button>
-      {/*<Activity type={current}/>*/}
+      <Activity type={current}/>
     </div>
   )
 } // Fertility
