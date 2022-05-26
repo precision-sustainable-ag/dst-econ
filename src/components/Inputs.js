@@ -34,11 +34,11 @@ const keyPress = (event) => {
   }
 } // keyPress
 
-const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput, property, index='', value, onChange, onInput, immediate, ...props}) => {
-  console.log(`Render: Input ${id} ${property}`);
+const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
+  console.log(`Render: Input ${id}`);
 
   const dispatch = useDispatch();
-  let obj = property ? id + '.' + property : id;
+  let obj = id;
   if (Number.isFinite(index)) {
     obj += index;
   }
@@ -46,7 +46,8 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
   const focus = useSelector(get.focus) === obj;
   const focusRef = useRef(null);
 
-  const sel = get[id];
+  let sel = get;
+  id.split('.').forEach(k => sel = sel[k]);
   if (!sel) {
     alert('Unknown Input: ' + id);
   }
@@ -68,16 +69,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
          typeof sel2 === 'boolean'          ? 'checkbox' :
                                               'text';
 
-  // console.log(id, typeof sel2);
-  let val;
-
-  if (property) {
-    val = sel2[property];
-  } else if (isArray) {
-    val = sel2[index] || '';
-  } else {
-    val = sel2;
-  }
+  let val = isArray ? sel2[index] || '' : sel2;
 
   if (type === 'dollar' && val) {
     val = (+val).toFixed(2);
@@ -119,16 +111,17 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
       }
     }
 
+    let s = set;
+    id.split('.').forEach(k => s = s[k]);
+
     if (isArray) {
       if (sel2[index] !== value) {
-        dispatch(set[id]({index, value}));
+        dispatch(s({index, value}));
       }
-    } else if (property) {
-      dispatch(set[id][property](value));
-    } else {
-      dispatch(set[id](value));
+    } else if (sel2 !== value) {
+      dispatch(s(value));
     }
-  }, [dispatch, id, index, isArray, property, sel2, type]); // update
+  }, [dispatch, id, index, isArray, sel2, type]); // update
 
   useEffect(() => {
     if (value) {
@@ -148,10 +141,6 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
     }
   }
 
-  if (v === 'NaN') {
-    console.log(id, v, property, typeof v, Number.isNaN(v));
-  }
-
   if (type === 'radio' && options) {
     return (
       <>
@@ -163,7 +152,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
             <FormControlLabel 
               value={option}
               key={option}
-              control={<Radio />}
+              control={<Radio sx={{padding: '0.2rem 0.5rem'}} />}
               label={props.labels ? props.labels[i] : option}
               checked={option.toString() === value.toString()}
               onChange={(e) => {
@@ -203,6 +192,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
         {...props}
 
         onKeyPress={keyPress}
+        ref={focusRef}
 
         sx={{width: max}}
 

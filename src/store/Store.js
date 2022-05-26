@@ -180,8 +180,25 @@ const other = {
     }
   },
   'seedbed.q3': (state, action) => {
-    if (action.payload === 'Self') {
-      state.focus = 'seedbed.q4';  // TODO
+    switch (action.payload) {
+      case 'Self':
+        state.focus = 'seedbed.q4';
+        break;
+      case 'Custom Operator':
+        state.focus = 'seedbed.total';
+        break;
+      default:
+    }
+  },
+  'planting.q3': (state, action) => {
+    switch (action.payload) {
+      case 'Self':
+        state.focus = 'planting.q4';
+        break;
+      case 'Custom Operator':
+        state.focus = 'planting.total';
+        break;
+      default:
     }
   },
   'seedbed.q4': (state, action) => {

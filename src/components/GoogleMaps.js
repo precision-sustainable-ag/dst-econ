@@ -140,7 +140,7 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
       <p/>
       <div tabIndex="-1">
         If you know your exact coordinates, you can enter them here:
-        <br/>
+        <p/>
         <Input
           id="lat"
           value={lat}

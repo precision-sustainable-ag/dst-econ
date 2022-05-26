@@ -8,16 +8,17 @@ import {get, set, db, dollars, data, match, totalRelevantCost} from '../store/st
 const Termination = () => {
   console.log('Render: Termination');
   const dispatch = useDispatch();
-  const current  = 'termination';
+  const current = 'termination';
   useSelector(get.current);
-  const state    = useSelector(get[current]);
+  useSelector(get.shown[current]);  
+  const state = useSelector(get[current]);
 
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
   const total     = state.total;
-  const estimated = current ? totalRelevantCost() : 0;
+  const estimated = totalRelevantCost();
 
   const dbvalue = (table, key, parm) => {
     return db[table][key] ? db[table][key][parm] : '';
