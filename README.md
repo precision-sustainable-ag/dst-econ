@@ -7,12 +7,14 @@ To simplify Redux development, setters and getters are automatically created for
 
 To read from the store:
 ```
+import {get} from '../store/store';
 const screen = useSelector(get.screen);
 const total = useSelector(get.seedbed.total);
 ```
 
 To write to the store:
 ```
+import {set} from '../store/store';
 const dispatch = useDispatch();
 dispatch(set.screen('Seedbed'));
 dispatch(set.seedbed.total(999));
