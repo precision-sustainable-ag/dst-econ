@@ -43,7 +43,7 @@ const Field = () => {
                 <Input id="farm" fullWidth/>
 
                 <h2>How many acres are in your Field?</h2>
-                <Input id="acres" type="number" />
+                <Input id="acres" />
 
                 <h2>Which of the following options best describes your Field?</h2>
 
@@ -114,10 +114,7 @@ const Field = () => {
                 }
 
                 <h2>What is your Labor Value for Analysis? ($/hour)</h2>
-                <Input
-                  id="labor"
-                  type="dollar"
-                />
+                <Input id="$labor" />
               </td>
             </tr>
           </tbody>
