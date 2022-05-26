@@ -15,3 +15,5 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+
+document.title = 'CC-ECON';

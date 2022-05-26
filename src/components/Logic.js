@@ -9,7 +9,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
   const dispatch = useDispatch();
   const holdShown = useSelector(get.shown);
   const id = useSelector(get.current);
-  const state = useSelector(id ? get[id] : get.screen); // TODO
+  const q4 = useSelector(id ? get[id].q4 : get.screen); // TODO
 
   if (property === 'q4') {
     a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
@@ -25,23 +25,23 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
     case 'Annual Use (acres on implement)':
       q = q || question;
       a = data('acres/year', 0);
-      shown = state.q4;
+      shown = q4;
       break;
     case 'Annual Use (hours on power)':
       q = q || question;
       a= power('expected use (hr/yr)');
-      shown = state.q4;
+      shown = q4;
       break;
     case 'Acres/hour':
       q = q || question;
       a = data('acres/hour', 1);
-      shown = state.q4;
+      shown = q4;
       break;
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(db.power)];
-      shown = state.q4;
+      shown = q4;
       onChange = () => {
         dispatch(set[id].total(totalRelevantCost()));
         dispatch(set[id].edited(false));
@@ -59,8 +59,6 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
     default:
   }
 
-  // if (property === 'q2') alert(shown)
-
   useEffect(() => {
     if (!id || !property) return;
 
@@ -69,8 +67,8 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
     // }
 
     if (!shown) { // TODO
-      console.log(id);
-      console.log(property);
+      // console.log(id);
+      // console.log(property);
       dispatch(set[id][property](initial));
     } else if (value !== undefined) {
       dispatch(set[id][property](value));
@@ -85,35 +83,23 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
         {
           Array.isArray(a) ?
             a.length < 3 ? 
-            <>
-              {
-                a.map(a => (
-                  <label key={a}>
-                    <Input
-                      id={id}
-                      property={property}
-                      onChange={onChange}
-                      type="radio"
-                      value={a}
-                    />{a}
-                    <br/>
-                  </label>
-                ))
-              }
-            </>
+              <Input
+                id={id + '.' + property}
+                type="radio"
+                options={a}
+                onChange={onChange}
+              />
             :
-            <Input
-              id={id}
-              property={property}
-              onChange={onChange}
-              options={a}
-            />
+              <Input
+                id={id + '.' + property}
+                onChange={onChange}
+                options={a}
+              />
           :
           
           /number|dollar/.test(a) ?
             <Input
-              id={id}
-              property={property}
+              id={id + '.' + property}
               onChange={onChange}
               onInput={onInput}
               type={a}

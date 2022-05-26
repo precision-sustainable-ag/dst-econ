@@ -68,8 +68,7 @@ const Activity = ({type, ds = 'q4'}) => {
         <td>
           <label>
             <Input
-              id={type}
-              property={d}
+              id={type + '.' + d}
               type="checkbox"
               onChange={() => dispatch(set[type].total(totalRelevantCost()))}
             />
@@ -137,8 +136,7 @@ const Activity = ({type, ds = 'q4'}) => {
                   Implement Cost<br/>($/acre)
                   <br/>
                   <Input
-                    id={type}
-                    property={'implementCost'}
+                    id={type + '.implementCost'}
                     type="checkbox"
                     onChange={() => {
                       console.log(totalRelevantCost());
@@ -152,8 +150,7 @@ const Activity = ({type, ds = 'q4'}) => {
                   Power Cost<br/>($/acre)
                   <br/>
                   <Input
-                    id={type}
-                    property={'powerCost'}
+                    id={type + '.powerCost'}
                     type="checkbox"
                     onChange={() => dispatch(set[type].total(totalRelevantCost()))}
                   />

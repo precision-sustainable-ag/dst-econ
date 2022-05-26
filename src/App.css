@@ -357,7 +357,7 @@ input[type="number"] {
 }
 
 .MuiAutocomplete-inputRoot > * {
-  padding: 0.3rem !important;
+  zpadding: 0.3rem !important;
 }
 
 .Field h2 {
