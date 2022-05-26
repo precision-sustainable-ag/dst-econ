@@ -303,23 +303,22 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
             }}
             
             onChange={(e) => {
-              const value = e.target.value;
-              change(value);
-              if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
-                update(value);
-                if (onChange) {
-                  onChange(e);
+              if (value !== e.target.value) {
+                change(e.target.value);
+                if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
+                  update(e.target.value);
+                  if (onChange) {
+                    onChange(e);
+                  }
                 }
               }
             }}
 
             onBlur={(e) => {
-              let value = e.target.value;
-
               if (!(immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate')))) {
-                update(value);
+                update(e.target.value);
               }
-              if (onChange) {
+              if (onChange && value !== e.target.value) {
                 onChange(e);
               }
             }}

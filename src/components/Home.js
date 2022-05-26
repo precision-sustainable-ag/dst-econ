@@ -20,25 +20,28 @@ const Home = () => {
         <em>This worksheet is for educational purposes only. The user assumes all risks associated with its use.</em>
       </p>
       <img src="background.png" alt="background" style={{width: '100%'}} />
-      n: {++n}
-      <br/>
-      fertN: {fertN}
-      <br/>
-      test: {test}
-      <br/>
-      array1: {array1}
-      <br/>
-      array2: {array2}
-      <br/>
-      <button onClick={() => {
-        dispatch(set.test2.a.b.c(987));
-        dispatch(set.fertN(333));
-        dispatch(set.array1({index: 1, value: 'was '}));
-        dispatch(set.array2.a([1, 2, 3, 4, 5]));
-      }}>
-        Click me
-      </button>
-
+      <div style={{display: 'none'}}>
+        n: {++n}
+        <br/>
+        fertN: {fertN}
+        <br/>
+        test: {test}
+        <br/>
+        array1: {array1}
+        <br/>
+        array2: {array2}
+        <br/>
+        <button 
+          onClick={() => {
+            dispatch(set.test2.a.b.c(987));
+            dispatch(set.fertN(333));
+            dispatch(set.array1({index: 1, value: 'was '}));
+            dispatch(set.array2.a([1, 2, 3, 4, 5]));
+          }}
+        >
+          Click me
+        </button>
+      </div>
     </div>
   )
 } // Home

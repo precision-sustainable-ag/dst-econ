@@ -72,6 +72,7 @@ const Seedbed = () => {
         </table>
       </form>
       <button
+        zstyle={{display: 'none'}}
         onClick={() => {
           queue(() => dispatch(set.seedbed.q1('Yes')));
           queue(() => dispatch(set.seedbed.q2('No')));

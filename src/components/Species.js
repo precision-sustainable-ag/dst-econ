@@ -158,6 +158,7 @@ const Species = () => {
         </div>
       </form>
       <button
+        style={{display: 'none'}}
         onClick={() => {
           dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
           dispatch(set.rates({index: 0, value: 17}));
