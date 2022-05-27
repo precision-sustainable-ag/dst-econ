@@ -34,7 +34,7 @@ const keyPress = (event) => {
   }
 } // keyPress
 
-const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
+const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
   console.log(`Render: Input ${id}`);
 
   const dispatch = useDispatch();
@@ -102,7 +102,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
     setValue(value);
   } // change
 
-  const update = useCallback((newValue) => {
+  const update = useCallback((e, newValue) => {
     if (newValue == value) return;  // == in case numeric
 
     if (/dollar|number/.test(type)) {
@@ -125,13 +125,16 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
     }
 
     if (onChange) {
-      onChange(newValue);
+      onChange(e, newValue);
     }
   }, [onChange, value, dispatch, id, index, isArray, sel2, type]); // update
 
   useEffect(() => {
     if (value) {
-      update(value);
+      update(
+        {target: {value}},
+        value
+      );
     }
   }, [update, value]);
 
@@ -163,7 +166,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
               checked={option.toString() === value.toString()}
               onChange={(e) => {
                 change(e.target.value);
-                update(e.target.value);
+                update(e, e.target.value);
               }}
             />
           ))}
@@ -214,23 +217,23 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
         value={value}
 
         onChange={(e, value) => {
-          update(value);
+          update(e, value);
         }}
       />
     )
   } else {
     return (
-      type === 'radio' || name ?
+      type === 'radio' ?
         <Radio
           {...props}
           id={id}
-          name={name}
+          name={id}
           checked={val === value}
           value={value}
           style={{padding: 0}}
           onChange={(e) => {
             change(e.target.value);
-            update(e.target.value);
+            update(e, e.target.value);
           }}
         />
         :
@@ -242,7 +245,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
           style={{padding: 0}}
           onChange={(e) => {
             change(e.target.checked);
-            update(e.target.checked);
+            update(e, e.target.checked);
           }}
         />
         :
@@ -290,20 +293,20 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
               if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.nativeEvent.preventDefault();  // for number type
               } else if (e.key === 'Enter') {
-                update(e.target.value);
+                update(e, e.target.value);
               }
             }}
             
             onChange={(e) => {
               change(e.target.value);
               if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
-                update(e.target.value);
+                update(e, e.target.value);
               }
             }}
 
             onBlur={(e) => {
               if (!(immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate')))) {
-                update(e.target.value);
+                update(e, e.target.value);
               }
             }}
 

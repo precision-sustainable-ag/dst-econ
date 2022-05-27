@@ -95,3 +95,17 @@ If the radio buttons' labels should be different from their values, do this:
 />
 ```
 ![Output](https://raw.githubusercontent.com/rickhitchcock/redux-app/master/images/RadioButton2.png)
+
+#### `<Input>` events ####
+
+In JavaScript, `onChange()` isn't triggered until after the input is entered or blurred.  In Material UI, it's triggered after every keystroke, which is more like JavaScript's `onInput()` event.
+
+There are disadvantages to Material UI's `onChange()` event, because we don't want a render on every keystroke.  For this reason, the `onChange()` event for `<Input>` components works like JavaScript's method, but with one difference:  It will return the element's value as a second parameter:
+
+```
+  onChange={(event, newValue) => {
+    // ...
+  }}
+```
+
+You can still access the value using `event.target.value`, but it's not necessary to do so.

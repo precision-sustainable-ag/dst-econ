@@ -16,7 +16,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
   if (property === 'q4') {
     a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
     shown = match('q3', 'Self', id);
-    onChange=() => {
+    onChange = () => {
       dispatch(set[id].power(data('default power unit')));
       setTimeout(() => dispatch(set[id].total(totalRelevantCost())), 100);  // TODO: Why timeout?
       dispatch(set[id].edited(false));
@@ -63,7 +63,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
-      onChange = (value) => {
+      onChange = (_, value) => {
         dispatch(set[id].edited(value > ''));
       }
       break;
