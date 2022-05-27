@@ -33,7 +33,7 @@ const shared = {
   Storage: true,
 };
 
-const initialState = {
+let initialState = {
   focus: null,
   dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
@@ -43,6 +43,14 @@ const initialState = {
   array2: {
     a: [4, 3, 2, 1],
   },
+  costDefaults: {},
+  coefficients: {},
+  seedList: {},
+  dbrates: {},
+  stateRegions: {},
+  herbicides: {},
+  power: {},
+  implements  : {},
   screen: 'Home',
   previousScreen: 'Home',
   lat: 40.7849,
@@ -226,7 +234,10 @@ const builders = (builder) => {
   
       const fullkey = s ? s + '.' + key : key;
 
-      if (!get[key]) {
+      if (true || !get[key]) {
+        if (fullkey.includes('$fert')) {
+          console.log(key);
+        }
         get[key] = (state) => {
           const sp = s.split('.');
           let st = state;
@@ -241,7 +252,7 @@ const builders = (builder) => {
         }
       }
 
-      if (!set[key]) {
+      if (true || !set[key]) {
         set[key] = createAction(fullkey);
         builder
           .addCase(set[key], (state, action) => {
@@ -501,7 +512,16 @@ const loadData = async(table) => {
     if (Object.keys(db).length === 10) {
       document.querySelector('html').style.display = 'block';
       document.querySelector('body').style.display = 'block';
-      console.log('here');
+
+      initialState = structuredClone(initialState);
+
+      Object.keys(db).forEach(key1 => {
+        Object.keys(db[key1]).forEach(key2 => {
+          initialState[key1.replace('rates', 'dbrates')][key2.replace(/\./g, '')] = db[key1][key2];
+        });
+      })
+
+      mystore.replaceReducer(createReducer(initialState, builders));
     }
   }
 } // loadData
@@ -526,10 +546,6 @@ loadData('stateRegions');
 loadData('herbicides');
 loadData('power');
 loadData('implements');
-
-setTimeout(() => {
-  console.log(db.costDefaults['Custom Fertilizer Appl'].cost);
-}, 1000);
 
 export const dollars = (n) => {
   if (!isFinite(n)) {

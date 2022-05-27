@@ -83,7 +83,7 @@ const Seedbed = () => {
               queue(() => dispatch(set.seedbed.q4('Chisel Plow; 15 Ft')));
               queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
               queue(() => dispatch(set.seedbed.edited(true)));
-              // queue(() => dispatch(set.focus('seedbed.total')));
+              queue(() => dispatch(set.focus('seedbed.total')));
             }}
           >
             Test data

@@ -23,6 +23,7 @@ import Yield        from './components/Yield';
 import Practices    from './components/Practices';
 import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
+import Airtable     from './components/Airtables';
 
 function App() {
   const screens = {
@@ -45,7 +46,17 @@ function App() {
       Practices,
       Revenue
     },
-    Resources
+    Resources,
+    'Airtables': {
+      coefficients: '',
+      costDefaults: '',
+      herbicides: '',
+      implements: '',
+      power: '',
+      rates: '',
+      seedList: '',
+      stateRegions: '',
+    },
   };
 
   const MyMenu = (s) => {
@@ -78,6 +89,14 @@ function App() {
       case 'Practices'    : return <Practices />;
       case 'Revenue'      : return <Revenue />;
       case 'Resources'    : return <Resources/>;
+      case 'coefficients' : return <Airtable name="coefficients"  url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
+      case 'costDefaults' : return <Airtable name="costDefaults"  url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'herbicides'   : return <Airtable name="herbicides"    url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'implements'   : return <Airtable name="implements"    url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'power'        : return <Airtable name="power"         url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'rates'        : return <Airtable name="rates"         url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'seedList'     : return <Airtable name="seedList"      url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'stateRegions' : return <Airtable name="stateRegions"  url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
       default: 
     }
   } // Screen

@@ -5,11 +5,14 @@ This is a React + Redux project.
 
 To simplify Redux development, setters and getters are automatically created for everything in the store, including nested properties.
 
-To read from the store:
+Given:
 ```
-import {get} from '../store/store';
-const screen = useSelector(get.screen);
-const total = useSelector(get.seedbed.total);
+const initialState = {
+  screen: 'Home',
+  seedbed: {
+    total: 0
+  }
+}
 ```
 
 To write to the store:
@@ -19,6 +22,25 @@ const dispatch = useDispatch();
 dispatch(set.screen('Seedbed'));
 dispatch(set.seedbed.total(999));
 ```
+
+To read from the store:
+```
+import {get} from '../store/store';
+const screen = useSelector(get.screen);
+const total = useSelector(get.seedbed.total);
+```
+
+You can still access the store like this:
+```
+import {get} from '../store/store';
+const screen = useSelector(state => state.screen);
+const total = useSelector(state => state.seedbed.total);
+```
+
+The `get` methods are simply syntactic sugar, which *may* be slower for deeply nested properties.
+
+But the `set` methods save you the trouble of writing setter reducers for every variable in the store.
+
 
 ### `<Input>` components ###
 
