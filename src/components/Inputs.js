@@ -35,7 +35,7 @@ const keyPress = (event) => {
 } // keyPress
 
 const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
-  console.log(`Render: Input ${id}`);
+//  console.log(`Render: Input ${id}`);
 
   const dispatch = useDispatch();
   let obj = id;
@@ -49,10 +49,14 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   let sel = get;
   id.split('.').forEach(k => sel = sel[k]);
   if (!sel) {
-    alert('Unknown Input: ' + id);
+    console.log('Unknown Input: ' + id);
   }
   
-  let sel2 = useSelector(sel);
+  let sel2 = useSelector(sel || get.screen);
+
+  if (id === '$fertN') {
+    console.log(sel2, value);
+  }
 
   const [v2] = useState(sel2);
   const [changed, setChanged] = useState(false);
@@ -103,7 +107,9 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   } // change
 
   const update = useCallback((e, newValue) => {
-    if (newValue == value) return;  // == in case numeric
+    // eslint-disable-next-line
+    if (newValue == value && sel2 !== undefined) return;  // == in case numeric
+    console.log(id + ' ' + newValue + ' ' + value);
 
     if (/dollar|number/.test(type)) {
       if (newValue === '') {
@@ -136,7 +142,9 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         value
       );
     }
-  }, [update, value]);
+  }, [id, update, value]);
+
+  if (!sel) return `Unknown: ${id}`;
 
   value = value !== undefined ? value : val;
 

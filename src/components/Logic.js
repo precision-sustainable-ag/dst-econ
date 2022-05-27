@@ -71,7 +71,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
   }
 
   useEffect(() => {
-    if (!id || !property) return;
+    if (!id || !property || !set.shown[id][property]) return;
 
     // if (holdShown[id][property] !== !!shown) { // prevent infinite loop
       dispatch(set.shown[id][property](shown || false));
