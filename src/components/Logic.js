@@ -63,8 +63,8 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
-      onChange = (e) => {
-        dispatch(set[id].edited(e.target.value > ''));
+      onChange = (value) => {
+        dispatch(set[id].edited(value > ''));
       }
       break;
     default:

@@ -102,12 +102,14 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
     setValue(value);
   } // change
 
-  const update = useCallback((value) => {
+  const update = useCallback((newValue) => {
+    if (newValue == value) return;  // == in case numeric
+
     if (/dollar|number/.test(type)) {
-      if (value === '') {
-        value = undefined;
+      if (newValue === '') {
+        newValue = undefined;
       } else {
-        value = +value;
+        newValue = +newValue;
       }
     }
 
@@ -115,13 +117,17 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
     id.split('.').forEach(k => s = s[k]);
 
     if (isArray) {
-      if (sel2[index] !== value) {
-        dispatch(s({index, value}));
+      if (sel2[index] !== newValue) {
+        dispatch(s({index, value: newValue}));
       }
-    } else if (sel2 !== value) {
-      dispatch(s(value));
+    } else if (sel2 !== newValue) {
+      dispatch(s(newValue));
     }
-  }, [dispatch, id, index, isArray, sel2, type]); // update
+
+    if (onChange) {
+      onChange(newValue);
+    }
+  }, [onChange, value, dispatch, id, index, isArray, sel2, type]); // update
 
   useEffect(() => {
     if (value) {
@@ -158,9 +164,6 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
               onChange={(e) => {
                 change(e.target.value);
                 update(e.target.value);
-                if (onChange) {
-                  onChange(e);
-                }
               }}
             />
           ))}
@@ -211,12 +214,7 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
         value={value}
 
         onChange={(e, value) => {
-          console.log(value);
           update(value);
-          
-          if (onChange) {
-            onChange(e, value);
-          }
         }}
       />
     )
@@ -233,9 +231,6 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
           onChange={(e) => {
             change(e.target.value);
             update(e.target.value);
-            if (onChange) {
-              onChange(e);
-            }
           }}
         />
         :
@@ -248,9 +243,6 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
           onChange={(e) => {
             change(e.target.checked);
             update(e.target.checked);
-            if (onChange) {
-              onChange(e);
-            }
           }}
         />
         :
@@ -303,23 +295,15 @@ const Input = ({type, name, id=name, options, isOptionEqualToValue, renderInput,
             }}
             
             onChange={(e) => {
-              if (value !== e.target.value) {
-                change(e.target.value);
-                if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
-                  update(e.target.value);
-                  if (onChange) {
-                    onChange(e);
-                  }
-                }
+              change(e.target.value);
+              if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
+                update(e.target.value);
               }
             }}
 
             onBlur={(e) => {
               if (!(immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate')))) {
                 update(e.target.value);
-              }
-              if (onChange && value !== e.target.value) {
-                onChange(e);
               }
             }}
 

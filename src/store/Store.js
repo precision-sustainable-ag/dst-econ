@@ -35,6 +35,7 @@ const shared = {
 
 const initialState = {
   focus: null,
+  dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
   test2: {a: {b: {c: 3}}},
   testing: false,
@@ -120,6 +121,7 @@ const fertTotal = (state) => {
 const other = {
   species: (state, action) => {
     const {index, value} = action.payload;
+
     state.rates[index] = db.rate(value);
     state.prices[index] = db.price(value);
     updateCoverCropTotal(state);

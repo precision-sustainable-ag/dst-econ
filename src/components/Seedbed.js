@@ -9,6 +9,8 @@ const Seedbed = () => {
   console.log('Render: Seedbed');
   const dispatch = useDispatch();
   const current = 'seedbed';
+  const dev = useSelector(get.dev);
+
   useSelector(get.current);
   useSelector(get.shown[current]);
   const state = useSelector(get[current]);
@@ -71,19 +73,23 @@ const Seedbed = () => {
           </tbody>
         </table>
       </form>
-      <button
-        zstyle={{display: 'none'}}
-        onClick={() => {
-          queue(() => dispatch(set.seedbed.q1('Yes')));
-          queue(() => dispatch(set.seedbed.q2('No')));
-          queue(() => dispatch(set.seedbed.q3('Self')));
-          queue(() => dispatch(set.seedbed.q4('Chisel Plow; 15 Ft')));
-          queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
-          queue(() => dispatch(set.focus('seedbed.total')));
-        }}
-      >
-        Test data
-      </button>
+      {
+        dev && (
+          <button
+            onClick={() => {
+              queue(() => dispatch(set.seedbed.q1('Yes')));
+              queue(() => dispatch(set.seedbed.q2('No')));
+              queue(() => dispatch(set.seedbed.q3('Self')));
+              queue(() => dispatch(set.seedbed.q4('Chisel Plow; 15 Ft')));
+              queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
+              queue(() => dispatch(set.seedbed.edited(true)));
+              // queue(() => dispatch(set.focus('seedbed.total')));
+            }}
+          >
+            Test data
+          </button>
+        )
+      }
       <Activity type={current} />
     </>
   )
