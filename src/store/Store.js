@@ -18,6 +18,8 @@ const shared = {
   roller: '',
   rollerCost: 0,
   total: 0,
+  annualUseAcres: undefined,
+  annualUseHours: undefined,
   edited: false,
   implementCost: true,
   powerCost: true,
@@ -33,6 +35,7 @@ const shared = {
 
 const initialState = {
   focus: null,
+  dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
   test2: {a: {b: {c: 3}}},
   testing: false,
@@ -63,7 +66,7 @@ const initialState = {
   plantingTotal: 0,
   species3: '',
   species4: '',
-  current: '',
+  current: 'seedbed',
   useFertilizer: '',
   fertN: 0,
   fertP: 0,
@@ -118,6 +121,7 @@ const fertTotal = (state) => {
 const other = {
   species: (state, action) => {
     const {index, value} = action.payload;
+
     state.rates[index] = db.rate(value);
     state.prices[index] = db.price(value);
     updateCoverCropTotal(state);
@@ -128,18 +132,18 @@ const other = {
   },
   rates: updateCoverCropTotal,
   prices: updateCoverCropTotal,
-  priorCrop: (state, action) => {
-    if (action.payload === 'Other') {
+  priorCrop: (state, {payload}) => {
+    if (payload === 'Other') {
       state.focus = 'otherPriorCrop';
     }
   },
-  cashCrop: (state, action) => {
-    if (action.payload === 'Other') {
+  cashCrop: (state, {payload}) => {
+    if (payload === 'Other') {
       state.focus = 'otherCashCrop';
     }
   },
-  useFertilizer: (state, action) => {
-    if (action.payload === 'Yes') {
+  useFertilizer: (state, {payload}) => {
+    if (payload === 'Yes') {
       state.focus = 'fertNAdded';
     } else {
       state.fertNAdded = 0;
@@ -157,30 +161,30 @@ const other = {
   fertK: fertTotal,
   fertKAdded: fertTotal,
   $fertK: fertTotal,
-  $fertN: (state, action) => {
-    if (action.payload === undefined) {
+  $fertN: (state, {payload}) => {
+    if (payload === undefined) {
       state.$fertN = db.rates.Nitrogen.value;
     }
     fertTotal(state);
   },
-  $fertApplication: (state, action) => {
-    if (action.payload === undefined) {
+  $fertApplication: (state, {payload}) => {
+    if (payload === undefined) {
       state.$fertApplication = db.costDefaults['Custom Fertilizer Appl'].cost;
     }
     fertTotal(state);
   },
-  'seedbed.q1': (state, action) => {
-    if (action.payload === 'No') {
+  'seedbed.q1': (state, {payload}) => {
+    if (payload === 'No') {
       state.screen = 'Planting';
     }
   },
-  'seedbed.q2': (state, action) => {
-    if (action.payload === 'Yes') {
+  'seedbed.q2': (state, {payload}) => {
+    if (payload === 'Yes') {
       state.screen = 'Planting';
     }
   },
-  'seedbed.q3': (state, action) => {
-    switch (action.payload) {
+  'seedbed.q3': (state, {payload}) => {
+    switch (payload) {
       case 'Self':
         state.focus = 'seedbed.q4';
         break;
@@ -190,8 +194,8 @@ const other = {
       default:
     }
   },
-  'planting.q3': (state, action) => {
-    switch (action.payload) {
+  'planting.q3': (state, {payload}) => {
+    switch (payload) {
       case 'Self':
         state.focus = 'planting.q4';
         break;
@@ -201,12 +205,12 @@ const other = {
       default:
     }
   },
-  'seedbed.q4': (state, action) => {
-    console.log(action);
-    if (action.payload) {
-      // state.seedbed.power = data('default power unit');
+  'seedbed.q4': (state, {payload}) => {
+    if (payload) {
+      // state.seedbed.power = data('default power unit');  // TODO
       // state.seedbed.total = totalRelevantCost();
       state.seedbed.edited = false;
+      state.focus = 'seedbed.power';
     }
   }
 };
@@ -228,6 +232,10 @@ const builders = (builder) => {
           let st = state;
           while (s && sp[0]) {
             st = st[sp.shift()];
+          }
+
+          if (!st) {
+            alert('Unknown: ' + fullkey);
           }
           return st[key];
         }
@@ -251,6 +259,9 @@ const builders = (builder) => {
             } else {
               if (st[key] !== action.payload) { // TODO: is this check needed?
                 st[key] = action.payload;
+                if (fullkey === 'seedbed.annualUseAcres') { // TODO: what causes this?
+                  // alert(typeof action.payload);
+                }
               }
             }
             if (other[fullkey]) {
@@ -378,8 +389,27 @@ export const powerUnit = () => {
 
 export const power = (parm) => {
   const p = db.power[powerUnit()] || {};
+  const divisor = state(current()).annualUseHours;
+  let value = p[parm];
 
-  return (p[parm] || '').toString();
+  switch (parm) {
+    case 'Fuel':
+      return +(p['HP'] * p['fuel use (gal/PTO hp/hr)']).toFixed(2);  
+    case 'Depreciation':
+      return p['annualdepreciation'] / divisor;
+    case 'Interest':
+      return (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.interest.value / divisor;
+    case 'Repairs':
+      return p['annualrepairs'] / divisor;
+    case 'Taxes':
+      return (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.property.value / divisor;
+    case 'Insurance':
+      return (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.insurance.value / divisor;
+    case 'Storage':
+      return db.rates.storage.value * p['shed (ft^2)'] / divisor;
+    default:
+      return (value || '').toString();
+  }
 } // power
 
 const loadData = async(table) => {

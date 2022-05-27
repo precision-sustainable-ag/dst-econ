@@ -9,28 +9,38 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
   const dispatch = useDispatch();
   const holdShown = useSelector(get.shown);
   const id = useSelector(get.current);
-  const q4 = useSelector(id ? get[id].q4 : get.screen); // TODO
+  const q4 = useSelector(get[id].q4);
+  const annualUseAcres = useSelector(get[id].annualUseAcres);
+  const annualUseHours = useSelector(get[id].annualUseHours);
 
   if (property === 'q4') {
     a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
     shown = match('q3', 'Self', id);
     onChange=() => {
       dispatch(set[id].power(data('default power unit')));
-      dispatch(set[id].total(totalRelevantCost()));
+      setTimeout(() => dispatch(set[id].total(totalRelevantCost())), 100);  // TODO: Why timeout?
       dispatch(set[id].edited(false));
     }
   }
 
   switch (question) {
     case 'Annual Use (acres on implement)':
+      property = 'annualUseAcres';
       q = q || question;
-      a = data('acres/year', 0);
+      a = 'number';
+      value = Number.isFinite(annualUseAcres) ? annualUseAcres : +data('acres/year', 0);  // TODO: What causes this to be a string?
       shown = q4;
       break;
     case 'Annual Use (hours on power)':
+      property = 'annualUseHours';
       q = q || question;
-      a= power('expected use (hr/yr)');
+      a = 'number';
+      value = Number.isFinite(annualUseHours) ? annualUseHours : power('expected use (hr/yr)');  // TODO: What causes this to be a string?
       shown = q4;
+      onChange = () => {
+        dispatch(set[id].total(undefined));
+        dispatch(set[id].edited(false));
+      }
       break;
     case 'Acres/hour':
       q = q || question;
@@ -52,8 +62,9 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       q = q || question;
       q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
-      onChange = (e) => {
-        dispatch(set[id].edited(e.target.value > ''));
+      value = total || estimated;
+      onChange = (value) => {
+        dispatch(set[id].edited(value > ''));
       }
       break;
     default:
@@ -76,7 +87,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
   }, [dispatch, holdShown, id, value, property, shown, initial]);
 
   return (
-    id && shown ?
+    id && property && shown ?
     <tr className={id}>
       <td>{q}</td>
       <td>

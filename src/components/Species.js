@@ -62,7 +62,9 @@ const SpeciesRow = ({n}) => {
 
 const Species = () => {
   console.log('Render: Species');
+
   const dispatch = useDispatch();
+  const dev      = useSelector(get.dev);
   const species  = useSelector(get.species);
   const state    = useSelector(get.state);
   const testing  = useSelector(get.testing);
@@ -157,19 +159,23 @@ const Species = () => {
           </table>
         </div>
       </form>
-      <button
-        onClick={() => {
-          dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
-          dispatch(set.rates({index: 0, value: 17}));
-          dispatch(set.prices({index: 0, value: 14}));
-          dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
-          dispatch(set.rates({index: 1, value: 5}));
-          dispatch(set.prices({index: 1, value: 3.13}));
-          dispatch(set.testing(true));
-        }}
-      >
-        Test data
-      </button>
+      {
+        dev && (
+          <button
+            onClick={() => {
+              dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
+              dispatch(set.rates({index: 0, value: 17}));
+              dispatch(set.prices({index: 0, value: 14}));
+              dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
+              dispatch(set.rates({index: 1, value: 5}));
+              dispatch(set.prices({index: 1, value: 3.13}));
+              dispatch(set.testing(true));
+            }}
+          >
+            Test data
+          </button>
+        )
+      }
       <Activity type="species"/>
     </>
   )

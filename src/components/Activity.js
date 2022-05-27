@@ -138,10 +138,7 @@ const Activity = ({type, ds = 'q4'}) => {
                   <Input
                     id={type + '.implementCost'}
                     type="checkbox"
-                    onChange={() => {
-                      console.log(totalRelevantCost());
-                      dispatch(set[type].total(totalRelevantCost()))
-                    }}
+                    onChange={() => dispatch(set[type].total(totalRelevantCost()))}
                   />
                 </label>
               </th>
