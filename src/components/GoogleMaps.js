@@ -66,7 +66,7 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
         isOptionEqualToValue={(option, value) => {return false;}}  // TODO
         
-        onChange={(newValue) => {
+        onChange={(_, newValue) => {
           setOptions(newValue ? [newValue, ...options] : options);
           if (newValue) {
             dispatch(set.location(newValue.description));

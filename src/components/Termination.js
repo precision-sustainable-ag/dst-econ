@@ -40,7 +40,7 @@ const Termination = () => {
                 property="q2"
                 q="Would you do this field activity if you did not have a cover crop?"
                 a={['Yes', 'No']}
-                onChange={(value) => {
+                onChange={(_, value) => {
                   if (value === 'Yes') {
                     dispatch(set.screen('Tillage'));
                   }
@@ -52,7 +52,7 @@ const Termination = () => {
                 q="Who will do this activity?"
                 a={['Self', 'Custom Operator']}
                 shown={match('q2', 'No', current)}
-                onChange={(value) => {  // TODO
+                onChange={(_, value) => {  // TODO
                   if (value === 'Self') {
                     dispatch(set.focus('termination.method'));
                   } else {
@@ -163,7 +163,7 @@ const Termination = () => {
                       property="total"
                       q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
                       a={'dollar'}
-                      onChange={(value) => {
+                      onChange={(_, value) => {
                         dispatch(set[current].edited(value > ''));
                       }}
                     />
