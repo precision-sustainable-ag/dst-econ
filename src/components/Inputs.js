@@ -35,9 +35,9 @@ const keyPress = (event) => {
 } // keyPress
 
 const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
-//  console.log(`Render: Input ${id}`);
-
+  console.log(`Render: Input ${id}`);
   const dispatch = useDispatch();
+
   let obj = id;
   if (Number.isFinite(index)) {
     obj += index;
@@ -53,10 +53,6 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   }
   
   let sel2 = useSelector(sel || get.screen);
-
-  if (id === '$fertN') {
-    console.log(sel2, value);
-  }
 
   const [v2] = useState(sel2);
   const [changed, setChanged] = useState(false);

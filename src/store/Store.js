@@ -43,14 +43,14 @@ let initialState = {
   array2: {
     a: [4, 3, 2, 1],
   },
-  costDefaults: {},
-  coefficients: {},
-  seedList: {},
+  dbcostDefaults: {},
+  dbcoefficients: {},
+  dbherbicides: {},
+  dbimplements  : {},
+  dbpower: {},
   dbrates: {},
-  stateRegions: {},
-  herbicides: {},
-  power: {},
-  implements  : {},
+  dbseedList: {},
+  dbstateRegions: {},
   screen: 'Home',
   previousScreen: 'Home',
   lat: 40.7849,
@@ -234,10 +234,7 @@ const builders = (builder) => {
   
       const fullkey = s ? s + '.' + key : key;
 
-      if (true || !get[key]) {
-        if (fullkey.includes('$fert')) {
-          console.log(key);
-        }
+      if (key !== 'name') { // TODO: implements
         get[key] = (state) => {
           const sp = s.split('.');
           let st = state;
@@ -252,7 +249,7 @@ const builders = (builder) => {
         }
       }
 
-      if (true || !set[key]) {
+      if (key !== 'name') { // TODO: implements
         set[key] = createAction(fullkey);
         builder
           .addCase(set[key], (state, action) => {
@@ -509,7 +506,7 @@ const loadData = async(table) => {
       // console.log(db.power['130 Self Propelled']);
     }
 
-    if (Object.keys(db).length === 10) {
+    if (Object.keys(db).length === 11) {
       document.querySelector('html').style.display = 'block';
       document.querySelector('body').style.display = 'block';
 
@@ -517,9 +514,10 @@ const loadData = async(table) => {
 
       Object.keys(db).forEach(key1 => {
         Object.keys(db[key1]).forEach(key2 => {
-          initialState[key1.replace('rates', 'dbrates')][key2.replace(/\./g, '')] = db[key1][key2];
+          initialState['db' + key1][key2.replace(/\./g, '')] = db[key1][key2];
         });
-      })
+      });
+      console.log(initialState.dbimplements);
 
       mystore.replaceReducer(createReducer(initialState, builders));
     }

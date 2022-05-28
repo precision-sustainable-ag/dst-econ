@@ -367,3 +367,18 @@ input[type="number"] {
   margin-bottom: 0.3rem;
   margin-top: 0.8rem;
 }
+
+.airtable td, .airtable th {
+  padding: 0 0.3rem;
+  border: none;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.airtable .MuiFormControl-root {
+  margin: 0;
+}
+
+.airtable input {
+  padding: 0.3rem;
+}

@@ -1,20 +1,25 @@
 import {Input} from './Inputs'
-import {useSelector} from 'react-redux';
-import {get} from '../store/store';
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set} from '../store/store';
 
 const Airtable = ({name, url}) => {
+  const dispatch = useDispatch();
+
+  window.scrollTo(0, 0);
   const table = useSelector(state => state[name]);
+  const state = useSelector(get[name]);
+  console.log(state);
 
   let keys = {};
   
-  for (const [key, value] of Object.entries(table)) {
-    // eslint-disable-next-line no-loop-func
+  Object.values(table).forEach((value) => {
     Object.keys(value).forEach(k => keys[k] = true);
-  }
+  });
+  
   keys = Object.keys(keys).filter(k => k !== 'key').sort();
 
   return (
-    <>
+    <form class="airtable">
       <h2>
         <a 
           target="_blank"
@@ -39,8 +44,18 @@ const Airtable = ({name, url}) => {
                   <tr>
                     <td>{key}</td>
                     {keys.map(k => {
-                      if (get[name][key][k]) {
-                        return <td><Input id={`${name}.${key}.${k}`} /></td>
+                      if (state[key][k]) {
+                        return (
+                          <td>
+                            <input
+                              id={`${name}.${key}.${k}`}
+                              value={state[key][k]}
+                              onChange={(e) => {
+                                dispatch(set[name][key][k](e.target.value));
+                              }}
+                            />
+                          </td>
+                        )
                       } else {
                         return <td></td>
                       }
@@ -52,7 +67,7 @@ const Airtable = ({name, url}) => {
           </>
         </tbody>
       </table>
-    </>
+    </form>
   )
 } // Airtable
 
