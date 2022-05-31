@@ -190,11 +190,14 @@ function App() {
 
   const dispatch = useDispatch();
   const screen = useSelector(get.screen);
+  const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
 
   console.log('App');
 
-  return (
+  if (screen === 'Loading') {
+    return `Loading: ${status}`;
+  } else return (
     <div className="App">
       <nav onClick={changeScreen}>
         {MyMenu(screens)}

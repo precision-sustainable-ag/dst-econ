@@ -3,7 +3,7 @@ import {Input} from './Inputs';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, implementCost, powerCost, totalCost, totalRelevantCost} from '../store/store';
 
-const Activity = ({type, ds = 'q4'}) => {
+const Activity = ({type, ds = 'implement'}) => {
   const dispatch = useDispatch();
   const state           = useSelector(get[type]);
 

@@ -5,7 +5,7 @@ const shared = {
   q1: '',
   q2: '',
   q3: '',
-  q4: '',
+  implement: '',
   power: '',
   method: '',
   product: '',
@@ -51,7 +51,8 @@ let initialState = {
   dbrates: {},
   dbseedList: {},
   dbstateRegions: {},
-  screen: 'Home',
+  screen: 'Loading',
+  status: '',
   previousScreen: 'Home',
   lat: 40.7849,
   lon: -74.8073,
@@ -115,13 +116,13 @@ const updateCoverCropTotal = (state) => {
 
 const fertTotal = (state) => {
   state.$fertCredit = state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK;
-  console.log(state.fertNAdded);
-  console.log(state.$fertN);
-  console.log(state.fertPAdded);
-  console.log(state.$fertP);
-  console.log(state.fertKAdded);
-  console.log(state.$fertK);
-  console.log(state.$fertApplication);
+  // console.log(state.fertNAdded);
+  // console.log(state.$fertN);
+  // console.log(state.fertPAdded);
+  // console.log(state.$fertP);
+  // console.log(state.fertKAdded);
+  // console.log(state.$fertK);
+  // console.log(state.$fertApplication);
   state.$fertCost = -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication;
   state.fertility.total = state.$fertCredit + state.$fertCost;
 } // fertTotal
@@ -161,26 +162,16 @@ const other = {
       fertTotal(state);
     }
   },
-  fertN: fertTotal,
-  fertNAdded: fertTotal,
-  fertP: fertTotal,
-  fertPAdded: fertTotal,
-  $fertP: fertTotal,
-  fertK: fertTotal,
-  fertKAdded: fertTotal,
-  $fertK: fertTotal,
-  $fertN: (state, {payload}) => {
-    if (payload === undefined) {
-      state.$fertN = db.rates.Nitrogen.value;
-    }
-    fertTotal(state);
-  },
-  $fertApplication: (state, {payload}) => {
-    if (payload === undefined) {
-      state.$fertApplication = db.costDefaults['Custom Fertilizer Appl'].cost;
-    }
-    fertTotal(state);
-  },
+  fertN            : fertTotal,
+  fertNAdded       : fertTotal,
+  fertP            : fertTotal,
+  fertPAdded       : fertTotal,
+  $fertP           : fertTotal,
+  fertK            : fertTotal,
+  fertKAdded       : fertTotal,
+  $fertK           : fertTotal,
+  $fertN           : fertTotal,
+  $fertApplication : fertTotal,
   'seedbed.q1': (state, {payload}) => {
     if (payload === 'No') {
       state.screen = 'Planting';
@@ -194,7 +185,7 @@ const other = {
   'seedbed.q3': (state, {payload}) => {
     switch (payload) {
       case 'Self':
-        state.focus = 'seedbed.q4';
+        state.focus = 'seedbed.implement';
         break;
       case 'Custom Operator':
         state.focus = 'seedbed.total';
@@ -205,7 +196,7 @@ const other = {
   'planting.q3': (state, {payload}) => {
     switch (payload) {
       case 'Self':
-        state.focus = 'planting.q4';
+        state.focus = 'planting.implement';
         break;
       case 'Custom Operator':
         state.focus = 'planting.total';
@@ -213,9 +204,9 @@ const other = {
       default:
     }
   },
-  'seedbed.q4': (state, {payload}) => {
+  'seedbed.implement': (state, {payload}) => {
     if (payload) {
-      // state.seedbed.power = data('default power unit');  // TODO
+      // state.seedbed.power = implement('default power unit');  // TODO
       // state.seedbed.total = totalRelevantCost();
       state.seedbed.edited = false;
       state.focus = 'seedbed.power';
@@ -309,38 +300,66 @@ export const match = (key, value, context) => {
   } else {
     return !!(mystore.getState().shown[key] && mystore.getState()[key] === value);
   }
-}
+} // match
+
+const cost = (type, parm, round) => {
+  const o = type === 'implements' ? state(current()).implement : state(current()).power;
+  const acresHour = implement('acres/hour', 1);
+  const divisor = type === 'implements' ? state(current()).annualUseAcres : state(current()).annualUseHours * acresHour;
+  const p = db[type][o] || {};
+
+  let value;
+
+  switch (parm) {
+    case 'Fuel':
+      value = +((p['HP'] * p['fuel use (gal/PTO hp/hr)']) * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour;
+      break;
+    case 'Depreciation':
+      value = p['annualdepreciation'] / divisor;
+      break;
+    case 'Interest':
+      value = (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.interest.value / divisor;
+      break;
+    case 'Repairs':
+      value = p['annualrepairs'] / divisor;
+      break;
+    case 'Taxes':
+      value = (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.property.value / divisor;
+      break;
+    case 'Insurance':
+      value = (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.insurance.value / divisor;
+      break;
+    case 'Storage':
+      value = db.rates.storage.value * p['shed (ft^2)'] / divisor;
+      break;
+    case 'Labor':
+      value = (p['tractor (hr/impl)'] * p['labor (hr/trac)']) / implement('acres/hour') * db.rates.skilled.value;
+      break;
+    default:
+      value = p[parm] || '';
+  }
+
+  if (isFinite(round) && value) {
+    return (+value).toFixed(round);
+  } else {
+    return value;
+  }
+} // cost
 
 export const implementCost = (desc) => {
   if (!state(current()).implementCost) {
     return 0;
-  }
-
-  let result;
-
-  if (data(desc)) {
-    result = +data(desc);
   } else {
-    result = 0;
+    return cost('implements', desc);
   }
-
-  if (desc === 'Labor') {
-    result *= db.rates.skilled.value;
-  }
-
-  return result;
 } // implementCost
 
 export const powerCost = (desc) => {
-  if (desc === 'Labor' || !state(current()).powerCost) {
+  if (!state(current()).powerCost) {
     return 0;
+  } else {
+    return cost('power', desc);
   }
-
-  const acresHour = data('acres/hour', 1); 
-  let result = desc === 'Fuel'  ? (power('Fuel') * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour :
-                                  power(desc) / acresHour;
-
-  return result;
 } // powerCost
 
 export const totalCost = (desc) => {
@@ -369,54 +388,32 @@ export const totalRelevantCost = () => {
   return result;
 } // totalRelevantCost
 
-export const data = (parm, round) => {
-  if (!current()) {
-    return '';
+export const implement = (parm, round) => {
+  const o = state(current()).implement;
+  const p = db.implements[o] || {};
+  let value = p[parm] || '';
+
+  if (parm === 'acres/hour') {
+    value = p.size1 * p['field speed (m/h)'] * p['field efficiency'] / db.rates.conversion.value;
+  } else if (parm === 'acres/year') {
+    value = implement('acres/hour') * p['expected use (hr/yr)'];
   }
 
-  const c4 = mystore.getState()[current()].q4;
-
-  const d = db.implements[c4] || {};
-
-  // console.log(parm, c4, d, d[parm]);
-
-  if (isFinite(round) && d[parm]) {
-    return (+d[parm]).toFixed(round);
+  if (isFinite(round) && value) {
+    return (+value).toFixed(round);
   } else {
-    return d[parm];
+    return value;
   }
-} // data
+} // implement
 
-export const powerUnit = () => {
-  if (!current()) {
-    return '';
-  }
-
-  return mystore.getState()[current()].power;
-};
-
-export const power = (parm) => {
-  const p = db.power[powerUnit()] || {};
-  const divisor = state(current()).annualUseHours;
-  let value = p[parm];
-
-  switch (parm) {
-    case 'Fuel':
-      return +(p['HP'] * p['fuel use (gal/PTO hp/hr)']).toFixed(2);  
-    case 'Depreciation':
-      return p['annualdepreciation'] / divisor;
-    case 'Interest':
-      return (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.interest.value / divisor;
-    case 'Repairs':
-      return p['annualrepairs'] / divisor;
-    case 'Taxes':
-      return (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.property.value / divisor;
-    case 'Insurance':
-      return (p['purchase price 2020'] + p['tradein$'] + p['annualdepreciation']) / 2 * db.rates.insurance.value / divisor;
-    case 'Storage':
-      return db.rates.storage.value * p['shed (ft^2)'] / divisor;
-    default:
-      return (value || '').toString();
+export const power = (parm, round) => {
+  const o = state(current()).power;
+  const p = db.power[o] || {};
+  const value = p[parm] || '';
+  if (isFinite(round) && value) {
+    return (+value).toFixed(round);
+  } else {
+    return value;
   }
 } // power
 
@@ -427,9 +424,12 @@ const loadData = async(table) => {
   }
 
   let response = await fetch(`https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2`);
+  console.log(response);
   let rec = await response.json();
 
   db[table] = {};
+
+  status += table + ' ';
 
   const data = rec.records.map(r => r.fields);
 
@@ -443,6 +443,8 @@ const loadData = async(table) => {
 
   if (/implements|power/.test(table)) {
     Object.keys(db[table]).forEach(key => {
+      if (key === 'undefined') return;
+
       const c = db[table][key];
 
       if (!c) {
@@ -458,8 +460,9 @@ const loadData = async(table) => {
         c.RV4 = db.coefficients[c['default ASABE category']].RV4 || 0;
         c.RV5 = db.coefficients[c['default ASABE category']].RV5 || 0;
       } catch(ee) {
-        // alert(c['default ASABE category']);
+        console.warn('RF1: ', table, key, c['default ASABE category']);
       }
+      // console.log(c.RF1, table, key);
 
       c['tradein%'] = (c.RV1 - c.RV2 * c['expected life (years)'] ** 0.5 - c.RV3 * c['expected use (hr/yr)'] ** 0.5 + c.RV4 * db.rates.projected.value) ** 2 + 0.25 * c.RV5;
       c['listprice'] = c['purchase price 2020'] / (1 - c['list discount']);
@@ -467,30 +470,6 @@ const loadData = async(table) => {
       c['annualdepreciation'] = (c['purchase price 2020'] - c['tradein$']) / c['expected life (years)'];
       c['accumulatedrepairs'] = c['listprice'] * (c.RF1 * (c['expected life (years)'] * c['expected use (hr/yr)'] / 1000) ** c.RF2);
       c['annualrepairs'] = c['accumulatedrepairs'] / c['expected life (years)'];
-
-      if (table === 'implements') {
-        c['acres/hour'] = c.size1 * c['field speed (m/h)'] * c['field efficiency'] / db.rates.conversion.value;
-        c['acres/year'] = c['acres/hour'] * c['expected use (hr/yr)'];
-      }
-      
-      const divisor = table === 'implements' ? c['acres/year'] : c['expected use (hr/yr)'];
-      c['Depreciation'] = c['annualdepreciation'] / divisor;
-      c['Interest'] = (c['purchase price 2020'] + c['tradein$'] + c['annualdepreciation']) / 2 * db.rates.interest.value / divisor;
-      c['Repairs'] = c['annualrepairs'] / divisor;
-      c['Taxes'] = (c['purchase price 2020'] + c['tradein$'] + c['annualdepreciation']) / 2 * db.rates.property.value / divisor;
-      c['Insurance'] = (c['purchase price 2020'] + c['tradein$'] + c['annualdepreciation']) / 2 * db.rates.insurance.value / divisor;
-
-      if (table === 'implements') {
-        c['Labor'] = (c['tractor (hr/impl)'] * c['labor (hr/trac)']) / c['acres/hour'];
-      }
-
-      if (table === 'power') {
-        c['Fuel'] = +(c['HP'] * c['fuel use (gal/PTO hp/hr)']).toFixed(2);
-      }
-
-      c['Storage'] = db.rates.storage.value * c['shed (ft^2)'] / divisor;
-      // console.log(key);
-      // console.log(c);
     });
 
     // console.log(db.implements);
@@ -506,17 +485,20 @@ const loadData = async(table) => {
       // console.log(db.power['130 Self Propelled']);
     }
 
-    if (Object.keys(db).length === 11) {
-      document.querySelector('html').style.display = 'block';
-      document.querySelector('body').style.display = 'block';
+    mystore.dispatch(set.status(status));
 
-      initialState = structuredClone(initialState);
+    if (Object.keys(db).length === 11) {
+      initialState = structuredClone({
+        ...initialState,
+        screen: 'Home'
+      });
 
       Object.keys(db).forEach(key1 => {
         Object.keys(db[key1]).forEach(key2 => {
           initialState['db' + key1][key2.replace(/\./g, '')] = db[key1][key2];
         });
       });
+
       console.log(initialState.dbimplements);
 
       mystore.replaceReducer(createReducer(initialState, builders));
@@ -536,6 +518,7 @@ export const queue = (f, time=1) => {
 }
 queue.i = 0;
 
+let status = '';
 loadData('coefficients');
 loadData('seedList');
 loadData('costDefaults');

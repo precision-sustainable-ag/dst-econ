@@ -2,22 +2,24 @@ import {Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, data, power, match, dollars, db, totalRelevantCost} from '../store/store';
+import {get, set, implement, power, match, dollars, totalRelevantCost} from '../store/store';
 
 const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
   console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown = useSelector(get.shown);
   const id = useSelector(get.current);
-  const q4 = useSelector(get[id].q4);
+  const currentImplement = useSelector(get[id].implement);
   const annualUseAcres = useSelector(get[id].annualUseAcres);
   const annualUseHours = useSelector(get[id].annualUseHours);
+  const dbimplements = useSelector(get.dbimplements);
+  const dbpower = useSelector(get.dbpower);
 
-  if (property === 'q4') {
-    a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
+  if (property === 'implement') {
+    a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
     shown = match('q3', 'Self', id);
     onChange = () => {
-      dispatch(set[id].power(data('default power unit')));
+      dispatch(set[id].power(implement('default power unit')));
       setTimeout(() => dispatch(set[id].total(totalRelevantCost())), 100);  // TODO: Why timeout?
       dispatch(set[id].edited(false));
     }
@@ -28,15 +30,15 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       property = 'annualUseAcres';
       q = q || question;
       a = 'number';
-      value = Number.isFinite(annualUseAcres) ? annualUseAcres : +data('acres/year', 0);  // TODO: What causes this to be a string?
-      shown = q4;
+      value = Number.isFinite(annualUseAcres) ? annualUseAcres : +implement('acres/year', 0);  // TODO: What causes this to be a string?
+      shown = currentImplement;
       break;
     case 'Annual Use (hours on power)':
       property = 'annualUseHours';
       q = q || question;
       a = 'number';
       value = Number.isFinite(annualUseHours) ? annualUseHours : power('expected use (hr/yr)');  // TODO: What causes this to be a string?
-      shown = q4;
+      shown = currentImplement;
       onChange = () => {
         dispatch(set[id].total(undefined));
         dispatch(set[id].edited(false));
@@ -44,14 +46,14 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       break;
     case 'Acres/hour':
       q = q || question;
-      a = data('acres/hour', 1);
-      shown = q4;
+      a = implement('acres/hour', 1);
+      shown = currentImplement;
       break;
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
-      a = ['', ...Object.keys(db.power)];
-      shown = q4;
+      a = ['', ...Object.keys(dbpower)];
+      shown = currentImplement;
       onChange = () => {
         dispatch(set[id].total(totalRelevantCost()));
         dispatch(set[id].edited(false));
@@ -87,7 +89,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
   }, [dispatch, holdShown, id, value, property, shown, initial]);
 
   return (
-    id && property && shown ?
+    id && shown ?
     <tr className={id}>
       <td>{q}</td>
       <td>

@@ -10,7 +10,6 @@ html, body {
   margin: 0;
   padding: 0;
   max-width: 1400px;
-  display: none;
 }
 
 .selected {
@@ -32,6 +31,7 @@ nav {
   padding: 0.5em;
   background: #eee;
   border: 1px solid #ddd;
+  z-index: 999;  /* prevent position: sticky from covering navigation */
 }
 
 nav button {
@@ -381,4 +381,10 @@ input[type="number"] {
 
 .airtable input {
   padding: 0.3rem;
+}
+
+.airtable th {
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid #333;
 }

@@ -44,7 +44,7 @@ const Planting = () => {
             />
 
             <Logic
-              property="q4"
+              property="implement"
               q="What type of seedbed preparation will be done?"
               type="Planting"
             />

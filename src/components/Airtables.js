@@ -17,7 +17,7 @@ const Airtable = ({name, url}) => {
   });
   
   keys = Object.keys(keys).filter(k => k !== 'key').sort();
-
+  let first = 1;
   return (
     <form class="airtable">
       <h2>
@@ -50,6 +50,7 @@ const Airtable = ({name, url}) => {
                             <input
                               id={`${name}.${key}.${k}`}
                               value={state[key][k]}
+                              autoFocus={first++ == 1}
                               onChange={(e) => {
                                 dispatch(set[name][key][k](e.target.value));
                               }}

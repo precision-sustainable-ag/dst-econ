@@ -3,14 +3,17 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, dollars, data, match, totalRelevantCost} from '../store/store';
+import {get, set, db, dollars, implement, match, totalRelevantCost} from '../store/store';
 
 const Termination = () => {
   console.log('Render: Termination');
   const dispatch = useDispatch();
   const current = 'termination';
   useSelector(get.current);
-  useSelector(get.shown[current]);  
+  useSelector(get.shown[current]);
+  const dbherbicides = useSelector(get.dbherbicides);
+  const dbimplements = useSelector(get.dbimplements);
+
   const state = useSelector(get[current]);
 
   useEffect(() => {
@@ -78,7 +81,7 @@ const Termination = () => {
               <Logic
                 property="product"
                 q="Product"
-                a={['', ...Object.keys(db.herbicides).sort()]}
+                a={['', ...Object.keys(dbherbicides).sort()]}
                 shown={match('method', 'Herbicide application', current)}
               />
 
@@ -110,7 +113,7 @@ const Termination = () => {
                     <Logic
                       property="chemical"
                       q="What chemical spray equipment will be used?"
-                      a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Chemical').sort()]}
+                      a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Chemical').sort()]}
                     />
             
                     <Logic
@@ -128,7 +131,7 @@ const Termination = () => {
                     <Logic
                       property="roller"
                       q="What roller equipment will be used?"
-                      a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Termination').sort()]}
+                      a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Termination').sort()]}
                     />
 
                     <Logic
@@ -144,11 +147,11 @@ const Termination = () => {
                 match('method', 'Tillage', current) && (
                   <>
                     <Logic
-                      property="q4"
+                      property="implement"
                       q="What type of seedbed preparation will be done?"
-                      a={['', ...Object.keys(db.implements).filter(key => db.implements[key].type === 'Tillage').sort()]}
+                      a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Tillage').sort()]}
                       onChange={() => {
-                        dispatch(set[current].power(data('default power unit')));
+                        dispatch(set[current].power(implement('default power unit')));
                         dispatch(set[current].total(totalRelevantCost()));
                         dispatch(set[current].edited(false));
                       }}
@@ -175,7 +178,7 @@ const Termination = () => {
         </form>
       </div>
       <Activity type="termination" ds="Chemical"/>
-      <Activity type="termination" ds="q4"/>
+      <Activity type="termination" ds="implement"/>
       <Activity type="termination" ds="Product" />
     </>
   )

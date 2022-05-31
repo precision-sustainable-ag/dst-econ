@@ -60,7 +60,7 @@ const Seedbed = () => {
             />
 
             <Logic
-              property="q4"
+              property="implement"
               q="What type of seedbed preparation will be done?"
               type="Tillage"
             />
@@ -80,7 +80,7 @@ const Seedbed = () => {
               queue(() => dispatch(set.seedbed.q1('Yes')));
               queue(() => dispatch(set.seedbed.q2('No')));
               queue(() => dispatch(set.seedbed.q3('Self')));
-              queue(() => dispatch(set.seedbed.q4('Chisel Plow; 15 Ft')));
+              queue(() => dispatch(set.seedbed.implement('Chisel Plow; 15 Ft')));
               queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
               queue(() => dispatch(set.seedbed.edited(true)));
               queue(() => dispatch(set.focus('seedbed.total')));
