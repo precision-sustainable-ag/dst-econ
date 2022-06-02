@@ -2,7 +2,7 @@ import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, dollars} from '../store/store';
+import {get, set, dollars} from '../store/store';
 
 const Fertility = () => {
   const dispatch = useDispatch();
@@ -10,9 +10,11 @@ const Fertility = () => {
 
   const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';
   const $fertN            = useSelector(get.$fertN);
+  const dfertN            = useSelector(get.dbrates.Nitrogen.value);
   const $fertCost         = useSelector(get.$fertCost);
   const total             = useSelector(get.fertility.total);
   const $fertApplication  = useSelector(get.$fertApplication);
+  const dFertApplication  = useSelector(get.dbcostDefaults['Custom Fertilizer Appl'].cost);
   const $fertCredit       = useSelector(get.$fertCredit);
 
   return (
@@ -35,7 +37,7 @@ const Fertility = () => {
             </tr>
             <tr>
               <td>Fertilizer value ($/pound of nutrient)</td>
-              <td><Input id="$fertN" value={$fertN ?? db.rates.Nitrogen.value} /></td>
+              <td><Input id="$fertN" value={$fertN ?? dfertN} /></td>
               <td><Input id="$fertP" /></td>
               <td><Input id="$fertK" /></td>
             </tr>
@@ -65,7 +67,7 @@ const Fertility = () => {
 
             <tr>
               <td>Cost of fertilizer application</td>
-              <td><Input id="$fertApplication"  value={$fertApplication ?? db.costDefaults['Custom Fertilizer Appl'].cost}/></td>
+              <td><Input id="$fertApplication" value={$fertApplication ?? dFertApplication}/></td>
             </tr>
             <tr>
               <td>Value of fertilizer credit from cover crops ($/acre)</td>

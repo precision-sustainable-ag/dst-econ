@@ -3,7 +3,7 @@ import {useEffect} from 'react';
 import {Input} from './Inputs';
 import Activity from './Activity';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, dollars} from '../store/store';
+import {get, set, dollars} from '../store/store';
 
 const SpeciesRow = ({n}) => {
   const species = useSelector(get.species);
@@ -70,10 +70,11 @@ const Species = () => {
   const testing  = useSelector(get.testing);
   const fertN    = useSelector(get.fertN);
   const total    = useSelector(get.coverCropTotal);
+  const stateRegions = useSelector(get.dbstateRegions);
 
-  let rec = db.stateRegions[state.toUpperCase()];
+  let rec = stateRegions[state.toUpperCase()];
 
-  let region = rec ? db.stateRegions[state.toUpperCase()].ccRegion.toLowerCase() : '';
+  let region = rec ? stateRegions[state.toUpperCase()].ccRegion.toLowerCase() : '';
   if (region) {
     region = region[0].toUpperCase() + region.slice(1);
   }

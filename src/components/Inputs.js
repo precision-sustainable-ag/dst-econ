@@ -35,9 +35,13 @@ const keyPress = (event) => {
 } // keyPress
 
 const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
-//  console.log(`Render: Input ${id}`);
-
+  // console.log(`Render: Input ${id}`);
   const dispatch = useDispatch();
+
+  if (id === '$fertApplication') {
+    console.log(id, value);
+  }
+
   let obj = id;
   if (Number.isFinite(index)) {
     obj += index;
@@ -49,16 +53,12 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   let sel = get;
   id.split('.').forEach(k => sel = sel[k]);
   if (!sel) {
-    console.log('Unknown Input: ' + id);
+    console.warn('Unknown Input: ' + id);
   }
   
-  let sel2 = useSelector(sel || get.screen);
+  let sel2 = useSelector(sel);
 
-  if (id === '$fertN') {
-    console.log(sel2, value);
-  }
-
-  const [v2] = useState(sel2);
+  const [v2, setv2] = useState(value || sel2);
   const [changed, setChanged] = useState(false);
 
   const isArray = Array.isArray(sel2);
@@ -79,16 +79,17 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     val = (+val).toFixed(2);
   }
 
-  let [v, setValue] = useState(value || val);
+  let [v, setValue] = useState(val);
 
   useEffect(() => {
-    if (v2 !== sel2) {
+    if (v2 !== sel2 || v2 !== value) {
       setChanged(true);
     }
-  }, [v2, sel2]);
+  }, [v2, value, sel2]);
 
   useEffect(() => {
     if (changed) {
+      setv2(val);
       setValue(val);
       setChanged(false);
     }
@@ -109,7 +110,8 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   const update = useCallback((e, newValue) => {
     // eslint-disable-next-line
     if (newValue == value && sel2 !== undefined) return;  // == in case numeric
-    console.log(id + ' ' + newValue + ' ' + value);
+
+    setChanged(true);
 
     if (/dollar|number/.test(type)) {
       if (newValue === '') {
@@ -135,6 +137,8 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     }
   }, [onChange, value, dispatch, id, index, isArray, sel2, type]); // update
 
+  value = value !== undefined ? value : val;
+
   useEffect(() => {
     if (value) {
       update(
@@ -142,11 +146,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         value
       );
     }
-  }, [id, update, value]);
-
-  if (!sel) return `Unknown: ${id}`;
-
-  value = value !== undefined ? value : val;
+  }, [update, value]);
 
   if (type === 'checkbox') {
     if (value === '') {
@@ -222,7 +222,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         
         options={options}
 
-        value={value}
+        value={v}
 
         onChange={(e, value) => {
           update(e, value);
@@ -231,20 +231,6 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     )
   } else {
     return (
-      type === 'radio' ?
-        <Radio
-          {...props}
-          id={id}
-          name={id}
-          checked={val === value}
-          value={value}
-          style={{padding: 0}}
-          onChange={(e) => {
-            change(e.target.value);
-            update(e, e.target.value);
-          }}
-        />
-        :
       type === 'checkbox' ? 
         <Checkbox
           {...props}
