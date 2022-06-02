@@ -388,3 +388,8 @@ input[type="number"] {
   top: 0;
   border-bottom: 1px solid #333;
 }
+
+.loading {
+  margin: 0.5rem;
+  color: #aaa;
+}

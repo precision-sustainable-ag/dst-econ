@@ -196,7 +196,7 @@ function App() {
   console.log('App');
 
   if (screen === 'Loading') {
-    return `Loading: ${status}`;
+    return <div className="loading">Loading: {status}</div>;
   } else return (
     <div className="App">
       <nav onClick={changeScreen}>
