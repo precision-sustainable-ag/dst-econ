@@ -462,6 +462,22 @@ const loadData = async(tables) => {
 
   mystore.dispatch(set.status(status));
 
+  // fill in missing values:
+  for (const key in db) {
+    const d = db[key];
+    const set = new Set();
+    for (const key2 in d) {
+      Object.keys(d[key2]).forEach(set.add, set); // https://stackoverflow.com/a/50882116/3903374
+    }
+    set.forEach(value => {
+      for (const key2 in d) {
+        if (!(value in d[key2])) {
+          d[key2][value] = '';
+        }
+      }
+    });
+  }
+
   if (tables.length) {
     loadData(tables);
   } else {

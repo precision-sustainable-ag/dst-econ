@@ -1,10 +1,10 @@
+import {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set} from '../store/store';
 
 const Airtable = ({name, url}) => {
   const dispatch = useDispatch();
 
-  window.scrollTo(0, 0);
   const table = useSelector(state => state[name]);
   const state = useSelector(get[name]);
   console.log(state);
@@ -43,22 +43,60 @@ const Airtable = ({name, url}) => {
                   <tr>
                     <td>{key}</td>
                     {keys.map(k => {
-                      if (state[key][k]) {
-                        return (
-                          <td>
-                            <input
-                              id={`${name}.${key}.${k}`}
-                              value={state[key][k]}
-                              autoFocus={first++ == 1}
-                              onChange={(e) => {
-                                dispatch(set[name][key][k](e.target.value));
-                              }}
-                            />
-                          </td>
-                        )
-                      } else {
-                        return <td></td>
-                      }
+                      return (
+                        <td>
+                          <input
+                            id={`${name}.${key}.${k}`}
+                            value={state[key][k]}
+                            autoFocus={first++ === 1}
+                            onChange={(e) => dispatch(set[name][key][k](e.target.value))}
+                            onKeyDown={(e) => {
+                              if (/ArrowDown|ArrowUp|PageDown|PageUp|End|Home/.test(e.key)) {
+                                const col = e.target.closest('td').cellIndex;
+                                const row = e.target.closest('tr').rowIndex;
+                                const table = e.target.closest('table');
+                                let input;
+  
+                                switch (e.key) {
+                                  case 'ArrowDown':
+                                    input = table.rows[Math.min(table.rows.length - 1, row + 1)].cells[col].querySelector('input');
+                                    break;
+                                  case 'ArrowUp':
+                                    input = table.rows[row - 1].cells[col].querySelector('input');
+                                    break;
+                                  case 'PageDown':
+                                    input = table.rows[Math.min(table.rows.length - 1, row + 10)].cells[col].querySelector('input');
+                                    break;
+                                  case 'PageUp':
+                                    input = table.rows[Math.max(1, row - 10)].cells[col].querySelector('input');
+                                    break;
+                                  case 'End':
+                                    if (e.ctrlKey) {
+                                      input = table.rows[table.rows.length - 1].cells[col].querySelector('input');
+                                    }
+                                    break;
+                                  case 'Home':
+                                    if (e.ctrlKey) {
+                                      input = table.rows[1].cells[col].querySelector('input');
+                                    }
+                                    break;
+                                  default:
+                                }
+
+                                if (input) {
+                                  if (input.scrollIntoViewIfNeeded) {
+                                    input.scrollIntoViewIfNeeded();
+                                  }
+                                  input.focus();
+                                  input.select();
+                                }
+                                e.preventDefault();
+                              }
+                            }}
+                          />
+                          <span>{state[key][k]}</span>
+                        </td>
+                      )
                     })}
                   </tr>
                 )

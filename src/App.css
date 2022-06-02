@@ -369,24 +369,53 @@ input[type="number"] {
 }
 
 .airtable td, .airtable th {
-  padding: 0 0.3rem;
-  border: none;
-  border-bottom: 1px solid #eee;
+  padding: 0;
+  border: 1px solid #ddd;
+  height: 1.8rem;
   white-space: nowrap;
+  font: 14px arial;
 }
 
-.airtable .MuiFormControl-root {
-  margin: 0;
+.airtable th {
+  padding: 0.3rem;
+}
+
+.airtable td:nth-child(1) {
+  padding: 0.3rem;
+  background: #f8f8f8;
+}
+
+.airtable td > * {
+  padding: 0.5rem;
 }
 
 .airtable input {
-  padding: 0.3rem;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: block;
+  width: 100%;
+  border: none;
+  font: 14px arial;
+}
+
+.airtable td {
+  position: relative;
+}
+
+.airtable span {
+  visibility: hidden;  /* ensure widths match inputs */
+}
+
+.airtable :focus {
+  background: yellow;
 }
 
 .airtable th {
   position: sticky;
   top: 0;
   border-bottom: 1px solid #333;
+  z-index: 998;
 }
 
 .loading {
