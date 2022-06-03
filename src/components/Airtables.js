@@ -47,10 +47,19 @@ const Airtable = ({name, url}) => {
                         <td>
                           <input
                             id={`${name}.${key}.${k}`}
-                            value={state[key][k]}
+                            defaultValue={state[key][k]}
                             autoFocus={first++ === 1}
-                            onChange={(e) => dispatch(set[name][key][k](e.target.value))}
+                            onBlur={(e) => dispatch(set[name][key][k](e.target.value))}
                             onKeyDown={(e) => {
+                              const s = e.target.value;
+                              const td = e.target.closest('td');
+                              const span = td.querySelector('span');
+                              if (e.key.length === 1) {
+                                span.textContent = s + 'M'; // force new width
+                              } else {
+                                span.textContent = s;
+                              }
+
                               if (/ArrowDown|ArrowUp|PageDown|PageUp|End|Home/.test(e.key)) {
                                 const col = e.target.closest('td').cellIndex;
                                 const row = e.target.closest('tr').rowIndex;
@@ -84,13 +93,16 @@ const Airtable = ({name, url}) => {
                                 }
 
                                 if (input) {
-                                  if (input.scrollIntoViewIfNeeded) {
-                                    input.scrollIntoViewIfNeeded();
-                                  }
                                   input.focus();
                                   input.select();
+
+                                  // prevent position: sticky from covering input:
+                                  const pos = input.getBoundingClientRect();
+                                  if (pos.top < input.clientHeight) {
+                                    window.scrollTo(window.scrollX, window.scrollY - input.clientHeight);
+                                  }
+                                  e.preventDefault();
                                 }
-                                e.preventDefault();
                               }
                             }}
                           />
