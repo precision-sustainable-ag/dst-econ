@@ -368,10 +368,6 @@ input[type="number"] {
   margin-top: 0.8rem;
 }
 
-.airtable table {
-  width: 0;
-}
-
 .airtable td, .airtable th {
   padding: 0;
   border: 1px solid #ddd;
@@ -405,7 +401,6 @@ input[type="number"] {
 
 .airtable td {
   position: relative;
-  width: 500px !important;
 }
 
 .airtable span {
