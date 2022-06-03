@@ -517,8 +517,12 @@ export const dollars = (n) => {
 } // dollars
 
 export const test = (key, result) => {
-  const value = store.getState()[key];
-  if (value !== result) {
-    console.log(`${key} should be ${result} instead of ${value}`);
+  const sp = key.split('.');
+  let value = store.getState();
+  while (sp[0]) {
+    value = value[sp.shift()];
+  }
+  if (value.toString() !== result.toString()) {
+    console.error(`${key} should be ${result} instead of ${value}`);
   }
 } // test
