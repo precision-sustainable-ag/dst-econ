@@ -1,4 +1,4 @@
-import {get, set} from '../store/store';
+import {get, set, test} from '../store/store';
 
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -6,7 +6,7 @@ let n = 0;
 const Home = () => {
   const dispatch = useDispatch();
   const dev  = useSelector(get.dev);
-  const test = useSelector(get.test2.a.b.c);
+  const test2 = useSelector(get.test2.a.b.c);
   // const test = useSelector(state => state.test.a.b.c);
   const fertN = useSelector(get.fertN);
   const array1 = useSelector(get.array1);
@@ -26,7 +26,7 @@ const Home = () => {
           <br/>
           fertN: {fertN}
           <br/>
-          test: {test}
+          test: {test2}
           <br/>
           array1: {array1}
           <br/>
@@ -34,10 +34,17 @@ const Home = () => {
           <br/>
           <button 
             onClick={() => {
-              dispatch(set.test2.a.b.c(987));
               dispatch(set.fertN(333));
+              test('fertN', 345);
+
+              dispatch(set.test2.a.b.c(987));
+              test('test2.a.b.c', 987);
+
               dispatch(set.array1({index: 1, value: 'was '}));
+              test('array1', ['This ','was ', 'a ', 'test']);
+
               dispatch(set.array2.a([1, 2, 3, 4, 5]));
+              test('array2.a', [1,2,3,4,5]);
             }}
           >
             Click me

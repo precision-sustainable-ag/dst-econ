@@ -1,9 +1,7 @@
-import {useEffect} from 'react';
-
 import {Input} from './Inputs';
 import Activity from './Activity';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars} from '../store/store';
+import {get, set, dollars, test} from '../store/store';
 
 const SpeciesRow = ({n}) => {
   const species = useSelector(get.species);
@@ -67,8 +65,6 @@ const Species = () => {
   const dev      = useSelector(get.dev);
   const species  = useSelector(get.species);
   const state    = useSelector(get.state);
-  const testing  = useSelector(get.testing);
-  const fertN    = useSelector(get.fertN);
   const total    = useSelector(get.coverCropTotal);
   const stateRegions = useSelector(get.dbstateRegions);
 
@@ -85,15 +81,6 @@ const Species = () => {
     Southern:   'https://southerncovercrops.org/cover-crop-resource-guide/',
     Western:    'https://westerncovercrops.org/category/resources/selection/'
   }[region];
-
-
-  useEffect(() => {
-    if (testing) {
-      console.assert(total === 253.65, `total should be $253.65: ${total}`);
-      console.assert(fertN === 30, `fertN should be 30: ${fertN}`);
-      dispatch(set.testing(false));
-    }
-  }, [dispatch, total, testing, fertN]);
 
   return (
     <>
@@ -165,12 +152,15 @@ const Species = () => {
           <button
             onClick={() => {
               dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
+              dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
               dispatch(set.rates({index: 0, value: 17}));
               dispatch(set.prices({index: 0, value: 14}));
-              dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
               dispatch(set.rates({index: 1, value: 5}));
               dispatch(set.prices({index: 1, value: 3.13}));
-              dispatch(set.testing(true));
+              test('coverCropTotal', 253.65);
+              test('fertN', 30);
+              dispatch(set.rates({index: 0, value: 16}));
+              test('coverCropTotal', 239.65);
             }}
           >
             Test data
