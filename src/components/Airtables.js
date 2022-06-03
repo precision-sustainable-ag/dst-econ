@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set} from '../store/store';
 
@@ -8,6 +7,7 @@ const Airtable = ({name, url}) => {
   const table = useSelector(state => state[name]);
   const state = useSelector(get[name]);
   console.log(state);
+  console.log(set);
 
   let keys = {};
   
@@ -18,7 +18,7 @@ const Airtable = ({name, url}) => {
   keys = Object.keys(keys).filter(k => k !== 'key').sort();
   let first = 1;
   return (
-    <form class="airtable">
+    <form className="airtable">
       <h2>
         <a 
           target="_blank"
@@ -32,7 +32,7 @@ const Airtable = ({name, url}) => {
         <thead>
           <tr style={{background: '#eee'}}>
             <th>Key</th>
-            {keys.map(k => <th>{k}</th>)}
+            {keys.map(k => <th key={k}>{k}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -40,16 +40,20 @@ const Airtable = ({name, url}) => {
             {
               Object.keys(table).sort().map((key) => {
                 return (
-                  <tr>
+                  <tr key={key}>
                     <td>{key}</td>
                     {keys.map(k => {
                       return (
-                        <td>
+                        <td key={k}>
                           <input
                             id={`${name}.${key}.${k}`}
                             defaultValue={state[key][k]}
                             autoFocus={first++ === 1}
-                            onBlur={(e) => dispatch(set[name][key][k](e.target.value))}
+                            
+                            onBlur={(e) => {
+                              dispatch(set[name][key][k](e.target.value));
+                            }}
+
                             onKeyDown={(e) => {
                               const s = e.target.value;
                               const td = e.target.closest('td');

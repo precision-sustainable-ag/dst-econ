@@ -32,10 +32,10 @@ const Home = () => {
           <br/>
           array2: {array2}
           <br/>
-          <button 
+          <button
             onClick={() => {
               dispatch(set.fertN(333));
-              test('fertN', 345);
+              test('fertN', 333);
 
               dispatch(set.test2.a.b.c(987));
               test('test2.a.b.c', 987);

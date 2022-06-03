@@ -211,16 +211,16 @@ const sets = {};
 const gets = {};
 
 const builders = (builder) => {
-  const recurse = (obj, set, get, s = '') => {
+  const recurse = (obj, set, get, s = '', arr = []) => {
     Object.keys(obj).forEach((key) => {
       const isArray = Array.isArray(obj[key]);
       const isObject = !isArray && obj[key] !== null && typeof obj[key] === 'object';
-  
+
       const fullkey = s ? s + '.' + key : key;
 
       if (key !== 'name') { // TODO: implements
         get[key] = (state) => {
-          const sp = s.split('.');
+          const sp = [...arr];
           let st = state;
           while (s && sp[0]) {
             st = st[sp.shift()];
@@ -235,9 +235,10 @@ const builders = (builder) => {
 
       if (key !== 'name') { // TODO: implements
         set[key] = createAction(fullkey);
+
         builder
           .addCase(set[key], (state, action) => {
-            const sp = s.split('.');
+            const sp = [...arr];
             let st = state;
             while (s && sp.length) {
               st = st[sp.shift()];
@@ -264,7 +265,7 @@ const builders = (builder) => {
       }
 
       if (isObject) {
-        recurse(obj[key], set[key], get[key], fullkey);
+        recurse(obj[key], set[key], get[key], fullkey, [...arr, key]);
       }
     });
   } // recurse
@@ -303,15 +304,18 @@ const cost = (type, parm, round) => {
   let divisor = type === 'implements' ? section.annualUseAcres : section.annualUseHours * acresHour;
   const p = state['db' + type][o] || {};
 
-  const RF1 = (state.dbcoefficients[p['default ASABE category']] || {}).RF1 || 0;
-  const RF2 = (state.dbcoefficients[p['default ASABE category']] || {}).RF2 || 0;
-  const RV1 = (state.dbcoefficients[p['default ASABE category']] || {}).RV1 || 0;
-  const RV2 = (state.dbcoefficients[p['default ASABE category']] || {}).RV2 || 0;
-  const RV3 = (state.dbcoefficients[p['default ASABE category']] || {}).RV3 || 0;
-  const RV4 = (state.dbcoefficients[p['default ASABE category']] || {}).RV4 || 0;
-  const RV5 = (state.dbcoefficients[p['default ASABE category']] || {}).RV5 || 0;
+  const ASABE = state.dbcoefficients[p['default ASABE category']] || {};
+
+  const RF1 = ASABE.RF1 || 0;
+  const RF2 = ASABE.RF2 || 0;
+  const RV1 = ASABE.RV1 || 0;
+  const RV2 = ASABE.RV2 || 0;
+  const RV3 = ASABE.RV3 || 0;
+  const RV4 = ASABE.RV4 || 0;
+  const RV5 = ASABE.RV5 || 0;
   // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
 
+  console.log(p['default ASABE category']);
   const tradein = (RV1 - RV2 * p['expected life (years)'] ** 0.5 - RV3 * p['expected use (hr/yr)'] ** 0.5 + RV4 * state.dbrates.projected.value) ** 2 + 0.25 * RV5;  
   const listprice = p['purchase price 2020'] / (1 - p['list discount']);
   const $tradein = tradein * listprice;
@@ -319,7 +323,9 @@ const cost = (type, parm, round) => {
   const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
   const annualrepairs = accumulatedrepairs / p['expected life (years)'];  
   
-  console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs});
+  if (false) {
+    console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
+  }
 
   let value;
 
@@ -487,7 +493,7 @@ const loadData = async(tables) => {
 
     Object.keys(db).forEach(key1 => {
       Object.keys(db[key1]).forEach(key2 => {
-        initialState['db' + key1][key2.replace(/\./g, '')] = db[key1][key2];
+        initialState['db' + key1][key2] = db[key1][key2];
       });
     });
 

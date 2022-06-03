@@ -152,9 +152,9 @@ const Species = () => {
           <button
             onClick={() => {
               dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
-              dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
               dispatch(set.rates({index: 0, value: 17}));
               dispatch(set.prices({index: 0, value: 14}));
+              dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
               dispatch(set.rates({index: 1, value: 5}));
               dispatch(set.prices({index: 1, value: 3.13}));
               test('coverCropTotal', 253.65);
