@@ -38,7 +38,6 @@ let initialState = {
   dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
   test2: {a: {b: {c: 3}}},
-  testing: false,
   array1: ['This ', 'is ', 'a ', 'test'],
   array2: {
     a: [4, 3, 2, 1],
@@ -516,3 +515,10 @@ export const dollars = (n) => {
     return '$' + (+n).toFixed(2);
   }
 } // dollars
+
+export const test = (key, result) => {
+  const value = store.getState()[key];
+  if (value !== result) {
+    console.log(`${key} should be ${result} instead of ${value}`);
+  }
+} // test

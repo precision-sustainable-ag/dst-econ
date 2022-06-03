@@ -54,8 +54,9 @@ const Airtable = ({name, url}) => {
                               const s = e.target.value;
                               const td = e.target.closest('td');
                               const span = td.querySelector('span');
+                              // force new width:
                               if (e.key.length === 1) {
-                                span.textContent = s + 'M'; // force new width
+                                span.textContent = s + e.key + '\xa0';
                               } else {
                                 span.textContent = s;
                               }
