@@ -35,6 +35,16 @@ const shared = {
 
 let initialState = {
   focus: null,
+  firstName: '',
+  lastName: '',
+  fullName: (state) => state.firstName + ' ' + state.lastName,
+  fullName2: (state) => state.fullName,
+  t: {
+    value: 123,
+    ac: (state) => {
+      state.screen = 'Fertility';
+    }
+  },
   dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
   test2: {a: {b: {c: 3}}},
@@ -62,15 +72,44 @@ let initialState = {
   farm: '',
   acres: undefined,
   $labor: undefined,
-  priorCrop: '',
+  priorCrop: {
+    value: '',
+    ac: (state, {payload}) => {
+      if (payload === 'Other') {
+        state.focus = 'otherPriorCrop';
+      } else {
+        state.otherPriorCrop = '';
+      }
+    }
+  },
   otherPriorCrop: '',
+  cashCrop: {
+    value: '',
+    ac: (state, {payload}) => {
+      if (payload === 'Other') {
+        state.focus = 'otherCashCrop';
+      } else {
+        state.otherCashCrop = '';
+      }
+    }
+  },
   otherCashCrop: '',
-  cashCrop: '',
   description: null,
   species: [],
   rates: [],
   prices: [],
-  coverCropTotal: 0,
+  coverCropTotal: (state) => {
+    let total = 0;
+
+    state.species
+      .forEach((s, n) => {
+        if (s) {
+          total += (state.rates[n] || 0) * (state.prices[n] || 0);
+        }
+      });
+    
+    return total;
+  },
   plantingTotal: 0,
   species3: '',
   species4: '',
@@ -82,8 +121,8 @@ let initialState = {
   $fertN: undefined, // dbrates.Nitrogen.value
   $fertP: 0,
   $fertK: 0,
-  $fertCost: 0,
-  $fertCredit: 0,
+  $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
+  $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
@@ -91,7 +130,10 @@ let initialState = {
   seedbed: {...shared},
   planting: {...shared},
   termination: {...shared},
-  fertility: {...shared},
+  fertility: {
+    ...shared,
+    total: (state) => state.$fertCredit + state.$fertCost
+  },
   shown: {
     seedbed: {...shared},
     planting: {...shared},
@@ -100,48 +142,16 @@ let initialState = {
   },
 };
 
-const updateCoverCropTotal = (state) => {
-  let total = 0;
-
-  state.species
-    .forEach((s, n) => {
-      if (s) {
-        total += (state.rates[n] || 0) * (state.prices[n] || 0);
-      }
-    });
-  
-  state.coverCropTotal = total;
-} // updateCoverCropTotal
-
-const fertTotal = (state) => {
-  state.$fertCredit = state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK;
-  state.$fertCost = -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication;
-  state.fertility.total = state.$fertCredit + state.$fertCost;
-} // fertTotal
-
 const other = {
   species: (state, action) => {
     const {index, value} = action.payload;
 
     state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
     state.prices[index] = (state.dbseedList[value] || {}).price || '';
-    updateCoverCropTotal(state);
     state.focus = `rates${index}`;
     const fertN = (state.dbseedList[value] || {}).NCredit || '';
     if (fertN) {
       state.fertN = fertN;
-    }
-  },
-  rates: updateCoverCropTotal,
-  prices: updateCoverCropTotal,
-  priorCrop: (state, {payload}) => {
-    if (payload === 'Other') {
-      state.focus = 'otherPriorCrop';
-    }
-  },
-  cashCrop: (state, {payload}) => {
-    if (payload === 'Other') {
-      state.focus = 'otherCashCrop';
     }
   },
   useFertilizer: (state, {payload}) => {
@@ -152,19 +162,8 @@ const other = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
-      fertTotal(state);
     }
   },
-  fertN            : fertTotal,
-  fertNAdded       : fertTotal,
-  fertP            : fertTotal,
-  fertPAdded       : fertTotal,
-  $fertP           : fertTotal,
-  fertK            : fertTotal,
-  fertKAdded       : fertTotal,
-  $fertK           : fertTotal,
-  $fertN           : fertTotal,
-  $fertApplication : fertTotal,
   'seedbed.q1': (state, {payload}) => {
     if (payload === 'No') {
       state.screen = 'Planting';
@@ -207,24 +206,102 @@ const other = {
   }
 };
 
+const recurse = (obj, parents = []) => {
+  for (const key in obj) {
+    const fullkey = parents.length ? parents.join('.') + '.' + key : key;
+
+    const o = obj[key];
+    const isArray = Array.isArray(o);
+    const isObject = !isArray && o instanceof Object;
+
+    if (o?.ac) {
+      if (typeof o.ac === 'string') {
+        console.log(obj[o.ac]);
+        other[fullkey] = other[o.ac];
+      } else {
+        other[fullkey] = o.ac;
+      }    
+      obj[key] = o.value;
+    } else if (isObject) {
+      recurse(obj[key], [...parents, key]);
+    }
+  }
+} // recurse
+
+recurse(initialState);
+
 const sets = {};
 const gets = {};
 
+const funcs = {};
+const links = {};
+
+let updating = false;
+
 const builders = (builder) => {
-  const recurse = (obj, set, get, s = '', arr = []) => {
+  const recurse = (obj, set, get, parents = []) => {
     Object.keys(obj).forEach((key) => {
       const isArray = Array.isArray(obj[key]);
-      const isObject = !isArray && obj[key] !== null && typeof obj[key] === 'object';
+      const isObject = !isArray && obj[key] instanceof Object;
 
-      const fullkey = s ? s + '.' + key : key;
+      const fullkey = parents.length ? parents.join('.') + '.' + key : key;
 
-      if (key !== 'name') { // TODO: implements
-        get[key] = (state) => {
-          const sp = [...arr];
-          let st = state;
-          while (s && sp[0]) {
-            st = st[sp.shift()];
+      if (typeof obj[key] === 'function') {
+        if (true) {
+          funcs[fullkey] = obj[key];
+          let m = obj[key].toString().match(/state.[$_\w.(]+/g);
+          if (fullkey === 'fertility.total') {
+            console.log(obj[key]);
           }
+          
+          if (m) {
+            m = m.map(s => s.split('state.')[1].split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+            m.forEach(m => {
+              links[m] = links[m] || {};
+              links[m][fullkey] = funcs[fullkey];
+            });
+          }
+
+          obj[key] = undefined;
+          get[key] = (state) => {
+            let st = state;
+            for (const k of parents) st = st[k];
+
+            if (!st) {
+              alert('Unknown: ' + fullkey);
+            }
+            return st[key];
+          }
+          return;
+        } else {
+          const f = obj[key];
+          get[key] = (state) => {
+            const result = f(state);
+            
+            // prevent infinite loop:
+            if (!updating) { 
+              updating = true;
+              let s = sets;
+              for (const p of parents) s = s[p];
+  
+              // queue(() => {
+                // console.log(fullkey);
+                mystore.dispatch(s[key](result)); // TODO: Cannot update a component (`App`) while rendering a different component (`Home`)
+                updating = false;
+              // });
+            }
+            
+            return result;
+          }
+          obj[key] = undefined;
+          return;
+        }
+      }
+      
+      if (!get[key] && key !== 'name') { // TODO: implements
+        get[key] = (state) => {
+          let st = state;
+          for (const k of parents) st = st[k];
 
           if (!st) {
             alert('Unknown: ' + fullkey);
@@ -238,11 +315,20 @@ const builders = (builder) => {
 
         builder
           .addCase(set[key], (state, action) => {
-            const sp = [...arr];
+            const processLinks = (key => {
+              if (links[key]) {
+                for (let k in links[key]) {
+                  let st = state;
+                  for (const key of k.split('.').slice(0, -1)) st = st[key];
+                  const l = k.includes('.') ? k.split('.').slice(-1) : k;
+                  st[l] = links[key][k](state);
+                  processLinks(k);
+                }
+              }
+            });
+
             let st = state;
-            while (s && sp.length) {
-              st = st[sp.shift()];
-            }
+            for (const k of parents) st = st[k];
 
             if (isArray && Number.isFinite(action.payload.index)) {
               const {index, value} = action.payload;
@@ -252,20 +338,23 @@ const builders = (builder) => {
             } else {
               if (st[key] !== action.payload) { // TODO: is this check needed?
                 st[key] = action.payload;
-                if (fullkey === 'seedbed.annualUseAcres') { // TODO: what causes this?
-                  // alert(typeof action.payload);
-                }
               }
             }
+            
             if (other[fullkey]) {
               other[fullkey](state, action);
             }
+
+            processLinks(key);
+            // if (/firstName|lastName/.test(key)) {
+            //   state.fullName = funcs.fullName(state);
+            // }
           }
         );
       }
 
       if (isObject) {
-        recurse(obj[key], set[key], get[key], fullkey, [...arr, key]);
+        recurse(obj[key], set[key], get[key], [...parents, key]);
       }
     });
   } // recurse
@@ -283,6 +372,8 @@ export const set = sets;
 export const get = gets;
 
 console.log(set);
+console.log(funcs);
+console.log(links);
 
 const state = (parm) => mystore.getState()[parm];
 
@@ -448,7 +539,6 @@ const loadData = async(tables) => {
   const table = tables.shift();
 
   let response = await fetch(`https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2`);
-  console.log(response);
   let rec = await response.json();
 
   db[table] = {};
@@ -523,12 +613,18 @@ export const dollars = (n) => {
 } // dollars
 
 export const test = (key, result) => {
-  const sp = key.split('.');
-  let value = store.getState();
-  while (sp[0]) {
-    value = value[sp.shift()];
-  }
-  if (value.toString() !== result.toString()) {
-    console.error(`${key} should be ${result} instead of ${value}`);
+  let value = get[key]?.(mystore.getState())?.toString();
+  if (value !== result.toString()) {
+    value = mystore.getState();
+
+    for (const k of key.split('.')) {
+      value = value[k];
+    }
+
+    if (value?.toString() !== result.toString()) {
+      // I'd prefer console.error, but that requires showing all react_devtools_backend.js
+      console.info(`${key} should be ${result} instead of ${value}`);
+      console.info(get[key]?.(mystore.getState()));
+    }
   }
 } // test

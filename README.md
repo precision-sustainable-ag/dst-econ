@@ -37,9 +37,9 @@ const screen = useSelector(state => state.screen);
 const total = useSelector(state => state.seedbed.total);
 ```
 
-The `get` methods are simply syntactic sugar, which *may* be slower for deeply nested properties.
+The `get` methods are simply syntactic sugar, which *may* be slightly slower for deeply nested properties.
 
-But the `set` methods save you the trouble of writing setter reducers for every variable in the store.
+However, the `set` methods save you the trouble of writing setter reducers for every variable in the store.
 
 
 ### `<Input>` components ###
