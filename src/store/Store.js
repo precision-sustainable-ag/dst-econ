@@ -35,6 +35,10 @@ const shared = {
 
 let initialState = {
   focus: null,
+  firstName: '',
+  lastName: '',
+  fullName: (state) => state.firstName + ' ' + state.lastName,
+  fullName2: (state) => state.fullName,
   dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
   test2: {a: {b: {c: 3}}},
@@ -64,13 +68,24 @@ let initialState = {
   $labor: undefined,
   priorCrop: '',
   otherPriorCrop: '',
-  otherCashCrop: '',
   cashCrop: '',
+  otherCashCrop: '',
   description: null,
   species: [],
   rates: [],
   prices: [],
-  coverCropTotal: 0,
+  coverCropTotal: (state) => {
+    let total = 0;
+
+    state.species
+      .forEach((s, n) => {
+        if (s) {
+          total += (state.rates[n] || 0) * (state.prices[n] || 0);
+        }
+      });
+    
+    return total;
+  },
   plantingTotal: 0,
   species3: '',
   species4: '',
@@ -82,16 +97,19 @@ let initialState = {
   $fertN: undefined, // dbrates.Nitrogen.value
   $fertP: 0,
   $fertK: 0,
-  $fertCost: 0,
-  $fertCredit: 0,
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
   $fertApplication: undefined, // dbcostDefaults['Custom Fertilizer Appl'].cost
+  $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
+  $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed: {...shared},
   planting: {...shared},
   termination: {...shared},
-  fertility: {...shared},
+  fertility: {
+    ...shared,
+    total: (state) => state.$fertCredit + state.$fertCost
+  },
   shown: {
     seedbed: {...shared},
     planting: {...shared},
@@ -100,48 +118,30 @@ let initialState = {
   },
 };
 
-const updateCoverCropTotal = (state) => {
-  let total = 0;
-
-  state.species
-    .forEach((s, n) => {
-      if (s) {
-        total += (state.rates[n] || 0) * (state.prices[n] || 0);
-      }
-    });
-  
-  state.coverCropTotal = total;
-} // updateCoverCropTotal
-
-const fertTotal = (state) => {
-  state.$fertCredit = state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK;
-  state.$fertCost = -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication;
-  state.fertility.total = state.$fertCredit + state.$fertCost;
-} // fertTotal
-
-const other = {
-  species: (state, action) => {
-    const {index, value} = action.payload;
-
-    state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
-    state.prices[index] = (state.dbseedList[value] || {}).price || '';
-    updateCoverCropTotal(state);
-    state.focus = `rates${index}`;
-    const fertN = (state.dbseedList[value] || {}).NCredit || '';
-    if (fertN) {
-      state.fertN = fertN;
-    }
-  },
-  rates: updateCoverCropTotal,
-  prices: updateCoverCropTotal,
+const afterChange = {
   priorCrop: (state, {payload}) => {
     if (payload === 'Other') {
       state.focus = 'otherPriorCrop';
+    } else {
+      state.otherPriorCrop = '';
     }
   },
   cashCrop: (state, {payload}) => {
     if (payload === 'Other') {
       state.focus = 'otherCashCrop';
+    } else {
+      state.otherCashCrop = '';
+    }
+  },
+  species: (state, action) => {
+    const {index, value} = action.payload;
+
+    state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
+    state.prices[index] = (state.dbseedList[value] || {}).price || '';
+    state.focus = `rates${index}`;
+    const fertN = (state.dbseedList[value] || {}).NCredit || '';
+    if (fertN) {
+      state.fertN = fertN;
     }
   },
   useFertilizer: (state, {payload}) => {
@@ -152,19 +152,11 @@ const other = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
-      fertTotal(state);
+      // state.$fertCredit = funcs.$fertCredit(state);
+      // state.$fertCost = funcs.$fertCost(state);
+      // state.fertility.total = funcs['fertility.total'](state);
     }
   },
-  fertN            : fertTotal,
-  fertNAdded       : fertTotal,
-  fertP            : fertTotal,
-  fertPAdded       : fertTotal,
-  $fertP           : fertTotal,
-  fertK            : fertTotal,
-  fertKAdded       : fertTotal,
-  $fertK           : fertTotal,
-  $fertN           : fertTotal,
-  $fertApplication : fertTotal,
   'seedbed.q1': (state, {payload}) => {
     if (payload === 'No') {
       state.screen = 'Planting';
@@ -210,38 +202,79 @@ const other = {
 const sets = {};
 const gets = {};
 
+const funcs = {};
+const methods = {};
+
+let inhere = false;
+const processMethods = ((state, key) => {
+  if (methods[key]) {
+    for (let k in methods[key]) {
+      let st = state;
+      for (const key of k.split('.').slice(0, -1)) st = st[key];
+      const l = k.includes('.') ? k.split('.').slice(-1)[0] : k;
+      st[l] = methods[key][k](state);
+      if (inhere) {
+        console.log(key, k, l, st[l], methods[key][k](state));
+        console.log({
+          fertN: state.fertN,
+          fertP: state.fertP,
+          fertK: state.fertK,
+          $fertN: state.$fertN,
+          $fertP: state.$fertP,
+          $fertK: state.$fertK,
+          fertNAdded: state.fertNAdded,
+          fertPAdded: state.fertPAdded,
+          fertKAdded: state.fertKAdded,
+          $fertApplication: state.$fertApplication
+        })
+      }
+      processMethods(state, k);
+    }
+  }
+});
+
 const builders = (builder) => {
-  const recurse = (obj, set, get, s = '') => {
+  const recurse = (obj, set, get, parents = []) => {
     Object.keys(obj).forEach((key) => {
       const isArray = Array.isArray(obj[key]);
-      const isObject = !isArray && obj[key] !== null && typeof obj[key] === 'object';
-  
-      const fullkey = s ? s + '.' + key : key;
+      const isObject = !isArray && obj[key] instanceof Object;
+      const fullkey = parents.length ? parents.join('.') + '.' + key : key;
 
       if (key !== 'name') { // TODO: implements
         get[key] = (state) => {
-          const sp = s.split('.');
           let st = state;
-          while (s && sp[0]) {
-            st = st[sp.shift()];
-          }
+          for (const k of parents) st = st[k];
 
           if (!st) {
             alert('Unknown: ' + fullkey);
           }
           return st[key];
         }
+
+        if (typeof obj[key] === 'function') {
+          funcs[fullkey] = obj[key];
+          let m = obj[key].toString().match(/state.[$_\w.(]+/g);
+          
+          if (m) {
+            m = m.map(s => s.split('state.')[1].split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+            m.forEach(m => {
+              methods[m] = methods[m] || {};
+              methods[m][fullkey] = funcs[fullkey];
+            });
+          }
+  
+          obj[key] = undefined;
+          return;
+        }
       }
 
       if (key !== 'name') { // TODO: implements
         set[key] = createAction(fullkey);
+
         builder
           .addCase(set[key], (state, action) => {
-            const sp = s.split('.');
             let st = state;
-            while (s && sp.length) {
-              st = st[sp.shift()];
-            }
+            for (const k of parents) st = st[k];
 
             if (isArray && Number.isFinite(action.payload.index)) {
               const {index, value} = action.payload;
@@ -251,20 +284,33 @@ const builders = (builder) => {
             } else {
               if (st[key] !== action.payload) { // TODO: is this check needed?
                 st[key] = action.payload;
-                if (fullkey === 'seedbed.annualUseAcres') { // TODO: what causes this?
-                  // alert(typeof action.payload);
-                }
               }
             }
-            if (other[fullkey]) {
-              other[fullkey](state, action);
+            
+            if (afterChange[fullkey]) {
+              afterChange[fullkey](state, action);
+            }
+
+            processMethods(state, key);
+
+            if (afterChange[fullkey]) {
+              let m = afterChange[fullkey].toString().match(/state.[$_\w.(]+/g);
+          
+              if (m) {
+                m = m.forEach(s => {
+                  s = s.split('state.')[1].split(/\.\w+\(/)[0]
+                  inhere = true;
+                  processMethods(state, s);
+                  inhere = false;
+                });
+              }
             }
           }
         );
       }
 
       if (isObject) {
-        recurse(obj[key], set[key], get[key], fullkey);
+        recurse(obj[key], set[key], get[key], [...parents, key]);
       }
     });
   } // recurse
@@ -281,7 +327,11 @@ export const store = mystore;
 export const set = sets;
 export const get = gets;
 
-console.log(set);
+console.log({
+  set,
+  funcs,
+  methods
+});
 
 const state = (parm) => mystore.getState()[parm];
 
@@ -303,15 +353,18 @@ const cost = (type, parm, round) => {
   let divisor = type === 'implements' ? section.annualUseAcres : section.annualUseHours * acresHour;
   const p = state['db' + type][o] || {};
 
-  const RF1 = (state.dbcoefficients[p['default ASABE category']] || {}).RF1 || 0;
-  const RF2 = (state.dbcoefficients[p['default ASABE category']] || {}).RF2 || 0;
-  const RV1 = (state.dbcoefficients[p['default ASABE category']] || {}).RV1 || 0;
-  const RV2 = (state.dbcoefficients[p['default ASABE category']] || {}).RV2 || 0;
-  const RV3 = (state.dbcoefficients[p['default ASABE category']] || {}).RV3 || 0;
-  const RV4 = (state.dbcoefficients[p['default ASABE category']] || {}).RV4 || 0;
-  const RV5 = (state.dbcoefficients[p['default ASABE category']] || {}).RV5 || 0;
+  const ASABE = state.dbcoefficients[p['default ASABE category']] || {};
+
+  const RF1 = ASABE.RF1 || 0;
+  const RF2 = ASABE.RF2 || 0;
+  const RV1 = ASABE.RV1 || 0;
+  const RV2 = ASABE.RV2 || 0;
+  const RV3 = ASABE.RV3 || 0;
+  const RV4 = ASABE.RV4 || 0;
+  const RV5 = ASABE.RV5 || 0;
   // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
 
+  console.log(p['default ASABE category']);
   const tradein = (RV1 - RV2 * p['expected life (years)'] ** 0.5 - RV3 * p['expected use (hr/yr)'] ** 0.5 + RV4 * state.dbrates.projected.value) ** 2 + 0.25 * RV5;  
   const listprice = p['purchase price 2020'] / (1 - p['list discount']);
   const $tradein = tradein * listprice;
@@ -319,7 +372,9 @@ const cost = (type, parm, round) => {
   const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
   const annualrepairs = accumulatedrepairs / p['expected life (years)'];  
   
-  console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs});
+  if (false) {
+    console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
+  }
 
   let value;
 
@@ -442,7 +497,6 @@ const loadData = async(tables) => {
   const table = tables.shift();
 
   let response = await fetch(`https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2`);
-  console.log(response);
   let rec = await response.json();
 
   db[table] = {};
@@ -487,7 +541,7 @@ const loadData = async(tables) => {
 
     Object.keys(db).forEach(key1 => {
       Object.keys(db[key1]).forEach(key2 => {
-        initialState['db' + key1][key2.replace(/\./g, '')] = db[key1][key2];
+        initialState['db' + key1][key2] = db[key1][key2];
       });
     });
 
@@ -517,12 +571,18 @@ export const dollars = (n) => {
 } // dollars
 
 export const test = (key, result) => {
-  const sp = key.split('.');
-  let value = store.getState();
-  while (sp[0]) {
-    value = value[sp.shift()];
-  }
-  if (value.toString() !== result.toString()) {
-    console.error(`${key} should be ${result} instead of ${value}`);
+  let value = get[key]?.(mystore.getState())?.toString();
+  if (value !== result.toString()) {
+    value = mystore.getState();
+
+    for (const k of key.split('.')) {
+      value = value[k];
+    }
+
+    if (value?.toString() !== result.toString()) {
+      // I'd prefer console.error, but that requires showing all react_devtools_backend.js
+      console.info(`${key} should be ${result} instead of ${value}`);
+      console.info(get[key]?.(mystore.getState()));
+    }
   }
 } // test

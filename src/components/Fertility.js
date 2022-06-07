@@ -13,6 +13,7 @@ const Fertility = () => {
   const dfertN            = useSelector(get.dbrates.Nitrogen.value);
   const $fertCost         = useSelector(get.$fertCost);
   const total             = useSelector(get.fertility.total);
+  // console.warn(total);
   const $fertApplication  = useSelector(get.$fertApplication);
   const dFertApplication  = useSelector(get.dbcostDefaults['Custom Fertilizer Appl'].cost);
   const $fertCredit       = useSelector(get.$fertCredit);

@@ -38,10 +38,6 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   // console.log(`Render: Input ${id}`);
   const dispatch = useDispatch();
 
-  if (id === '$fertApplication') {
-    console.log(id, value);
-  }
-
   let obj = id;
   if (Number.isFinite(index)) {
     obj += index;

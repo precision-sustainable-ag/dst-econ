@@ -2,12 +2,14 @@ import Map from './GoogleMaps';
 import Activity from './Activity';
 import {Input} from './Inputs';
 
-import {useSelector} from 'react-redux';
-import {get} from '../store/store';
+import {useSelector, useDispatch} from 'react-redux';
+import {get, set, test} from '../store/store';
 
 const Field = () => {
+  const dispatch  = useDispatch();
   const priorCrop = useSelector(get.priorCrop);
-  const cashCrop = useSelector(get.cashCrop);
+  const cashCrop  = useSelector(get.cashCrop);
+  const dev       = useSelector(get.dev);
 
   return (
     <>
@@ -120,6 +122,23 @@ const Field = () => {
           </tbody>
         </table>
       </form>
+      {dev && (
+        <div>
+          <button
+            onClick={() => {
+              dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
+              test('lat', 33.9312);  // TODO
+              test('lon', -83.3208);
+
+              dispatch(set.priorCrop('Other'));
+              dispatch(set.cashCrop('Other'));
+            }}
+          >
+            Click me
+          </button>
+        </div>
+      )}
+
       <Activity type="species"/>
     </>
   )

@@ -3,6 +3,9 @@
 ## Development ##
 This is a React + Redux project.
 
+### The Redux store ###
+
+#### Setters and getters ####
 To simplify Redux development, setters and getters are automatically created for everything in the store, including nested properties.
 
 Given:
@@ -37,20 +40,88 @@ const screen = useSelector(state => state.screen);
 const total = useSelector(state => state.seedbed.total);
 ```
 
-The `get` methods are simply syntactic sugar, which *may* be slower for deeply nested properties.
+The `get` methods are simply syntactic sugar, which *may* be slightly slower for deeply nested properties.
 
-But the `set` methods save you the trouble of writing setter reducers for every variable in the store.
+However, the `set` methods save you the trouble of writing setter reducers for every property in the store.
+
+#### "Functional" state properties ####
+
+`initialState` can contain "functional" properties.
+
+In this example, `fullName` will be calculated whenever `firstName` or `lastName` changes:
+
+```
+let initialState = {
+  firstName: '',
+  lastName: '',
+  fullName: (state) => state.firstName + ' ' + state.lastName,
+  ...
+}
+```
+
+`fullName` can then be accessed like any other state property:
+```
+const fullName = useSelector(get.fullName);
+```
+
+A side benefit:  Functional properties are calculated *only* when the properties they rely on change.  This means that they are "auto" memoized.
+
+##### How it works #####
+
+The Redux store accepts a "serializable" state only, so `initialState` generally can't contain method calls.
+
+Before sending `initialState` to the store, the program iterates through it (recursively for nested objects), pulling out methods and changing the properties' values to undefined.
+
+It parses each method's definition, looking for properties that the method references.  (In our example, `fullName`'s method references `firstName` and `lastName`.)
+
+When (and only when) the referenced properties change, the method is run, and its result is stored in the "functional" property.
+
+Note that the `fullName` function doesn't have to worry about mutating the state:  The reducers are sent to the store using `createReducer()`, which calls Immer.
+
+Here's a more complete example from CC-Econ:
+
+```
+let initialState = {
+  fertN: 0,
+  fertP: 0,
+  fertK: 0,
+  $fertN: 0
+  $fertP: 0,
+  $fertK: 0,
+  fertNAdded: 0,
+  fertPAdded: 0,
+  fertKAdded: 0,
+  $fertApplication: 0,
+  $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
+  $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
+  fertility: {
+    ...
+    total: (state) => state.$fertCredit + state.$fertCost
+  },
+}
+```
+
+If `fertN` changes:
+
+- `$fertCredit`'s method will run and update `$fertCredit`'s value, because it references `state.fertN`.
+- Any methods that rely on `$fertCredit` will run and update their properties – in this case, `fertility.total`.
+- Any methods that rely on `fertility.total` will run.  Since there are none, the updates are finished.
+- Since none of `$fertCost's` referenced properties were affected, its method will *not* run.
+
+The standard way to write this would be to create setters for each property (`fertN` through `$fertApplication`), making sure that each setter calls functions to update `$fertCredit`, `$fertCost`, and `fertility.total`.
+
+Now, the setters are created automatically, and `$fertCredit`, `$fertCost`, and `fertility.total` are automatically calculated as needed.
 
 
 ### `<Input>` components ###
 
-`<Input>` components interact with the store.  The type of the store's variable usually determines the `<Input>` type:
+`<Input>` components interact with the store.  The type of the store's property usually determines the `<Input>` type:
 
-- If the store's variable is a string, the type will be `text`.
-- If the store's variable is a Boolean, the type will be `checkbox`.
-- If the store's variable is numeric or `undefined`, the type will be `number`.
-- If the store's variable begins with a dollar sign, the type will be `number`, and a dollar sign will appear before the input.
-  (If you want a "dollar" type for a variable that doesn't include `$` in its name, use `type="dollar"`.)
+- If the property is a string, the type will be `text`.
+- If the property is a Boolean, the type will be `checkbox`.
+- If the property is numeric or `undefined`, the type will be `number`.
+- If the property begins with a dollar sign, the type will be `number`, and a dollar sign will appear before the input.
+  (If you want a "dollar" type for a property that doesn't include `$` in its name, use `type="dollar"`.)
 
 For example, this code creates a text input for `farm`, a numeric type for `acres`, and a numeric type for `labor` with a prepended dollar sign:
 ```
@@ -69,7 +140,7 @@ import {Input} from './Inputs';
 <Input id="$labor" />
 ```
 
-If the store's variable is an array, include an `index` property:
+If the store's property is an array, include an `index` property:
 ```
 <Input id="species" index={0} />
 <Input id="species" index={1} />

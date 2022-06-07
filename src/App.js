@@ -68,7 +68,7 @@ function App() {
           return <MenuItem data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
         }
       })
-    )
+    );
   } // MyMenu
 
   const Screen = () => {
