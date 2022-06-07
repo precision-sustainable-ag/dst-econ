@@ -39,12 +39,6 @@ let initialState = {
   lastName: '',
   fullName: (state) => state.firstName + ' ' + state.lastName,
   fullName2: (state) => state.fullName,
-  t: {
-    value: 123,
-    ac: (state) => {
-      state.screen = 'Fertility';
-    }
-  },
   dev: new URLSearchParams(window.location.search).get('dev'),
   test: '',
   test2: {a: {b: {c: 3}}},
@@ -72,27 +66,9 @@ let initialState = {
   farm: '',
   acres: undefined,
   $labor: undefined,
-  priorCrop: {
-    value: '',
-    ac: (state, {payload}) => {
-      if (payload === 'Other') {
-        state.focus = 'otherPriorCrop';
-      } else {
-        state.otherPriorCrop = '';
-      }
-    }
-  },
+  priorCrop: '',
   otherPriorCrop: '',
-  cashCrop: {
-    value: '',
-    ac: (state, {payload}) => {
-      if (payload === 'Other') {
-        state.focus = 'otherCashCrop';
-      } else {
-        state.otherCashCrop = '';
-      }
-    }
-  },
+  cashCrop: '',
   otherCashCrop: '',
   description: null,
   species: [],
@@ -121,12 +97,12 @@ let initialState = {
   $fertN: undefined, // dbrates.Nitrogen.value
   $fertP: 0,
   $fertK: 0,
-  $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
-  $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
   $fertApplication: undefined, // dbcostDefaults['Custom Fertilizer Appl'].cost
+  $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
+  $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed: {...shared},
   planting: {...shared},
   termination: {...shared},
@@ -142,7 +118,21 @@ let initialState = {
   },
 };
 
-const other = {
+const afterChange = {
+  priorCrop: (state, {payload}) => {
+    if (payload === 'Other') {
+      state.focus = 'otherPriorCrop';
+    } else {
+      state.otherPriorCrop = '';
+    }
+  },
+  cashCrop: (state, {payload}) => {
+    if (payload === 'Other') {
+      state.focus = 'otherCashCrop';
+    } else {
+      state.otherCashCrop = '';
+    }
+  },
   species: (state, action) => {
     const {index, value} = action.payload;
 
@@ -162,6 +152,9 @@ const other = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
+      // state.$fertCredit = funcs.$fertCredit(state);
+      // state.$fertCost = funcs.$fertCost(state);
+      // state.fertility.total = funcs['fertility.total'](state);
     }
   },
   'seedbed.q1': (state, {payload}) => {
@@ -206,99 +199,48 @@ const other = {
   }
 };
 
-const recurse = (obj, parents = []) => {
-  for (const key in obj) {
-    const fullkey = parents.length ? parents.join('.') + '.' + key : key;
-
-    const o = obj[key];
-    const isArray = Array.isArray(o);
-    const isObject = !isArray && o instanceof Object;
-
-    if (o?.ac) {
-      if (typeof o.ac === 'string') {
-        console.log(obj[o.ac]);
-        other[fullkey] = other[o.ac];
-      } else {
-        other[fullkey] = o.ac;
-      }    
-      obj[key] = o.value;
-    } else if (isObject) {
-      recurse(obj[key], [...parents, key]);
-    }
-  }
-} // recurse
-
-recurse(initialState);
-
 const sets = {};
 const gets = {};
 
 const funcs = {};
-const links = {};
+const methods = {};
 
-let updating = false;
+let inhere = false;
+const processMethods = ((state, key) => {
+  if (methods[key]) {
+    for (let k in methods[key]) {
+      let st = state;
+      for (const key of k.split('.').slice(0, -1)) st = st[key];
+      const l = k.includes('.') ? k.split('.').slice(-1)[0] : k;
+      st[l] = methods[key][k](state);
+      if (inhere) {
+        console.log(key, k, l, st[l], methods[key][k](state));
+        console.log({
+          fertN: state.fertN,
+          fertP: state.fertP,
+          fertK: state.fertK,
+          $fertN: state.$fertN,
+          $fertP: state.$fertP,
+          $fertK: state.$fertK,
+          fertNAdded: state.fertNAdded,
+          fertPAdded: state.fertPAdded,
+          fertKAdded: state.fertKAdded,
+          $fertApplication: state.$fertApplication
+        })
+      }
+      processMethods(state, k);
+    }
+  }
+});
 
 const builders = (builder) => {
   const recurse = (obj, set, get, parents = []) => {
     Object.keys(obj).forEach((key) => {
       const isArray = Array.isArray(obj[key]);
       const isObject = !isArray && obj[key] instanceof Object;
-
       const fullkey = parents.length ? parents.join('.') + '.' + key : key;
 
-      if (typeof obj[key] === 'function') {
-        if (true) {
-          funcs[fullkey] = obj[key];
-          let m = obj[key].toString().match(/state.[$_\w.(]+/g);
-          if (fullkey === 'fertility.total') {
-            console.log(obj[key]);
-          }
-          
-          if (m) {
-            m = m.map(s => s.split('state.')[1].split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
-            m.forEach(m => {
-              links[m] = links[m] || {};
-              links[m][fullkey] = funcs[fullkey];
-            });
-          }
-
-          obj[key] = undefined;
-          get[key] = (state) => {
-            let st = state;
-            for (const k of parents) st = st[k];
-
-            if (!st) {
-              alert('Unknown: ' + fullkey);
-            }
-            return st[key];
-          }
-          return;
-        } else {
-          const f = obj[key];
-          get[key] = (state) => {
-            const result = f(state);
-            
-            // prevent infinite loop:
-            if (!updating) { 
-              updating = true;
-              let s = sets;
-              for (const p of parents) s = s[p];
-  
-              // queue(() => {
-                // console.log(fullkey);
-                mystore.dispatch(s[key](result)); // TODO: Cannot update a component (`App`) while rendering a different component (`Home`)
-                updating = false;
-              // });
-            }
-            
-            return result;
-          }
-          obj[key] = undefined;
-          return;
-        }
-      }
-      
-      if (!get[key] && key !== 'name') { // TODO: implements
+      if (key !== 'name') { // TODO: implements
         get[key] = (state) => {
           let st = state;
           for (const k of parents) st = st[k];
@@ -308,6 +250,22 @@ const builders = (builder) => {
           }
           return st[key];
         }
+
+        if (typeof obj[key] === 'function') {
+          funcs[fullkey] = obj[key];
+          let m = obj[key].toString().match(/state.[$_\w.(]+/g);
+          
+          if (m) {
+            m = m.map(s => s.split('state.')[1].split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+            m.forEach(m => {
+              methods[m] = methods[m] || {};
+              methods[m][fullkey] = funcs[fullkey];
+            });
+          }
+  
+          obj[key] = undefined;
+          return;
+        }
       }
 
       if (key !== 'name') { // TODO: implements
@@ -315,18 +273,6 @@ const builders = (builder) => {
 
         builder
           .addCase(set[key], (state, action) => {
-            const processLinks = (key => {
-              if (links[key]) {
-                for (let k in links[key]) {
-                  let st = state;
-                  for (const key of k.split('.').slice(0, -1)) st = st[key];
-                  const l = k.includes('.') ? k.split('.').slice(-1) : k;
-                  st[l] = links[key][k](state);
-                  processLinks(k);
-                }
-              }
-            });
-
             let st = state;
             for (const k of parents) st = st[k];
 
@@ -341,14 +287,24 @@ const builders = (builder) => {
               }
             }
             
-            if (other[fullkey]) {
-              other[fullkey](state, action);
+            if (afterChange[fullkey]) {
+              afterChange[fullkey](state, action);
             }
 
-            processLinks(key);
-            // if (/firstName|lastName/.test(key)) {
-            //   state.fullName = funcs.fullName(state);
-            // }
+            processMethods(state, key);
+
+            if (afterChange[fullkey]) {
+              let m = afterChange[fullkey].toString().match(/state.[$_\w.(]+/g);
+          
+              if (m) {
+                m = m.forEach(s => {
+                  s = s.split('state.')[1].split(/\.\w+\(/)[0]
+                  inhere = true;
+                  processMethods(state, s);
+                  inhere = false;
+                });
+              }
+            }
           }
         );
       }
@@ -371,9 +327,11 @@ export const store = mystore;
 export const set = sets;
 export const get = gets;
 
-console.log(set);
-console.log(funcs);
-console.log(links);
+console.log({
+  set,
+  funcs,
+  methods
+});
 
 const state = (parm) => mystore.getState()[parm];
 

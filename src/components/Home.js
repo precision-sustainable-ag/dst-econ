@@ -12,7 +12,6 @@ const Home = () => {
   const fertN       = useSelector(get.fertN);
   const array1      = useSelector(get.array1);
   const array2      = useSelector(get.array2.a);  
-  const t           = useSelector(get.t);
   const fullName    = useSelector(get.fullName);
   const fullName2   = useSelector(get.fullName2);
   const fullName2b  = useSelector(state => state.fullName2);
@@ -42,8 +41,6 @@ const Home = () => {
           <br/>
           array2: {array2}
           <br/>
-          t: {t}
-          <br/>
           <button
             onClick={() => {
               dispatch(set.fertN(333));
@@ -57,9 +54,6 @@ const Home = () => {
 
               dispatch(set.array2.a([1, 2, 3, 4, 5]));
               test('array2.a', [1,2,3,4,5]);
-
-              // dispatch(set.t(321));
-              // test('t', 321);
 
               dispatch(set.firstName('Rick'));
               dispatch(set.lastName('Hitchcock'));
