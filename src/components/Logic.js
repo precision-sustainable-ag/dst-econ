@@ -4,24 +4,23 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, implement, power, match, dollars, totalRelevantCost} from '../store/store';
 
-const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
+const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
-  const id                = useSelector(get.current);
-  const currentImplement  = useSelector(get[id].implement);
-  const annualUseAcres    = useSelector(get[id].annualUseAcres);
-  const annualUseHours    = useSelector(get[id].annualUseHours);
+  const currentImplement  = useSelector(get[current].implement);
+  const annualUseAcres    = useSelector(get[current].annualUseAcres);
+  const annualUseHours    = useSelector(get[current].annualUseHours);
   const dbimplements      = useSelector(get.dbimplements);
   const dbpower           = useSelector(get.dbpower);
 
   if (property === 'implement') {
     a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
-    shown = match('q3', 'Self', id);
+    shown = match('q3', 'Self', current);
     onChange = () => {
-      dispatch(set[id].power(implement('default power unit')));
-      setTimeout(() => dispatch(set[id].total(totalRelevantCost())), 100);  // TODO: Why timeout?
-      dispatch(set[id].edited(false));
+      dispatch(set[current].power(implement('default power unit')));
+      setTimeout(() => dispatch(set[current].total(totalRelevantCost())), 100);  // TODO: Why timeout?
+      dispatch(set[current].edited(false));
     }
   }
 
@@ -40,8 +39,8 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       value = Number.isFinite(annualUseHours) ? annualUseHours : power('expected use (hr/yr)');  // TODO: What causes this to be a string?
       shown = currentImplement;
       onChange = () => {
-        dispatch(set[id].total(undefined));
-        dispatch(set[id].edited(false));
+        dispatch(set[current].total(undefined));
+        dispatch(set[current].edited(false));
       }
       break;
     case 'Acres/hour':
@@ -55,56 +54,56 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
       a = ['', ...Object.keys(dbpower)];
       shown = currentImplement;
       onChange = () => {
-        dispatch(set[id].total(totalRelevantCost()));
-        dispatch(set[id].edited(false));
+        dispatch(set[current].total(totalRelevantCost()));
+        dispatch(set[current].edited(false));
       };
       break;
     case 'Estimated':
       property = 'total';
       q = q || question;
-      q = (match('q3', 'Self', id) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
+      q = (match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
       onChange = (_, value) => {
-        dispatch(set[id].edited(value > ''));
+        dispatch(set[current].edited(value > ''));
       }
       break;
     default:
   }
 
   useEffect(() => {
-    if (!id || !property || !set.shown[id][property]) return;
+    if (!current || !property || !set.shown[current][property]) return;
 
-    // if (holdShown[id][property] !== !!shown) { // prevent infinite loop
-      dispatch(set.shown[id][property](shown || false));
+    // if (holdShown[current][property] !== !!shown) { // prevent infinite loop
+      dispatch(set.shown[current][property](shown || false));
     // }
 
     if (!shown) { // TODO
-      // console.log(id);
+      // console.log(current);
       // console.log(property);
-      dispatch(set[id][property](initial));
+      dispatch(set[current][property](initial));
     } else if (value !== undefined) {
-      dispatch(set[id][property](value));
+      dispatch(set[current][property](value));
     }
-  }, [dispatch, holdShown, id, value, property, shown, initial]);
+  }, [dispatch, holdShown, current, value, property, shown, initial]);
 
   return (
-    id && shown ?
-    <tr className={id}>
+    current && shown ?
+    <tr className={current}>
       <td>{q}</td>
       <td>
         {
           Array.isArray(a) ?
             a.length < 3 ? 
               <Input
-                id={id + '.' + property}
+                id={current + '.' + property}
                 type="radio"
                 options={a}
                 onChange={onChange}
               />
             :
               <Input
-                id={id + '.' + property}
+                id={current + '.' + property}
                 onChange={onChange}
                 options={a}
               />
@@ -112,7 +111,7 @@ const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='
           
           /number|dollar/.test(a) ?
             <Input
-              id={id + '.' + property}
+              id={current + '.' + property}
               onChange={onChange}
               onInput={onInput}
               type={a}

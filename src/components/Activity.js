@@ -20,9 +20,9 @@ const Activity = ({type, ds = 'implement'}) => {
   const Insurance       = state.Insurance;
   const Storage         = state.Storage;
   const coverCropTotal  = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal    = useSelector(get.seedbed).total;
-  const plantingTotal   = useSelector(get.planting).total;
-  const fertilityTotal  = useSelector(get.fertility).total;
+  const seedbedTotal    = useSelector(get.seedbed).total || 0;
+  const plantingTotal   = useSelector(get.planting).total || 0;
+  const fertilityTotal  = useSelector(get.fertility).total || 0;
   const state3          = useSelector(get[type]).q3;
 
   const totalImplementCost = () => {

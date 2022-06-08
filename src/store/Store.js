@@ -136,13 +136,14 @@ const afterChange = {
   },
   species: (state, action) => {
     const {index, value} = action.payload;
-
-    state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
-    state.prices[index] = (state.dbseedList[value] || {}).price || '';
-    state.focus = `rates${index}`;
-    const fertN = (state.dbseedList[value] || {}).NCredit || '';
-    if (fertN) {
-      state.fertN = fertN;
+    if (index) {
+      state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
+      state.prices[index] = (state.dbseedList[value] || {}).price || '';
+      state.focus = `rates${index}`;
+      const fertN = (state.dbseedList[value] || {}).NCredit || '';
+      if (fertN) {
+        state.fertN = fertN;
+      }
     }
   },
   useFertilizer: (state, {payload}) => {
@@ -188,7 +189,6 @@ const afterChange = {
     }
   },
   'seedbed.implement': (state, {payload}) => {
-    return
     if (payload) {
       // state.seedbed.power = implement('default power unit');  // TODO
       // state.seedbed.total = totalRelevantCost();
