@@ -64,6 +64,7 @@ let initialState = {
   location: '',
   state: 'New Jersey',
   farm: '',
+  field: '',
   acres: undefined,
   $labor: undefined,
   priorCrop: '',
@@ -152,9 +153,6 @@ const afterChange = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
-      // state.$fertCredit = funcs.$fertCredit(state);
-      // state.$fertCost = funcs.$fertCost(state);
-      // state.fertility.total = funcs['fertility.total'](state);
     }
   },
   'seedbed.q1': (state, {payload}) => {
@@ -190,6 +188,7 @@ const afterChange = {
     }
   },
   'seedbed.implement': (state, {payload}) => {
+    return
     if (payload) {
       // state.seedbed.power = implement('default power unit');  // TODO
       // state.seedbed.total = totalRelevantCost();
@@ -205,7 +204,6 @@ const gets = {};
 const funcs = {};
 const methods = {};
 
-let inhere = false;
 const processMethods = ((state, key) => {
   if (methods[key]) {
     for (let k in methods[key]) {
@@ -213,21 +211,6 @@ const processMethods = ((state, key) => {
       for (const key of k.split('.').slice(0, -1)) st = st[key];
       const l = k.includes('.') ? k.split('.').slice(-1)[0] : k;
       st[l] = methods[key][k](state);
-      if (inhere) {
-        console.log(key, k, l, st[l], methods[key][k](state));
-        console.log({
-          fertN: state.fertN,
-          fertP: state.fertP,
-          fertK: state.fertK,
-          $fertN: state.$fertN,
-          $fertP: state.$fertP,
-          $fertK: state.$fertK,
-          fertNAdded: state.fertNAdded,
-          fertPAdded: state.fertPAdded,
-          fertKAdded: state.fertKAdded,
-          $fertApplication: state.$fertApplication
-        })
-      }
       processMethods(state, k);
     }
   }
@@ -299,9 +282,7 @@ const builders = (builder) => {
               if (m) {
                 m = m.forEach(s => {
                   s = s.split('state.')[1].split(/\.\w+\(/)[0]
-                  inhere = true;
                   processMethods(state, s);
-                  inhere = false;
                 });
               }
             }
@@ -364,7 +345,7 @@ const cost = (type, parm, round) => {
   const RV5 = ASABE.RV5 || 0;
   // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
 
-  console.log(p['default ASABE category']);
+  // console.log(p['default ASABE category']);
   const tradein = (RV1 - RV2 * p['expected life (years)'] ** 0.5 - RV3 * p['expected use (hr/yr)'] ** 0.5 + RV4 * state.dbrates.projected.value) ** 2 + 0.25 * RV5;  
   const listprice = p['purchase price 2020'] / (1 - p['list discount']);
   const $tradein = tradein * listprice;
@@ -553,7 +534,7 @@ export const db = {};
 
 export const queue = (f, time=1) => {
   setTimeout(f, queue.i++ * time);
-  setTimeout(() => queue.i = 0, 1000);
+  setTimeout(() => queue.i = 0, time + 999);
 }
 queue.i = 0;
 
@@ -586,3 +567,30 @@ export const test = (key, result) => {
     }
   }
 } // test
+
+export const getDefaults = (component, defaults) => {
+  component.toString()
+    .match(/id: "[^"]+"/g)
+    .map(s => s.split('"')[1])
+    .forEach(id => {
+      if (!(id in defaults)) {
+        defaults[id] = initialState[id] || '';
+      }
+      console.log(defaults);
+    });
+} // getDefaults
+
+export const clearInputs = (defaults) => {
+  for (const key in defaults) {
+    try {
+      let s = set;
+      for (const k of key.split('.')) {
+        s = s[k];
+      }
+      console.log(key);
+      mystore.dispatch(s(defaults[key]));
+    } catch(error) {
+      console.log(error);
+    }
+  }
+} // clearInputs

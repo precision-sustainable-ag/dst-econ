@@ -3,7 +3,12 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, totalRelevantCost, queue} from '../store/store';
+import {get, set, match, totalRelevantCost, queue, getDefaults, clearInputs} from '../store/store';
+
+const defaults = {
+  'seedbed.total': 0,
+  'seedbed.q1': ''
+};
 
 const Seedbed = () => {
   console.log('Render: Seedbed');
@@ -18,6 +23,11 @@ const Seedbed = () => {
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
+
+  useEffect(() => {
+    getDefaults(Seedbed, defaults);
+    console.log(defaults);
+  }, []);
 
   const estimated = totalRelevantCost();
 
@@ -90,6 +100,12 @@ const Seedbed = () => {
           </button>
         )
       }
+      <button
+        onClick={() => clearInputs(defaults)}
+      >
+        Clear inputs
+      </button>
+
       <Activity type={current} />
     </>
   )

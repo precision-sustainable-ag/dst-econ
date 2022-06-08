@@ -5,15 +5,15 @@ import {useSelector, useDispatch} from 'react-redux';
 import {get, set, implement, power, match, dollars, totalRelevantCost} from '../store/store';
 
 const Logic = ({question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
-  console.log('Render: Logic ' + property);
+  // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
-  const holdShown = useSelector(get.shown);
-  const id = useSelector(get.current);
-  const currentImplement = useSelector(get[id].implement);
-  const annualUseAcres = useSelector(get[id].annualUseAcres);
-  const annualUseHours = useSelector(get[id].annualUseHours);
-  const dbimplements = useSelector(get.dbimplements);
-  const dbpower = useSelector(get.dbpower);
+  const holdShown         = useSelector(get.shown);
+  const id                = useSelector(get.current);
+  const currentImplement  = useSelector(get[id].implement);
+  const annualUseAcres    = useSelector(get[id].annualUseAcres);
+  const annualUseHours    = useSelector(get[id].annualUseHours);
+  const dbimplements      = useSelector(get.dbimplements);
+  const dbpower           = useSelector(get.dbpower);
 
   if (property === 'implement') {
     a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
