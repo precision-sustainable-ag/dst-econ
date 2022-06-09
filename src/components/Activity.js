@@ -1,65 +1,35 @@
 import {Input} from './Inputs';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, implementCost, powerCost, totalCost, totalRelevantCost} from '../store/store';
+import {useSelector} from 'react-redux';
+import {get, dollars} from '../store/store';
 
 const Activity = ({type, ds = 'implement'}) => {
-  const dispatch = useDispatch();
   const state           = useSelector(get[type]);
-
-  const edited          = state.edited;
+  const estimated       = state.estimated;
+  const tot             = state.total;
+  const edited          = estimated !== tot;
   const imp             = state[ds];
-  const ImplementCost   = state.implementCost;
+  const ImplementsCost  = state.implementsCost;
   const PowerCost       = state.powerCost;
-  const Labor           = state.Labor;
-  const Fuel            = state.Fuel;
-  const Depreciation    = state.Depreciation;
-  const Interest        = state.Interest;
-  const Repairs         = state.Repairs;
-  const Taxes           = state.Taxes;
-  const Insurance       = state.Insurance;
-  const Storage         = state.Storage;
   const coverCropTotal  = useSelector(get.coverCropTotal) || 0;
   const seedbedTotal    = useSelector(get.seedbed).total || 0;
   const plantingTotal   = useSelector(get.planting).total || 0;
   const fertilityTotal  = useSelector(get.fertility).total || 0;
   const state3          = useSelector(get[type]).q3;
 
-  const totalImplementCost = () => {
-    return (
-      (Labor        || 0) * implementCost('Labor') +
-      (Depreciation || 0) * implementCost('Depreciation') + 
-      (Interest     || 0) * implementCost('Interest') + 
-      (Repairs      || 0) * implementCost('Repairs') + 
-      (Taxes        || 0) * implementCost('Taxes') + 
-      (Insurance    || 0) * implementCost('Insurance') + 
-      (Storage      || 0) * implementCost('Storage')
-    );
-  }; // totalImplementCost
-
-  const totalPowerCost = () => (
-    (Fuel         || 0) * powerCost('Fuel') +
-    (Depreciation || 0) * powerCost('Depreciation') + 
-    (Interest     || 0) * powerCost('Interest') + 
-    (Repairs      || 0) * powerCost('Repairs') +
-    (Taxes        || 0) * powerCost('Taxes') + 
-    (Insurance    || 0) * powerCost('Insurance') +
-    (Storage      || 0) * powerCost('Storage')
-  ); // totalPowerCost
-
   const heading = {
     seedbed: 'Seedbed Preparation',
     planting: 'Cover Crop Planting',
   }[type];
   
-  const Costs = ({desc, lookup}) => {
+  const Costs = ({desc}) => {
     const d = desc.replace('Storage shed', 'Storage');
 
     const val = state[d];
 
-    const iCost = implementCost(d, lookup);
-    const pCost = powerCost(d, lookup);
-    const total = '$' + totalCost(d, lookup).toFixed(2);
+    const iCost = state.$implements[d];
+    const pCost = state.$power[d];
+    const total = '$' + (iCost + pCost).toFixed(2);
 
     const style = !val ? {background: '#ddd', color: '#888'}  : {};
 
@@ -70,7 +40,6 @@ const Activity = ({type, ds = 'implement'}) => {
             <Input
               id={type + '.' + d}
               type="checkbox"
-              onChange={() => dispatch(set[type].total(totalRelevantCost()))}
             />
             {desc}
           </label>
@@ -82,22 +51,13 @@ const Activity = ({type, ds = 'implement'}) => {
     )
   } // Costs
 
-  // useEffect(() => { // TODO
-  //   if (Object.keys(data).length) {    
-  //     change('change', type + 'Estimated', totalImplementCost(type) + totalPowerCost(type));
-  //     if (!state[type + 'Total']) {
-  //       change('change', type + 'Total', totalImplementCost(type) + totalPowerCost(type));
-  //     }
-  //   }
-  // });
-
   let breakdown;
 
   if (/species|fertility/.test(type)) {
     breakdown = '';
   } else {
     let cname = type;
-    if (!ImplementCost) {
+    if (!ImplementsCost) {
       cname += ' noImplementCost';
     }
 
@@ -105,20 +65,11 @@ const Activity = ({type, ds = 'implement'}) => {
       cname += ' noPowerCost';
     }
 
-    // useEffect(() => {
-    //   if (Object.keys(data).length) {    
-    //     change('change', type + 'Estimated', totalImplementCost(type) + totalPowerCost(type), true);
-    //     if (!state[type + 'Total']) {
-    //       change('change', type + 'Total', totalImplementCost(type) + totalPowerCost(type), true);
-    //     }
-    //   }
-    // });
-
-    breakdown = ((
+    breakdown = (
                   state3 !== 'Custom Operator' &&
                   imp &&
                   !edited
-                )) &&
+                ) && (
       <div className={cname} id="Breakdown">
         <table id="Costs">
           <thead>
@@ -136,9 +87,8 @@ const Activity = ({type, ds = 'implement'}) => {
                   Implement Cost<br/>($/acre)
                   <br/>
                   <Input
-                    id={type + '.implementCost'}
+                    id={type + '.implementsCost'}
                     type="checkbox"
-                    onChange={() => dispatch(set[type].total(totalRelevantCost()))}
                   />
                 </label>
               </th>
@@ -149,7 +99,6 @@ const Activity = ({type, ds = 'implement'}) => {
                   <Input
                     id={type + '.powerCost'}
                     type="checkbox"
-                    onChange={() => dispatch(set[type].total(totalRelevantCost()))}
                   />
                 </label>
               </th>
@@ -167,13 +116,14 @@ const Activity = ({type, ds = 'implement'}) => {
             <Costs desc="Storage shed" lookup="Storage"/>
             <tr className="total">
               <td>Total</td>
-              <td>{'$' + totalImplementCost(type).toFixed(2)}</td>
-              <td>{'$' + totalPowerCost(type).toFixed(2)}</td>
-              <td>{'$' + (totalImplementCost(type) + totalPowerCost(type)).toFixed(2)}</td>
+              <td>{'$' + state.$implements.total.toFixed(2)}</td>
+              <td>{'$' + state.$power.total.toFixed(2)}</td>
+              <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
       </div>
+    )
   }
 
   const SummaryRow = ({parm, desc}) => {

@@ -2,26 +2,20 @@ import {Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, implement, power, match, dollars, totalRelevantCost} from '../store/store';
+import {get, set, match, dollars} from '../store/store';
 
 const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
   const currentImplement  = useSelector(get[current].implement);
-  const annualUseAcres    = useSelector(get[current].annualUseAcres);
-  const annualUseHours    = useSelector(get[current].annualUseHours);
+  const acresHour         = useSelector(get[current].acresHour).toString();
   const dbimplements      = useSelector(get.dbimplements);
   const dbpower           = useSelector(get.dbpower);
 
   if (property === 'implement') {
     a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
     shown = match('q3', 'Self', current);
-    onChange = () => {
-      dispatch(set[current].power(implement('default power unit')));
-      setTimeout(() => dispatch(set[current].total(totalRelevantCost())), 100);  // TODO: Why timeout?
-      dispatch(set[current].edited(false));
-    }
   }
 
   switch (question) {
@@ -29,23 +23,17 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       property = 'annualUseAcres';
       q = q || question;
       a = 'number';
-      value = Number.isFinite(annualUseAcres) ? annualUseAcres : +implement('acres/year', 0);  // TODO: What causes this to be a string?
       shown = currentImplement;
       break;
     case 'Annual Use (hours on power)':
       property = 'annualUseHours';
       q = q || question;
       a = 'number';
-      value = Number.isFinite(annualUseHours) ? annualUseHours : power('expected use (hr/yr)');  // TODO: What causes this to be a string?
       shown = currentImplement;
-      onChange = () => {
-        dispatch(set[current].total(undefined));
-        dispatch(set[current].edited(false));
-      }
       break;
     case 'Acres/hour':
       q = q || question;
-      a = implement('acres/hour', 1);
+      a = acresHour;
       shown = currentImplement;
       break;
     case 'power':
@@ -53,10 +41,6 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(dbpower)];
       shown = currentImplement;
-      onChange = () => {
-        dispatch(set[current].total(totalRelevantCost()));
-        dispatch(set[current].edited(false));
-      };
       break;
     case 'Estimated':
       property = 'total';
@@ -64,9 +48,6 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       q = (match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
-      onChange = (_, value) => {
-        dispatch(set[current].edited(value > ''));
-      }
       break;
     default:
   }

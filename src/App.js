@@ -193,7 +193,7 @@ function App() {
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
 
-  console.log('App');
+  // console.log('Render App');
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;

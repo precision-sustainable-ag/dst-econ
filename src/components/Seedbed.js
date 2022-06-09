@@ -3,18 +3,33 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, totalRelevantCost, queue, getDefaults, clearInputs} from '../store/store';
+import {get, set, match, totalRelevantCost, queue, getDefaults, clearInputs, test} from '../store/store';
 
 const defaults = {
-  'seedbed.total': 0,
-  'seedbed.q1': ''
+  'seedbed.total': undefined,
+  'seedbed.q1': '',
+  'seedbed.q2': '',
+  'seedbed.q3': '',
+  'seedbed.implement': '',
+  'seedbed.power': '',
+  'seedbed.implementsCost': true,
+  'seedbed.powerCost': true,
+  'seedbed.Labor': true,
+  'seedbed.Fuel': true,
+  'seedbed.Depreciation': true,
+  'seedbed.Interest': true,
+  'seedbed.Repairs': true,
+  'seedbed.Taxes': true,
+  'seedbed.Insurance': true,
+  'seedbed.Storage': true,
 };
 
 const Seedbed = () => {
-  console.log('Render: Seedbed');
+  // console.log('Render: Seedbed');
   const dispatch = useDispatch();
   const current = 'seedbed';
   const dev = useSelector(get.dev);
+  const estimated = useSelector(get[current].estimated);
 
   useSelector(get.current);
   useSelector(get.shown[current]);
@@ -28,8 +43,6 @@ const Seedbed = () => {
     getDefaults(Seedbed, defaults);
     console.log(defaults);
   }, []);
-
-  const estimated = totalRelevantCost();
 
   return (
     <>
@@ -91,13 +104,18 @@ const Seedbed = () => {
         dev && (
           <button
             onClick={() => {
-              queue(() => dispatch(set.seedbed.q1('Yes')));
-              queue(() => dispatch(set.seedbed.q2('No')));
-              queue(() => dispatch(set.seedbed.q3('Self')));
-              queue(() => dispatch(set.seedbed.implement('Chisel Plow; 15 Ft')));
-              queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
-              queue(() => dispatch(set.seedbed.edited(true)));
-              queue(() => dispatch(set.focus('seedbed.total')));
+              dispatch(set.seedbed.q1('Yes'));
+              dispatch(set.seedbed.q2('No'));
+              dispatch(set.seedbed.q3('Self'));
+              queue(() => {
+                dispatch(set.seedbed.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
+                test('seedbed.power', '200 HP MFWD Tractor');
+                test('seedbed.annualUseAcres', 670);
+                test('seedbed.annualUseHours', 500);
+                test('seedbed.acresHour', 8.37);
+                test('seedbed.estimated', 18.34);
+                test('seedbed.total', 18.34);
+              });
             }}
           >
             Test data
@@ -105,7 +123,9 @@ const Seedbed = () => {
         )
       }
       <button
-        onClick={() => clearInputs(defaults)}
+        onClick={() => {
+          clearInputs(defaults);
+        }}
       >
         Clear inputs
       </button>

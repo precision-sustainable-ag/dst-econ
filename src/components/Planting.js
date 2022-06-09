@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, totalRelevantCost} from '../store/store';
+import {get, set} from '../store/store';
 
 const Planting = () => {
   console.log('Render: Planting');
@@ -17,7 +17,7 @@ const Planting = () => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const estimated = totalRelevantCost();
+  const estimated = useSelector(get[current].estimated);
 
   return (
     <>
