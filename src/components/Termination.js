@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, dollars, implement, match, totalRelevantCost} from '../store/store';
+import {get, set, dollars, match} from '../store/store';
 
 const Termination = () => {
   console.log('Render: Termination');
@@ -21,10 +21,10 @@ const Termination = () => {
   }, [dispatch, current]);
 
   const total     = state.total;
-  const estimated = totalRelevantCost();
+  const estimated = useSelector(get[current].estimated);
 
   const dbvalue = (table, key, parm) => {
-    return db[table][key] ? db[table][key][parm] : '';
+    // return db[table][key] ? db[table][key][parm] : '';
   } // dbvalue
 
   return (
@@ -151,9 +151,7 @@ const Termination = () => {
                       q="What type of seedbed preparation will be done?"
                       a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Tillage').sort()]}
                       onChange={() => {
-                        dispatch(set[current].power(implement('default power unit')));
-                        dispatch(set[current].total(totalRelevantCost()));
-                        dispatch(set[current].edited(false));
+                        // dispatch(set[current].power(implement('default power unit')));
                       }}
                     />
 
@@ -166,9 +164,6 @@ const Termination = () => {
                       property="total"
                       q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
                       a={'dollar'}
-                      onChange={(_, value) => {
-                        dispatch(set[current].edited(value > ''));
-                      }}
                     />
                   </>
                 )

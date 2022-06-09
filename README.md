@@ -70,7 +70,7 @@ A side benefit:  Functional properties are calculated *only* when the properties
 
 The Redux store accepts a "serializable" state only, so `initialState` generally can't contain method calls.
 
-Before sending `initialState` to the store, the program iterates through it (recursively for nested objects), pulling out methods and changing the properties' values to undefined.
+Before sending `initialState` to the store, the program iterates through it (recursively for nested objects), pulling out methods and changing those properties' values to undefined.
 
 It parses each method's definition, looking for properties that the method references.  (In our example, `fullName`'s method references `firstName` and `lastName`.)
 

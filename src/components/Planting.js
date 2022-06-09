@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, totalRelevantCost} from '../store/store';
+import {get, set} from '../store/store';
 
 const Planting = () => {
   console.log('Render: Planting');
@@ -17,7 +17,7 @@ const Planting = () => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const estimated = totalRelevantCost();
+  const estimated = useSelector(get[current].estimated);
 
   return (
     <>
@@ -38,22 +38,24 @@ const Planting = () => {
             </tr>
 
             <Logic
+              current={current}
               property="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
             />
 
             <Logic
+              current={current}
               property="implement"
               q="What type of seedbed preparation will be done?"
               type="Planting"
             />
 
-            <Logic question="power" />
-            <Logic question="Annual Use (acres on implement)" />
-            <Logic question="Annual Use (hours on power)" />
-            <Logic question="Acres/hour" />
-            <Logic question="Estimated" total={state.total} estimated={estimated} />
+            <Logic current={current} question="power" />
+            <Logic current={current} question="Annual Use (acres on implement)" />
+            <Logic current={current} question="Annual Use (hours on power)" />
+            <Logic current={current} question="Acres/hour" />
+            <Logic current={current} question="Estimated" total={state.total} estimated={estimated} />
           </tbody>
         </table>
       </form>

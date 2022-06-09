@@ -3,13 +3,33 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, totalRelevantCost, queue} from '../store/store';
+import {get, set, match, totalRelevantCost, queue, getDefaults, clearInputs, test} from '../store/store';
+
+const defaults = {
+  'seedbed.total': undefined,
+  'seedbed.q1': '',
+  'seedbed.q2': '',
+  'seedbed.q3': '',
+  'seedbed.implement': '',
+  'seedbed.power': '',
+  'seedbed.implementsCost': true,
+  'seedbed.powerCost': true,
+  'seedbed.Labor': true,
+  'seedbed.Fuel': true,
+  'seedbed.Depreciation': true,
+  'seedbed.Interest': true,
+  'seedbed.Repairs': true,
+  'seedbed.Taxes': true,
+  'seedbed.Insurance': true,
+  'seedbed.Storage': true,
+};
 
 const Seedbed = () => {
-  console.log('Render: Seedbed');
+  // console.log('Render: Seedbed');
   const dispatch = useDispatch();
   const current = 'seedbed';
   const dev = useSelector(get.dev);
+  const estimated = useSelector(get[current].estimated);
 
   useSelector(get.current);
   useSelector(get.shown[current]);
@@ -19,7 +39,10 @@ const Seedbed = () => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const estimated = totalRelevantCost();
+  useEffect(() => {
+    getDefaults(Seedbed, defaults);
+    console.log(defaults);
+  }, []);
 
   return (
     <>
@@ -40,12 +63,14 @@ const Seedbed = () => {
             </tr>
             
             <Logic
+              current={current}
               property="q1"
               q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
               a={['Yes', 'No']}
             />
 
             <Logic
+              current={current}
               property="q2"
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
@@ -53,6 +78,7 @@ const Seedbed = () => {
             />
 
             <Logic
+              current={current}
               property="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
@@ -60,16 +86,17 @@ const Seedbed = () => {
             />
 
             <Logic
+              current={current}
               property="implement"
               q="What type of seedbed preparation will be done?"
               type="Tillage"
             />
 
-            <Logic question="power" />
-            <Logic question="Annual Use (acres on implement)" />
-            <Logic question="Annual Use (hours on power)" />
-            <Logic question="Acres/hour" />
-            <Logic question="Estimated" total={state.total} estimated={estimated} />
+            <Logic current={current} question="power" />
+            <Logic current={current} question="Annual Use (acres on implement)" />
+            <Logic current={current} question="Annual Use (hours on power)" />
+            <Logic current={current} question="Acres/hour" />
+            <Logic current={current} question="Estimated" total={state.total} estimated={estimated} />
           </tbody>
         </table>
       </form>
@@ -77,19 +104,32 @@ const Seedbed = () => {
         dev && (
           <button
             onClick={() => {
-              queue(() => dispatch(set.seedbed.q1('Yes')));
-              queue(() => dispatch(set.seedbed.q2('No')));
-              queue(() => dispatch(set.seedbed.q3('Self')));
-              queue(() => dispatch(set.seedbed.implement('Chisel Plow; 15 Ft')));
-              queue(() => dispatch(set.seedbed.power('350 HP Tracked Tractor')));
-              queue(() => dispatch(set.seedbed.edited(true)));
-              queue(() => dispatch(set.focus('seedbed.total')));
+              dispatch(set.seedbed.q1('Yes'));
+              dispatch(set.seedbed.q2('No'));
+              dispatch(set.seedbed.q3('Self'));
+              queue(() => {
+                dispatch(set.seedbed.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
+                test('seedbed.power', '200 HP MFWD Tractor');
+                test('seedbed.annualUseAcres', 670);
+                test('seedbed.annualUseHours', 500);
+                test('seedbed.acresHour', 8.37);
+                test('seedbed.estimated', 18.34);
+                test('seedbed.total', 18.34);
+              });
             }}
           >
             Test data
           </button>
         )
       }
+      <button
+        onClick={() => {
+          clearInputs(defaults);
+        }}
+      >
+        Clear inputs
+      </button>
+
       <Activity type={current} />
     </>
   )

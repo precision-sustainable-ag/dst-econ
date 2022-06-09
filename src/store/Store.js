@@ -17,11 +17,12 @@ const shared = {
   chemicalCost: 0,
   roller: '',
   rollerCost: 0,
-  total: 0,
+  acresHour: 0,
+  estimated: undefined,
+  total: undefined,
   annualUseAcres: undefined,
   annualUseHours: undefined,
-  edited: false,
-  implementCost: true,
+  implementsCost: true,
   powerCost: true,
   Labor: true,
   Fuel: true,
@@ -29,8 +30,30 @@ const shared = {
   Interest: true,
   Repairs: true,
   Taxes: true,
-  Insurance: true,
   Storage: true,
+  Insurance: true,
+  $implements: {
+    Labor: 0,
+    Fuel: 0,
+    Depreciation: 0,
+    Interest: 0,
+    Repairs: 0,
+    Taxes: 0,
+    Storage: 0,
+    Insurance: 0,
+    total: 0,
+  },
+  $power: {
+    Labor: 0,
+    Fuel: 0,
+    Depreciation: 0,
+    Interest: 0,
+    Repairs: 0,
+    Taxes: 0,
+    Storage: 0,
+    Insurance: 0,
+    total: 0,
+  },
 };
 
 let initialState = {
@@ -64,6 +87,7 @@ let initialState = {
   location: '',
   state: 'New Jersey',
   farm: '',
+  field: '',
   acres: undefined,
   $labor: undefined,
   priorCrop: '',
@@ -135,13 +159,14 @@ const afterChange = {
   },
   species: (state, action) => {
     const {index, value} = action.payload;
-
-    state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
-    state.prices[index] = (state.dbseedList[value] || {}).price || '';
-    state.focus = `rates${index}`;
-    const fertN = (state.dbseedList[value] || {}).NCredit || '';
-    if (fertN) {
-      state.fertN = fertN;
+    if (index) {
+      state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
+      state.prices[index] = (state.dbseedList[value] || {}).price || '';
+      state.focus = `rates${index}`;
+      const fertN = (state.dbseedList[value] || {}).NCredit || '';
+      if (fertN) {
+        state.fertN = fertN;
+      }
     }
   },
   useFertilizer: (state, {payload}) => {
@@ -152,9 +177,6 @@ const afterChange = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
-      // state.$fertCredit = funcs.$fertCredit(state);
-      // state.$fertCost = funcs.$fertCost(state);
-      // state.fertility.total = funcs['fertility.total'](state);
     }
   },
   'seedbed.q1': (state, {payload}) => {
@@ -189,15 +211,39 @@ const afterChange = {
       default:
     }
   },
-  'seedbed.implement': (state, {payload}) => {
+  'seedbed.implement': (state, {payload}) => { // TODO: Can't put this below in forEach
     if (payload) {
-      // state.seedbed.power = implement('default power unit');  // TODO
-      // state.seedbed.total = totalRelevantCost();
-      state.seedbed.edited = false;
+      const p = state.dbimplements[payload];
+      state.seedbed.power = p['default power unit'];
+      state.seedbed.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / state.dbrates.conversion.value).toFixed(2);
+      state.seedbed.annualUseAcres = +(state.seedbed.acresHour * p['expected use (hr/yr)']).toFixed(0);
       state.focus = 'seedbed.power';
+      return ['seedbed.power'];
     }
-  }
+  },
+  'seedbed.power': (state) => { // TODO: Can't put this below in forEach
+    if (state.seedbed.power) {
+      state.seedbed.annualUseHours = state.dbpower[state.seedbed.power]['expected use (hr/yr)'];
+      getCosts(state, 'seedbed');
+      state.focus = 'seedbed.annualUseAcres';
+    }
+  },
 };
+
+['seedbed', 'planting'].forEach(section => {
+  afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
+  afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
+  afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
+  afterChange[section + '.Fuel'] =           (state) => getCosts(state, section);
+  afterChange[section + '.Depreciation'] =   (state) => getCosts(state, section);
+  afterChange[section + '.Interest'] =       (state) => getCosts(state, section);
+  afterChange[section + '.Repairs'] =        (state) => getCosts(state, section);
+  afterChange[section + '.Taxes'] =          (state) => getCosts(state, section);
+  afterChange[section + '.Storage'] =        (state) => getCosts(state, section);
+  afterChange[section + '.Insurance'] =      (state) => getCosts(state, section);
+  afterChange[section + '.annualUseHours'] = (state, {payload}) => payload && getCosts(state, section);
+  afterChange[section + '.annualUseAcres'] = (state, {payload}) => payload && getCosts(state, section);
+});
 
 const sets = {};
 const gets = {};
@@ -205,7 +251,6 @@ const gets = {};
 const funcs = {};
 const methods = {};
 
-let inhere = false;
 const processMethods = ((state, key) => {
   if (methods[key]) {
     for (let k in methods[key]) {
@@ -213,21 +258,6 @@ const processMethods = ((state, key) => {
       for (const key of k.split('.').slice(0, -1)) st = st[key];
       const l = k.includes('.') ? k.split('.').slice(-1)[0] : k;
       st[l] = methods[key][k](state);
-      if (inhere) {
-        console.log(key, k, l, st[l], methods[key][k](state));
-        console.log({
-          fertN: state.fertN,
-          fertP: state.fertP,
-          fertK: state.fertK,
-          $fertN: state.$fertN,
-          $fertP: state.$fertP,
-          $fertK: state.$fertK,
-          fertNAdded: state.fertNAdded,
-          fertPAdded: state.fertPAdded,
-          fertKAdded: state.fertKAdded,
-          $fertApplication: state.$fertApplication
-        })
-      }
       processMethods(state, k);
     }
   }
@@ -288,7 +318,10 @@ const builders = (builder) => {
             }
             
             if (afterChange[fullkey]) {
-              afterChange[fullkey](state, action);
+              const ac = afterChange[fullkey](state, action);
+              if (ac) {
+                ac.forEach(parm => afterChange[parm](state, action));
+              }
             }
 
             processMethods(state, key);
@@ -299,9 +332,7 @@ const builders = (builder) => {
               if (m) {
                 m = m.forEach(s => {
                   s = s.split('state.')[1].split(/\.\w+\(/)[0]
-                  inhere = true;
                   processMethods(state, s);
-                  inhere = false;
                 });
               }
             }
@@ -333,10 +364,6 @@ console.log({
   methods
 });
 
-const state = (parm) => mystore.getState()[parm];
-
-const current = () => mystore.getState().current;
-
 export const match = (key, value, context) => {
   if (context) {
     return !!(mystore.getState().shown[context][key] && mystore.getState()[context][key] === value);
@@ -345,148 +372,88 @@ export const match = (key, value, context) => {
   }
 } // match
 
-const cost = (type, parm, round) => {
-  const state = mystore.getState();
-  const section = state[state.current];
-  const o = type === 'implements' ? section.implement : section.power;
-  const acresHour = implement('acres/hour', 1);
-  let divisor = type === 'implements' ? section.annualUseAcres : section.annualUseHours * acresHour;
-  const p = state['db' + type][o] || {};
+const getCosts = (state, current) => {
+  ['implements', 'power'].forEach(type => {
+    state[current]['$' + type].total = 0;
 
-  const ASABE = state.dbcoefficients[p['default ASABE category']] || {};
+    ['Fuel', 'Depreciation', 'Interest', 'Repairs', 'Taxes', 'Insurance', 'Storage', 'Labor'].forEach(parm => {
+      if (!state[current][type + 'Cost'] || !state[current][parm]) {
+        state[current]['$' + type][parm] = 0;
+        return;
+      }
 
-  const RF1 = ASABE.RF1 || 0;
-  const RF2 = ASABE.RF2 || 0;
-  const RV1 = ASABE.RV1 || 0;
-  const RV2 = ASABE.RV2 || 0;
-  const RV3 = ASABE.RV3 || 0;
-  const RV4 = ASABE.RV4 || 0;
-  const RV5 = ASABE.RV5 || 0;
-  // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
+      const section = state[current];
+      const o = type === 'implements' ? section.implement : section.power;
 
-  console.log(p['default ASABE category']);
-  const tradein = (RV1 - RV2 * p['expected life (years)'] ** 0.5 - RV3 * p['expected use (hr/yr)'] ** 0.5 + RV4 * state.dbrates.projected.value) ** 2 + 0.25 * RV5;  
-  const listprice = p['purchase price 2020'] / (1 - p['list discount']);
-  const $tradein = tradein * listprice;
-  const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
-  const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
-  const annualrepairs = accumulatedrepairs / p['expected life (years)'];  
-  
-  if (false) {
-    console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
-  }
+      const acresHour = state[current].acresHour;
 
-  let value;
+      let divisor = type === 'implements' ? section.annualUseAcres : section.annualUseHours * acresHour;
+      const p = state['db' + type][o] || {};
 
-  switch (parm) {
-    case 'Fuel':
-      value = +((p['HP'] * p['fuel use (gal/PTO hp/hr)']) * (1 + +state.dbrates.lubrication.value)) * state.dbrates.fuel.value / acresHour;
-      break;
-    case 'Depreciation':
-      value = annualdepreciation / divisor;
-      break;
-    case 'Interest':
-      value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * state.dbrates.interest.value / divisor;
-      break;
-    case 'Repairs':
-      value = annualrepairs / divisor;
-      break;
-    case 'Taxes':
-      value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * state.dbrates.property.value / divisor;
-      break;
-    case 'Insurance':
-      value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * state.dbrates.insurance.value / divisor;
-      break;
-    case 'Storage':
-      value = state.dbrates.storage.value * p['shed (ft^2)'] / divisor;
-      break;
-    case 'Labor':
-      value = (p['tractor (hr/impl)'] * p['labor (hr/trac)']) / implement('acres/hour') * state.dbrates.skilled.value;
-      break;
-    default:
-      value = p[parm] || '';
-  }
+      const ASABE = state.dbcoefficients[p['default ASABE category']] || {};
+    
+      const RF1 = ASABE.RF1 || 0;
+      const RF2 = ASABE.RF2 || 0;
+      const RV1 = ASABE.RV1 || 0;
+      const RV2 = ASABE.RV2 || 0;
+      const RV3 = ASABE.RV3 || 0;
+      const RV4 = ASABE.RV4 || 0;
+      const RV5 = ASABE.RV5 || 0;
+      // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
+    
+      // console.log(p['default ASABE category']);
+      const tradein = (RV1 - RV2 * p['expected life (years)'] ** 0.5 - RV3 * p['expected use (hr/yr)'] ** 0.5 + RV4 * state.dbrates.projected.value) ** 2 + 0.25 * RV5;  
+      const listprice = p['purchase price 2020'] / (1 - p['list discount']);
+      const $tradein = tradein * listprice;
+      const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
+      const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
+      const annualrepairs = accumulatedrepairs / p['expected life (years)'];  
+      
+      if (false) {
+        console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
+      }
+    
+      let value;
 
-  if (isFinite(round) && value) {
-    return (+value).toFixed(round);
-  } else {
-    return value;
-  }
-} // cost
+      switch (parm) {
+        case 'Fuel':
+          value = +((p['HP'] * p['fuel use (gal/PTO hp/hr)']) * (1 + +state.dbrates.lubrication.value)) * state.dbrates.fuel.value / acresHour;
+          break;
+        case 'Depreciation':
+          value = annualdepreciation / divisor;
+          break;
+        case 'Interest':
+          value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * state.dbrates.interest.value / divisor;
+          break;
+        case 'Repairs':
+          value = annualrepairs / divisor;
+          break;
+        case 'Taxes':
+          value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * state.dbrates.property.value / divisor;
+          break;
+        case 'Insurance':
+          value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * state.dbrates.insurance.value / divisor;
+          break;
+        case 'Storage':
+          value = state.dbrates.storage.value * p['shed (ft^2)'] / divisor;
+          break;
+        case 'Labor':
+          value = (p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour * state.dbrates.skilled.value;
+          break;
+        default:
+          value = p[parm];
+      }
 
-export const implementCost = (desc) => {
-  if (!state(current()).implementCost) {
-    return 0;
-  } else {
-    return cost('implements', desc);
-  }
-} // implementCost
+      value = value || 0;
 
-export const powerCost = (desc) => {
-  if (!state(current()).powerCost) {
-    return 0;
-  } else {
-    return cost('power', desc);
-  }
-} // powerCost
+      state[current]['$' + type][parm] = value;
+      state[current]['$' + type].total += value;
+    });
 
-export const totalCost = (desc) => {
-  return (implementCost(desc) || 0) + (powerCost(desc) || 0);
-} // totalCost
-
-const relevantCost = (desc) => {
-  if (!current()) {
-    return 0;
-  }
-
-  return state(current())[desc] ? totalCost(desc) : 0;
-} // relevantCost
-
-export const totalRelevantCost = () => {
-  const result = 
-    relevantCost('Labor') +
-    relevantCost('Fuel') +
-    relevantCost('Depreciation') +
-    relevantCost('Interest') + 
-    relevantCost('Repairs') + 
-    relevantCost('Taxes') + 
-    relevantCost('Insurance') + 
-    relevantCost('Storage');
-  
-  return result;
-} // totalRelevantCost
-
-export const implement = (parm, round) => {
-  const state = mystore.getState();
-  const o = state[state.current].implement;
-  const p = state.dbimplements[o] || {};
-  let value = p[parm] || '';
-
-  if (parm === 'acres/hour') {
-    value = p.size1 * p['field speed (m/h)'] * p['field efficiency'] / state.dbrates.conversion.value;
-  } else if (parm === 'acres/year') {
-    value = implement('acres/hour') * p['expected use (hr/yr)'];
-  }
-
-  if (isFinite(round) && value) {
-    return (+value).toFixed(round);
-  } else {
-    return value;
-  }
-} // implement
-
-export const power = (parm, round) => {
-  const state = mystore.getState();
-  const o = state[state.current].power;
-  const p = state.dbpower[o] || {};
-  const value = p[parm] || '';
-  if (isFinite(round) && value) {
-    return (+value).toFixed(round);
-  } else {
-    return value;
-  }
-} // power
-
+    state[current].estimated = +(state[current].$implements.total + state[current].$power.total).toFixed(2);
+    state[current].total = state[current].estimated;
+  })
+} // getCosts
 
 const loadData = async(tables) => {
   const alias = (col) => {
@@ -549,11 +516,11 @@ const loadData = async(tables) => {
   }
 } // loadData
 
-export const db = {};
+const db = {};
 
 export const queue = (f, time=1) => {
   setTimeout(f, queue.i++ * time);
-  setTimeout(() => queue.i = 0, 1000);
+  setTimeout(() => queue.i = 0, time + 999);
 }
 queue.i = 0;
 
@@ -586,3 +553,30 @@ export const test = (key, result) => {
     }
   }
 } // test
+
+export const getDefaults = (component, defaults) => {
+  component.toString()
+    .match(/id: "[^"]+"/g)
+    .map(s => s.split('"')[1])
+    .forEach(id => {
+      if (!(id in defaults)) {
+        defaults[id] = initialState[id] || '';
+      }
+      console.log(defaults);
+    });
+} // getDefaults
+
+export const clearInputs = (defaults) => {
+  for (const key in defaults) {
+    try {
+      let s = set;
+      for (const k of key.split('.')) {
+        s = s[k];
+      }
+      console.log(key, defaults[key]);
+      mystore.dispatch(s(defaults[key]));
+    } catch(error) {
+      console.log(error);
+    }
+  }
+} // clearInputs

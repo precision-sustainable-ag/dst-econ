@@ -1,7 +1,7 @@
-import {Input} from './Inputs';
-import Activity from './Activity';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, test} from '../store/store';
+import {Input} from './Inputs';
+import Activity from './Activity';
 
 const SpeciesRow = ({n}) => {
   const species = useSelector(get.species);
@@ -167,6 +167,16 @@ const Species = () => {
           </button>
         )
       }
+      <button
+        onClick={() => {
+          dispatch(set.rates([]));
+          dispatch(set.prices([]));
+          dispatch(set.species([]));
+        }}
+      >
+        Clear inputs
+      </button>
+
       <Activity type="species"/>
     </>
   )

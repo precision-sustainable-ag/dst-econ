@@ -201,6 +201,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
       <MUIAutocomplete
         {...props}
 
+        id={id}
         onKeyPress={keyPress}
         ref={focusRef}
 
