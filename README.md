@@ -44,6 +44,33 @@ The `get` methods are simply syntactic sugar, which *may* be slightly slower for
 
 However, the `set` methods save you the trouble of writing setter reducers for every property in the store.
 
+#### afterChange ####
+
+Setters often need side effects.  Because setters are automatically created, we need a way to hook into them.
+
+The `afterChange` object in the store accomplishes this.
+
+For example, this sets the default rate, price, and expected fertilizer N credit based on the species selected:
+
+```
+const afterChange = {
+  // ...
+  species: (state, action) => {
+    const {index, value} = action.payload;
+    if (Number.isFinite(index)) {
+      state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
+      state.prices[index] = (state.dbseedList[value] || {}).price || '';
+      state.focus = `rates${index}`;
+      const fertN = (state.dbseedList[value] || {}).NCredit || '';
+      if (fertN) {
+        state.fertN = fertN;
+      }
+    }
+  },
+  // ...
+}  
+```
+
 #### "Functional" state properties ####
 
 `initialState` can contain "functional" properties.
@@ -112,6 +139,28 @@ The standard way to write this would be to create setters for each property (`fe
 
 Now, the setters are created automatically, and `$fertCredit`, `$fertCost`, and `fertility.total` are automatically calculated as needed.
 
+Note that functional properties don't need to be simple one-liners.
+
+For example, this will set `state.coverCropTotal` whenever `species`, `rates`, or `prices` change:
+
+```
+let initialState = {
+  // ...  
+  coverCropTotal: (state) => {
+    let total = 0;
+
+    state.species
+      .forEach((s, n) => {
+        if (s) {
+          total += (state.rates[n] || 0) * (state.prices[n] || 0);
+        }
+      });
+    
+    return total;
+  },
+  // ...
+}
+```
 
 ### `<Input>` components ###
 
