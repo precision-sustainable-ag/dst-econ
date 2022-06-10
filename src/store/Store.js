@@ -159,7 +159,7 @@ const afterChange = {
   },
   species: (state, action) => {
     const {index, value} = action.payload;
-    if (index) {
+    if (Number.isFinite(index)) {
       state.rates[index] = (state.dbseedList[value] || {}).seedingRate || '';
       state.prices[index] = (state.dbseedList[value] || {}).price || '';
       state.focus = `rates${index}`;
