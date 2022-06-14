@@ -101,7 +101,7 @@ Before sending `initialState` to the store, the program iterates through it (rec
 
 It parses each method's definition, looking for properties that the method references.  (In our example, `fullName`'s method references `firstName` and `lastName`.)
 
-When (and only when) the referenced properties change, the method is run, and its result is stored in the "functional" property.
+When (and only when) the referenced properties' setters are called, the method is run, and its result is stored in the "functional" property.
 
 Note that the `fullName` function doesn't have to worry about mutating the state:  The reducers are sent to the store using `createReducer()`, which calls Immer.
 

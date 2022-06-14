@@ -211,23 +211,6 @@ const afterChange = {
       default:
     }
   },
-  'seedbed.implement': (state, {payload}) => { // TODO: Can't put this below in forEach
-    if (payload) {
-      const p = state.dbimplements[payload];
-      state.seedbed.power = p['default power unit'];
-      state.seedbed.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / state.dbrates.conversion.value).toFixed(2);
-      state.seedbed.annualUseAcres = +(state.seedbed.acresHour * p['expected use (hr/yr)']).toFixed(0);
-      state.focus = 'seedbed.power';
-      return ['seedbed.power'];
-    }
-  },
-  'seedbed.power': (state) => { // TODO: Can't put this below in forEach
-    if (state.seedbed.power) {
-      state.seedbed.annualUseHours = state.dbpower[state.seedbed.power]['expected use (hr/yr)'];
-      getCosts(state, 'seedbed');
-      state.focus = 'seedbed.annualUseAcres';
-    }
-  },
 };
 
 ['seedbed', 'planting'].forEach(section => {
@@ -243,6 +226,31 @@ const afterChange = {
   afterChange[section + '.Insurance'] =      (state) => getCosts(state, section);
   afterChange[section + '.annualUseHours'] = (state, {payload}) => payload && getCosts(state, section);
   afterChange[section + '.annualUseAcres'] = (state, {payload}) => payload && getCosts(state, section);
+
+  afterChange[section + '.implement'] = (state, {payload}) => {
+    const obj = state[section];
+
+    if (payload) {
+      const p = state.dbimplements[payload];
+    
+      obj.power = p['default power unit'];
+      obj.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / state.dbrates.conversion.value).toFixed(2);
+      obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
+      state.focus = section + '.power';
+      return [section + '.power'];
+    }
+  };
+
+  afterChange[section + '.power'] = (state) => {
+    const obj = state[section];
+    
+    if (obj.power) {
+      obj.annualUseHours = state.dbpower[obj.power]['expected use (hr/yr)'];
+      getCosts(state, section);
+      state.focus = section + '.annualUseAcres';
+    }
+  };
+
 });
 
 const sets = {};
@@ -331,8 +339,10 @@ const builders = (builder) => {
           
               if (m) {
                 m = m.forEach(s => {
-                  s = s.split('state.')[1].split(/\.\w+\(/)[0]
-                  processMethods(state, s);
+                  s = s.split('state.')[1];
+                  if (s) {
+                    processMethods(state, s.split(/\.\w+\(/)[0]);
+                  }
                 });
               }
             }

@@ -3,12 +3,34 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {get, set, match, queue, getDefaults, clearInputs, test} from '../store/store';
+
+const defaults = {
+  'planting.total': undefined,
+  'planting.q1': '',
+  'planting.q2': '',
+  'planting.q3': '',
+  'planting.implement': '',
+  'planting.power': '',
+  'planting.implementsCost': true,
+  'planting.powerCost': true,
+  'planting.Labor': true,
+  'planting.Fuel': true,
+  'planting.Depreciation': true,
+  'planting.Interest': true,
+  'planting.Repairs': true,
+  'planting.Taxes': true,
+  'planting.Insurance': true,
+  'planting.Storage': true,
+};
 
 const Planting = () => {
-  console.log('Render: Planting');
+  // console.log('Render: Planting');
   const dispatch = useDispatch();
   const current = 'planting';
+  const dev = useSelector(get.dev);
+  const estimated = useSelector(get[current].estimated);
+
   useSelector(get.current);
   useSelector(get.shown[current]);
   const state = useSelector(get[current]);
@@ -17,7 +39,10 @@ const Planting = () => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const estimated = useSelector(get[current].estimated);
+  useEffect(() => {
+    getDefaults(Planting, defaults);
+    console.log(defaults);
+  }, []);
 
   return (
     <>
@@ -59,6 +84,33 @@ const Planting = () => {
           </tbody>
         </table>
       </form>
+      {
+        dev && (
+          <button
+            onClick={() => {
+              dispatch(set.planting.q3('Self'));
+              queue(() => {
+                dispatch(set.planting.implement('Presswheel Drill; 16 Ft'));
+                test('planting.power', '105 HP MFWD Tractor');
+                test('planting.annualUseAcres', 509);
+                test('planting.annualUseHours', 450);
+                test('planting.acresHour', 6.79);
+                test('planting.estimated', 17.60);
+                test('planting.total', 17.60);
+              });
+            }}
+          >
+            Test data
+          </button>
+        )
+      }
+      <button
+        onClick={() => {
+          clearInputs(defaults);
+        }}
+      >
+        Clear inputs
+      </button>
 
       <Activity type={current}/>
     </>

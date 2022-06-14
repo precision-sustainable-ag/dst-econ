@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, totalRelevantCost, queue, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, match, queue, getDefaults, clearInputs, test} from '../store/store';
 
 const defaults = {
   'seedbed.total': undefined,

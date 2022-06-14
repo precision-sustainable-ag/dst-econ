@@ -2,7 +2,7 @@ import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars} from '../store/store';
+import {get, set, dollars, test} from '../store/store';
 
 const Fertility = () => {
   const dispatch = useDispatch();
@@ -13,7 +13,6 @@ const Fertility = () => {
   const dfertN            = useSelector(get.dbrates.Nitrogen.value);
   const $fertCost         = useSelector(get.$fertCost);
   const total             = useSelector(get.fertility.total);
-  // console.warn(total);
   const $fertApplication  = useSelector(get.$fertApplication);
   const dFertApplication  = useSelector(get.dbcostDefaults['Custom Fertilizer Appl'].cost);
   const $fertCredit       = useSelector(get.$fertCredit);
@@ -98,6 +97,7 @@ const Fertility = () => {
           dispatch(set.fertKAdded(10));
           dispatch(set.$fertApplication(8));
           dispatch(set.useFertilizer('Yes'));
+          test('fertility.total', 0.5);
         }}
       >
         Test data
