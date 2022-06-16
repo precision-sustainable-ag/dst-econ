@@ -57,12 +57,12 @@ const Home = () => {
 
               dispatch(set.firstName('Rick'));
               dispatch(set.lastName('Hitchcock'));
-              queue(() => test('fullName', 'Rick Hitchcock'));
-              queue(() => test('fullName2', 'Rick Hitchcock'));
-              queue(() => test('fullName2', 'Rick Hitchcock'));
+
+              test('fullName', 'Rick Hitchcock');
+              test('fullName2', 'Rick Hitchcock');
             }}
           >
-            Click me
+            Test data
           </button>
         </div>
         )}

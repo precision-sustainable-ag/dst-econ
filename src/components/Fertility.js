@@ -1,8 +1,11 @@
+import {useEffect} from 'react';
 import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, test} from '../store/store';
+import {get, set, dollars, getDefaults, clearInputs, test} from '../store/store';
+
+const defaults = {};
 
 const Fertility = () => {
   const dispatch = useDispatch();
@@ -16,6 +19,11 @@ const Fertility = () => {
   const $fertApplication  = useSelector(get.$fertApplication);
   const dFertApplication  = useSelector(get.dbcostDefaults['Custom Fertilizer Appl'].cost);
   const $fertCredit       = useSelector(get.$fertCredit);
+
+  useEffect(() => {
+    getDefaults(Fertility, defaults);
+    console.log(defaults);
+  }, []);
 
   return (
     <div className="Fertility">
@@ -102,6 +110,14 @@ const Fertility = () => {
       >
         Test data
       </button>
+      <button
+        onClick={() => {
+          clearInputs(defaults);
+        }}
+      >
+        Clear inputs
+      </button>
+
       <Activity type={current}/>
     </div>
   )
