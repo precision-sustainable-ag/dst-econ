@@ -211,6 +211,22 @@ const afterChange = {
       default:
     }
   },
+  'termination.q2': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.screen = 'Tillage';
+    }
+  },
+  'termination.q3': (state, {payload}) => {
+    switch (payload) {
+      case 'Self':
+        state.focus = 'termination.method';
+        break;
+      case 'Custom Operator':
+        state.focus = 'termination.customCost';
+        break;
+      default:
+    }
+  },
 };
 
 ['seedbed', 'planting'].forEach(section => {

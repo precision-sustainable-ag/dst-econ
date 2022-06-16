@@ -9,6 +9,9 @@ const Termination = () => {
   console.log('Render: Termination');
   const dispatch = useDispatch();
   const current = 'termination';
+
+  const dev = useSelector(get.dev);
+
   useSelector(get.current);
   useSelector(get.shown[current]);
   const dbherbicides = useSelector(get.dbherbicides);
@@ -23,10 +26,6 @@ const Termination = () => {
   const total     = state.total;
   const estimated = useSelector(get[current].estimated);
 
-  const dbvalue = (table, key, parm) => {
-    // return db[table][key] ? db[table][key][parm] : '';
-  } // dbvalue
-
   return (
     <>
       <div className="Termination">
@@ -40,31 +39,22 @@ const Termination = () => {
               </tr>
 
               <Logic
+                current={current}
                 property="q2"
                 q="Would you do this field activity if you did not have a cover crop?"
                 a={['Yes', 'No']}
-                onChange={(_, value) => {
-                  if (value === 'Yes') {
-                    dispatch(set.screen('Tillage'));
-                  }
-                }}
               />
 
               <Logic
+                current={current}
                 property="q3"
                 q="Who will do this activity?"
                 a={['Self', 'Custom Operator']}
                 shown={match('q2', 'No', current)}
-                onChange={(_, value) => {  // TODO
-                  if (value === 'Self') {
-                    dispatch(set.focus('termination.method'));
-                  } else {
-                    dispatch(set.focus('termination.customCost'));
-                  }
-                }}
               />
 
               <Logic
+                current={current}
                 property="customCost"
                 q="Custom operator cost ($/acre)"
                 a={'dollar'}
@@ -72,6 +62,7 @@ const Termination = () => {
               />
 
               <Logic
+                current={current}
                 property="method"
                 q="Cover Crop termination method"
                 a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
@@ -79,6 +70,7 @@ const Termination = () => {
               />
 
               <Logic
+                current={current}
                 property="product"
                 q="Product"
                 a={['', ...Object.keys(dbherbicides).sort()]}
@@ -89,34 +81,39 @@ const Termination = () => {
                 (match('method', 'Herbicide application', current) || match('method', 'Roller with follow-up herbicide', current)) && (
                   <>
                     <Logic
+                      current={current}
                       property="unitCost"
                       q="Cost per unit of product"
                       a={'dollar'}
-                      value={dbvalue('herbicides', state.product, 'Cost ($)')}
-                      suffix={dbvalue('herbicides', state.product, 'Unit (cost)')}
+                      value={dbherbicides[state.product]['Cost ($)']}
+                      suffix={dbherbicides[state.product]['Unit (cost)']}
                     />
           
                     <Logic
+                      current={current}
                       property="rate"
                       q="Application rate"
                       a={'number'}
-                      value={dbvalue('herbicides', state.product, 'Rate')}
-                      suffix={dbvalue('herbicides', state.product, 'Unit (rate)')}
+                      value={dbherbicides[state.product]['Rate']}
+                      suffix={dbherbicides[state.product]['Unit (rate)']}
                     />
           
                     <Logic
+                      current={current}
                       property="productCost"
                       q="Product cost"
                       a={state.productCost}
                     />
 
                     <Logic
+                      current={current}
                       property="chemical"
                       q="What chemical spray equipment will be used?"
                       a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Chemical').sort()]}
                     />
             
                     <Logic
+                      current={current}
                       property="chemicalCost"
                       q="Chemical spray equipment cost ($/acre)"
                       a={'dollar'}
@@ -129,12 +126,14 @@ const Termination = () => {
                 (match('method', 'Roller', current) || match('method', 'Roller with follow-up herbicide', current)) && (
                   <>
                     <Logic
+                      current={current}
                       property="roller"
                       q="What roller equipment will be used?"
                       a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Termination').sort()]}
                     />
 
                     <Logic
+                      current={current}
                       property="rollerCost"
                       q="Roller equipment cost ($/acre)"
                       a={'dollar'}
@@ -147,20 +146,19 @@ const Termination = () => {
                 match('method', 'Tillage', current) && (
                   <>
                     <Logic
+                      current={current}
                       property="implement"
                       q="What type of seedbed preparation will be done?"
                       a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Tillage').sort()]}
-                      onChange={() => {
-                        // dispatch(set[current].power(implement('default power unit')));
-                      }}
                     />
 
-                    <Logic question="power" />
-                    <Logic question="Annual Use (acres on implement)" />
-                    <Logic question="Annual Use (hours on power)" />
-                    <Logic question="Acres/hour" />
+                    <Logic current={current} question="power" />
+                    <Logic current={current} question="Annual Use (acres on implement)" />
+                    <Logic current={current} question="Annual Use (hours on power)" />
+                    <Logic current={current} question="Acres/hour" />
 
                     <Logic
+                      current={current}
                       property="total"
                       q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
                       a={'dollar'}
