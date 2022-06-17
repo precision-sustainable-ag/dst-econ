@@ -5,24 +5,7 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, match, queue, getDefaults, clearInputs, test} from '../store/store';
 
-const defaults = {
-  'seedbed.total': undefined,
-  'seedbed.q1': '',
-  'seedbed.q2': '',
-  'seedbed.q3': '',
-  'seedbed.implement': '',
-  'seedbed.power': '',
-  'seedbed.implementsCost': true,
-  'seedbed.powerCost': true,
-  'seedbed.Labor': true,
-  'seedbed.Fuel': true,
-  'seedbed.Depreciation': true,
-  'seedbed.Interest': true,
-  'seedbed.Repairs': true,
-  'seedbed.Taxes': true,
-  'seedbed.Insurance': true,
-  'seedbed.Storage': true,
-};
+const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.q2|seedbed.q3|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage');
 
 const Seedbed = () => {
   // console.log('Render: Seedbed');
@@ -38,11 +21,6 @@ const Seedbed = () => {
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
-
-  useEffect(() => {
-    getDefaults(Seedbed, defaults);
-    console.log(defaults);
-  }, []);
 
   return (
     <>

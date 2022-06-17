@@ -5,49 +5,7 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, match, test, getDefaults, clearInputs} from '../store/store';
 
-const defaults = {
-  'chemical.q3': '',
-  'chemical.implement': '',
-  'chemical.power': '',
-  'chemical.implementsCost': true,
-  'chemical.powerCost': true,
-  'chemical.Labor': true,
-  'chemical.Fuel': true,
-  'chemical.Depreciation': true,
-  'chemical.Interest': true,
-  'chemical.Repairs': true,
-  'chemical.Taxes': true,
-  'chemical.Insurance': true,
-  'chemical.Storage': true,
-  'roller.q3': '',
-  'roller.implement': '',
-  'roller.power': '',
-  'roller.implementsCost': true,
-  'roller.powerCost': true,
-  'roller.Labor': true,
-  'roller.Fuel': true,
-  'roller.Depreciation': true,
-  'roller.Interest': true,
-  'roller.Repairs': true,
-  'roller.Taxes': true,
-  'roller.Insurance': true,
-  'roller.Storage': true,
-  'tillage.q3': '',
-  'tillage.implement': '',
-  'tillage.power': '',
-  'tillage.implementsCost': true,
-  'tillage.powerCost': true,
-  'tillage.Labor': true,
-  'tillage.Fuel': true,
-  'tillage.Depreciation': true,
-  'tillage.Interest': true,
-  'tillage.Repairs': true,
-  'tillage.Taxes': true,
-  'tillage.Insurance': true,
-  'tillage.Storage': true,
-  'termination.method': '',
-  
-};
+const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.q3|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.q3|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method');
 
 const Termination = () => {
   // console.log('Render: Termination');
@@ -66,11 +24,6 @@ const Termination = () => {
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
-
-  useEffect(() => {
-    getDefaults(Termination, defaults);
-    console.log(defaults);
-  }, []);
 
   return (
     <>

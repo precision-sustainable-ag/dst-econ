@@ -3,26 +3,9 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, queue, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, queue, getDefaults, clearInputs, test} from '../store/store';
 
-const defaults = {
-  'planting.total': undefined,
-  'planting.q1': '',
-  'planting.q2': '',
-  'planting.q3': '',
-  'planting.implement': '',
-  'planting.power': '',
-  'planting.implementsCost': true,
-  'planting.powerCost': true,
-  'planting.Labor': true,
-  'planting.Fuel': true,
-  'planting.Depreciation': true,
-  'planting.Interest': true,
-  'planting.Repairs': true,
-  'planting.Taxes': true,
-  'planting.Insurance': true,
-  'planting.Storage': true,
-};
+const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.q3|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
 
 const Planting = () => {
   // console.log('Render: Planting');
@@ -38,11 +21,6 @@ const Planting = () => {
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
-
-  useEffect(() => {
-    getDefaults(Planting, defaults);
-    console.log(defaults);
-  }, []);
 
   return (
     <>

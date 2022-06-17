@@ -1,11 +1,10 @@
-import {useEffect} from 'react';
 import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, getDefaults, clearInputs, test} from '../store/store';
 
-const defaults = {};
+const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertilizer|fertNAdded|fertPAdded|fertKAdded|$fertApplication|$fertCredit|$fertCost|fertility.total');
 
 const Fertility = () => {
   const dispatch = useDispatch();
@@ -19,11 +18,6 @@ const Fertility = () => {
   const $fertApplication  = useSelector(get.$fertApplication);
   const dFertApplication  = useSelector(get.dbcostDefaults['Custom Fertilizer Appl'].cost);
   const $fertCredit       = useSelector(get.$fertCredit);
-
-  useEffect(() => {
-    getDefaults(Fertility, defaults);
-    console.log(defaults);
-  }, []);
 
   return (
     <div className="Fertility">

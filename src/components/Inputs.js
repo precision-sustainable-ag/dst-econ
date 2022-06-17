@@ -167,7 +167,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               key={option}
               control={<Radio sx={{padding: '0.2rem 0.5rem'}} />}
               label={props.labels ? props.labels[i] : option}
-              checked={option.toString() === value.toString()}
+              checked={option.toString() === value?.toString()}
               onChange={(e) => {
                 change(e.target.value);
                 update(e, e.target.value);
@@ -181,7 +181,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     // let max = Math.max.apply(Math, options.map(option => option.description ? option.description.length : option.length));
     const max = '100%';
     if (!isOptionEqualToValue) {
-      isOptionEqualToValue = (option, value) => option.value === value.value;
+      isOptionEqualToValue = (option, value) => option.value === value?.value;
     }
 
     if (!renderInput) {

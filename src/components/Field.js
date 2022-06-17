@@ -4,21 +4,14 @@ import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, test, getDefaults, clearInputs} from '../store/store';
-import {useEffect} from 'react';
 
-const defaults = {
-  lat: 40.7849,
-  lon: -74.8073,
-  location: ''
-};
+const defaults = getDefaults('lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description');
 
 const Field = () => {
   const dispatch  = useDispatch();
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop  = useSelector(get.cashCrop);
   const dev       = useSelector(get.dev);
-
-  useEffect(() => getDefaults(Field, defaults), []);
 
   return (
     <>

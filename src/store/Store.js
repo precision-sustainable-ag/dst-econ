@@ -327,10 +327,11 @@ const builders = (builder) => {
 
         if (typeof obj[key] === 'function') {
           funcs[fullkey] = obj[key];
-          let m = obj[key].toString().match(/state.[$_\w.(]+/g);
+          // console.log(obj[key]);
+          let m = obj[key].toString().match(/e\.[$_\w.(]+/g);  // state.* unbuilt, e.* built
           
           if (m) {
-            m = m.map(s => s.split('state.')[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+            m = m.map(s => s.split(/e\./)[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
             m.forEach(m => {
               methods[m] = methods[m] || {};
               methods[m][fullkey] = funcs[fullkey];
@@ -602,16 +603,17 @@ export const test = (key, result) => {
   }
 } // test
 
-export const getDefaults = (component, defaults) => {
-  component.toString()
-    .match(/id: "[^"]+"/g)
-    ?.map(s => s.split('"')[1])
-    .forEach(id => {
-      if (!(id in defaults)) {
-        defaults[id] = initialState[id] || '';
-      }
-      console.log(defaults);
-    });
+export const getDefaults = (parms) => {
+  const def = {};
+  parms.split('|').forEach(parm => {
+    let s = initialState;
+    for (const k of parm.split('.')) {
+      s = s[k];
+    }
+    def[parm] = s;
+  });
+  console.log(def);
+  return def;
 } // getDefaults
 
 export const clearInputs = (defaults) => {
