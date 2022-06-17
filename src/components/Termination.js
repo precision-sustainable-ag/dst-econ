@@ -3,7 +3,51 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, match, queue, test} from '../store/store';
+import {get, set, match, test, getDefaults, clearInputs} from '../store/store';
+
+const defaults = {
+  'chemical.q3': '',
+  'chemical.implement': '',
+  'chemical.power': '',
+  'chemical.implementsCost': true,
+  'chemical.powerCost': true,
+  'chemical.Labor': true,
+  'chemical.Fuel': true,
+  'chemical.Depreciation': true,
+  'chemical.Interest': true,
+  'chemical.Repairs': true,
+  'chemical.Taxes': true,
+  'chemical.Insurance': true,
+  'chemical.Storage': true,
+  'roller.q3': '',
+  'roller.implement': '',
+  'roller.power': '',
+  'roller.implementsCost': true,
+  'roller.powerCost': true,
+  'roller.Labor': true,
+  'roller.Fuel': true,
+  'roller.Depreciation': true,
+  'roller.Interest': true,
+  'roller.Repairs': true,
+  'roller.Taxes': true,
+  'roller.Insurance': true,
+  'roller.Storage': true,
+  'tillage.q3': '',
+  'tillage.implement': '',
+  'tillage.power': '',
+  'tillage.implementsCost': true,
+  'tillage.powerCost': true,
+  'tillage.Labor': true,
+  'tillage.Fuel': true,
+  'tillage.Depreciation': true,
+  'tillage.Interest': true,
+  'tillage.Repairs': true,
+  'tillage.Taxes': true,
+  'tillage.Insurance': true,
+  'tillage.Storage': true,
+  'termination.method': '',
+  
+};
 
 const Termination = () => {
   // console.log('Render: Termination');
@@ -15,7 +59,6 @@ const Termination = () => {
   useSelector(get.current);
   useSelector(get.shown[current]);
   const dbherbicides = useSelector(get.dbherbicides);
-  const dbimplements = useSelector(get.dbimplements);
   const method = useSelector(get.termination.method);
 
   const state = useSelector(get[current]);
@@ -24,8 +67,10 @@ const Termination = () => {
     dispatch(set.current(current));
   }, [dispatch, current]);
 
-  const total     = state.total;
-  const estimated = useSelector(get[current].estimated);
+  useEffect(() => {
+    getDefaults(Termination, defaults);
+    console.log(defaults);
+  }, []);
 
   return (
     <>
@@ -188,55 +233,124 @@ const Termination = () => {
       </div>
       {
         dev && (
-          <button
-            onClick={() => {
-              dispatch(set.termination.q2('Yes'));
-              test('screen', 'Tillage');
-              dispatch(set.screen('Termination'));
+          <>
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
 
-              dispatch(set.termination.q2('No'));
-              dispatch(set.termination.q3('Self'));
-              test('focus', 'termination.method');
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
 
-              dispatch(set.termination.method('Herbicide application'));
-              
-                dispatch(set.termination.product('2,4-D'));
-                test('termination.unitCost', 5);
-                test('termination.rate', 1);
+                dispatch(set.termination.method('Herbicide application'));
+                
+                  dispatch(set.termination.product('2,4-D'));
+                  test('termination.unitCost', 5);
+                  test('termination.rate', 1);
 
-                dispatch(set.termination.product('atrazine'));
-                test('termination.unitCost', 4);
-                test('termination.rate', 2);
+                  dispatch(set.termination.product('atrazine'));
+                  test('termination.unitCost', 4);
+                  test('termination.rate', 2);
 
-                dispatch(set.termination.unitCost(333));
+                  dispatch(set.termination.unitCost(333));
 
-                dispatch(set.termination.product('dicamba'));
-                test('termination.unitCost', 3);
-                test('termination.rate', 3);
-                test('termination.productCost', 9);
+                  dispatch(set.termination.product('dicamba'));
+                  test('termination.unitCost', 3);
+                  test('termination.rate', 3);
+                  test('termination.productCost', 9);
 
-                dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
-                test('chemical.power', '130 HP MFWD Tractor');
-                test('chemical.total', 6.62);
+                  dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+                  test('chemical.power', '130 HP MFWD Tractor');
+                  test('chemical.total', 6.62);
 
-                dispatch(set.chemical.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
-                test('chemical.power', '130 Self Propelled');
-                test('chemical.total', 6.75);
+                  dispatch(set.chemical.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
+                  test('chemical.power', '130 Self Propelled');
+                  test('chemical.total', 6.75);
+              }}
+            >
+              Test Herbicide
+            </button>
 
-              dispatch(set.termination.method('Roller'));
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Roller'));
+                
                 test('chemical.total', 0);
+                dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
 
-              dispatch(set.termination.method('Tillage'));
+              }}
+            >
+              Test Roller
+            </button>
+
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Tillage'));
+                
                 test('chemical.total', 0);
+                test('roller.total', 0);
+                
                 dispatch(set.tillage.implement('Chisel Plow; 23 Ft'));
+                test('tillage.total', 16.41);
+              }}
+            >
+              Test Tillage
+            </button>
 
-            }}
-          >
-            Test data
-          </button>
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Roller with follow-up herbicide'));
+                
+                test('chemical.total', 0);
+                test('roller.total', 0);
+                test('tillage.total', 0);
+                
+                dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+                dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+              }}
+            >
+              Test Roller with follow-up herbicide
+            </button>
+
+            <button
+              onClick={() => {
+                clearInputs(defaults);
+              }}
+            >
+              Clear inputs
+            </button>
+
+            <br/>
+          </>
         )
       }
-
+      <br/>
       <Activity type="chemical" />
       <Activity type="roller" />
       <Activity type="tillage" />

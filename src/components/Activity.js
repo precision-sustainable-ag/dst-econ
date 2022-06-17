@@ -4,28 +4,33 @@ import {useSelector} from 'react-redux';
 import {get, dollars} from '../store/store';
 
 const Activity = ({type, ds = 'implement'}) => {
-  const state           = useSelector(get[type]);
-  const estimated       = state.estimated;
-  const tot             = state.total;
-  const edited          = estimated !== tot;
-  const imp             = state[ds];
-  const ImplementsCost  = state.implementsCost;
-  const PowerCost       = state.powerCost;
-  const coverCropTotal  = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal    = useSelector(get.seedbed).total || 0;
-  const plantingTotal   = useSelector(get.planting).total || 0;
-  const fertilityTotal  = useSelector(get.fertility).total || 0;
-  const chemicalTotal   = useSelector(get.chemical).total || 0;
-  const rollerTotal     = useSelector(get.roller).total || 0;
-  const tillageTotal    = useSelector(get.tillage).total || 0;
-  const state3          = useSelector(get[type]).q3;
+  const state             = useSelector(get[type]);
+  const estimated         = state.estimated;
+  const tot               = state.total;
+  const edited            = estimated !== tot;
+  const imp               = state[ds];
+  const ImplementsCost    = state.implementsCost;
+  const PowerCost         = state.powerCost;
+  const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
+  const seedbedTotal      = useSelector(get.seedbed.total) || 0;
+  const plantingTotal     = useSelector(get.planting.total) || 0;
+  const fertilityTotal    = useSelector(get.fertility.total) || 0;
+
+  const productCost       = useSelector(get.termination.productCost) || 0;
+  const chemicalTotal     = useSelector(get.chemical.total) || 0;
+  const rollerTotal       = useSelector(get.roller.total) || 0;
+  const tillageTotal      = useSelector(get.tillage.total) || 0;
+  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
+
+  const state3            = useSelector(get[type]).q3;
 
   const heading = {
-    seedbed:  'Seedbed Preparation',
-    planting: 'Cover Crop Planting',
-    chemical: 'Chemical Spray',
-    roller:   'Roller',
-    tillage:  'Tillage',
+    seedbed:      'Seedbed Preparation',
+    planting:     'Cover Crop Planting',
+    chemical:     'Chemical Spray',
+    roller:       'Roller',
+    tillage:      'Tillage',
+    termination:  'Termination total',
   }[type];
   
   const Costs = ({desc}) => {
@@ -77,7 +82,6 @@ const Activity = ({type, ds = 'implement'}) => {
                   !edited
                 ) && (
       <div className={cname} id="Breakdown">
-        <br/>
         <table id="Costs">
           <thead>
             <tr>
@@ -137,7 +141,7 @@ const Activity = ({type, ds = 'implement'}) => {
     return parm ? <tr><td>{desc}</td><td>{dollars(parm)}</td></tr> : null;
   } // SummaryRow
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +chemicalTotal + +rollerTotal + +tillageTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal;
 
   const summary = (
     total > 0 &&
@@ -147,13 +151,27 @@ const Activity = ({type, ds = 'implement'}) => {
         <tr><th>Description</th><th>Expense</th></tr>
       </thead>
       <tbody>
-        <SummaryRow parm={coverCropTotal} desc="Cover crop seed" />
-        <SummaryRow parm={seedbedTotal}   desc="Seedbed preparation" />
-        <SummaryRow parm={plantingTotal}  desc="Planting activity" />
-        <SummaryRow parm={fertilityTotal} desc="Fertility" />
-        <SummaryRow parm={chemicalTotal}  desc="Chemical" />
-        <SummaryRow parm={rollerTotal}    desc="Roller" />
-        <SummaryRow parm={tillageTotal}   desc="Tillage" />
+        <SummaryRow parm={coverCropTotal}   desc="Cover crop seed" />
+        <SummaryRow parm={seedbedTotal}     desc="Seedbed preparation" />
+        <SummaryRow parm={plantingTotal}    desc="Planting activity" />
+        <SummaryRow parm={fertilityTotal}   desc="Fertility" />
+
+        {
+          false && terminationTotal > 0 &&
+          <>
+            <tr><th colSpan="100">Termination</th></tr>
+            <SummaryRow parm={chemicalTotal}    desc="Chemical" />
+            <SummaryRow parm={rollerTotal}      desc="Roller" />
+            <SummaryRow parm={tillageTotal}     desc="Tillage" />
+            <SummaryRow parm={productCost}      desc="Product cost" />
+          </>
+        }
+        {
+          true && terminationTotal > 0 &&
+          <>
+            <SummaryRow parm={terminationTotal} desc="Termination" />
+          </>
+        }
       </tbody>
       <tfoot>
         <tr><td>Total</td><td>{dollars(total)}</td></tr>

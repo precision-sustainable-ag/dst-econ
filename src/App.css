@@ -92,6 +92,7 @@ label {
 
 #Breakdown {
   display: inline-block;
+  margin-right: 1em;
 }
 
 #Breakdown.noImplementCost tr > :nth-child(2),

@@ -135,28 +135,26 @@ const Field = () => {
         </table>
       </form>
       {dev && (
-        <div>
-          <button
-            onClick={() => {
-              dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('My field'));
-              dispatch(set.acres(123));
-              dispatch(set.field('My field'));
-              dispatch(set.description('Bottom land; poorly-drained'));
-              dispatch(set.priorCrop('Other'));
-              dispatch(set.otherPriorCrop('Wheat'));
-              dispatch(set.cashCrop('Other'));
-              dispatch(set.otherCashCrop('Barley'));
-              dispatch(set.$labor(999));
+        <button
+          onClick={() => {
+            dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
+            dispatch(set.farm('My farm'));
+            dispatch(set.field('My field'));
+            dispatch(set.acres(123));
+            dispatch(set.field('My field'));
+            dispatch(set.description('Bottom land; poorly-drained'));
+            dispatch(set.priorCrop('Other'));
+            dispatch(set.otherPriorCrop('Wheat'));
+            dispatch(set.cashCrop('Other'));
+            dispatch(set.otherCashCrop('Barley'));
+            dispatch(set.$labor(999));
 
-              test('lat', 33.9312);  // TODO
-              test('lon', -83.3208);
-            }}
-          >
-            Test data
-          </button>
-        </div>
+            test('lat', 33.9312);  // TODO
+            test('lon', -83.3208);
+          }}
+        >
+          Test data
+        </button>
       )}
       <button
         onClick={() => clearInputs(defaults)}

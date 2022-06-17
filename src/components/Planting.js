@@ -111,7 +111,7 @@ const Planting = () => {
       >
         Clear inputs
       </button>
-
+      <br/>
       <Activity type={current}/>
     </>
   )

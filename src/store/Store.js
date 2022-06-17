@@ -1,5 +1,4 @@
-import {createAction} from '@reduxjs/toolkit';
-import {configureStore, createReducer} from '@reduxjs/toolkit';
+import {configureStore, createAction, createReducer, current} from '@reduxjs/toolkit';
 
 const shared = {
   q1: '',
@@ -185,11 +184,15 @@ const afterChange = {
   },
   'seedbed.q1': (state, {payload}) => {
     if (payload === 'No') {
+      state.seedbed.estimated = 0;
+      state.seedbed.total = 0;
       state.screen = 'Planting';
     }
   },
   'seedbed.q2': (state, {payload}) => {
     if (payload === 'Yes') {
+      state.seedbed.estimated = 0;
+      state.seedbed.total = 0;
       state.screen = 'Planting';
     }
   },
@@ -231,7 +234,7 @@ const afterChange = {
       default:
     }
   },
-  'termination.method': (state, {payload}) => {
+  'termination.method': (state) => {
     state.chemical.implement = '';
     state.chemical.power = '';
     state.chemical.total = 0;
@@ -602,7 +605,7 @@ export const test = (key, result) => {
 export const getDefaults = (component, defaults) => {
   component.toString()
     .match(/id: "[^"]+"/g)
-    .map(s => s.split('"')[1])
+    ?.map(s => s.split('"')[1])
     .forEach(id => {
       if (!(id in defaults)) {
         defaults[id] = initialState[id] || '';

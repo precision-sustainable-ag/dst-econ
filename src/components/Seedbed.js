@@ -130,6 +130,7 @@ const Seedbed = () => {
         Clear inputs
       </button>
 
+      <br/>
       <Activity type={current} />
     </>
   )
