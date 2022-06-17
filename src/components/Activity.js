@@ -15,11 +15,17 @@ const Activity = ({type, ds = 'implement'}) => {
   const seedbedTotal    = useSelector(get.seedbed).total || 0;
   const plantingTotal   = useSelector(get.planting).total || 0;
   const fertilityTotal  = useSelector(get.fertility).total || 0;
+  const chemicalTotal   = useSelector(get.chemical).total || 0;
+  const rollerTotal     = useSelector(get.roller).total || 0;
+  const tillageTotal    = useSelector(get.tillage).total || 0;
   const state3          = useSelector(get[type]).q3;
 
   const heading = {
-    seedbed: 'Seedbed Preparation',
+    seedbed:  'Seedbed Preparation',
     planting: 'Cover Crop Planting',
+    chemical: 'Chemical Spray',
+    roller:   'Roller',
+    tillage:  'Tillage',
   }[type];
   
   const Costs = ({desc}) => {
@@ -71,6 +77,7 @@ const Activity = ({type, ds = 'implement'}) => {
                   !edited
                 ) && (
       <div className={cname} id="Breakdown">
+        <br/>
         <table id="Costs">
           <thead>
             <tr>
@@ -130,7 +137,7 @@ const Activity = ({type, ds = 'implement'}) => {
     return parm ? <tr><td>{desc}</td><td>{dollars(parm)}</td></tr> : null;
   } // SummaryRow
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +chemicalTotal + +rollerTotal + +tillageTotal;
 
   const summary = (
     total > 0 &&
@@ -144,6 +151,9 @@ const Activity = ({type, ds = 'implement'}) => {
         <SummaryRow parm={seedbedTotal}   desc="Seedbed preparation" />
         <SummaryRow parm={plantingTotal}  desc="Planting activity" />
         <SummaryRow parm={fertilityTotal} desc="Fertility" />
+        <SummaryRow parm={chemicalTotal}  desc="Chemical" />
+        <SummaryRow parm={rollerTotal}    desc="Roller" />
+        <SummaryRow parm={tillageTotal}   desc="Tillage" />
       </tbody>
       <tfoot>
         <tr><td>Total</td><td>{dollars(total)}</td></tr>

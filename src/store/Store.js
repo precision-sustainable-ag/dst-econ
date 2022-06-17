@@ -10,13 +10,6 @@ const shared = {
   method: '',
   product: '',
   customCost: 0,
-  unitCost: 0,
-  rate: 0,
-  productCost: 0,
-  chemical: '',
-  chemicalCost: 0,
-  roller: '',
-  rollerCost: 0,
   acresHour: 0,
   estimated: undefined,
   total: undefined,
@@ -127,18 +120,29 @@ let initialState = {
   $fertApplication: undefined, // dbcostDefaults['Custom Fertilizer Appl'].cost
   $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
-  seedbed: {...shared},
+  seedbed:  {...shared},
   planting: {...shared},
-  termination: {...shared},
+  chemical: {...shared},
+  roller:   {...shared},
+  tillage:  {...shared},
+  termination: {
+    ...shared,
+    unitCost:    (state) => state.dbherbicides[state.termination.product]?.['Cost ($)'],
+    rate:        (state) => state.dbherbicides[state.termination.product]?.['Rate'],
+    productCost: (state) => state.termination.unitCost * state.termination.rate,
+  },
   fertility: {
     ...shared,
     total: (state) => state.$fertCredit + state.$fertCost
   },
   shown: {
-    seedbed: {...shared},
-    planting: {...shared},
-    termination: {...shared},
-    fertility: {...shared},
+    seedbed:      {...shared},
+    planting:     {...shared},
+    termination:  {...shared},
+    fertility:    {...shared},
+    chemical:     {...shared},
+    roller:       {...shared},
+    tillage:      {...shared},
   },
 };
 
@@ -227,9 +231,22 @@ const afterChange = {
       default:
     }
   },
+  'termination.method': (state, {payload}) => {
+    state.chemical.implement = '';
+    state.chemical.power = '';
+    state.chemical.total = 0;
+
+    state.roller.implement = '';
+    state.roller.power = '';
+    state.roller.total = 0;
+
+    state.tillage.implement = '';
+    state.tillage.power = '';
+    state.tillage.total = 0;
+  },
 };
 
-['seedbed', 'planting'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -310,7 +327,7 @@ const builders = (builder) => {
           let m = obj[key].toString().match(/state.[$_\w.(]+/g);
           
           if (m) {
-            m = m.map(s => s.split('state.')[1].split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+            m = m.map(s => s.split('state.')[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
             m.forEach(m => {
               methods[m] = methods[m] || {};
               methods[m][fullkey] = funcs[fullkey];
@@ -348,7 +365,9 @@ const builders = (builder) => {
               }
             }
 
-            processMethods(state, key);
+            // TODO:  Is the first of these needed?
+              processMethods(state, key);
+              processMethods(state, fullkey);
 
             if (afterChange[fullkey]) {
               let m = afterChange[fullkey].toString().match(/state.[$_\w.(]+/g);

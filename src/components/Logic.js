@@ -15,7 +15,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
 
   if (property === 'implement') {
     a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
-    shown = match('q3', 'Self', current);
+    shown = /chemical|roller|tillage/.test(current) || match('q3', 'Self', current);
   }
 
   switch (question) {

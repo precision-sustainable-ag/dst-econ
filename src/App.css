@@ -90,6 +90,10 @@ label {
   cursor: pointer;
 }
 
+#Breakdown {
+  display: inline-block;
+}
+
 #Breakdown.noImplementCost tr > :nth-child(2),
 #Breakdown.noPowerCost tr > :nth-child(3),
 #Breakdown.noImplementCost.noPowerCost tr > :nth-child(4) {
