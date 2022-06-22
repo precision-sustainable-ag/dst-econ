@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, test, getDefaults, clearInputs} from '../store/store';
+import {get, set, test, getDefaults, clearInputs} from '../store/store';
 
 const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.q3|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.q3|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method');
 
@@ -49,7 +49,7 @@ const Termination = () => {
                 property="q3"
                 q="Who will do this activity?"
                 a={['Self', 'Custom Operator']}
-                shown={match('q2', 'No', current)}
+                shown={state.q2 === 'No'}
               />
 
               <Logic
@@ -57,7 +57,7 @@ const Termination = () => {
                 property="customCost"
                 q="Custom operator cost ($/acre)"
                 a={'dollar'}
-                shown={match('q3', 'Custom Operator', current)}
+                shown={state.q3 === 'Custom Operator'}
               />
 
               <Logic
@@ -65,7 +65,7 @@ const Termination = () => {
                 property="method"
                 q="Cover Crop termination method"
                 a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
-                shown={match('q2', 'No', current)}
+                shown={state.q2 === 'No'}
               />
 
               <Logic
@@ -73,7 +73,7 @@ const Termination = () => {
                 property="product"
                 q="Product"
                 a={['', ...Object.keys(dbherbicides).sort()]}
-                shown={match('method', 'Herbicide application', current)}
+                shown={state.method === 'Herbicide application'}
               />
 
               {
@@ -302,8 +302,8 @@ const Termination = () => {
       </button>
       <br/>
       <Activity type="chemical" />
-      <Activity type="roller" />
-      <Activity type="tillage" />
+      <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />
+      <Activity type="tillage"  />
     </>
   )
 } // Termination

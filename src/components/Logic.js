@@ -2,12 +2,13 @@ import {Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, dollars} from '../store/store';
+import {get, set, dollars} from '../store/store';
 
 const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
+  const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
   const dbimplements      = useSelector(get.dbimplements);
@@ -15,7 +16,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
 
   if (property === 'implement') {
     a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
-    shown = /chemical|roller|tillage/.test(current) || match('q3', 'Self', current);
+    shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
   }
 
   switch (question) {
@@ -45,7 +46,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
     case 'Estimated':
       property = 'total';
       q = q || question;
-      q = (match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
+      q = (context.q3 === 'Self' ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
       break;

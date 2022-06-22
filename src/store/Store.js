@@ -413,14 +413,6 @@ console.log({
   methods
 });
 
-export const match = (key, value, context) => {
-  if (context) {
-    return !!(mystore.getState().shown[context][key] && mystore.getState()[context][key] === value);
-  } else {
-    return !!(mystore.getState().shown[key] && mystore.getState()[key] === value);
-  }
-} // match
-
 const getCosts = (state, current) => {
   ['implements', 'power'].forEach(type => {
     state[current]['$' + type].total = 0;

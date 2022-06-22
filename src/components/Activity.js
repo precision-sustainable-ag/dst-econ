@@ -3,12 +3,12 @@ import {Input} from './Inputs';
 import {useSelector} from 'react-redux';
 import {get, dollars} from '../store/store';
 
-const Activity = ({type, ds = 'implement'}) => {
+const Activity = ({type, instructions=true}) => {
   const state             = useSelector(get[type]);
   const estimated         = state.estimated;
   const tot               = state.total;
   const edited            = estimated !== tot;
-  const imp               = state[ds];
+  const imp               = state.implement;
   const ImplementsCost    = state.implementsCost;
   const PowerCost         = state.powerCost;
   const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
@@ -81,60 +81,73 @@ const Activity = ({type, ds = 'implement'}) => {
                   imp &&
                   !edited
                 ) && (
-      <div className={cname} id="Breakdown">
-        <p>Use the checkboxes below to disable any costs that don't apply:</p>
-        <table id="Costs">
-          <thead>
-            <tr>
-              <th rowSpan="2">Cost Description</th>
-              <th colSpan="4">{heading}</th>
-              <th className="hidden"></th>
-              <th className="hidden"></th>
-              <th className="hidden"></th>
-            </tr>
-            <tr>
-              <th className="hidden"></th>
-              <th>
-                <label>
-                  Implement Cost<br/>($/acre)
-                  <br/>
-                  <Input
-                    id={type + '.implementsCost'}
-                    type="checkbox"
-                  />
-                </label>
-              </th>
-              <th>
-                <label>
-                  Power Cost<br/>($/acre)
-                  <br/>
-                  <Input
-                    id={type + '.powerCost'}
-                    type="checkbox"
-                  />
-                </label>
-              </th>
-              <th>Relevant Cost<br/>($/acre)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <Costs desc="Labor"        lookup="Labor" />
-            <Costs desc="Fuel"         lookup=""/>
-            <Costs desc="Depreciation" lookup="Depreciation"/>
-            <Costs desc="Interest"     lookup="Interest"/>
-            <Costs desc="Repairs"      lookup="Repairs"/>
-            <Costs desc="Taxes"        lookup="Taxes"/>
-            <Costs desc="Insurance"    lookup="Insurance"/>
-            <Costs desc="Storage shed" lookup="Storage"/>
-            <tr className="total">
-              <td>Total</td>
-              <td>{'$' + state.$implements.total.toFixed(2)}</td>
-              <td>{'$' + state.$power.total.toFixed(2)}</td>
-              <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <>
+        {
+          instructions &&
+          <p>
+            Farmers view costs differently, so the table below allows the user to customize the cost estimation to fit their needs.
+            The default cost estimation assumes all ownership and variable costs are relevant.
+            However, some farmers will want to focus on the cash costs of fuel and labor.
+            Removing the check from the box would allow such an analysis.
+            Others would want to ignore all costs that definitely do not change with use so they would uncheck the boxes for interest, taxes, insurance and shed.
+            Basically, the costs you want to count toward the cost of cover crops should have a checkmark beside it.
+            If you are not concerned with certain costs, remove the checkmark.
+          </p>
+        }
+        <div className={cname} id="Breakdown">
+          <table id="Costs">
+            <thead>
+              <tr>
+                <th rowSpan="2">Cost Description</th>
+                <th colSpan="4">{heading}</th>
+                <th className="hidden"></th>
+                <th className="hidden"></th>
+                <th className="hidden"></th>
+              </tr>
+              <tr>
+                <th className="hidden"></th>
+                <th>
+                  <label>
+                    Implement Cost<br/>($/acre)
+                    <br/>
+                    <Input
+                      id={type + '.implementsCost'}
+                      type="checkbox"
+                    />
+                  </label>
+                </th>
+                <th>
+                  <label>
+                    Power Cost<br/>($/acre)
+                    <br/>
+                    <Input
+                      id={type + '.powerCost'}
+                      type="checkbox"
+                    />
+                  </label>
+                </th>
+                <th>Relevant Cost<br/>($/acre)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <Costs desc="Labor"        lookup="Labor" />
+              <Costs desc="Fuel"         lookup=""/>
+              <Costs desc="Depreciation" lookup="Depreciation"/>
+              <Costs desc="Interest"     lookup="Interest"/>
+              <Costs desc="Repairs"      lookup="Repairs"/>
+              <Costs desc="Taxes"        lookup="Taxes"/>
+              <Costs desc="Insurance"    lookup="Insurance"/>
+              <Costs desc="Storage shed" lookup="Storage"/>
+              <tr className="total">
+                <td>Total</td>
+                <td>{'$' + state.$implements.total.toFixed(2)}</td>
+                <td>{'$' + state.$power.total.toFixed(2)}</td>
+                <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
     )
   }
 

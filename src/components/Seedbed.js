@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, queue, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, queue, getDefaults, clearInputs, test} from '../store/store';
 
 const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.q2|seedbed.q3|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage');
 
@@ -52,7 +52,7 @@ const Seedbed = () => {
               property="q2"
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
-              shown={match('q1', 'Yes', current)}
+              shown={state.q1 === 'Yes'}
             />
 
             <Logic
@@ -60,7 +60,7 @@ const Seedbed = () => {
               property="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
-              shown={match('q2', 'No', current)}
+              shown={state.q2 === 'No'}
             />
 
             <Logic
