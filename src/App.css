@@ -427,3 +427,9 @@ input[type="number"] {
   margin: 0.5rem;
   color: #aaa;
 }
+
+.link {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}

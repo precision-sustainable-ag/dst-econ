@@ -82,6 +82,7 @@ const Activity = ({type, ds = 'implement'}) => {
                   !edited
                 ) && (
       <div className={cname} id="Breakdown">
+        <p>Use the checkboxes below to disable any costs that don't apply:</p>
         <table id="Costs">
           <thead>
             <tr>

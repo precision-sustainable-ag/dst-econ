@@ -290,19 +290,16 @@ const Termination = () => {
             >
               Test Roller with follow-up herbicide
             </button>
-
-            <button
-              onClick={() => {
-                clearInputs(defaults);
-              }}
-            >
-              Clear inputs
-            </button>
-
-            <br/>
           </>
         )
       }
+      <button
+        onClick={() => {
+          clearInputs(defaults);
+        }}
+      >
+        Clear inputs
+      </button>
       <br/>
       <Activity type="chemical" />
       <Activity type="roller" />
