@@ -18,8 +18,16 @@ html, body {
 }
 
 #Main {
-  margin-left: calc(15em + 1em);
-  width: calc(100vw - (15em + 16em));
+  margin-left: calc(16em + 1em);
+  width: calc(100vw - (16em + 16em));
+}
+
+.Additional table {
+  width: 50rem;
+}
+
+.Additional td:nth-child(1) {
+  width: 30rem;
 }
 
 nav button {
@@ -31,7 +39,7 @@ nav {
   height: 100vh;
   overflow: auto;
   top: 0;
-  width: 15em;
+  width: 16em;
   margin-right: 1em;
   padding: 0.5em;
   background: #eee;

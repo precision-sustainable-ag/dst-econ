@@ -134,6 +134,27 @@ let initialState = {
     ...shared,
     total: (state) => state.$fertCredit + state.$fertCost
   },
+  additional: {
+    $landowner: '0.00',
+    $costShare: '0.00',
+    $carbonOffset: '0.00',
+    grazing: '',
+    lease: '',
+    $lease: undefined,
+    fallGraze: undefined,
+    fallDryMatter: undefined,
+    fallWaste: 50,
+    springGraze: undefined,
+    springDryMatter: undefined,
+    springWaste: 50,
+    dryMatter: undefined,
+    wasted: undefined,
+    $hay: undefined,
+    hoursAcre: 0.5,
+    baleSize: undefined,
+    baleTime: undefined,
+    tractor: '',
+  },
   shown: {
     seedbed:      {...shared},
     planting:     {...shared},
@@ -250,6 +271,32 @@ const afterChange = {
     state.tillage.implement = '';
     state.tillage.power = '';
     state.tillage.total = 0;
+  },
+  'additional.grazing': (state, {payload}) => {
+    if (payload === 'No') {
+      state.screen = 'Yield';
+    }
+  },
+  'additional.lease': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.$lease';
+    }
+  },
+  'additional.fallGraze': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.fallDryMatter';
+    } else {
+      state.focus = 'additional.springGraze';
+      state.additional.fallDryMatter = undefined;
+      state.additional.fallWaste = 50;
+    }
+  },
+  'additional.springGraze': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.springDryMatter';
+      state.additional.springDryMatter = undefined;
+      state.additional.springWaste = 50;
+    }
   },
 };
 

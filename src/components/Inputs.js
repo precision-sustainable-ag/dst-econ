@@ -64,11 +64,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     type = 'dollar';
   }
 
-  type = type                               ? type :
-         sel2 === undefined                 ? 'number' :
-         /number|dollar/.test(typeof sel2)  ? 'number' :
-         typeof sel2 === 'boolean'          ? 'checkbox' :
-                                              'text';
+  type = type                                       ? type :
+         sel2 === undefined                         ? 'number' :
+         /number|dollar|percent/.test(typeof sel2)  ? 'number' :
+         typeof sel2 === 'boolean'                  ? 'checkbox' :
+                                                      'text';
 
   let val = isArray ? sel2[index] || '' : sel2;
 
@@ -110,7 +110,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
     setChanged(true);
 
-    if (/dollar|number/.test(type)) {
+    if (/dollar|number|percent/.test(type)) {
       if (newValue === '') {
         newValue = undefined;
       } else {
@@ -242,7 +242,8 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         />
         :
         <>
-          {type === 'dollar' && <span style={{position: 'absolute', marginTop: '0.3rem'}}>$</span>}
+          {type === 'dollar'  && <span style={{position: 'absolute', marginTop: '0.3rem'}}>$</span>}
+          {type === 'percent' && <span style={{position: 'absolute', marginTop: '0.3rem'}}>%</span>}
           <TextField
             {...props}
             id={id}
@@ -252,11 +253,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
             size="small"
 
-            type={type === 'dollar' ? 'number' : type || 'text'}
+            type={/dollar|percent/.test(type) ? 'number' : type || 'text'}
 
             sx={{
               display: props.fullWidth ? 'block' : 'span',
-              paddingLeft: type === 'dollar' ? '0.7rem' : 0,
+              paddingLeft: /dollar|percent/.test(type) ? '1rem' : 0,
               boxSizing: 'border-box',
               marginBottom: 1,
             }}
@@ -273,7 +274,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               },
             }}
 
-            InputLabelProps={{ style: { marginLeft: type === 'dollar' ? '0.7em' : 0} }}
+            InputLabelProps={{ style: { marginLeft: /dollar|percent/.test(type) ? '0.7em' : 0} }}
 
             ref={focusRef}
 
