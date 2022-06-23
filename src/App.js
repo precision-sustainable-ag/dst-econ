@@ -203,7 +203,7 @@ function App() {
         {MyMenu(screens)}
       </nav>
 
-      <div id="Main" style={{marginLeft: '15em', width: 'calc(100vw - 30em)'}}>
+      <div id="Main">
         <Screen/>
         <Navigation current={screen} />
       </div>

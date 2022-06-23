@@ -200,9 +200,11 @@ const afterChange = {
     switch (payload) {
       case 'Self':
         state.focus = 'seedbed.implement';
+        state.seedbed.estimated = state.seedbed.total = undefined;
         break;
       case 'Custom Operator':
         state.focus = 'seedbed.total';
+        state.seedbed.estimated = state.seedbed.total = state.dbcostDefaults['Seedbed preparation'].cost;
         break;
       default:
     }
@@ -211,9 +213,11 @@ const afterChange = {
     switch (payload) {
       case 'Self':
         state.focus = 'planting.implement';
+        state.planting.estimated = state.planting.total = undefined;
         break;
       case 'Custom Operator':
         state.focus = 'planting.total';
+        state.planting.estimated = state.planting.total = state.dbcostDefaults['Planting'].cost;
         break;
       default:
     }

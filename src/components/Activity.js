@@ -158,39 +158,40 @@ const Activity = ({type, instructions=true}) => {
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal;
 
   const summary = (
-    total > 0 &&
-    <table id="Summary">
-      <caption>Summary of Expenses</caption>
-      <thead>
-        <tr><th>Description</th><th>Expense</th></tr>
-      </thead>
-      <tbody>
-        <SummaryRow parm={coverCropTotal}   desc="Cover crop seed" />
-        <SummaryRow parm={seedbedTotal}     desc="Seedbed preparation" />
-        <SummaryRow parm={plantingTotal}    desc="Planting activity" />
-        <SummaryRow parm={fertilityTotal}   desc="Fertility" />
+    total > 0 && instructions && (
+      <table id="Summary">
+        <caption>Summary of Expenses</caption>
+        <thead>
+          <tr><th>Description</th><th>Expense</th></tr>
+        </thead>
+        <tbody>
+          <SummaryRow parm={coverCropTotal}   desc="Seed expense" />
+          <SummaryRow parm={seedbedTotal}     desc="Seed bed preparation" />
+          <SummaryRow parm={plantingTotal}    desc="Planting" />
+          <SummaryRow parm={fertilityTotal}   desc="Fertility" />
 
-        {
-          false && terminationTotal > 0 &&
-          <>
-            <tr><th colSpan="100">Termination</th></tr>
-            <SummaryRow parm={chemicalTotal}    desc="Chemical" />
-            <SummaryRow parm={rollerTotal}      desc="Roller" />
-            <SummaryRow parm={tillageTotal}     desc="Tillage" />
-            <SummaryRow parm={productCost}      desc="Product cost" />
-          </>
-        }
-        {
-          true && terminationTotal > 0 &&
-          <>
-            <SummaryRow parm={terminationTotal} desc="Termination" />
-          </>
-        }
-      </tbody>
-      <tfoot>
-        <tr><td>Total</td><td>{dollars(total)}</td></tr>
-      </tfoot>
-    </table>
+          {
+            false && terminationTotal > 0 &&
+            <>
+              <tr><th colSpan="100">Termination</th></tr>
+              <SummaryRow parm={chemicalTotal}    desc="Chemical" />
+              <SummaryRow parm={rollerTotal}      desc="Roller" />
+              <SummaryRow parm={tillageTotal}     desc="Tillage" />
+              <SummaryRow parm={productCost}      desc="Product cost" />
+            </>
+          }
+          {
+            true && terminationTotal > 0 &&
+            <>
+              <SummaryRow parm={terminationTotal} desc="Termination" />
+            </>
+          }
+        </tbody>
+        <tfoot>
+          <tr><td>Total</td><td>{dollars(total)}</td></tr>
+        </tfoot>
+      </table>
+    )
   )
 
   return (

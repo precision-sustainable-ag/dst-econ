@@ -55,6 +55,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   let sel2 = useSelector(sel);
 
   const [v2, setv2] = useState(value || sel2);
+
   const [changed, setChanged] = useState(false);
 
   const isArray = Array.isArray(sel2);
@@ -307,6 +308,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               }
             }}
           />
+          {props.warning}
         </>
     )
   }

@@ -74,7 +74,12 @@ const Seedbed = () => {
             <Logic current={current} question="Annual Use (acres on implement)" />
             <Logic current={current} question="Annual Use (hours on power)" />
             <Logic current={current} question="Acres/hour" />
-            <Logic current={current} question="Estimated" total={state.total} estimated={estimated} />
+            <Logic 
+              current={current}
+              shown={state.q2 === 'No'}
+              question="Estimated"
+              total={Number.isFinite(state.total) ? state.total : estimated} estimated={estimated} 
+            />
           </tbody>
         </table>
       </form>

@@ -17,6 +17,11 @@ html, body {
   background: navy;
 }
 
+#Main {
+  margin-left: calc(15em + 1em);
+  width: calc(100vw - (15em + 16em));
+}
+
 nav button {
   font-weight: bold;
 }
@@ -26,7 +31,7 @@ nav {
   height: 100vh;
   overflow: auto;
   top: 0;
-  width: 14em;
+  width: 15em;
   margin-right: 1em;
   padding: 0.5em;
   background: #eee;
@@ -264,6 +269,7 @@ nav strong, [data-scr=Resources] {
   top: 0.5rem;
   right: 1rem;
   font-size: 0.8rem;
+  width: 16em;
 }
 
 #Summary thead {
@@ -432,4 +438,9 @@ input[type="number"] {
   color: blue;
   font-weight: bold;
   cursor: pointer;
+}
+
+.warning {
+  color: red;
+  font-size: 90%;
 }

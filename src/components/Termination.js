@@ -301,9 +301,9 @@ const Termination = () => {
         Clear inputs
       </button>
       <br/>
-      <Activity type="chemical" />
-      <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />
-      <Activity type="tillage"  />
+      {/herbicide/i.test(method) && <Activity type="chemical" />}
+      {/roller/i.test(method)    && <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />}
+      {method === 'Tillage'      && <Activity type="tillage"  />}
     </>
   )
 } // Termination
