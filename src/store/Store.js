@@ -1,5 +1,4 @@
-import {createAction} from '@reduxjs/toolkit';
-import {configureStore, createReducer} from '@reduxjs/toolkit';
+import {configureStore, createAction, createReducer, current} from '@reduxjs/toolkit';
 
 const shared = {
   q1: '',
@@ -10,13 +9,6 @@ const shared = {
   method: '',
   product: '',
   customCost: 0,
-  unitCost: 0,
-  rate: 0,
-  productCost: 0,
-  chemical: '',
-  chemicalCost: 0,
-  roller: '',
-  rollerCost: 0,
   acresHour: 0,
   estimated: undefined,
   total: undefined,
@@ -127,18 +119,50 @@ let initialState = {
   $fertApplication: undefined, // dbcostDefaults['Custom Fertilizer Appl'].cost
   $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
-  seedbed: {...shared},
+  seedbed:  {...shared},
   planting: {...shared},
-  termination: {...shared},
+  chemical: {...shared},
+  roller:   {...shared},
+  tillage:  {...shared},
+  termination: {
+    ...shared,
+    unitCost:    (state) => state.dbherbicides[state.termination.product]?.['Cost ($)'],
+    rate:        (state) => state.dbherbicides[state.termination.product]?.['Rate'],
+    productCost: (state) => state.termination.unitCost * state.termination.rate,
+  },
   fertility: {
     ...shared,
     total: (state) => state.$fertCredit + state.$fertCost
   },
+  additional: {
+    $landowner: '0.00',
+    $costShare: '0.00',
+    $carbonOffset: '0.00',
+    grazing: '',
+    lease: '',
+    $lease: undefined,
+    fallGraze: undefined,
+    fallDryMatter: undefined,
+    fallWaste: 50,
+    springGraze: undefined,
+    springDryMatter: undefined,
+    springWaste: 50,
+    dryMatter: undefined,
+    wasted: undefined,
+    $hay: undefined,
+    hoursAcre: 0.5,
+    baleSize: undefined,
+    baleTime: undefined,
+    tractor: '',
+  },
   shown: {
-    seedbed: {...shared},
-    planting: {...shared},
-    termination: {...shared},
-    fertility: {...shared},
+    seedbed:      {...shared},
+    planting:     {...shared},
+    termination:  {...shared},
+    fertility:    {...shared},
+    chemical:     {...shared},
+    roller:       {...shared},
+    tillage:      {...shared},
   },
 };
 
@@ -181,11 +205,15 @@ const afterChange = {
   },
   'seedbed.q1': (state, {payload}) => {
     if (payload === 'No') {
+      state.seedbed.estimated = 0;
+      state.seedbed.total = 0;
       state.screen = 'Planting';
     }
   },
   'seedbed.q2': (state, {payload}) => {
     if (payload === 'Yes') {
+      state.seedbed.estimated = 0;
+      state.seedbed.total = 0;
       state.screen = 'Planting';
     }
   },
@@ -193,9 +221,11 @@ const afterChange = {
     switch (payload) {
       case 'Self':
         state.focus = 'seedbed.implement';
+        state.seedbed.estimated = state.seedbed.total = undefined;
         break;
       case 'Custom Operator':
         state.focus = 'seedbed.total';
+        state.seedbed.estimated = state.seedbed.total = state.dbcostDefaults['Seedbed preparation'].cost;
         break;
       default:
     }
@@ -204,33 +234,73 @@ const afterChange = {
     switch (payload) {
       case 'Self':
         state.focus = 'planting.implement';
+        state.planting.estimated = state.planting.total = undefined;
         break;
       case 'Custom Operator':
         state.focus = 'planting.total';
+        state.planting.estimated = state.planting.total = state.dbcostDefaults['Planting'].cost;
         break;
       default:
     }
   },
-  'seedbed.implement': (state, {payload}) => { // TODO: Can't put this below in forEach
-    if (payload) {
-      const p = state.dbimplements[payload];
-      state.seedbed.power = p['default power unit'];
-      state.seedbed.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / state.dbrates.conversion.value).toFixed(2);
-      state.seedbed.annualUseAcres = +(state.seedbed.acresHour * p['expected use (hr/yr)']).toFixed(0);
-      state.focus = 'seedbed.power';
-      return ['seedbed.power'];
+  'termination.q2': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.screen = 'Tillage';
     }
   },
-  'seedbed.power': (state) => { // TODO: Can't put this below in forEach
-    if (state.seedbed.power) {
-      state.seedbed.annualUseHours = state.dbpower[state.seedbed.power]['expected use (hr/yr)'];
-      getCosts(state, 'seedbed');
-      state.focus = 'seedbed.annualUseAcres';
+  'termination.q3': (state, {payload}) => {
+    switch (payload) {
+      case 'Self':
+        state.focus = 'termination.method';
+        break;
+      case 'Custom Operator':
+        state.focus = 'termination.customCost';
+        break;
+      default:
+    }
+  },
+  'termination.method': (state) => {
+    state.chemical.implement = '';
+    state.chemical.power = '';
+    state.chemical.total = 0;
+
+    state.roller.implement = '';
+    state.roller.power = '';
+    state.roller.total = 0;
+
+    state.tillage.implement = '';
+    state.tillage.power = '';
+    state.tillage.total = 0;
+  },
+  'additional.grazing': (state, {payload}) => {
+    if (payload === 'No') {
+      state.screen = 'Yield';
+    }
+  },
+  'additional.lease': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.$lease';
+    }
+  },
+  'additional.fallGraze': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.fallDryMatter';
+    } else {
+      state.focus = 'additional.springGraze';
+      state.additional.fallDryMatter = undefined;
+      state.additional.fallWaste = 50;
+    }
+  },
+  'additional.springGraze': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.springDryMatter';
+      state.additional.springDryMatter = undefined;
+      state.additional.springWaste = 50;
     }
   },
 };
 
-['seedbed', 'planting'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -243,6 +313,31 @@ const afterChange = {
   afterChange[section + '.Insurance'] =      (state) => getCosts(state, section);
   afterChange[section + '.annualUseHours'] = (state, {payload}) => payload && getCosts(state, section);
   afterChange[section + '.annualUseAcres'] = (state, {payload}) => payload && getCosts(state, section);
+
+  afterChange[section + '.implement'] = (state, {payload}) => {
+    const obj = state[section];
+
+    if (payload) {
+      const p = state.dbimplements[payload];
+    
+      obj.power = p['default power unit'];
+      obj.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / state.dbrates.conversion.value).toFixed(2);
+      obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
+      state.focus = section + '.power';
+      return [section + '.power'];
+    }
+  };
+
+  afterChange[section + '.power'] = (state) => {
+    const obj = state[section];
+    
+    if (obj.power) {
+      obj.annualUseHours = state.dbpower[obj.power]['expected use (hr/yr)'];
+      getCosts(state, section);
+      state.focus = section + '.annualUseAcres';
+    }
+  };
+
 });
 
 const sets = {};
@@ -283,10 +378,11 @@ const builders = (builder) => {
 
         if (typeof obj[key] === 'function') {
           funcs[fullkey] = obj[key];
-          let m = obj[key].toString().match(/state.[$_\w.(]+/g);
+          // console.log(obj[key]);
+          let m = obj[key].toString().match(/e\.[$_\w.(]+/g);  // state.* unbuilt, e.* built
           
           if (m) {
-            m = m.map(s => s.split('state.')[1].split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+            m = m.map(s => s.split(/e\./)[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
             m.forEach(m => {
               methods[m] = methods[m] || {};
               methods[m][fullkey] = funcs[fullkey];
@@ -324,15 +420,19 @@ const builders = (builder) => {
               }
             }
 
-            processMethods(state, key);
+            // TODO:  Is the first of these needed?
+              processMethods(state, key);
+              processMethods(state, fullkey);
 
             if (afterChange[fullkey]) {
               let m = afterChange[fullkey].toString().match(/state.[$_\w.(]+/g);
           
               if (m) {
                 m = m.forEach(s => {
-                  s = s.split('state.')[1].split(/\.\w+\(/)[0]
-                  processMethods(state, s);
+                  s = s.split('state.')[1];
+                  if (s) {
+                    processMethods(state, s.split(/\.\w+\(/)[0]);
+                  }
                 });
               }
             }
@@ -363,14 +463,6 @@ console.log({
   funcs,
   methods
 });
-
-export const match = (key, value, context) => {
-  if (context) {
-    return !!(mystore.getState().shown[context][key] && mystore.getState()[context][key] === value);
-  } else {
-    return !!(mystore.getState().shown[key] && mystore.getState()[key] === value);
-  }
-} // match
 
 const getCosts = (state, current) => {
   ['implements', 'power'].forEach(type => {
@@ -554,16 +646,17 @@ export const test = (key, result) => {
   }
 } // test
 
-export const getDefaults = (component, defaults) => {
-  component.toString()
-    .match(/id: "[^"]+"/g)
-    .map(s => s.split('"')[1])
-    .forEach(id => {
-      if (!(id in defaults)) {
-        defaults[id] = initialState[id] || '';
-      }
-      console.log(defaults);
-    });
+export const getDefaults = (parms) => {
+  const def = {};
+  parms.split('|').forEach(parm => {
+    let s = initialState;
+    for (const k of parm.split('.')) {
+      s = s[k];
+    }
+    def[parm] = s;
+  });
+  console.log(def);
+  return def;
 } // getDefaults
 
 export const clearInputs = (defaults) => {

@@ -17,6 +17,19 @@ html, body {
   background: navy;
 }
 
+#Main {
+  margin-left: calc(16em + 1em);
+  width: calc(100vw - (16em + 16em));
+}
+
+.Additional table {
+  width: 50rem;
+}
+
+.Additional td:nth-child(1) {
+  width: 30rem;
+}
+
 nav button {
   font-weight: bold;
 }
@@ -26,7 +39,7 @@ nav {
   height: 100vh;
   overflow: auto;
   top: 0;
-  width: 14em;
+  width: 16em;
   margin-right: 1em;
   padding: 0.5em;
   background: #eee;
@@ -88,6 +101,11 @@ td, th {
 
 label {
   cursor: pointer;
+}
+
+#Breakdown {
+  display: inline-block;
+  margin-right: 1em;
 }
 
 #Breakdown.noImplementCost tr > :nth-child(2),
@@ -259,6 +277,7 @@ nav strong, [data-scr=Resources] {
   top: 0.5rem;
   right: 1rem;
   font-size: 0.8rem;
+  width: 16em;
 }
 
 #Summary thead {
@@ -421,4 +440,15 @@ input[type="number"] {
 .loading {
   margin: 0.5rem;
   color: #aaa;
+}
+
+.link {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.warning {
+  color: red;
+  font-size: 90%;
 }

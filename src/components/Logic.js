@@ -2,12 +2,13 @@ import {Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, dollars} from '../store/store';
+import {get, set, dollars} from '../store/store';
 
-const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total}) => {
+const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
+  const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
   const dbimplements      = useSelector(get.dbimplements);
@@ -15,7 +16,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
 
   if (property === 'implement') {
     a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
-    shown = match('q3', 'Self', current);
+    shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
   }
 
   switch (question) {
@@ -39,15 +40,23 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
-      a = ['', ...Object.keys(dbpower)];
+      a = ['', ...Object.keys(dbpower).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
       shown = currentImplement;
       break;
     case 'Estimated':
       property = 'total';
       q = q || question;
-      q = (match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`) || question;
+      q = (context.q3 === 'Self' ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`) || question;
       a = 'dollar';
       value = total || estimated;
+      shown = context.q3;
+      warning = (
+        context.q3 === 'Custom Operator' && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
+          <div className="warning">
+            Warning: {dollars(context.total)} is outside the expected range for this activity.
+          </div>
+        : null
+      );
       break;
     default:
   }
@@ -96,6 +105,8 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
               onChange={onChange}
               onInput={onInput}
               type={a}
+              value={value}
+              warning={warning}
             />
           :
           

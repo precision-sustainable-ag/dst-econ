@@ -3,23 +3,34 @@ import {Input} from './Inputs';
 import {useSelector} from 'react-redux';
 import {get, dollars} from '../store/store';
 
-const Activity = ({type, ds = 'implement'}) => {
-  const state           = useSelector(get[type]);
-  const estimated       = state.estimated;
-  const tot             = state.total;
-  const edited          = estimated !== tot;
-  const imp             = state[ds];
-  const ImplementsCost  = state.implementsCost;
-  const PowerCost       = state.powerCost;
-  const coverCropTotal  = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal    = useSelector(get.seedbed).total || 0;
-  const plantingTotal   = useSelector(get.planting).total || 0;
-  const fertilityTotal  = useSelector(get.fertility).total || 0;
-  const state3          = useSelector(get[type]).q3;
+const Activity = ({type, instructions=true}) => {
+  const state             = useSelector(get[type]);
+  const estimated         = state.estimated;
+  const tot               = state.total;
+  const edited            = estimated !== tot;
+  const imp               = state.implement;
+  const ImplementsCost    = state.implementsCost;
+  const PowerCost         = state.powerCost;
+  const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
+  const seedbedTotal      = useSelector(get.seedbed.total) || 0;
+  const plantingTotal     = useSelector(get.planting.total) || 0;
+  const fertilityTotal    = useSelector(get.fertility.total) || 0;
+
+  const productCost       = useSelector(get.termination.productCost) || 0;
+  const chemicalTotal     = useSelector(get.chemical.total) || 0;
+  const rollerTotal       = useSelector(get.roller.total) || 0;
+  const tillageTotal      = useSelector(get.tillage.total) || 0;
+  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
+
+  const state3            = useSelector(get[type]).q3;
 
   const heading = {
-    seedbed: 'Seedbed Preparation',
-    planting: 'Cover Crop Planting',
+    seedbed:      'Seedbed Preparation',
+    planting:     'Cover Crop Planting',
+    chemical:     'Chemical Spray',
+    roller:       'Roller',
+    tillage:      'Tillage',
+    termination:  'Termination total',
   }[type];
   
   const Costs = ({desc}) => {
@@ -70,59 +81,73 @@ const Activity = ({type, ds = 'implement'}) => {
                   imp &&
                   !edited
                 ) && (
-      <div className={cname} id="Breakdown">
-        <table id="Costs">
-          <thead>
-            <tr>
-              <th rowSpan="2">Cost Description</th>
-              <th colSpan="4">{heading}</th>
-              <th className="hidden"></th>
-              <th className="hidden"></th>
-              <th className="hidden"></th>
-            </tr>
-            <tr>
-              <th className="hidden"></th>
-              <th>
-                <label>
-                  Implement Cost<br/>($/acre)
-                  <br/>
-                  <Input
-                    id={type + '.implementsCost'}
-                    type="checkbox"
-                  />
-                </label>
-              </th>
-              <th>
-                <label>
-                  Power Cost<br/>($/acre)
-                  <br/>
-                  <Input
-                    id={type + '.powerCost'}
-                    type="checkbox"
-                  />
-                </label>
-              </th>
-              <th>Relevant Cost<br/>($/acre)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <Costs desc="Labor"        lookup="Labor" />
-            <Costs desc="Fuel"         lookup=""/>
-            <Costs desc="Depreciation" lookup="Depreciation"/>
-            <Costs desc="Interest"     lookup="Interest"/>
-            <Costs desc="Repairs"      lookup="Repairs"/>
-            <Costs desc="Taxes"        lookup="Taxes"/>
-            <Costs desc="Insurance"    lookup="Insurance"/>
-            <Costs desc="Storage shed" lookup="Storage"/>
-            <tr className="total">
-              <td>Total</td>
-              <td>{'$' + state.$implements.total.toFixed(2)}</td>
-              <td>{'$' + state.$power.total.toFixed(2)}</td>
-              <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <>
+        {
+          instructions &&
+          <p>
+            Farmers view costs differently, so the table below allows the user to customize the cost estimation to fit their needs.
+            The default cost estimation assumes all ownership and variable costs are relevant.
+            However, some farmers will want to focus on the cash costs of fuel and labor.
+            Removing the check from the box would allow such an analysis.
+            Others would want to ignore all costs that definitely do not change with use so they would uncheck the boxes for interest, taxes, insurance and shed.
+            Basically, the costs you want to count toward the cost of cover crops should have a checkmark beside it.
+            If you are not concerned with certain costs, remove the checkmark.
+          </p>
+        }
+        <div className={cname} id="Breakdown">
+          <table id="Costs">
+            <thead>
+              <tr>
+                <th rowSpan="2">Cost Description</th>
+                <th colSpan="4">{heading}</th>
+                <th className="hidden"></th>
+                <th className="hidden"></th>
+                <th className="hidden"></th>
+              </tr>
+              <tr>
+                <th className="hidden"></th>
+                <th>
+                  <label>
+                    Implement Cost<br/>($/acre)
+                    <br/>
+                    <Input
+                      id={type + '.implementsCost'}
+                      type="checkbox"
+                    />
+                  </label>
+                </th>
+                <th>
+                  <label>
+                    Power Cost<br/>($/acre)
+                    <br/>
+                    <Input
+                      id={type + '.powerCost'}
+                      type="checkbox"
+                    />
+                  </label>
+                </th>
+                <th>Relevant Cost<br/>($/acre)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <Costs desc="Labor"        lookup="Labor" />
+              <Costs desc="Fuel"         lookup=""/>
+              <Costs desc="Depreciation" lookup="Depreciation"/>
+              <Costs desc="Interest"     lookup="Interest"/>
+              <Costs desc="Repairs"      lookup="Repairs"/>
+              <Costs desc="Taxes"        lookup="Taxes"/>
+              <Costs desc="Insurance"    lookup="Insurance"/>
+              <Costs desc="Storage shed" lookup="Storage"/>
+              <tr className="total">
+                <td>Total</td>
+                <td>{'$' + state.$implements.total.toFixed(2)}</td>
+                <td>{'$' + state.$power.total.toFixed(2)}</td>
+                <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
     )
   }
 
@@ -130,25 +155,43 @@ const Activity = ({type, ds = 'implement'}) => {
     return parm ? <tr><td>{desc}</td><td>{dollars(parm)}</td></tr> : null;
   } // SummaryRow
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal;
 
   const summary = (
-    total > 0 &&
-    <table id="Summary">
-      <caption>Summary of Expenses</caption>
-      <thead>
-        <tr><th>Description</th><th>Expense</th></tr>
-      </thead>
-      <tbody>
-        <SummaryRow parm={coverCropTotal} desc="Cover crop seed" />
-        <SummaryRow parm={seedbedTotal}   desc="Seedbed preparation" />
-        <SummaryRow parm={plantingTotal}  desc="Planting activity" />
-        <SummaryRow parm={fertilityTotal} desc="Fertility" />
-      </tbody>
-      <tfoot>
-        <tr><td>Total</td><td>{dollars(total)}</td></tr>
-      </tfoot>
-    </table>
+    total > 0 && instructions && (
+      <table id="Summary">
+        <caption>Summary of Expenses</caption>
+        <thead>
+          <tr><th>Description</th><th>Expense</th></tr>
+        </thead>
+        <tbody>
+          <SummaryRow parm={coverCropTotal}   desc="Seed expense" />
+          <SummaryRow parm={seedbedTotal}     desc="Seed bed preparation" />
+          <SummaryRow parm={plantingTotal}    desc="Planting" />
+          <SummaryRow parm={fertilityTotal}   desc="Fertility" />
+
+          {
+            false && terminationTotal > 0 &&
+            <>
+              <tr><th colSpan="100">Termination</th></tr>
+              <SummaryRow parm={chemicalTotal}    desc="Chemical" />
+              <SummaryRow parm={rollerTotal}      desc="Roller" />
+              <SummaryRow parm={tillageTotal}     desc="Tillage" />
+              <SummaryRow parm={productCost}      desc="Product cost" />
+            </>
+          }
+          {
+            true && terminationTotal > 0 &&
+            <>
+              <SummaryRow parm={terminationTotal} desc="Termination" />
+            </>
+          }
+        </tbody>
+        <tfoot>
+          <tr><td>Total</td><td>{dollars(total)}</td></tr>
+        </tfoot>
+      </table>
+    )
   )
 
   return (

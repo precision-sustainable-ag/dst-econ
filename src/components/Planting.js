@@ -3,12 +3,17 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {get, set, queue, getDefaults, clearInputs, test} from '../store/store';
+
+const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.q3|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
 
 const Planting = () => {
-  console.log('Render: Planting');
+  // console.log('Render: Planting');
   const dispatch = useDispatch();
   const current = 'planting';
+  const dev = useSelector(get.dev);
+  const estimated = useSelector(get[current].estimated);
+
   useSelector(get.current);
   useSelector(get.shown[current]);
   const state = useSelector(get[current]);
@@ -16,8 +21,6 @@ const Planting = () => {
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
-
-  const estimated = useSelector(get[current].estimated);
 
   return (
     <>
@@ -59,7 +62,34 @@ const Planting = () => {
           </tbody>
         </table>
       </form>
-
+      {
+        dev && (
+          <button
+            onClick={() => {
+              dispatch(set.planting.q3('Self'));
+              queue(() => {
+                dispatch(set.planting.implement('Presswheel Drill; 16 Ft'));
+                test('planting.power', '105 HP MFWD Tractor');
+                test('planting.annualUseAcres', 509);
+                test('planting.annualUseHours', 450);
+                test('planting.acresHour', 6.79);
+                test('planting.estimated', 17.60);
+                test('planting.total', 17.60);
+              });
+            }}
+          >
+            Test data
+          </button>
+        )
+      }
+      <button
+        onClick={() => {
+          clearInputs(defaults);
+        }}
+      >
+        Clear inputs
+      </button>
+      <br/>
       <Activity type={current}/>
     </>
   )

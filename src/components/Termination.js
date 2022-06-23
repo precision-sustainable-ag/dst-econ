@@ -3,29 +3,27 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, match} from '../store/store';
+import {get, set, test, getDefaults, clearInputs} from '../store/store';
+
+const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.q3|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.q3|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method');
 
 const Termination = () => {
-  console.log('Render: Termination');
+  // console.log('Render: Termination');
   const dispatch = useDispatch();
   const current = 'termination';
+
+  const dev = useSelector(get.dev);
+
   useSelector(get.current);
   useSelector(get.shown[current]);
   const dbherbicides = useSelector(get.dbherbicides);
-  const dbimplements = useSelector(get.dbimplements);
+  const method = useSelector(get.termination.method);
 
   const state = useSelector(get[current]);
 
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
-
-  const total     = state.total;
-  const estimated = useSelector(get[current].estimated);
-
-  const dbvalue = (table, key, parm) => {
-    // return db[table][key] ? db[table][key][parm] : '';
-  } // dbvalue
 
   return (
     <>
@@ -40,84 +38,88 @@ const Termination = () => {
               </tr>
 
               <Logic
+                current={current}
                 property="q2"
                 q="Would you do this field activity if you did not have a cover crop?"
                 a={['Yes', 'No']}
-                onChange={(_, value) => {
-                  if (value === 'Yes') {
-                    dispatch(set.screen('Tillage'));
-                  }
-                }}
               />
 
               <Logic
+                current={current}
                 property="q3"
                 q="Who will do this activity?"
                 a={['Self', 'Custom Operator']}
-                shown={match('q2', 'No', current)}
-                onChange={(_, value) => {  // TODO
-                  if (value === 'Self') {
-                    dispatch(set.focus('termination.method'));
-                  } else {
-                    dispatch(set.focus('termination.customCost'));
-                  }
-                }}
+                shown={state.q2 === 'No'}
               />
 
               <Logic
+                current={current}
                 property="customCost"
                 q="Custom operator cost ($/acre)"
                 a={'dollar'}
-                shown={match('q3', 'Custom Operator', current)}
+                shown={state.q3 === 'Custom Operator'}
               />
 
               <Logic
+                current={current}
                 property="method"
                 q="Cover Crop termination method"
                 a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
-                shown={match('q2', 'No', current)}
+                shown={state.q2 === 'No'}
               />
 
               <Logic
+                current={current}
                 property="product"
                 q="Product"
                 a={['', ...Object.keys(dbherbicides).sort()]}
-                shown={match('method', 'Herbicide application', current)}
+                shown={state.method === 'Herbicide application'}
               />
 
               {
-                (match('method', 'Herbicide application', current) || match('method', 'Roller with follow-up herbicide', current)) && (
+                /herbicide/i.test(method) && (
                   <>
+                    <tr><th colSpan="100">Product</th></tr>
                     <Logic
+                      current={current}
                       property="unitCost"
                       q="Cost per unit of product"
                       a={'dollar'}
-                      value={dbvalue('herbicides', state.product, 'Cost ($)')}
-                      suffix={dbvalue('herbicides', state.product, 'Unit (cost)')}
+                      suffix={dbherbicides[state.product]?.['Unit (cost)']}
                     />
           
                     <Logic
+                      current={current}
                       property="rate"
                       q="Application rate"
                       a={'number'}
-                      value={dbvalue('herbicides', state.product, 'Rate')}
-                      suffix={dbvalue('herbicides', state.product, 'Unit (rate)')}
+                      suffix={dbherbicides[state.product]?.['Unit (rate)']}
                     />
           
                     <Logic
+                      current={current}
                       property="productCost"
                       q="Product cost"
                       a={state.productCost}
                     />
 
+                    <tr><th colSpan="100">Chemical Spray Equipment</th></tr>
                     <Logic
-                      property="chemical"
+                      current="chemical"
+                      property="implement"
                       q="What chemical spray equipment will be used?"
-                      a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Chemical').sort()]}
+                      type="Chemical"
                     />
+
+                    <Logic current="chemical" question="power" />
             
+                    <Logic current="chemical" question="Annual Use (acres on implement)" />
+                    <Logic current="chemical" question="Annual Use (hours on power)" />
+                    <Logic current="chemical" question="Acres/hour" />
+
                     <Logic
-                      property="chemicalCost"
+                      current="chemical"
+                      property="total"
                       q="Chemical spray equipment cost ($/acre)"
                       a={'dollar'}
                     />
@@ -126,16 +128,25 @@ const Termination = () => {
               }
 
               {
-                (match('method', 'Roller', current) || match('method', 'Roller with follow-up herbicide', current)) && (
+                /Roller/.test(method) && (
                   <>
+                    <tr><th colSpan="100">Roller Equipment</th></tr>
                     <Logic
-                      property="roller"
+                      current="roller"
+                      property="implement"
                       q="What roller equipment will be used?"
-                      a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Termination').sort()]}
+                      type="Termination"
                     />
 
+                    <Logic current="roller" question="power" />
+
+                    <Logic current="roller" question="Annual Use (acres on implement)" />
+                    <Logic current="roller" question="Annual Use (hours on power)" />
+                    <Logic current="roller" question="Acres/hour" />
+
                     <Logic
-                      property="rollerCost"
+                      current="roller"
+                      property="total"
                       q="Roller equipment cost ($/acre)"
                       a={'dollar'}
                     />
@@ -144,25 +155,26 @@ const Termination = () => {
               }
 
               {
-                match('method', 'Tillage', current) && (
+                /Tillage/.test(method) && (
                   <>
+                    <tr><th colSpan="100">Tillage Equipment</th></tr>
                     <Logic
+                      current="tillage"
                       property="implement"
-                      q="What type of seedbed preparation will be done?"
-                      a={['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === 'Tillage').sort()]}
-                      onChange={() => {
-                        // dispatch(set[current].power(implement('default power unit')));
-                      }}
+                      q="What tillage equipment will be used?"
+                      type="Tillage"
                     />
 
-                    <Logic question="power" />
-                    <Logic question="Annual Use (acres on implement)" />
-                    <Logic question="Annual Use (hours on power)" />
-                    <Logic question="Acres/hour" />
+                    <Logic current="tillage" question="power" />
+
+                    <Logic current="tillage" question="Annual Use (acres on implement)" />
+                    <Logic current="tillage" question="Annual Use (hours on power)" />
+                    <Logic current="tillage" question="Acres/hour" />
 
                     <Logic
+                      current="tillage"
                       property="total"
-                      q={match('q3', 'Self', current) ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(total)}/acre)`}
+                      q="Tillage equipment cost ($/acre)"
                       a={'dollar'}
                     />
                   </>
@@ -172,9 +184,126 @@ const Termination = () => {
           </table>
         </form>
       </div>
-      <Activity type="termination" ds="Chemical"/>
-      <Activity type="termination" ds="implement"/>
-      <Activity type="termination" ds="Product" />
+      {
+        dev && (
+          <>
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Herbicide application'));
+                
+                  dispatch(set.termination.product('2,4-D'));
+                  test('termination.unitCost', 5);
+                  test('termination.rate', 1);
+
+                  dispatch(set.termination.product('atrazine'));
+                  test('termination.unitCost', 4);
+                  test('termination.rate', 2);
+
+                  dispatch(set.termination.unitCost(333));
+
+                  dispatch(set.termination.product('dicamba'));
+                  test('termination.unitCost', 3);
+                  test('termination.rate', 3);
+                  test('termination.productCost', 9);
+
+                  dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+                  test('chemical.power', '130 HP MFWD Tractor');
+                  test('chemical.total', 6.62);
+
+                  dispatch(set.chemical.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
+                  test('chemical.power', '130 Self Propelled');
+                  test('chemical.total', 6.75);
+              }}
+            >
+              Test Herbicide
+            </button>
+
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Roller'));
+                
+                test('chemical.total', 0);
+                dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+
+              }}
+            >
+              Test Roller
+            </button>
+
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Tillage'));
+                
+                test('chemical.total', 0);
+                test('roller.total', 0);
+                
+                dispatch(set.tillage.implement('Chisel Plow; 23 Ft'));
+                test('tillage.total', 16.41);
+              }}
+            >
+              Test Tillage
+            </button>
+
+            <button
+              onClick={() => {
+                dispatch(set.termination.q2('Yes'));
+                test('screen', 'Tillage');
+                dispatch(set.screen('Termination'));
+
+                dispatch(set.termination.q2('No'));
+                dispatch(set.termination.q3('Self'));
+                test('focus', 'termination.method');
+
+                dispatch(set.termination.method('Roller with follow-up herbicide'));
+                
+                test('chemical.total', 0);
+                test('roller.total', 0);
+                test('tillage.total', 0);
+                
+                dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+                dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+              }}
+            >
+              Test Roller with follow-up herbicide
+            </button>
+          </>
+        )
+      }
+      <button
+        onClick={() => {
+          clearInputs(defaults);
+        }}
+      >
+        Clear inputs
+      </button>
+      <br/>
+      {/herbicide/i.test(method) && <Activity type="chemical" />}
+      {/roller/i.test(method)    && <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />}
+      {method === 'Tillage'      && <Activity type="tillage"  />}
     </>
   )
 } // Termination

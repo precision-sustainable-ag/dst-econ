@@ -4,21 +4,14 @@ import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, test, getDefaults, clearInputs} from '../store/store';
-import {useEffect} from 'react';
 
-const defaults = {
-  lat: 40.7849,
-  lon: -74.8073,
-  location: ''
-};
+const defaults = getDefaults('lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description');
 
 const Field = () => {
   const dispatch  = useDispatch();
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop  = useSelector(get.cashCrop);
   const dev       = useSelector(get.dev);
-
-  useEffect(() => getDefaults(Field, defaults), []);
 
   return (
     <>
@@ -135,28 +128,26 @@ const Field = () => {
         </table>
       </form>
       {dev && (
-        <div>
-          <button
-            onClick={() => {
-              dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('My field'));
-              dispatch(set.acres(123));
-              dispatch(set.field('My field'));
-              dispatch(set.description('Bottom land; poorly-drained'));
-              dispatch(set.priorCrop('Other'));
-              dispatch(set.otherPriorCrop('Wheat'));
-              dispatch(set.cashCrop('Other'));
-              dispatch(set.otherCashCrop('Barley'));
-              dispatch(set.$labor(999));
+        <button
+          onClick={() => {
+            dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
+            dispatch(set.farm('My farm'));
+            dispatch(set.field('My field'));
+            dispatch(set.acres(123));
+            dispatch(set.field('My field'));
+            dispatch(set.description('Bottom land; poorly-drained'));
+            dispatch(set.priorCrop('Other'));
+            dispatch(set.otherPriorCrop('Wheat'));
+            dispatch(set.cashCrop('Other'));
+            dispatch(set.otherCashCrop('Barley'));
+            dispatch(set.$labor(999));
 
-              test('lat', 33.9312);  // TODO
-              test('lon', -83.3208);
-            }}
-          >
-            Test data
-          </button>
-        </div>
+            test('lat', 33.9312);  // TODO
+            test('lon', -83.3208);
+          }}
+        >
+          Test data
+        </button>
       )}
       <button
         onClick={() => clearInputs(defaults)}

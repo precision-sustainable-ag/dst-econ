@@ -1,5 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, queue} from '../store/store';
+import {get, set, test} from '../store/store';
 import {Input} from './Inputs';
 
 let n = 0;
@@ -26,21 +26,22 @@ const Home = () => {
       <img src="background.png" alt="background" style={{width: '100%'}} />
       {dev && (
         <div>
-          First name: <Input id="firstName"/><br/>
-          Last name:  <Input id="lastName"/><br/>
-          Full name: {fullName}<br/>
-          Full name2: {fullName2}<br/>
-          Full name2b: {fullName2b}<br/>
-          n: {++n}
-          <br/>
-          fertN: {fertN}
-          <br/>
-          test: {test2}
-          <br/>
-          array1: {array1}
-          <br/>
-          array2: {array2}
-          <br/>
+          <div style={{display: 'none'}}>
+            First name: <Input id="firstName" immediate/><br/>
+            Last name:  <Input id="lastName"/><br/>
+            Full name: {fullName}<br/>
+            Full name2: {fullName2}<br/>
+            Full name2b: {fullName2b}<br/>
+            n: {++n}
+            <br/>
+            fertN: {fertN}
+            <br/>
+            test: {test2}
+            <br/>
+            array1: {array1}
+            <br/>
+            array2: {array2}
+          </div>
           <button
             onClick={() => {
               dispatch(set.fertN(333));
@@ -53,16 +54,16 @@ const Home = () => {
               test('array1', ['This ','was ', 'a ', 'test']);
 
               dispatch(set.array2.a([1, 2, 3, 4, 5]));
-              test('array2.a', [1,2,3,4,5]);
+              test('array2.a', [1,2,3,4,5,]);
 
               dispatch(set.firstName('Rick'));
               dispatch(set.lastName('Hitchcock'));
-              queue(() => test('fullName', 'Rick Hitchcock'));
-              queue(() => test('fullName2', 'Rick Hitchcock'));
-              queue(() => test('fullName2', 'Rick Hitchcock'));
+
+              test('fullName', 'Rick Hitchcock');
+              test('fullName2', 'Rick Hitchcock');
             }}
           >
-            Click me
+            Test data
           </button>
         </div>
         )}

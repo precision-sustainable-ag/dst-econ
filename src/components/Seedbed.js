@@ -3,26 +3,9 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, match, totalRelevantCost, queue, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, queue, getDefaults, clearInputs, test} from '../store/store';
 
-const defaults = {
-  'seedbed.total': undefined,
-  'seedbed.q1': '',
-  'seedbed.q2': '',
-  'seedbed.q3': '',
-  'seedbed.implement': '',
-  'seedbed.power': '',
-  'seedbed.implementsCost': true,
-  'seedbed.powerCost': true,
-  'seedbed.Labor': true,
-  'seedbed.Fuel': true,
-  'seedbed.Depreciation': true,
-  'seedbed.Interest': true,
-  'seedbed.Repairs': true,
-  'seedbed.Taxes': true,
-  'seedbed.Insurance': true,
-  'seedbed.Storage': true,
-};
+const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.q2|seedbed.q3|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage');
 
 const Seedbed = () => {
   // console.log('Render: Seedbed');
@@ -38,11 +21,6 @@ const Seedbed = () => {
   useEffect(() => {
     dispatch(set.current(current));
   }, [dispatch, current]);
-
-  useEffect(() => {
-    getDefaults(Seedbed, defaults);
-    console.log(defaults);
-  }, []);
 
   return (
     <>
@@ -74,7 +52,7 @@ const Seedbed = () => {
               property="q2"
               q="Would you do this field activity if not planting a cover crop?"
               a={['Yes', 'No']}
-              shown={match('q1', 'Yes', current)}
+              shown={state.q1 === 'Yes'}
             />
 
             <Logic
@@ -82,7 +60,7 @@ const Seedbed = () => {
               property="q3"
               q="Who will do this activity?"
               a={['Self', 'Custom Operator']}
-              shown={match('q2', 'No', current)}
+              shown={state.q2 === 'No'}
             />
 
             <Logic
@@ -96,7 +74,12 @@ const Seedbed = () => {
             <Logic current={current} question="Annual Use (acres on implement)" />
             <Logic current={current} question="Annual Use (hours on power)" />
             <Logic current={current} question="Acres/hour" />
-            <Logic current={current} question="Estimated" total={state.total} estimated={estimated} />
+            <Logic 
+              current={current}
+              shown={state.q2 === 'No'}
+              question="Estimated"
+              total={Number.isFinite(state.total) ? state.total : estimated} estimated={estimated} 
+            />
           </tbody>
         </table>
       </form>
@@ -130,6 +113,7 @@ const Seedbed = () => {
         Clear inputs
       </button>
 
+      <br/>
       <Activity type={current} />
     </>
   )

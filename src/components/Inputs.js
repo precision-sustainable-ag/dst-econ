@@ -51,10 +51,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   if (!sel) {
     console.warn('Unknown Input: ' + id);
   }
-  
+
   let sel2 = useSelector(sel);
 
   const [v2, setv2] = useState(value || sel2);
+
   const [changed, setChanged] = useState(false);
 
   const isArray = Array.isArray(sel2);
@@ -63,11 +64,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     type = 'dollar';
   }
 
-  type = type                               ? type :
-         sel2 === undefined                 ? 'number' :
-         /number|dollar/.test(typeof sel2)  ? 'number' :
-         typeof sel2 === 'boolean'          ? 'checkbox' :
-                                              'text';
+  type = type                                       ? type :
+         sel2 === undefined                         ? 'number' :
+         /number|dollar|percent/.test(typeof sel2)  ? 'number' :
+         typeof sel2 === 'boolean'                  ? 'checkbox' :
+                                                      'text';
 
   let val = isArray ? sel2[index] || '' : sel2;
 
@@ -109,7 +110,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
     setChanged(true);
 
-    if (/dollar|number/.test(type)) {
+    if (/dollar|number|percent/.test(type)) {
       if (newValue === '') {
         newValue = undefined;
       } else {
@@ -167,7 +168,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               key={option}
               control={<Radio sx={{padding: '0.2rem 0.5rem'}} />}
               label={props.labels ? props.labels[i] : option}
-              checked={option.toString() === value.toString()}
+              checked={option.toString() === value?.toString()}
               onChange={(e) => {
                 change(e.target.value);
                 update(e, e.target.value);
@@ -181,7 +182,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     // let max = Math.max.apply(Math, options.map(option => option.description ? option.description.length : option.length));
     const max = '100%';
     if (!isOptionEqualToValue) {
-      isOptionEqualToValue = (option, value) => option.value === value.value;
+      isOptionEqualToValue = (option, value) => option.value === value?.value;
     }
 
     if (!renderInput) {
@@ -241,7 +242,8 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         />
         :
         <>
-          {type === 'dollar' && <span style={{position: 'absolute', marginTop: '0.3rem'}}>$</span>}
+          {type === 'dollar'  && <span style={{position: 'absolute', marginTop: '0.3rem'}}>$</span>}
+          {type === 'percent' && <span style={{position: 'absolute', marginTop: '0.3rem'}}>%</span>}
           <TextField
             {...props}
             id={id}
@@ -251,11 +253,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
             size="small"
 
-            type={type === 'dollar' ? 'number' : type || 'text'}
+            type={/dollar|percent/.test(type) ? 'number' : type || 'text'}
 
             sx={{
               display: props.fullWidth ? 'block' : 'span',
-              paddingLeft: type === 'dollar' ? '0.7rem' : 0,
+              paddingLeft: /dollar|percent/.test(type) ? '1rem' : 0,
               boxSizing: 'border-box',
               marginBottom: 1,
             }}
@@ -272,7 +274,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               },
             }}
 
-            InputLabelProps={{ style: { marginLeft: type === 'dollar' ? '0.7em' : 0} }}
+            InputLabelProps={{ style: { marginLeft: /dollar|percent/.test(type) ? '0.7em' : 0} }}
 
             ref={focusRef}
 
@@ -307,6 +309,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               }
             }}
           />
+          {props.warning}
         </>
     )
   }
