@@ -2,7 +2,7 @@ import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, dollars, getDefaults, clearInputs, test, db} from '../store/store';
 
 const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertilizer|fertNAdded|fertPAdded|fertKAdded|$fertApplication|$fertCredit|$fertCost|fertility.total');
 
@@ -12,11 +12,11 @@ const Fertility = () => {
 
   const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';
   const $fertN            = useSelector(get.$fertN);
-  const dfertN            = useSelector(get.dbrates.Nitrogen.value);
+  const dfertN            = db.rates.Nitrogen.value;
   const $fertCost         = useSelector(get.$fertCost);
   const total             = useSelector(get.fertility.total);
   const $fertApplication  = useSelector(get.$fertApplication);
-  const dFertApplication  = useSelector(get.dbcostDefaults['Custom Fertilizer Appl'].cost);
+  const dFertApplication  = db.costDefaults['Custom Fertilizer Appl'].cost;
   const $fertCredit       = useSelector(get.$fertCredit);
 
   return (

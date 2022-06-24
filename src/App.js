@@ -89,14 +89,14 @@ function App() {
       case 'Practices'    : return <Practices />;
       case 'Revenue'      : return <Revenue />;
       case 'Resources'    : return <Resources/>;
-      case 'coefficients' : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
-      case 'costDefaults' : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
-      case 'herbicides'   : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" />;
-      case 'implements'   : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" />;
-      case 'power'        : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" />;
-      case 'rates'        : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" />;
-      case 'seedList'     : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" />;
-      case 'stateRegions' : return <Airtable name={'db' + screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" />;
+      case 'coefficients' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
+      case 'costDefaults' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'herbicides'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" />;
+      case 'implements'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" />;
+      case 'power'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" />;
+      case 'rates'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" />;
+      case 'seedList'     : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" />;
+      case 'stateRegions' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" />;
       default: 
     }
   } // Screen
@@ -195,6 +195,7 @@ function App() {
 
   // console.log('Render App');
 
+  console.log(screen);
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
@@ -211,4 +212,5 @@ function App() {
   );
 }
 
+let firstTime = true;
 export default App;

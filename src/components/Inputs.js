@@ -54,6 +54,10 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
   let sel2 = useSelector(sel);
 
+  if (sel2 && type === 'percent') {
+    sel2 = sel2 * 100;
+  }
+
   const [v2, setv2] = useState(value || sel2);
 
   const [changed, setChanged] = useState(false);
@@ -121,6 +125,10 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     let s = set;
     id.split('.').forEach(k => s = s[k]);
 
+    if (type === 'percent') {
+      newValue /= 100;
+    }
+
     if (isArray) {
       if (sel2[index] !== newValue) {
         dispatch(s({index, value: newValue}));
@@ -136,6 +144,10 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
   value = value !== undefined ? value : val;
 
+  if (/dollar|percent/.test(type)) {
+    props.className = (props.className || '') + ' ' + type;
+  }
+
   useEffect(() => {
     if (value) {
       update(
@@ -143,7 +155,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         value
       );
     }
-  }, [update, value]);
+  }, [update, value, type]);
 
   if (type === 'checkbox') {
     if (value === '') {
@@ -242,8 +254,6 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         />
         :
         <>
-          {type === 'dollar'  && <span style={{position: 'absolute', marginTop: '0.3rem'}}>$</span>}
-          {type === 'percent' && <span style={{position: 'absolute', marginTop: '0.3rem'}}>%</span>}
           <TextField
             {...props}
             id={id}
@@ -257,9 +267,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
             sx={{
               display: props.fullWidth ? 'block' : 'span',
-              paddingLeft: /dollar|percent/.test(type) ? '1rem' : 0,
               boxSizing: 'border-box',
-              marginBottom: 1,
             }}
 
             variant={props.variant || 'outlined'}
@@ -268,13 +276,14 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               role: 'presentation',
               autoComplete: 'off',
               style: {
-                zpadding: 5,
+                paddingLeft: 7,
+                paddingTop: 5,
+                paddingBottom: 5,
+                maxWidth: /number|dollar|percent/.test(type) ? 70 : 1000,
                 background: 'white',
                 ...props.style
               },
             }}
-
-            InputLabelProps={{ style: { marginLeft: /dollar|percent/.test(type) ? '0.7em' : 0} }}
 
             ref={focusRef}
 

@@ -2,7 +2,7 @@ import {Input} from './Inputs';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars} from '../store/store';
+import {get, set, dollars, db} from '../store/store';
 
 const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning}) => {
   // console.log('Render: Logic ' + property);
@@ -11,11 +11,9 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
-  const dbimplements      = useSelector(get.dbimplements);
-  const dbpower           = useSelector(get.dbpower);
 
   if (property === 'implement') {
-    a = ['', ...Object.keys(dbimplements).filter(key => dbimplements[key].type === type).sort()]
+    a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
     shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
   }
 
@@ -40,7 +38,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
-      a = ['', ...Object.keys(dbpower).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
+      a = ['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
       shown = currentImplement;
       break;
     case 'Estimated':
@@ -120,7 +118,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
           
           ''
         }
-        {' ' + suffix}
+        <span className="suffix">{suffix}</span>
       </td>
     </tr> :
     null

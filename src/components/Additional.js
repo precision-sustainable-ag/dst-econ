@@ -2,13 +2,12 @@ import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, clearInputs} from '../store/store';
+import {get, set, test, getDefaults, clearInputs, db} from '../store/store';
 
 const Additional = () => {
   const dispatch = useDispatch();
   const context = useSelector(get.additional);
   const dev = useSelector(get.dev);
-  const dbpower = useSelector(get.dbpower);
 
   return (
     <div className="Additional">
@@ -135,6 +134,10 @@ const Additional = () => {
                 }
 
                 <tr>
+                  <td>lbs hay not fed (per ac)</td>
+                  <td>{context.lbsNotFed}</td>
+                </tr>
+                <tr>
                   <td>What is the dry matter percentage (DM%) of the hay you feed?</td>
                   <td><Input id="additional.dryMatter" type="percent" /></td>
                 </tr>
@@ -163,16 +166,16 @@ const Additional = () => {
                   <td>
                     <Input
                       id="additional.tractor"
-                      options={['', ...Object.keys(dbpower).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))]}
+                      options={['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))]}
                     />
                   </td>
                 </tr>
               </>
             )
           }
-          
         </tbody>
       </table>
+
       {
         dev && (
           <button
@@ -182,13 +185,21 @@ const Additional = () => {
               dispatch(set.additional.fallGraze('Yes'));
               dispatch(set.additional.springGraze('Yes'));
               dispatch(set.additional.fallDryMatter(500));
-              dispatch(set.additional.fallWaste(40));
+              dispatch(set.additional.fallWaste(0.40));
               test('additional.fallDryMatter', 500);
-              test('additional.fallWaste', 40);
+              test('additional.fallWaste', 0.40);
               dispatch(set.additional.fallGraze('No'));
-              test('additional.fallWaste', 50);
+              test('additional.fallWaste', 0.50);
 
               dispatch(set.additional.fallGraze('Yes'));
+
+              dispatch(set.additional.fallDryMatter(500));
+              dispatch(set.additional.fallWaste(0.50));
+              dispatch(set.additional.springDryMatter(1000));
+              dispatch(set.additional.springWaste(0.50));
+              dispatch(set.additional.dryMatter(0.88));
+              dispatch(set.additional.wasted(0.22));
+
             }}
           >
             Test data

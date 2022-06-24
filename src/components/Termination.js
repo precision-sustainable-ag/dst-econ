@@ -3,7 +3,7 @@ import Logic from './Logic';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, clearInputs} from '../store/store';
+import {get, set, test, getDefaults, clearInputs, db} from '../store/store';
 
 const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.q3|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.q3|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method');
 
@@ -16,7 +16,6 @@ const Termination = () => {
 
   useSelector(get.current);
   useSelector(get.shown[current]);
-  const dbherbicides = useSelector(get.dbherbicides);
   const method = useSelector(get.termination.method);
 
   const state = useSelector(get[current]);
@@ -72,7 +71,7 @@ const Termination = () => {
                 current={current}
                 property="product"
                 q="Product"
-                a={['', ...Object.keys(dbherbicides).sort()]}
+                a={['', ...Object.keys(db.herbicides).sort()]}
                 shown={state.method === 'Herbicide application'}
               />
 
@@ -85,7 +84,7 @@ const Termination = () => {
                       property="unitCost"
                       q="Cost per unit of product"
                       a={'dollar'}
-                      suffix={dbherbicides[state.product]?.['Unit (cost)']}
+                      suffix={db.herbicides[state.product]?.['Unit (cost)']}
                     />
           
                     <Logic
@@ -93,7 +92,7 @@ const Termination = () => {
                       property="rate"
                       q="Application rate"
                       a={'number'}
-                      suffix={dbherbicides[state.product]?.['Unit (rate)']}
+                      suffix={db.herbicides[state.product]?.['Unit (rate)']}
                     />
           
                     <Logic
