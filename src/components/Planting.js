@@ -1,9 +1,10 @@
 import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
+import {ClearInputs} from './ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, queue, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, queue, getDefaults, test} from '../store/store';
 
 const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.q3|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
 
@@ -37,7 +38,10 @@ const Planting = () => {
         <table className={current + ' inputs'}>
           <tbody>
             <tr>
-              <th colSpan="2">Planting</th>
+              <th colSpan="2">
+                Planting
+                <ClearInputs defaults={defaults} />
+              </th>
             </tr>
 
             <Logic
@@ -82,14 +86,6 @@ const Planting = () => {
           </button>
         )
       }
-      <button
-        onClick={() => {
-          clearInputs(defaults);
-        }}
-      >
-        Clear inputs
-      </button>
-      <br/>
       <Activity type={current}/>
     </>
   )

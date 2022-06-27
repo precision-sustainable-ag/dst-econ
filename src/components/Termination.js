@@ -1,9 +1,10 @@
 import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
+import {ClearInputs} from './ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, clearInputs, db} from '../store/store';
+import {get, set, test, getDefaults, db} from '../store/store';
 
 const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.q3|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.q3|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method');
 
@@ -31,11 +32,15 @@ const Termination = () => {
         <strong>Cover Crop Establishment</strong>
         <form>
           <table className={current + ' inputs'}>
-            <tbody>
+            <thead>
               <tr>
-                <th colSpan="2">Termination</th>
+                <th colSpan="2">
+                  Termination
+                  <ClearInputs defaults={defaults} />
+                </th>
               </tr>
-
+            </thead>
+            <tbody>
               <Logic
                 current={current}
                 property="q2"
@@ -292,14 +297,7 @@ const Termination = () => {
           </>
         )
       }
-      <button
-        onClick={() => {
-          clearInputs(defaults);
-        }}
-      >
-        Clear inputs
-      </button>
-      <br/>
+
       {/herbicide/i.test(method) && <Activity type="chemical" />}
       {/roller/i.test(method)    && <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />}
       {method === 'Tillage'      && <Activity type="tillage"  />}

@@ -635,7 +635,11 @@ export const test = (key, result) => {
 
 export const getDefaults = (parms) => {
   const def = {};
-  parms.split('|').forEach(parm => {
+  if (!Array.isArray(parms)) {
+    parms = parms.split('|');
+  }
+
+  parms.forEach(parm => {
     let s = initialState;
     for (const k of parm.split('.')) {
       s = s[k];

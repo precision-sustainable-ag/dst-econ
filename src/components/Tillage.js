@@ -2,7 +2,7 @@ import Activity from './Activity';
 import Logic from './Logic';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, clearInputs} from '../store/store';
+import {get, set, test, getDefaults} from '../store/store';
 
 const Tillage = () => {
   const dispatch  = useDispatch();

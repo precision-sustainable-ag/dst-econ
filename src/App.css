@@ -482,3 +482,17 @@ input[type="number"] {
   margin-left: 0.2rem;
   margin-top: 0.3rem;
 }
+
+.clearInputs {
+  position: absolute !important;
+  right: 0;
+  font-size: 0.6rem !important;
+  padding: 0.2rem 0.3rem !important;
+}
+
+th {
+  position: relative;
+  min-height: 2rem;
+  height: 2rem;
+  vertical-align: top;
+}

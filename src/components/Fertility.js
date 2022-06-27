@@ -1,14 +1,16 @@
 import Activity from './Activity';
 import {Input} from './Inputs';
 
+import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, getDefaults, clearInputs, test, db} from '../store/store';
+import {get, set, dollars, getDefaults, test, db} from '../store/store';
 
 const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertilizer|fertNAdded|fertPAdded|fertKAdded|$fertApplication|$fertCredit|$fertCost|fertility.total');
 
 const Fertility = () => {
   const dispatch = useDispatch();
   const current = 'fertility';
+  const dev         = useSelector(get.dev);
 
   const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';
   const $fertN            = useSelector(get.$fertN);
@@ -24,6 +26,9 @@ const Fertility = () => {
       <form>
         <h1>Economic Decision Aid for Cover Crops: Fertility</h1>
         <table>
+          <thead>
+            <tr><th colSpan={4}><ClearInputs defaults={defaults} /></th></tr>
+          </thead>
           <tbody>
             <tr>
               <td/>
@@ -86,32 +91,28 @@ const Fertility = () => {
           </tbody>
         </table>
       </form>
-      <button
-        onClick={() => {
-          dispatch(set.fertN(30));
-          dispatch(set.fertP(0));
-          dispatch(set.fertK(0));
-          dispatch(set.$fertN(.75));
-          dispatch(set.$fertP(.60));
-          dispatch(set.$fertK(.50));
-          dispatch(set.fertNAdded(0));
-          dispatch(set.fertPAdded(15));
-          dispatch(set.fertKAdded(10));
-          dispatch(set.$fertApplication(8));
-          dispatch(set.useFertilizer('Yes'));
-          test('fertility.total', 0.5);
-        }}
-      >
-        Test data
-      </button>
-      <button
-        onClick={() => {
-          clearInputs(defaults);
-        }}
-      >
-        Clear inputs
-      </button>
-
+      {
+        dev && (
+          <button
+            onClick={() => {
+              dispatch(set.fertN(30));
+              dispatch(set.fertP(0));
+              dispatch(set.fertK(0));
+              dispatch(set.$fertN(.75));
+              dispatch(set.$fertP(.60));
+              dispatch(set.$fertK(.50));
+              dispatch(set.fertNAdded(0));
+              dispatch(set.fertPAdded(15));
+              dispatch(set.fertKAdded(10));
+              dispatch(set.$fertApplication(8));
+              dispatch(set.useFertilizer('Yes'));
+              test('fertility.total', 0.5);
+            }}
+          >
+            Test data
+          </button>
+        )
+      }
       <Activity type={current}/>
     </div>
   )

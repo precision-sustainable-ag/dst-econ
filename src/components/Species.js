@@ -1,8 +1,12 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, test, db} from '../store/store';
+import {get, set, dollars, test, db, getDefaults} from '../store/store';
 import {Input} from './Inputs';
+import {ClearInputs} from './ClearInputs';
 import Activity from './Activity';
 
+const defaults = getDefaults('rates|species|prices');
+
+console.log(defaults);
 const SpeciesRow = ({n}) => {
   const species = useSelector(get.species);
 
@@ -117,7 +121,10 @@ const Species = () => {
           <table>
             <thead>
               <tr>
-                <th colSpan="3">User Input</th>
+                <th colSpan="3">
+                  User Input
+                  <ClearInputs defaults={defaults} />
+                </th>
                 <td className="hidden"></td>
                 <td className="hidden"></td>
               </tr>
@@ -166,16 +173,6 @@ const Species = () => {
           </button>
         )
       }
-      <button
-        onClick={() => {
-          dispatch(set.rates([]));
-          dispatch(set.prices([]));
-          dispatch(set.species([]));
-        }}
-      >
-        Clear inputs
-      </button>
-
       <Activity type="species"/>
     </>
   )
