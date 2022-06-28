@@ -496,3 +496,13 @@ th {
   height: 2rem;
   vertical-align: top;
 }
+
+u {
+  text-decoration: none;
+  border-bottom: 1px solid #ccc;
+}
+
+body.hotkeys u {
+  text-decoration: underline;
+  border-bottom: none;
+}

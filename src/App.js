@@ -2,7 +2,7 @@ import './App.css';
 
 import React from 'react';
 import {MenuItem, Button} from '@mui/material';
-
+import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {get, set} from './store/store';
@@ -24,6 +24,7 @@ import Practices    from './components/Practices';
 import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
+import {Summary}    from './components/Activity';
 
 function App() {
   const screens = {
@@ -102,7 +103,7 @@ function App() {
   } // Screen
 
   const changeScreen = (e) => {
-    const menu = e.target;
+    const menu = e.target.closest('LI');
 
     if (menu.tagName === 'LI') {
       const scr = menu.dataset.scr;
@@ -110,10 +111,16 @@ function App() {
       if (scr !== 'Resources') {
         dispatch(set.previousScreen(scr));
       }
-     
+
       dispatch(set.screen(scr));
     }
   } // changeScreen
+
+  const getNodeText = node => {
+    if (['string', 'number'].includes(typeof node)) return node
+    if (node instanceof Array) return node.map(getNodeText).join('')
+    if (typeof node === 'object' && node) return getNodeText(node.props.children)
+  } // getNodeText
 
   const Navigation = ({current}) => {
     let back;
@@ -122,7 +129,7 @@ function App() {
     let nextDesc;
   
     const mods = {Home, ...screens.Modules, ...screens['Economic Impact'], Resources};
-    
+
     const s = ['Home','Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Pests','Erosion','Additional','Yield','Practices','Revenue','Resources'];
   
     if (current === 'Resources') {
@@ -133,11 +140,11 @@ function App() {
     }
 
     if (back) {
-      backDesc = mods[back].menu || back;
+      backDesc = getNodeText(mods[back].menu) || back;
     }
 
     if (next) {
-      nextDesc = mods[next].menu || next;
+      nextDesc = getNodeText(mods[next].menu) || next;
     }
 
     return (
@@ -193,13 +200,52 @@ function App() {
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
 
+  const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
+
+  // Maybe not:
+  useEffect(() => {
+    if (!hotkeys) {
+      const u = document.querySelectorAll('u');
+      console.log(u);
+      if (u.length) {
+        setHotKeys(true);
+        const hk = {};
+        u.forEach(el => {
+          if (el.closest('span').parentNode.dataset.scr) {
+            hk[el.textContent.toLowerCase()] = el.closest('span').parentNode.dataset.scr;
+          }
+        });
+
+        document.addEventListener('keydown', e => {
+          if (e.altKey) {
+            document.body.classList.add('hotkeys');
+            const scr = hk[e.key.toLowerCase()];
+            if (scr) {
+              dispatch(set.screen(scr));
+              e.preventDefault();
+            }
+            if (e.key === 'Alt') {
+              e.preventDefault();
+            }
+          }
+        });
+
+        document.addEventListener('keyup', e => {
+          if (!e.altKey) {
+            document.body.classList.remove('hotkeys');
+          }
+        });
+      }
+    }
+  }, [dispatch, hotkeys, screen]);
 
   console.log(screen);
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <div className="App">
+      <Summary/>
       <nav onClick={changeScreen}>
         {MyMenu(screens)}
       </nav>
@@ -212,5 +258,4 @@ function App() {
   );
 }
 
-let firstTime = true;
 export default App;

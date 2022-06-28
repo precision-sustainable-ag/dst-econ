@@ -305,4 +305,6 @@ const Termination = () => {
   )
 } // Termination
 
+Termination.menu = <span><u>T</u>ermination</span>;
+
 export default Termination;

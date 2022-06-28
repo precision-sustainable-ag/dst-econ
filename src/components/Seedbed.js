@@ -114,6 +114,6 @@ const Seedbed = () => {
   )
 } // Seedbed
 
-Seedbed.menu = 'Seedbed preparation';
+Seedbed.menu = <span><u>S</u>eedbed preparation</span>;
 
 export default Seedbed;

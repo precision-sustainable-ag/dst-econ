@@ -178,6 +178,6 @@ const Species = () => {
   )
 } // Species
 
-Species.menu = 'Cover Crop selection';
+Species.menu = <span><u>C</u>over Crop selection</span>;
 
 export default Species;

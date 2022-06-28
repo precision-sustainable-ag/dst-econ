@@ -4,4 +4,6 @@ const Herbicide = () => (
   </div>
 ) // Herbicide
 
+Herbicide.menu = <span>He<u>r</u>bicide</span>;
+
 export default Herbicide;

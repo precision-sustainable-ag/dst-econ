@@ -91,6 +91,6 @@ const Planting = () => {
   )
 } // Planting
 
-Planting.menu = 'Planting decisions';
+Planting.menu = <span>P<u>l</u>anting decisions</span>;
 
 export default Planting;

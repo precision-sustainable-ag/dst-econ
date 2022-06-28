@@ -4,6 +4,6 @@ const Revenue = () => (
   </div>
 ) // Revenue
 
-Revenue.menu = 'Revenue Impact';
+Revenue.menu = <span>Re<u>v</u>enue Impact</span>;
 
 export default Revenue;

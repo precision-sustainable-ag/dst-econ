@@ -4,6 +4,6 @@ const Practices = () => (
   </div>
 ) // Practices
 
-Practices.menu = 'Summary of Practices';
+Practices.menu = <span>S<u>u</u>mmary of Practices</span>;
 
 export default Practices;

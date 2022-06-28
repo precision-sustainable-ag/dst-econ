@@ -50,4 +50,6 @@ const Tillage = () => {
   )
 } // Tillage
 
+Tillage.menu = <span>T<u>i</u>llage</span>;
+
 export default Tillage;

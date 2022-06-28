@@ -23,4 +23,6 @@ const Resources = () => (
   </div>
 ) // Resources
 
+Resources.menu = <span>Res<u>o</u>urces</span>;
+
 export default Resources;

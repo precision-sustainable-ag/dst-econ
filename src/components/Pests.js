@@ -4,4 +4,6 @@ const Pests = () => (
   </div>
 ) // Pests
 
+Pests.menu = <span><u>P</u>ests</span>;
+
 export default Pests;

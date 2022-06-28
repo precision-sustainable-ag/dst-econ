@@ -118,4 +118,6 @@ const Fertility = () => {
   )
 } // Fertility
 
+Fertility.menu = <span><u>F</u>ertility</span>;
+
 export default Fertility;

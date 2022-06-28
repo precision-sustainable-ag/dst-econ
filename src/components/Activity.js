@@ -11,16 +11,6 @@ const Activity = ({type, instructions=true}) => {
   const imp               = state.implement;
   const ImplementsCost    = state.implementsCost;
   const PowerCost         = state.powerCost;
-  const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal      = useSelector(get.seedbed.total) || 0;
-  const plantingTotal     = useSelector(get.planting.total) || 0;
-  const fertilityTotal    = useSelector(get.fertility.total) || 0;
-
-  const productCost       = useSelector(get.termination.productCost) || 0;
-  const chemicalTotal     = useSelector(get.chemical.total) || 0;
-  const rollerTotal       = useSelector(get.roller.total) || 0;
-  const tillageTotal      = useSelector(get.tillage.total) || 0;
-  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
 
   const state3            = useSelector(get[type]).q3;
 
@@ -151,14 +141,29 @@ const Activity = ({type, instructions=true}) => {
     )
   }
 
+  return breakdown;
+} // Activity
+
+export const Summary = () => {
+  const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
+  const seedbedTotal      = useSelector(get.seedbed.total) || 0;
+  const plantingTotal     = useSelector(get.planting.total) || 0;
+  const fertilityTotal    = useSelector(get.fertility.total) || 0;
+
+  const productCost       = useSelector(get.termination.productCost) || 0;
+  const chemicalTotal     = useSelector(get.chemical.total) || 0;
+  const rollerTotal       = useSelector(get.roller.total) || 0;
+  const tillageTotal      = useSelector(get.tillage.total) || 0;
+  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
+
   const SummaryRow = ({parm, desc}) => {
     return parm ? <tr><td>{desc}</td><td>{dollars(parm)}</td></tr> : null;
   } // SummaryRow
 
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal;
 
-  const summary = (
-    total > 0 && instructions && (
+  return (
+    total > 0 && (
       <table id="Summary">
         <caption>Summary of Expenses</caption>
         <thead>
@@ -192,14 +197,7 @@ const Activity = ({type, instructions=true}) => {
         </tfoot>
       </table>
     )
-  )
-
-  return (
-    <>
-      {summary}
-      {breakdown}
-    </>
-  )
-} // Activity
+  );
+} // Summary
 
 export default Activity;
