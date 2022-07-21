@@ -71,4 +71,6 @@ const Home = () => {
   )
 } // Home
 
+Home.menu = <span><u>H</u>ome</span>;
+
 export default Home;

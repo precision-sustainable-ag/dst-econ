@@ -4,4 +4,6 @@ const Yield = () => (
   </div>
 ) // Yield
 
+Yield.menu = <span><u>Y</u>ield</span>;
+
 export default Yield;

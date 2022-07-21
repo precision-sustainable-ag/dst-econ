@@ -1,13 +1,7 @@
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {db} from '../store/store';
 
 const Airtable = ({name, url}) => {
-  const dispatch = useDispatch();
-
-  const table = useSelector(state => state[name]);
-  const state = useSelector(get[name]);
-  console.log(state);
-  console.log(set);
+  const table = db[name];
 
   let keys = {};
   
@@ -47,11 +41,13 @@ const Airtable = ({name, url}) => {
                         <td key={k}>
                           <input
                             id={`${name}.${key}.${k}`}
-                            defaultValue={state[key][k]}
+                            defaultValue={table[key][k]}
                             autoFocus={first++ === 1}
                             
+                            onFocus={(e) => e.target.select()}
+
                             onBlur={(e) => {
-                              dispatch(set[name][key][k](e.target.value));
+                              table[key][k] = e.target.value;
                             }}
 
                             onKeyDown={(e) => {
@@ -111,7 +107,7 @@ const Airtable = ({name, url}) => {
                               }
                             }}
                           />
-                          <span>{state[key][k]}</span>
+                          <span>{table[key][k]}</span>
                         </td>
                       )
                     })}

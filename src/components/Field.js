@@ -1,9 +1,9 @@
 import Map from './GoogleMaps';
 import Activity from './Activity';
 import {Input} from './Inputs';
-
+import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, clearInputs} from '../store/store';
+import {get, set, test, getDefaults} from '../store/store';
 
 const defaults = getDefaults('lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description');
 
@@ -31,6 +31,7 @@ const Field = () => {
           Please answer all of the following:
         </p>
 
+        <ClearInputs defaults={defaults} />
         <table className="fullWidth">
           <tbody>
             <tr>
@@ -149,16 +150,11 @@ const Field = () => {
           Test data
         </button>
       )}
-      <button
-        onClick={() => clearInputs(defaults)}
-      >
-        Clear inputs
-      </button>
       <Activity type="species"/>
     </>
   );
 } // Field
 
-Field.menu = 'Field and Farm';
+Field.menu = <span>Field and Far<u>m</u></span>;
 
 export default Field;

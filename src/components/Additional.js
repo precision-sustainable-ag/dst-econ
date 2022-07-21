@@ -1,14 +1,16 @@
 import Activity from './Activity';
 import {Input} from './Inputs';
 
+import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, clearInputs} from '../store/store';
+import {get, set, test, getDefaults, db} from '../store/store';
 
 const Additional = () => {
   const dispatch = useDispatch();
   const context = useSelector(get.additional);
   const dev = useSelector(get.dev);
-  const dbpower = useSelector(get.dbpower);
+
+  const defaults = getDefaults(Object.keys(context).map(key => `additional.${key}`));
 
   return (
     <div className="Additional">
@@ -27,6 +29,14 @@ const Additional = () => {
       </p>
 
       <table>
+        <thead>
+          <tr>
+            <th colSpan="2">
+              Additional considerations
+              <ClearInputs defaults={defaults} />
+            </th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
             <td>
@@ -77,102 +87,108 @@ const Additional = () => {
 
           {
             context.grazing === 'Yes' && (
-              <tr>
-                <td>Do you intend to lease your cover crop acres to a livestock producer (not graze them with your operation)?</td>
-                <td><Input id="additional.lease" options={['Yes', 'No']} type="radio" /></td>
-              </tr>
-            )
-          }
-
-          {
-            context.lease === 'Yes' && (
-              <tr>
-                <td>What is the approximate value (per acre) you will receive for leasing your cover crop acres for grazing?</td>
-                <td><Input id="additional.$lease" /></td>
-              </tr>
-            )
-          }
-
-          {
-            context.lease === 'No' && (
               <>
                 <tr>
-                  <td>Do you intend to fall graze?</td>
-                  <td><Input id="additional.fallGraze" options={['Yes', 'No']} type="radio" /></td>
+                  <td>Do you intend to lease your cover crop acres to a livestock producer (not graze them with your operation)?</td>
+                  <td><Input id="additional.lease" options={['Yes', 'No']} type="radio" /></td>
                 </tr>
+
                 {
-                  context.fallGraze === 'Yes' && (
+                  context.lease === 'Yes' && (
+                    <tr>
+                      <td>What is the approximate value (per acre) you will receive for leasing your cover crop acres for grazing?</td>
+                      <td><Input id="additional.$lease" /></td>
+                    </tr>
+                  )
+                }
+
+                {
+                  context.lease === 'No' && (
                     <>
                       <tr>
-                        <td>How many pounds of dry matter per acre will be harvested (grazed by cows)?</td>
-                        <td><Input id="additional.fallDryMatter" /></td>
+                        <td>Do you intend to fall graze?</td>
+                        <td><Input id="additional.fallGraze" options={['Yes', 'No']} type="radio" /></td>
+                      </tr>
+                      {
+                        context.fallGraze === 'Yes' && (
+                          <>
+                            <tr>
+                              <td>How many pounds of dry matter per acre will be harvested (grazed by cows)?</td>
+                              <td><Input id="additional.fallDryMatter" /></td>
+                            </tr>
+                            <tr>
+                              <td>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</td>
+                              <td><Input id="additional.fallWaste" type="percent" /></td>
+                            </tr>
+                          </>
+                        )
+                      }
+
+                      <tr>
+                        <td>Do you intend to spring graze?</td>
+                        <td><Input id="additional.springGraze" options={['Yes', 'No']} type="radio" /></td>
+                      </tr>
+                      {
+                        context.springGraze === 'Yes' && (
+                          <>
+                            <tr>
+                              <td>How many pounds of dry matter per acre will be harvested (grazed by cows)?</td>
+                              <td><Input id="additional.springDryMatter" /></td>
+                            </tr>
+                            <tr>
+                              <td>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</td>
+                              <td><Input id="additional.springWaste" type="percent" /></td>
+                            </tr>
+                          </>
+                        )
+                      }
+
+                      <tr>
+                        <td>lbs hay not fed (per ac)</td>
+                        <td>{context.lbsNotFed}</td>
                       </tr>
                       <tr>
-                        <td>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</td>
-                        <td><Input id="additional.fallWaste" type="percent" /></td>
+                        <td>What is the dry matter percentage (DM%) of the hay you feed?</td>
+                        <td><Input id="additional.dryMatter" type="percent" /></td>
+                      </tr>
+                      <tr>
+                        <td>How much hay is wasted by cows in the feedlot?</td>
+                        <td><Input id="additional.wasted" type="percent" /></td>
+                      </tr>
+                      <tr>
+                        <td>What is the value of the hay you feed?</td>
+                        <td><Input id="additional.$hay" /></td>
+                      </tr>
+                      <tr>
+                        <td>How much additional time (hours per acre) will be required for management of the grazing operation?</td>
+                        <td><Input id="additional.hoursAcre" /></td>
+                      </tr>
+                      <tr>
+                        <td>What is the average size of bales you feed (lbs/bale)?</td>
+                        <td><Input id="additional.baleSize" /></td>
+                      </tr>
+                      <tr>
+                        <td>What is the approximate amount of time it takes you to feed one bale of hay during the winter months?</td>
+                        <td><Input id="additional.baleTime" /></td>
+                      </tr>
+                      <tr>
+                        <td>What tractor do you use for feeding?</td>
+                        <td>
+                          <Input
+                            id="additional.tractor"
+                            options={['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))]}
+                          />
+                        </td>
                       </tr>
                     </>
                   )
                 }
-
-                <tr>
-                  <td>Do you intend to spring graze?</td>
-                  <td><Input id="additional.springGraze" options={['Yes', 'No']} type="radio" /></td>
-                </tr>
-                {
-                  context.springGraze === 'Yes' && (
-                    <>
-                      <tr>
-                        <td>How many pounds of dry matter per acre will be harvested (grazed by cows)?</td>
-                        <td><Input id="additional.springDryMatter" /></td>
-                      </tr>
-                      <tr>
-                        <td>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</td>
-                        <td><Input id="additional.springWaste" type="percent" /></td>
-                      </tr>
-                    </>
-                  )
-                }
-
-                <tr>
-                  <td>What is the dry matter percentage (DM%) of the hay you feed?</td>
-                  <td><Input id="additional.dryMatter" type="percent" /></td>
-                </tr>
-                <tr>
-                  <td>How much hay is wasted by cows in the feedlot?</td>
-                  <td><Input id="additional.wasted" type="percent" /></td>
-                </tr>
-                <tr>
-                  <td>What is the value of the hay you feed?</td>
-                  <td><Input id="additional.$hay" /></td>
-                </tr>
-                <tr>
-                  <td>How much additional time (hours per acre) will be required for management of the grazing operation?</td>
-                  <td><Input id="additional.hoursAcre" /></td>
-                </tr>
-                <tr>
-                  <td>What is the average size of bales you feed (lbs/bale)?</td>
-                  <td><Input id="additional.baleSize" /></td>
-                </tr>
-                <tr>
-                  <td>What is the approximate amount of time it takes you to feed one bale of hay during the winter months?</td>
-                  <td><Input id="additional.baleTime" /></td>
-                </tr>
-                <tr>
-                  <td>What tractor do you use for feeding?</td>
-                  <td>
-                    <Input
-                      id="additional.tractor"
-                      options={['', ...Object.keys(dbpower).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))]}
-                    />
-                  </td>
-                </tr>
               </>
             )
           }
-          
         </tbody>
       </table>
+
       {
         dev && (
           <button
@@ -182,24 +198,32 @@ const Additional = () => {
               dispatch(set.additional.fallGraze('Yes'));
               dispatch(set.additional.springGraze('Yes'));
               dispatch(set.additional.fallDryMatter(500));
-              dispatch(set.additional.fallWaste(40));
+              dispatch(set.additional.fallWaste(0.40));
               test('additional.fallDryMatter', 500);
-              test('additional.fallWaste', 40);
+              test('additional.fallWaste', 0.40);
               dispatch(set.additional.fallGraze('No'));
-              test('additional.fallWaste', 50);
+              test('additional.fallWaste', 0.50);
 
               dispatch(set.additional.fallGraze('Yes'));
+
+              dispatch(set.additional.fallDryMatter(500));
+              dispatch(set.additional.fallWaste(0.50));
+              dispatch(set.additional.springDryMatter(1000));
+              dispatch(set.additional.springWaste(0.50));
+              dispatch(set.additional.dryMatter(0.88));
+              dispatch(set.additional.wasted(0.22));
+              dispatch(set.additional.$hay(80));
+              dispatch(set.additional.baleSize(1800))
             }}
           >
             Test data
           </button>
         )
       }
-      
     </div>
   );
 } // Additional
 
-Additional.menu = 'Additional considerations';
+Additional.menu = <span><u>A</u>dditional considerations</span>;
 
 export default Additional;

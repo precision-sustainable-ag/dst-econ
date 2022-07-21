@@ -1,9 +1,10 @@
 import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
+import {ClearInputs} from './ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, queue, getDefaults, clearInputs, test} from '../store/store';
+import {get, set, queue, getDefaults, test} from '../store/store';
 
 const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.q2|seedbed.q3|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage');
 
@@ -37,7 +38,10 @@ const Seedbed = () => {
         <table className={current + ' inputs'}>
           <tbody>
             <tr>
-              <th colSpan="2">Seedbed preparation</th>
+              <th colSpan="2">
+                Seedbed preparation
+                <ClearInputs defaults={defaults} />
+              </th>
             </tr>
             
             <Logic
@@ -105,20 +109,11 @@ const Seedbed = () => {
           </button>
         )
       }
-      <button
-        onClick={() => {
-          clearInputs(defaults);
-        }}
-      >
-        Clear inputs
-      </button>
-
-      <br/>
       <Activity type={current} />
     </>
   )
 } // Seedbed
 
-Seedbed.menu = 'Seedbed preparation';
+Seedbed.menu = <span><u>S</u>eedbed preparation</span>;
 
 export default Seedbed;

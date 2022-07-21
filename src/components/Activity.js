@@ -11,16 +11,6 @@ const Activity = ({type, instructions=true}) => {
   const imp               = state.implement;
   const ImplementsCost    = state.implementsCost;
   const PowerCost         = state.powerCost;
-  const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal      = useSelector(get.seedbed.total) || 0;
-  const plantingTotal     = useSelector(get.planting.total) || 0;
-  const fertilityTotal    = useSelector(get.fertility.total) || 0;
-
-  const productCost       = useSelector(get.termination.productCost) || 0;
-  const chemicalTotal     = useSelector(get.chemical.total) || 0;
-  const rollerTotal       = useSelector(get.roller.total) || 0;
-  const tillageTotal      = useSelector(get.tillage.total) || 0;
-  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
 
   const state3            = useSelector(get[type]).q3;
 
@@ -151,55 +141,91 @@ const Activity = ({type, instructions=true}) => {
     )
   }
 
+  return breakdown;
+} // Activity
+
+export const Summary = () => {
+  const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
+  const seedbedTotal      = useSelector(get.seedbed.total) || 0;
+  const plantingTotal     = useSelector(get.planting.total) || 0;
+  const fertilityTotal    = useSelector(get.fertility.total) || 0;
+
+  const productCost       = useSelector(get.termination.productCost) || 0;
+  const chemicalTotal     = useSelector(get.chemical.total) || 0;
+  const rollerTotal       = useSelector(get.roller.total) || 0;
+  const tillageTotal      = useSelector(get.tillage.total) || 0;
+  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + -fertilityTotal + +terminationTotal;
+
   const SummaryRow = ({parm, desc}) => {
-    return parm ? <tr><td>{desc}</td><td>{dollars(parm)}</td></tr> : null;
+    return parm ? <tr><td>{desc}</td><td>{dollars(Math.abs(parm))}</td></tr> : null;
   } // SummaryRow
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal;
+  const Costs = () => {
+    console.log(coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal);
+    if (total > 0) {
+      return (
+        <>
+          <thead>
+            <tr><th>Description</th><th>Costs</th></tr>
+          </thead>
+          <tbody>
+            <SummaryRow parm={coverCropTotal}   desc="Seed expense" />
+            <SummaryRow parm={seedbedTotal}     desc="Seed bed preparation" />
+            <SummaryRow parm={plantingTotal}    desc="Planting" />
+            {fertilityTotal < 0 && <SummaryRow parm={fertilityTotal} desc="Fertility" />}
+    
+            {
+              false && terminationTotal > 0 &&
+              <>
+                <tr><th colSpan="100">Termination</th></tr>
+                <SummaryRow parm={chemicalTotal}    desc="Chemical" />
+                <SummaryRow parm={rollerTotal}      desc="Roller" />
+                <SummaryRow parm={tillageTotal}     desc="Tillage" />
+                <SummaryRow parm={productCost}      desc="Product cost" />
+              </>
+            }
+            {
+              true && terminationTotal > 0 &&
+              <>
+                <SummaryRow parm={terminationTotal} desc="Termination" />
+              </>
+            }
+          </tbody>
+        </>
+      )
+    }
+  }; // Costs
 
-  const summary = (
-    total > 0 && instructions && (
+  const Benefits = () => {
+    if (fertilityTotal > 0) {
+      return (
+        <>
+          <thead>
+            <tr><th>Description</th><th>Benefits</th></tr>
+          </thead>
+          <tbody>
+            {fertilityTotal > 0 && (
+              <SummaryRow parm={fertilityTotal} desc="Fertility" />
+            )}
+          </tbody>
+        </>
+      );
+    }
+  }; // Benefits
+  
+  return (
+    total !== 0 && (
       <table id="Summary">
-        <caption>Summary of Expenses</caption>
-        <thead>
-          <tr><th>Description</th><th>Expense</th></tr>
-        </thead>
-        <tbody>
-          <SummaryRow parm={coverCropTotal}   desc="Seed expense" />
-          <SummaryRow parm={seedbedTotal}     desc="Seed bed preparation" />
-          <SummaryRow parm={plantingTotal}    desc="Planting" />
-          <SummaryRow parm={fertilityTotal}   desc="Fertility" />
-
-          {
-            false && terminationTotal > 0 &&
-            <>
-              <tr><th colSpan="100">Termination</th></tr>
-              <SummaryRow parm={chemicalTotal}    desc="Chemical" />
-              <SummaryRow parm={rollerTotal}      desc="Roller" />
-              <SummaryRow parm={tillageTotal}     desc="Tillage" />
-              <SummaryRow parm={productCost}      desc="Product cost" />
-            </>
-          }
-          {
-            true && terminationTotal > 0 &&
-            <>
-              <SummaryRow parm={terminationTotal} desc="Termination" />
-            </>
-          }
-        </tbody>
+        <caption>Summary</caption>
+        <Costs/>
+        <Benefits/>
         <tfoot>
           <tr><td>Total</td><td>{dollars(total)}</td></tr>
         </tfoot>
       </table>
     )
-  )
-
-  return (
-    <>
-      {summary}
-      {breakdown}
-    </>
-  )
-} // Activity
+  );
+} // Summary
 
 export default Activity;

@@ -1,8 +1,12 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, test} from '../store/store';
+import {get, set, dollars, test, db, getDefaults} from '../store/store';
 import {Input} from './Inputs';
+import {ClearInputs} from './ClearInputs';
 import Activity from './Activity';
 
+const defaults = getDefaults('rates|species|prices');
+
+console.log(defaults);
 const SpeciesRow = ({n}) => {
   const species = useSelector(get.species);
 
@@ -66,11 +70,10 @@ const Species = () => {
   const species  = useSelector(get.species);
   const state    = useSelector(get.state);
   const total    = useSelector(get.coverCropTotal);
-  const stateRegions = useSelector(get.dbstateRegions);
 
-  let rec = stateRegions[state.toUpperCase()];
+  let rec = db.stateRegions[state.toUpperCase()];
 
-  let region = rec ? stateRegions[state.toUpperCase()].ccRegion.toLowerCase() : '';
+  let region = rec ? db.stateRegions[state.toUpperCase()].ccRegion.toLowerCase() : '';
   if (region) {
     region = region[0].toUpperCase() + region.slice(1);
   }
@@ -106,7 +109,7 @@ const Species = () => {
               In addition, you may adjust seeding rates even for single species based upon your intended purpose.
               For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
               but may plant a higher rate if you seek to maximize grazing potential.
-              You may use the common rate listed in the grey shaded boxes or input your own rate.
+              You may use the common rate listed in the green shaded boxes or input your own rate.
               If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".</p>
 
             <p>
@@ -118,7 +121,10 @@ const Species = () => {
           <table>
             <thead>
               <tr>
-                <th colSpan="3">User Input</th>
+                <th colSpan="3">
+                  User Input
+                  <ClearInputs defaults={defaults} />
+                </th>
                 <td className="hidden"></td>
                 <td className="hidden"></td>
               </tr>
@@ -167,21 +173,11 @@ const Species = () => {
           </button>
         )
       }
-      <button
-        onClick={() => {
-          dispatch(set.rates([]));
-          dispatch(set.prices([]));
-          dispatch(set.species([]));
-        }}
-      >
-        Clear inputs
-      </button>
-
       <Activity type="species"/>
     </>
   )
 } // Species
 
-Species.menu = 'Cover Crop selection';
+Species.menu = <span><u>C</u>over Crop selection</span>;
 
 export default Species;

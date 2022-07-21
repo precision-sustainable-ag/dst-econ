@@ -13,8 +13,8 @@ const autocompleteService = { current: null };
 const GoogleMaps = ({autoFocus=false, field=false}) => {
   const dispatch = useDispatch();
 
-  const lat = useSelector(get.lat);
-  const lon = useSelector(get.lon);
+  const lat = +useSelector(get.lat);
+  const lon = +useSelector(get.lon);
   const location = useSelector(get.location);
 
   const [inputValue, setInputValue] = React.useState('');
@@ -162,8 +162,8 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
 const Map = ({field=false, autoFocus}) => {
   const dispatch = useDispatch();
-  const lat = useSelector(get.lat);
-  const lon = useSelector(get.lon);
+  const lat = +useSelector(get.lat);
+  const lon = +useSelector(get.lon);
   const mapType = useSelector(get.mapType);
   const mapZoom = useSelector(get.mapZoom);
 
@@ -220,16 +220,16 @@ const Map = ({field=false, autoFocus}) => {
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
             center={{lat: +lat, lng: +lon}}
-            zoom={mapZoom}
+            zzoom={mapZoom}
 
-            onGoogleApiLoaded={initGeocoder}
+            zonGoogleApiLoaded={initGeocoder}
             
-            yesIWantToUseGoogleMapApiInternals
-            onClick={mapChange}
-            onZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
-            onMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
+            zyesIWantToUseGoogleMapApiInternals
+            zonClick={mapChange}
+            zonZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
+            zonMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
 
-            onLoad={
+            zonLoad={
               // prevent tabbing through map
               // got to be a better way than setting a timeout
               setTimeout(() => {
@@ -237,7 +237,7 @@ const Map = ({field=false, autoFocus}) => {
               }, 1000)
             }
 
-            options={(map) => ({
+            zoptions={(map) => ({
               mapTypeId: mapType,
               fullscreenControl: false,
               scaleControl: true,
