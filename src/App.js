@@ -16,7 +16,6 @@ import Termination  from './components/Termination';
 import Tillage      from './components/Tillage';
 import Fertility    from './components/Fertility';
 import Herbicide    from './components/Herbicide';
-import Pests        from './components/Pests';
 import Erosion      from './components/Erosion';
 import Additional   from './components/Additional';
 import Yield        from './components/Yield';
@@ -38,7 +37,6 @@ function App() {
       Tillage,
       Fertility,
       Herbicide,
-      Pests,
       Erosion,
       Additional,
       Yield,
@@ -83,7 +81,6 @@ function App() {
       case 'Tillage'      : return <Tillage />;
       case 'Fertility'    : return <Fertility />;
       case 'Herbicide'    : return <Herbicide />;
-      case 'Pests'        : return <Pests />;
       case 'Erosion'      : return <Erosion />;
       case 'Additional'   : return <Additional />;
       case 'Yield'        : return <Yield />;
@@ -130,7 +127,7 @@ function App() {
   
     const mods = {Home, ...screens.Modules, ...screens['Economic Impact'], Resources};
 
-    const s = ['Home','Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Pests','Erosion','Additional','Yield','Practices','Revenue','Resources'];
+    const s = ['Home','Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Erosion','Additional','Yield','Practices','Revenue','Resources'];
   
     if (current === 'Resources') {
       back = previousScreen;

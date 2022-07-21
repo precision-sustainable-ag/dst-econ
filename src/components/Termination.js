@@ -10,6 +10,105 @@ const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chem
 
 const Termination = () => {
   // console.log('Render: Termination');
+  const Herbicide = () => (
+    <>
+      <tr><th colSpan="100">Product</th></tr>
+      <Logic
+        current={current}
+        property="unitCost"
+        q="Cost per unit of product"
+        a={'dollar'}
+        suffix={db.herbicides[state.product]?.['Unit (cost)']}
+      />
+
+      <Logic
+        current={current}
+        property="rate"
+        q="Application rate"
+        a={'number'}
+        suffix={db.herbicides[state.product]?.['Unit (rate)']}
+      />
+
+      <Logic
+        current={current}
+        property="productCost"
+        q="Product cost"
+        a={state.productCost}
+      />
+
+      <tr><th colSpan="100">Chemical Spray Equipment</th></tr>
+      <Logic
+        current="chemical"
+        property="implement"
+        q="What chemical spray equipment will be used?"
+        type="Chemical"
+      />
+
+      <Logic current="chemical" question="power" />
+
+      <Logic current="chemical" question="Annual Use (acres on implement)" />
+      <Logic current="chemical" question="Annual Use (hours on power)" />
+      <Logic current="chemical" question="Acres/hour" />
+
+      <Logic
+        current="chemical"
+        property="total"
+        q="Chemical spray equipment cost ($/acre)"
+        a={'dollar'}
+      />
+    </>
+  ); // Herbicide
+
+  const Roller = () => (
+    <>
+      <tr><th colSpan="100">Roller Equipment</th></tr>
+      <Logic
+        current="roller"
+        property="implement"
+        q="What roller equipment will be used?"
+        type="Termination"
+      />
+
+      <Logic current="roller" question="power" />
+
+      <Logic current="roller" question="Annual Use (acres on implement)" />
+      <Logic current="roller" question="Annual Use (hours on power)" />
+      <Logic current="roller" question="Acres/hour" />
+
+      <Logic
+        current="roller"
+        property="total"
+        q="Roller equipment cost ($/acre)"
+        a={'dollar'}
+      />
+    </>
+  ); // Roller
+
+  const Tillage = () => (
+    <>
+      <tr><th colSpan="100">Tillage Equipment</th></tr>
+      <Logic
+        current="tillage"
+        property="implement"
+        q="What tillage equipment will be used?"
+        type="Tillage"
+      />
+
+      <Logic current="tillage" question="power" />
+
+      <Logic current="tillage" question="Annual Use (acres on implement)" />
+      <Logic current="tillage" question="Annual Use (hours on power)" />
+      <Logic current="tillage" question="Acres/hour" />
+
+      <Logic
+        current="tillage"
+        property="total"
+        q="Tillage equipment cost ($/acre)"
+        a={'dollar'}
+      />
+    </>
+  ); // Tillage
+
   const dispatch = useDispatch();
   const current = 'termination';
 
@@ -43,144 +142,48 @@ const Termination = () => {
             <tbody>
               <Logic
                 current={current}
-                property="q2"
-                q="Would you do this field activity if you did not have a cover crop?"
-                a={['Yes', 'No']}
-              />
-
-              <Logic
-                current={current}
-                property="q3"
-                q="Who will do this activity?"
-                a={['Self', 'Custom Operator']}
-                shown={state.q2 === 'No'}
-              />
-
-              <Logic
-                current={current}
-                property="customCost"
-                q="Custom operator cost ($/acre)"
-                a={'dollar'}
-                shown={state.q3 === 'Custom Operator'}
-              />
-
-              <Logic
-                current={current}
                 property="method"
                 q="Cover Crop termination method"
                 a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
-                shown={state.q2 === 'No'}
               />
 
               <Logic
                 current={current}
-                property="product"
-                q="Product"
-                a={['', ...Object.keys(db.herbicides).sort()]}
-                shown={state.method === 'Herbicide application'}
+                property="q2"
+                q="Would you do this field activity if you did not have a cover crop?"
+                a={['Yes', 'No']}
+                shown={state.method}
               />
 
               {
-                /herbicide/i.test(method) && (
+                state.q2 === 'No' && (
                   <>
-                    <tr><th colSpan="100">Product</th></tr>
                     <Logic
                       current={current}
-                      property="unitCost"
-                      q="Cost per unit of product"
-                      a={'dollar'}
-                      suffix={db.herbicides[state.product]?.['Unit (cost)']}
+                      property="q3"
+                      q="Who will do this activity?"
+                      a={['Self', 'Custom Operator']}
                     />
-          
+
                     <Logic
                       current={current}
-                      property="rate"
-                      q="Application rate"
-                      a={'number'}
-                      suffix={db.herbicides[state.product]?.['Unit (rate)']}
+                      property="customCost"
+                      q="Custom operator cost ($/acre)"
+                      a={'dollar'}
+                      shown={state.q3 === 'Custom Operator'}
                     />
-          
+
                     <Logic
                       current={current}
-                      property="productCost"
-                      q="Product cost"
-                      a={state.productCost}
+                      property="product"
+                      q="Product"
+                      a={['', ...Object.keys(db.herbicides).sort()]}
+                      shown={state.method === 'Herbicide application'}
                     />
 
-                    <tr><th colSpan="100">Chemical Spray Equipment</th></tr>
-                    <Logic
-                      current="chemical"
-                      property="implement"
-                      q="What chemical spray equipment will be used?"
-                      type="Chemical"
-                    />
-
-                    <Logic current="chemical" question="power" />
-            
-                    <Logic current="chemical" question="Annual Use (acres on implement)" />
-                    <Logic current="chemical" question="Annual Use (hours on power)" />
-                    <Logic current="chemical" question="Acres/hour" />
-
-                    <Logic
-                      current="chemical"
-                      property="total"
-                      q="Chemical spray equipment cost ($/acre)"
-                      a={'dollar'}
-                    />
-                  </>
-                )
-              }
-
-              {
-                /Roller/.test(method) && (
-                  <>
-                    <tr><th colSpan="100">Roller Equipment</th></tr>
-                    <Logic
-                      current="roller"
-                      property="implement"
-                      q="What roller equipment will be used?"
-                      type="Termination"
-                    />
-
-                    <Logic current="roller" question="power" />
-
-                    <Logic current="roller" question="Annual Use (acres on implement)" />
-                    <Logic current="roller" question="Annual Use (hours on power)" />
-                    <Logic current="roller" question="Acres/hour" />
-
-                    <Logic
-                      current="roller"
-                      property="total"
-                      q="Roller equipment cost ($/acre)"
-                      a={'dollar'}
-                    />
-                  </>
-                )
-              }
-
-              {
-                /Tillage/.test(method) && (
-                  <>
-                    <tr><th colSpan="100">Tillage Equipment</th></tr>
-                    <Logic
-                      current="tillage"
-                      property="implement"
-                      q="What tillage equipment will be used?"
-                      type="Tillage"
-                    />
-
-                    <Logic current="tillage" question="power" />
-
-                    <Logic current="tillage" question="Annual Use (acres on implement)" />
-                    <Logic current="tillage" question="Annual Use (hours on power)" />
-                    <Logic current="tillage" question="Acres/hour" />
-
-                    <Logic
-                      current="tillage"
-                      property="total"
-                      q="Tillage equipment cost ($/acre)"
-                      a={'dollar'}
-                    />
+                    {/herbicide/i.test(method) && <Herbicide/>}
+                    {/Roller/.test(method) && <Roller/>}
+                    {/Tillage/.test(method) && <Tillage/>}
                   </>
                 )
               }

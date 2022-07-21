@@ -93,7 +93,26 @@ const Fertility = () => {
       </form>
       {
         dev && (
-          <button
+          <>
+            <button
+              onClick={() => {
+                dispatch(set.fertN(30));
+                dispatch(set.fertP(0));
+                dispatch(set.fertK(0));
+                dispatch(set.$fertN(.75));
+                dispatch(set.$fertP(.60));
+                dispatch(set.$fertK(.50));
+                dispatch(set.fertNAdded(0));
+                dispatch(set.fertPAdded(15));
+                dispatch(set.fertKAdded(10));
+                dispatch(set.$fertApplication(8));
+                dispatch(set.useFertilizer('Yes'));
+                test('fertility.total', 0.5);
+              }}
+            >
+              Test data: Benefit
+            </button>
+            <button
             onClick={() => {
               dispatch(set.fertN(30));
               dispatch(set.fertP(0));
@@ -101,7 +120,7 @@ const Fertility = () => {
               dispatch(set.$fertN(.75));
               dispatch(set.$fertP(.60));
               dispatch(set.$fertK(.50));
-              dispatch(set.fertNAdded(0));
+              dispatch(set.fertNAdded(30));
               dispatch(set.fertPAdded(15));
               dispatch(set.fertKAdded(10));
               dispatch(set.$fertApplication(8));
@@ -109,9 +128,10 @@ const Fertility = () => {
               test('fertility.total', 0.5);
             }}
           >
-            Test data
+            Test data: Cost
           </button>
-        )
+        </>
+      )
       }
       <Activity type={current}/>
     </div>

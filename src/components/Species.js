@@ -109,7 +109,7 @@ const Species = () => {
               In addition, you may adjust seeding rates even for single species based upon your intended purpose.
               For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
               but may plant a higher rate if you seek to maximize grazing potential.
-              You may use the common rate listed in the grey shaded boxes or input your own rate.
+              You may use the common rate listed in the green shaded boxes or input your own rate.
               If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".</p>
 
             <p>

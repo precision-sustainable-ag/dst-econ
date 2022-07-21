@@ -288,7 +288,7 @@ nav strong, [data-scr=Resources] {
   background: yellow
 }
 
-#Summary tr > :nth-child(2) {
+#Summary td:nth-child(2) {
   text-align: right;
 }
 
