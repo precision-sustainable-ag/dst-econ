@@ -46,15 +46,8 @@ const Planting = () => {
 
             <Logic
               current={current}
-              property="q3"
-              q="Who will do this activity?"
-              a={['Self', 'Custom Operator']}
-            />
-
-            <Logic
-              current={current}
               property="implement"
-              q="What type of seedbed preparation will be done?"
+              q="How will planting be done?"
               type="Planting"
             />
 

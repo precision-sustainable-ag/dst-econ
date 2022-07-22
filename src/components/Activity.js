@@ -67,7 +67,7 @@ const Activity = ({type, instructions=true}) => {
     }
 
     breakdown = (
-                  state3 !== 'Custom Operator' &&
+                  (state3 !== 'Custom Operator' && imp !== 'Hire custom operator') &&
                   imp &&
                   !edited
                 ) && (

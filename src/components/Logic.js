@@ -11,10 +11,12 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
+  const custom = 'Hire custom operator';
 
   if (property === 'implement') {
-    a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
-    shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
+    a = [custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
+    // shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
+    shown = true;
   }
 
   switch (question) {
@@ -22,34 +24,34 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       property = 'annualUseAcres';
       q = q || question;
       a = 'number';
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'Annual Use (hours on power)':
       property = 'annualUseHours';
       q = q || question;
       a = 'number';
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'Acres/hour':
       q = q || question;
       a = acresHour;
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'Estimated':
       property = 'total';
       q = q || question;
-      q = (context.q3 === 'Self' ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`) || question;
+      q = (currentImplement === custom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
-      shown = context.q3;
+      shown = context.q3 || currentImplement;
       warning = (
-        context.q3 === 'Custom Operator' && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
+        (currentImplement === custom || context.q3 === 'Custom Operator') && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
           <div className="warning">
             Warning: {dollars(context.total)} is outside the expected range for this activity.
           </div>

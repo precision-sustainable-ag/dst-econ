@@ -296,6 +296,8 @@ const afterChange = {
   },
 };
 
+const capitalize = s => s[0].toUpperCase() + s.slice(1);
+
 ['seedbed', 'planting', 'chemical', 'roller', 'tillage'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
@@ -313,7 +315,15 @@ const afterChange = {
   afterChange[section + '.implement'] = (state, {payload}) => {
     const obj = state[section];
 
-    if (payload) {
+    if (payload === 'Hire custom operator') {
+      const def = {
+        seedbed : 'Seedbed preparation',
+        planting: 'Planting',
+      }[section];
+
+      state.focus = section + '.total';
+      obj.estimated = obj.total = db.costDefaults[def].cost;
+    } else {
       const p = db.implements[payload];
     
       obj.power = p['default power unit'];
@@ -664,3 +674,4 @@ export const clearInputs = (defaults) => {
     }
   }
 } // clearInputs
+
