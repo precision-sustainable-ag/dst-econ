@@ -296,8 +296,6 @@ const afterChange = {
   },
 };
 
-const capitalize = s => s[0].toUpperCase() + s.slice(1);
-
 ['seedbed', 'planting', 'chemical', 'roller', 'tillage'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
@@ -667,7 +665,7 @@ export const clearInputs = (defaults) => {
       for (const k of key.split('.')) {
         s = s[k];
       }
-      console.log(key, defaults[key]);
+      console.log(key, typeof defaults[key], defaults[key]);
       mystore.dispatch(s(defaults[key]));
     } catch(error) {
       console.log(error);

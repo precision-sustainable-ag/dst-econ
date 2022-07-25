@@ -6,7 +6,7 @@ import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, queue, getDefaults, test} from '../store/store';
 
-const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.q2|seedbed.q3|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage');
+const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage|seedbed.annualUseAcres|seedbed.acresHour|seedbed.annualUseHours');
 
 const Seedbed = () => {
   // console.log('Render: Seedbed');
@@ -47,20 +47,12 @@ const Seedbed = () => {
             <Logic
               current={current}
               property="q1"
-              q="Will you do cover crop seedbed preparation prior to planting the cover crop?"
+              q="Will you do a field activity to prepare for cover crop planting, which would not normally be done on this field without cover crops?"
               a={['Yes', 'No']}
-            />
-
-            <Logic
-              current={current}
-              property="q2"
-              q="Would you do this field activity if not planting a cover crop?"
-              a={['Yes', 'No']}
-              shown={state.q1 === 'Yes'}
             />
 
             {
-              state.q2 === 'No' && (
+              state.q1 === 'Yes' && (
                 <Logic
                   current={current}
                   property="implement"
@@ -76,9 +68,9 @@ const Seedbed = () => {
             <Logic current={current} question="Acres/hour" />
             <Logic 
               current={current}
-              shown={state.q2 === 'No'}
               question="Estimated"
-              total={Number.isFinite(state.total) ? state.total : estimated} estimated={estimated} 
+              total={Number.isFinite(state.total) ? state.total : estimated}
+              estimated={estimated} 
             />
           </tbody>
         </table>
@@ -88,8 +80,6 @@ const Seedbed = () => {
           <button
             onClick={() => {
               dispatch(set.seedbed.q1('Yes'));
-              dispatch(set.seedbed.q2('No'));
-              dispatch(set.seedbed.q3('Self'));
               queue(() => {
                 dispatch(set.seedbed.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
                 test('seedbed.power', '200 HP MFWD Tractor');
