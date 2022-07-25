@@ -1,4 +1,4 @@
-import {configureStore, createAction, createReducer, current} from '@reduxjs/toolkit';
+import {configureStore, createAction, createReducer} from '@reduxjs/toolkit'; // include "current" for troubleshooting
 
 const shared = {
   q1: '',
@@ -321,7 +321,7 @@ const afterChange = {
 
       state.focus = section + '.total';
       obj.estimated = obj.total = db.costDefaults[def].cost;
-    } else {
+    } else if (payload) {
       const p = db.implements[payload];
     
       obj.power = p['default power unit'];
