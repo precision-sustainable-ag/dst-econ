@@ -51,16 +51,13 @@ const Seedbed = () => {
               a={['Yes', 'No']}
             />
 
-            {
-              state.q1 === 'Yes' && (
-                <Logic
-                  current={current}
-                  property="implement"
-                  q="What type of seedbed preparation will be done?"
-                  type="Tillage"
-                />
-              )
-            }
+            <Logic
+              current={current}
+              property="implement"
+              q="What type of seedbed preparation will be done?"
+              type="Tillage"
+              shown={state.q1 === 'Yes'}
+            />
 
             <Logic current={current} question="power" />
             <Logic current={current} question="Annual Use (acres on implement)" />

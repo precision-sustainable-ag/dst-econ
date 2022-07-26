@@ -4,6 +4,13 @@ const shared = {
   q1: '',
   q2: '',
   q3: '',
+  q4: '',
+  q5: '',
+  q6: '',
+  q7: '',
+  q8: '',
+  q9: '',
+  q10: '',
   implement: '',
   power: '',
   method: '',
@@ -116,6 +123,9 @@ let initialState = {
   chemical: {...shared},
   roller:   {...shared},
   tillage:  {...shared},
+  tillage1: {...shared},
+  tillage2: {...shared},
+  tillage3: {...shared},
   termination: {
     ...shared,
     unitCost:    (state) => db.herbicides[state.termination.product]?.['Cost ($)'],
@@ -159,6 +169,9 @@ let initialState = {
     chemical:     {...shared},
     roller:       {...shared},
     tillage:      {...shared},
+    tillage1:     {...shared},
+    tillage2:     {...shared},
+    tillage3:     {...shared},
   },
 };
 
@@ -296,7 +309,7 @@ const afterChange = {
   },
 };
 
-['seedbed', 'planting', 'chemical', 'roller', 'tillage'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -315,11 +328,16 @@ const afterChange = {
 
     if (payload === 'Hire custom operator') {
       const def = {
-        seedbed : 'Seedbed preparation',
-        planting: 'Planting',
+        seedbed  : 'Seedbed preparation',
+        planting : 'Planting',
+        tillage  : 'Planting',
+        tillage1 : 'Planting',
+        tillage2 : 'Planting',
+        tillage3 : 'Planting',
       }[section];
 
       state.focus = section + '.total';
+      console.log(db.costDefaults);
       obj.estimated = obj.total = db.costDefaults[def].cost;
     } else if (payload) {
       const p = db.implements[payload];

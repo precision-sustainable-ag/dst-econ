@@ -3,50 +3,170 @@ import Logic from './Logic';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, test, getDefaults} from '../store/store';
+import {ClearInputs} from './ClearInputs';
+
+const defaults = getDefaults('tillage1.q1|tillage1.q2|tillage1.q6|tillage1.q9|tillage1.implement|tillage1.estimated|tillage1.total|tillage2.q2|tillage2.estimated|tillage2.total|tillage3.q2|tillage3.estimated|tillage3.total|tillage2.implement|tillage3.implement');
 
 const Tillage = () => {
   const dispatch  = useDispatch();
-  const current = 'tillage';
+  const current = 'tillage1';
+  const dev = useSelector(get.dev);
 
   const farm  = useSelector(get.farm);
   const field = useSelector(get.field);
   const acres = useSelector(get.acres);
 
+  const state = useSelector(get[current]);
+  const tillage1 = useSelector(get.tillage1);
+  const tillage2 = useSelector(get.tillage2);
+  const tillage3 = useSelector(get.tillage3);
+
+  const Costs = ({current, q2, q3, q4, shown}) => {
+    const state = useSelector(get[current]);
+    const estimated = useSelector(get[current].estimated);
+
+    return shown && (
+      <>
+        <Logic
+          current={current}
+          property="q2"
+          q={q2}
+          a={['Yes', 'No']}
+        />
+
+        <Logic
+          current={current}
+          property="implement"
+          q={q3}
+          type="Tillage"
+          shown={state.q2 === 'Yes'}
+        />
+
+        <Logic 
+          current={current}
+          question="Estimated"
+          q={q4}
+          total={Number.isFinite(state.total) ? state.total : estimated}
+          estimated={estimated}
+        />
+      </>
+    );
+  } // Costs
+
   return (
-    <div className="Tillage">
-      <h1>Economic Decision Aid for Cover Crops: Tillage</h1>
-      <p>
-        As a reminder to the user, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
-        Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
-        For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
-        Other growers have switched from conventional tillage to no-til planting after making a switch to extensive use of cover crops.
-        Review the <span className="link" onClick={() => dispatch(set.screen('Resources'))}>Resources page</span> for additional information.
-      </p>
+    <>
+      <div className="Tillage">
+        <h1>Economic Decision Aid for Cover Crops: Tillage</h1>
+        <p>
+          As a reminder to the user, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
+          Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
+          For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
+          Other growers have switched from conventional tillage to no-til planting after making a switch to extensive use of cover crops.
+          Review the <span className="link" onClick={() => dispatch(set.screen('Resources'))}>Resources page</span> for additional information.
+        </p>
 
-      <table>
-        <tbody>
-          {farm  && <tr><td>Farm:  </td><td>{farm} </td></tr>}
-          {field && <tr><td>Field: </td><td>{field}</td></tr>}
-          {acres && <tr><td>Acres: </td><td>{acres}</td></tr>}
-        </tbody>
-      </table>
-
-      <form>
-        <table className={current + ' inputs'}>
+        <table>
           <tbody>
-            <tr>
-              <th colSpan="2">Tillage</th>
-            </tr>
-            <Logic
-              current={current}
-              property="q1"
-              q="Do you typically conduct fall tillage on this field?"
-              a={['Yes', 'No']}
-            />
+            {farm  && <tr><td>Farm:  </td><td>{farm} </td></tr>}
+            {field && <tr><td>Field: </td><td>{field}</td></tr>}
+            {acres && <tr><td>Acres: </td><td>{acres}</td></tr>}
           </tbody>
         </table>
-      </form>
-    </div>
+
+        <form>
+          <table className={current + ' inputs'}>
+            <tbody>
+              <tr>
+                <th colSpan="2">
+                  Tillage
+                  <ClearInputs defaults={defaults} />
+                </th>
+              </tr>
+              <Logic
+                current={current}
+                property="q1"
+                q="Do you typically use no-till on this field?"
+                a={['Yes', 'No']}
+              />
+
+              <Costs 
+                current="tillage1"
+                q2="Do you typically conduct fall tillage on this field?"
+                q3="How is fall tillage on this field typically done?"
+                q4="Estimated cost of fall tillage"
+                shown={state.q1 === 'No'}
+              />
+
+              <Logic
+                current={current}
+                property="q5"
+                q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
+                a={['Yes', 'No']}
+                shown={state.q2 === 'Yes'}
+              />
+
+              <Costs
+                current="tillage2"
+                q2="Will you be eliminating any other tillage than fall tillage, because of planting a cover crop?"
+                q3="What other tillage activity will be eliminated because of planting a cover crop?"
+                q4="Estimated cost of eliminated tillage activity"
+                shown={state.q2 === 'Yes'}
+              />
+
+              <Costs
+                current="tillage3"
+                q2="Will you be adding any tillage activities because of planting a cover crop?"
+                q3="What other tillage activity will be added because of planting a cover crop?"
+                q4="Estimated cost of added tillage activity"
+                shown={true}
+              />
+
+              <Logic
+                current={current}
+                q="Tillage cost reductions due to adopting cover crop"
+                a={(state.q5 === 'Yes' ? -tillage1.total : 0) - tillage2.total}
+                shown={state.q2 === 'Yes'}
+              />              
+
+              <Logic
+                current={current}
+                q="Tillage cost increases due to adopting cover crop"
+                a={tillage3.total}
+                shown={state.q2 === 'Yes'}
+              />              
+
+              <Logic
+                current={current}
+                q="Net impact of adopting cover crop on tillage costs"
+                a={tillage3.total}
+                shown={state.q2 === 'Yes'}
+              />              
+            </tbody>
+          </table>
+        </form>
+      </div>
+      {
+        dev && (
+          <button
+            onClick={() => {
+              dispatch(set.tillage1.q1('No'));
+              dispatch(set.tillage1.q2('Yes'));
+              dispatch(set.tillage1.implement('Chisel Plow; 23 Ft'));
+              dispatch(set.tillage1.q6('Yes'));
+              dispatch(set.tillage2.implement('Field Cultivator; 23 Ft'));
+              dispatch(set.tillage1.q9('Yes'));
+              dispatch(set.tillage3.implement('Hire custom operator'));
+            }}
+          >
+            Test data
+          </button>
+        )
+      }
+
+      <Activity type="tillage1" />
+      <Activity type="tillage2" instructions={false} />
+      <Activity type="tillage3" instructions={false} />
+    </>
   )
 } // Tillage
 

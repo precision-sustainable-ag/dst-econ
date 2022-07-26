@@ -16,7 +16,9 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   if (property === 'implement') {
     a = [custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
     // shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
-    shown = true;
+    if (shown !== false) {
+      shown = true;
+    }
   }
 
   switch (question) {
@@ -45,8 +47,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       break;
     case 'Estimated':
       property = 'total';
-      q = q || question;
-      q = (currentImplement === custom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
+      q = (currentImplement === custom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : q || `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || currentImplement;
