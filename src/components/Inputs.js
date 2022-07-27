@@ -98,8 +98,10 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
       if (focusRef.current) {
         const input = focusRef.current.querySelector('input');
         input.focus();
-        setTimeout(() => input.select(), 100);
-        dispatch(set.focus(null));
+        setTimeout(() => {
+          input.focus();
+          dispatch(set.focus(null));
+        }, 100);
       }
     }
   }, [changed, val, focus, dispatch, props]);

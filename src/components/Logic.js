@@ -4,7 +4,7 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../store/store';
 
-const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning}) => {
+const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
@@ -81,8 +81,8 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   return (
     current && shown ?
     <tr className={current}>
-      <td>{q}</td>
-      <td>
+      <td style={style}>{q}</td>
+      <td style={style}>
         {
           Array.isArray(a) ?
             a.length < 3 ? 
@@ -111,15 +111,11 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
             />
           :
           
-          typeof a === 'string' ? 
-            a
-          :
-          
           isFinite(a) ? 
             '$' + (+a).toFixed(2)
           :
           
-          ''
+          a
         }
         <span className="suffix">{suffix}</span>
       </td>

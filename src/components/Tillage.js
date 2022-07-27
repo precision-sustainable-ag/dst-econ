@@ -2,7 +2,7 @@ import Activity from './Activity';
 import Logic from './Logic';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults} from '../store/store';
+import {get, set, test, getDefaults, dollars} from '../store/store';
 import {ClearInputs} from './ClearInputs';
 
 const defaults = getDefaults('tillage1.q1|tillage1.q2|tillage1.q6|tillage1.q9|tillage1.implement|tillage1.estimated|tillage1.total|tillage2.q2|tillage2.estimated|tillage2.total|tillage3.q2|tillage3.estimated|tillage3.total|tillage2.implement|tillage3.implement');
@@ -18,8 +18,8 @@ const Tillage = () => {
 
   const state = useSelector(get[current]);
   const tillage1 = useSelector(get.tillage1);
-  const tillage2 = useSelector(get.tillage2);
   const tillage3 = useSelector(get.tillage3);
+  const tillageAll = useSelector(get.tillageAll);
 
   const Costs = ({current, q2, q3, q4, shown}) => {
     const state = useSelector(get[current]);
@@ -32,6 +32,7 @@ const Tillage = () => {
           property="q2"
           q={q2}
           a={['Yes', 'No']}
+          style={{borderTop: '2px solid #444'}}
         />
 
         <Logic
@@ -103,6 +104,7 @@ const Tillage = () => {
                 q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
                 a={['Yes', 'No']}
                 shown={state.q2 === 'Yes'}
+                style={{borderTop: '2px solid #444'}}
               />
 
               <Costs
@@ -124,22 +126,25 @@ const Tillage = () => {
               <Logic
                 current={current}
                 q="Tillage cost reductions due to adopting cover crop"
-                a={(state.q5 === 'Yes' ? -tillage1.total : 0) - tillage2.total}
+                a={dollars(tillage1.costReductions)}
                 shown={state.q2 === 'Yes'}
+                style={{background: 'lightyellow', borderTop: '2px solid #444'}}
               />              
 
               <Logic
                 current={current}
                 q="Tillage cost increases due to adopting cover crop"
-                a={tillage3.total}
+                a={dollars(tillage3.total)}
                 shown={state.q2 === 'Yes'}
+                style={{background: 'lightyellow'}}
               />              
 
               <Logic
                 current={current}
                 q="Net impact of adopting cover crop on tillage costs"
-                a={tillage3.total}
+                a={dollars(tillageAll.total)}
                 shown={state.q2 === 'Yes'}
+                style={{background: 'lightyellow'}}
               />              
             </tbody>
           </table>
@@ -147,19 +152,68 @@ const Tillage = () => {
       </div>
       {
         dev && (
-          <button
-            onClick={() => {
-              dispatch(set.tillage1.q1('No'));
-              dispatch(set.tillage1.q2('Yes'));
-              dispatch(set.tillage1.implement('Chisel Plow; 23 Ft'));
-              dispatch(set.tillage1.q6('Yes'));
-              dispatch(set.tillage2.implement('Field Cultivator; 23 Ft'));
-              dispatch(set.tillage1.q9('Yes'));
-              dispatch(set.tillage3.implement('Hire custom operator'));
-            }}
-          >
-            Test data
-          </button>
+          <>
+            <button
+              onClick={() => {
+                dispatch(set.tillage1.q1('No'));
+                dispatch(set.tillage1.q2('Yes'));
+                dispatch(set.tillage1.implement('Chisel Plow; 23 Ft'));
+                dispatch(set.tillage1.q5('Yes'));
+                dispatch(set.tillage2.q2('No'));
+                dispatch(set.tillage3.q2('Yes'));
+                dispatch(set.tillage3.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
+              }}
+            >
+              Test data #1
+            </button>
+            <button
+              onClick={() => {
+                dispatch(set.tillage1.q1('No'));
+                dispatch(set.tillage1.q2('No'));
+                dispatch(set.tillage2.q2('No'));
+                dispatch(set.tillage3.q2('No'));
+              }}
+            >
+              Test data #2
+            </button>
+            <button
+              onClick={() => {
+                dispatch(set.tillage1.q1('No'));
+                dispatch(set.tillage1.q2('Yes'));
+                dispatch(set.tillage1.implement('Chisel Plow; 23 Ft'));
+                dispatch(set.tillage1.q5('Yes'));
+                dispatch(set.tillage2.q2('No'));
+                dispatch(set.tillage3.q2('No'));
+              }}
+            >
+              Test data #3
+            </button>
+            <button
+              onClick={() => {
+                dispatch(set.tillage1.q1('No'));
+                dispatch(set.tillage1.q2('Yes'));
+                dispatch(set.tillage1.implement('Chisel Plow; 23 Ft'));
+                dispatch(set.tillage1.q5('Yes'));
+                dispatch(set.tillage2.q2('Yes'));
+                dispatch(set.tillage2.implement('Chisel Plow; 23 Ft'));
+                dispatch(set.tillage3.q2('No'));
+              }}
+            >
+              Test data #4
+            </button>
+            <button
+              onClick={() => {
+                dispatch(set.tillage1.q1('No'));
+                dispatch(set.tillage1.q2('No'));
+                dispatch(set.tillage2.q2('No'));
+                dispatch(set.tillage3.q2('Yes'));
+                dispatch(set.tillage3.implement('Chisel Plow; 23 Ft'));
+              }}
+            >
+              Test data #5
+            </button>
+            <hr/>
+          </>
         )
       }
 

@@ -123,9 +123,20 @@ let initialState = {
   chemical: {...shared},
   roller:   {...shared},
   tillage:  {...shared},
-  tillage1: {...shared},
+  tillage1: {
+    ...shared,
+    costReductions: (state) => {
+      return (state.tillage1.q5 === 'Yes' ? -state.tillage1.total : 0) - state.tillage2.total
+    }
+  },
   tillage2: {...shared},
   tillage3: {...shared},
+  tillageAll: {
+    ...shared,
+    total: (state) => {
+      return state.tillage1.costReductions + state.tillage3.total;
+    }
+  },
   termination: {
     ...shared,
     unitCost:    (state) => db.herbicides[state.termination.product]?.['Cost ($)'],
@@ -281,6 +292,30 @@ const afterChange = {
     state.tillage.power = '';
     state.tillage.total = 0;
   },
+  'tillage1.q2': (state, {payload}) => {
+    state.tillage1.estimated = 0;
+    state.tillage1.total = 0;
+    state.tillage1.implement = '';
+    if (payload === 'Yes') {
+      state.focus = 'tillage1.implement';
+    }
+  },
+  'tillage2.q2': (state, {payload}) => {
+    state.tillage2.estimated = 0;
+    state.tillage2.total = 0;
+    state.tillage2.implement = '';
+    if (payload === 'Yes') {
+      state.focus = 'tillage2.implement';
+    }
+  },
+  'tillage3.q2': (state, {payload}) => {
+    state.tillage3.estimated = 0;
+    state.tillage3.total = 0;
+    state.tillage3.implement = '';
+    if (payload === 'Yes') {
+      state.focus = 'tillage3.implement';
+    }
+  },
   'additional.grazing': (state, {payload}) => {
     if (payload === 'No') {
       state.screen = 'Yield';
@@ -345,7 +380,7 @@ const afterChange = {
       obj.power = p['default power unit'];
       obj.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / db.rates.conversion.value).toFixed(2);
       obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
-      state.focus = section + '.power';
+      
       return [section + '.power'];
     }
   };
@@ -356,7 +391,12 @@ const afterChange = {
     if (obj.power) {
       obj.annualUseHours = db.power[obj.power]['expected use (hr/yr)'];
       getCosts(state, section);
-      state.focus = section + '.annualUseAcres';
+
+      if (/tillage[1-3]/.test(section)) {
+        state.focus = section + '.total';
+      } else {
+        state.focus = section + '.annualUseAcres';
+      }
     }
   };
 
