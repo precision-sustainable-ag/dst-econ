@@ -1,55 +1,81 @@
 import {Input} from './Inputs';
 import {useEffect} from 'react';
 
+import {Icon} from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../store/store';
 
-const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning}) => {
+const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
+  const custom = 'Hire custom operator';
 
   if (property === 'implement') {
-    a = ['', ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
-    shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
+    a = [custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
+    // shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
+    if (shown !== false) {
+      shown = true;
+    }
   }
 
   switch (question) {
     case 'Annual Use (acres on implement)':
       property = 'annualUseAcres';
+      question = (
+        <>
+          {question}
+          <Icon>
+            help
+            <p>Costs associated with tractor and implement use are based upon annual use.</p>
+            <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
+          </Icon>
+        </>
+      );
+
       q = q || question;
       a = 'number';
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'Annual Use (hours on power)':
       property = 'annualUseHours';
+      question = (
+        <>
+          {question}
+          <Icon>
+            help
+            <p>Costs associated with tractor and implement use are based upon annual use.</p>
+            <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
+          </Icon>
+        </>
+      );
       q = q || question;
       a = 'number';
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'Acres/hour':
       q = q || question;
       a = acresHour;
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
-      shown = currentImplement;
+      shown = currentImplement && currentImplement !== custom;
       break;
     case 'Estimated':
       property = 'total';
-      q = q || question;
-      q = (context.q3 === 'Self' ? `Estimated relevant cost (${dollars(estimated)}/acre)` : `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`) || question;
+      estimated = context.estimated;
+      q = (currentImplement === custom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : q || `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
-      shown = context.q3;
+      shown = context.q3 || currentImplement;
       warning = (
-        context.q3 === 'Custom Operator' && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
+        (currentImplement === custom || context.q3 === 'Custom Operator') && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
           <div className="warning">
             Warning: {dollars(context.total)} is outside the expected range for this activity.
           </div>
@@ -78,8 +104,8 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   return (
     current && shown ?
     <tr className={current}>
-      <td>{q}</td>
-      <td>
+      <td style={style}>{q}</td>
+      <td style={style}>
         {
           Array.isArray(a) ?
             a.length < 3 ? 
@@ -108,15 +134,11 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
             />
           :
           
-          typeof a === 'string' ? 
-            a
-          :
-          
           isFinite(a) ? 
             '$' + (+a).toFixed(2)
           :
           
-          ''
+          a
         }
         <span className="suffix">{suffix}</span>
       </td>

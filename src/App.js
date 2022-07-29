@@ -58,6 +58,28 @@ function App() {
     },
   };
 
+  const Help = () => {
+    const help  = useSelector(get.help);
+    const helpX = useSelector(get.helpX);
+    const helpY = useSelector(get.helpY);
+    const style = {
+      left: helpX,
+      top: helpY,
+      maxWidth:  `calc(100vw - ${helpX}px - 20px)`,
+      maxHeight: `calc(100vh - ${helpY}px - 20px)`,
+      overflow: 'auto'
+    }
+  
+    return (
+      help &&
+      <div
+        className="help"
+        style={style}
+        dangerouslySetInnerHTML={{ __html: help }}
+      />
+    )
+  } // Help
+  
   const MyMenu = (s) => {
     return (
       Object.keys(s).map(scr => {
@@ -237,18 +259,39 @@ function App() {
     }
   }, [dispatch, hotkeys, screen]);
 
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        dispatch(set.help(''));
+      }
+    });
+  }, [dispatch]);
+
   console.log(screen);
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
-    <div className="App">
+    <div
+      className="App"
+      
+      onClick={(e) => {
+        if (/^help/.test(e.target.innerHTML)) {
+          dispatch(set.help(e.target.innerHTML.slice(4)));
+          dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
+          dispatch(set.helpY(e.pageY - 20));
+        } else {
+          dispatch(set.help(''));
+        }
+      }}
+    >
       <Summary/>
       <nav onClick={changeScreen}>
         {MyMenu(screens)}
       </nav>
 
       <div id="Main">
-        <Screen/>
+        <Help />
+        <Screen />
         <Navigation current={screen} />
       </div>
     </div>

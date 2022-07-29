@@ -110,11 +110,13 @@ const Species = () => {
               For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
               but may plant a higher rate if you seek to maximize grazing potential.
               You may use the common rate listed in the green shaded boxes or input your own rate.
-              If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".</p>
+              If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".
+            </p>
 
             <p>
               Prices for cover crops may vary widely based upon your geography and availability from season to season.
               You may utilize the default value or enter specific pricing from your region.
+              Growers planning to plant a cover crop <em>mix</em> can either 'build' their mix by selecting multiple cover crop species and an <em><strong>appropriate</strong></em> seeding rate (i.e. seeding rate may be lower in a mix relative to seeding as a stand-alone) or by selecting commercial mix and entering a seed rate and price for the commercial mix you chose.
             </p>
           </div>
 

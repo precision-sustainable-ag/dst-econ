@@ -506,3 +506,20 @@ body.hotkeys u {
   text-decoration: underline;
   border-bottom: none;
 }
+
+.help {
+  position: fixed;
+  background: #eee;
+  z-index: 1000;
+  padding: 0.5em;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px 5px #000;
+  font-size: 80%;
+}
+
+.MuiIcon-root {
+  zoom: 0.8;
+  opacity: 0.6;
+  cursor: pointer;
+  color: #444;
+}

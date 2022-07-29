@@ -1,9 +1,16 @@
-import {configureStore, createAction, createReducer, current} from '@reduxjs/toolkit';
+import {configureStore, createAction, createReducer} from '@reduxjs/toolkit'; // include "current" for troubleshooting
 
 const shared = {
   q1: '',
   q2: '',
   q3: '',
+  q4: '',
+  q5: '',
+  q6: '',
+  q7: '',
+  q8: '',
+  q9: '',
+  q10: '',
   implement: '',
   power: '',
   method: '',
@@ -49,6 +56,9 @@ const shared = {
 };
 
 let initialState = {
+  help   : '',
+  helpX  : 0,
+  helpY  : 0,  
   focus: null,
   firstName: '',
   lastName: '',
@@ -116,11 +126,25 @@ let initialState = {
   chemical: {...shared},
   roller:   {...shared},
   tillage:  {...shared},
+  tillage1: {
+    ...shared,
+    costReductions: (state) => {
+      return (state.tillage1.q5 === 'Yes' ? -state.tillage1.total : 0) - state.tillage2.total
+    }
+  },
+  tillage2: {...shared},
+  tillage3: {...shared},
+  tillageAll: {
+    ...shared,
+    total: (state) => {
+      return state.tillage1.costReductions + state.tillage3.total;
+    }
+  },
   termination: {
     ...shared,
     unitCost:    (state) => db.herbicides[state.termination.product]?.['Cost ($)'],
     rate:        (state) => db.herbicides[state.termination.product]?.['Rate'],
-    productCost: (state) => state.termination.unitCost * state.termination.rate,
+    productCost: (state) => (state.termination.unitCost * state.termination.rate) || undefined,
   },
   fertility: {
     ...shared,
@@ -159,6 +183,9 @@ let initialState = {
     chemical:     {...shared},
     roller:       {...shared},
     tillage:      {...shared},
+    tillage1:     {...shared},
+    tillage2:     {...shared},
+    tillage3:     {...shared},
   },
 };
 
@@ -213,46 +240,12 @@ const afterChange = {
       state.screen = 'Planting';
     }
   },
-  'seedbed.q3': (state, {payload}) => {
-    switch (payload) {
-      case 'Self':
-        state.focus = 'seedbed.implement';
-        state.seedbed.estimated = state.seedbed.total = undefined;
-        break;
-      case 'Custom Operator':
-        state.focus = 'seedbed.total';
-        state.seedbed.estimated = state.seedbed.total = db.costDefaults['Seedbed preparation'].cost;
-        break;
-      default:
-    }
-  },
-  'planting.q3': (state, {payload}) => {
-    switch (payload) {
-      case 'Self':
-        state.focus = 'planting.implement';
-        state.planting.estimated = state.planting.total = undefined;
-        break;
-      case 'Custom Operator':
-        state.focus = 'planting.total';
-        state.planting.estimated = state.planting.total = db.costDefaults['Planting'].cost;
-        break;
-      default:
-    }
+  'termination.product': (state) => {
+    state.focus = 'termination.unitCost'
   },
   'termination.q2': (state, {payload}) => {
     if (payload === 'Yes') {
       state.screen = 'Tillage';
-    }
-  },
-  'termination.q3': (state, {payload}) => {
-    switch (payload) {
-      case 'Self':
-        state.focus = 'termination.method';
-        break;
-      case 'Custom Operator':
-        state.focus = 'termination.customCost';
-        break;
-      default:
     }
   },
   'termination.method': (state) => {
@@ -267,6 +260,30 @@ const afterChange = {
     state.tillage.implement = '';
     state.tillage.power = '';
     state.tillage.total = 0;
+  },
+  'tillage1.q2': (state, {payload}) => {
+    state.tillage1.estimated = 0;
+    state.tillage1.total = 0;
+    state.tillage1.implement = '';
+    if (payload === 'Yes') {
+      state.focus = 'tillage1.implement';
+    }
+  },
+  'tillage2.q2': (state, {payload}) => {
+    state.tillage2.estimated = 0;
+    state.tillage2.total = 0;
+    state.tillage2.implement = '';
+    if (payload === 'Yes') {
+      state.focus = 'tillage2.implement';
+    }
+  },
+  'tillage3.q2': (state, {payload}) => {
+    state.tillage3.estimated = 0;
+    state.tillage3.total = 0;
+    state.tillage3.implement = '';
+    if (payload === 'Yes') {
+      state.focus = 'tillage3.implement';
+    }
   },
   'additional.grazing': (state, {payload}) => {
     if (payload === 'No') {
@@ -296,7 +313,7 @@ const afterChange = {
   },
 };
 
-['seedbed', 'planting', 'chemical', 'roller', 'tillage'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -313,13 +330,28 @@ const afterChange = {
   afterChange[section + '.implement'] = (state, {payload}) => {
     const obj = state[section];
 
-    if (payload) {
+    if (payload === 'Hire custom operator') {
+      const def = {
+        seedbed  : 'Seedbed preparation',
+        planting : 'Planting',
+        tillage  : 'Seedbed preparation',
+        tillage1 : 'Seedbed preparation',
+        tillage2 : 'Seedbed preparation',
+        tillage3 : 'Seedbed preparation',
+        chemical : 'Herbicide application',
+        roller   : 'Roller',
+      }[section];
+
+      state.focus = section + '.total';
+      console.log(db.costDefaults);
+      obj.estimated = obj.total = db.costDefaults[def].cost;
+    } else if (payload) {
       const p = db.implements[payload];
     
       obj.power = p['default power unit'];
       obj.acresHour = +(p['size1'] * p['field speed (m/h)'] * p['field efficiency'] / db.rates.conversion.value).toFixed(2);
       obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
-      state.focus = section + '.power';
+      
       return [section + '.power'];
     }
   };
@@ -330,7 +362,12 @@ const afterChange = {
     if (obj.power) {
       obj.annualUseHours = db.power[obj.power]['expected use (hr/yr)'];
       getCosts(state, section);
-      state.focus = section + '.annualUseAcres';
+
+      if (/tillage[1-3]/.test(section)) {
+        state.focus = section + '.total';
+      } else {
+        state.focus = section + '.annualUseAcres';
+      }
     }
   };
 
@@ -657,10 +694,11 @@ export const clearInputs = (defaults) => {
       for (const k of key.split('.')) {
         s = s[k];
       }
-      console.log(key, defaults[key]);
+      console.log(key, typeof defaults[key], defaults[key]);
       mystore.dispatch(s(defaults[key]));
     } catch(error) {
       console.log(error);
     }
   }
 } // clearInputs
+

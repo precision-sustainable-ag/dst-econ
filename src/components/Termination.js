@@ -4,15 +4,23 @@ import {useEffect} from 'react';
 import {ClearInputs} from './ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, db} from '../store/store';
+import {get, set, test, getDefaults, db, clearInputs} from '../store/store';
 
-const defaults = getDefaults('termination.q2|chemical.q3|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.q3|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.q3|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method');
+const defaults = getDefaults('termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product');
 
 const Termination = () => {
   // console.log('Render: Termination');
+
   const Herbicide = () => (
     <>
       <tr><th colSpan="100">Product</th></tr>
+      <Logic
+        current={current}
+        property="product"
+        q="Product"
+        a={['', ...Object.keys(db.herbicides).sort()]}
+      />
+
       <Logic
         current={current}
         property="unitCost"
@@ -40,7 +48,7 @@ const Termination = () => {
       <Logic
         current="chemical"
         property="implement"
-        q="What chemical spray equipment will be used?"
+        q="How will this herbicide application be done?"
         type="Chemical"
       />
 
@@ -52,7 +60,7 @@ const Termination = () => {
 
       <Logic
         current="chemical"
-        property="total"
+        question="Estimated"
         q="Chemical spray equipment cost ($/acre)"
         a={'dollar'}
       />
@@ -65,7 +73,7 @@ const Termination = () => {
       <Logic
         current="roller"
         property="implement"
-        q="What roller equipment will be used?"
+        q="How will this roller termination be done?"
         type="Termination"
       />
 
@@ -77,7 +85,7 @@ const Termination = () => {
 
       <Logic
         current="roller"
-        property="total"
+        question="Estimated"
         q="Roller equipment cost ($/acre)"
         a={'dollar'}
       />
@@ -90,8 +98,9 @@ const Termination = () => {
       <Logic
         current="tillage"
         property="implement"
-        q="What tillage equipment will be used?"
+        q="How will this tillage be done?"
         type="Tillage"
+        zshown={false}
       />
 
       <Logic current="tillage" question="power" />
@@ -102,7 +111,7 @@ const Termination = () => {
 
       <Logic
         current="tillage"
-        property="total"
+        question="Estimated"
         q="Tillage equipment cost ($/acre)"
         a={'dollar'}
       />
@@ -145,6 +154,10 @@ const Termination = () => {
                 property="method"
                 q="Cover Crop termination method"
                 a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
+                onChange={(_, value) => {
+                  clearInputs(defaults);
+                  dispatch(set.termination.method(value));
+                }}
               />
 
               <Logic
@@ -158,29 +171,6 @@ const Termination = () => {
               {
                 state.q2 === 'No' && (
                   <>
-                    <Logic
-                      current={current}
-                      property="q3"
-                      q="Who will do this activity?"
-                      a={['Self', 'Custom Operator']}
-                    />
-
-                    <Logic
-                      current={current}
-                      property="customCost"
-                      q="Custom operator cost ($/acre)"
-                      a={'dollar'}
-                      shown={state.q3 === 'Custom Operator'}
-                    />
-
-                    <Logic
-                      current={current}
-                      property="product"
-                      q="Product"
-                      a={['', ...Object.keys(db.herbicides).sort()]}
-                      shown={state.method === 'Herbicide application'}
-                    />
-
                     {/herbicide/i.test(method) && <Herbicide/>}
                     {/Roller/.test(method) && <Roller/>}
                     {/Tillage/.test(method) && <Tillage/>}
@@ -201,7 +191,6 @@ const Termination = () => {
                 dispatch(set.screen('Termination'));
 
                 dispatch(set.termination.q2('No'));
-                dispatch(set.termination.q3('Self'));
                 test('focus', 'termination.method');
 
                 dispatch(set.termination.method('Herbicide application'));
@@ -240,7 +229,6 @@ const Termination = () => {
                 dispatch(set.screen('Termination'));
 
                 dispatch(set.termination.q2('No'));
-                dispatch(set.termination.q3('Self'));
                 test('focus', 'termination.method');
 
                 dispatch(set.termination.method('Roller'));
@@ -260,7 +248,6 @@ const Termination = () => {
                 dispatch(set.screen('Termination'));
 
                 dispatch(set.termination.q2('No'));
-                dispatch(set.termination.q3('Self'));
                 test('focus', 'termination.method');
 
                 dispatch(set.termination.method('Tillage'));
@@ -282,7 +269,6 @@ const Termination = () => {
                 dispatch(set.screen('Termination'));
 
                 dispatch(set.termination.q2('No'));
-                dispatch(set.termination.q3('Self'));
                 test('focus', 'termination.method');
 
                 dispatch(set.termination.method('Roller with follow-up herbicide'));

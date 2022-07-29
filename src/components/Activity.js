@@ -21,6 +21,9 @@ const Activity = ({type, instructions=true}) => {
     roller:       'Roller',
     tillage:      'Tillage',
     termination:  'Termination total',
+    tillage1:     'Fall tillage',
+    tillage2:     'Other tillage',
+    tillage3:     'Cover crop tillage',
   }[type];
   
   const Costs = ({desc}) => {
@@ -67,7 +70,7 @@ const Activity = ({type, instructions=true}) => {
     }
 
     breakdown = (
-                  state3 !== 'Custom Operator' &&
+                  (state3 !== 'Custom Operator' && imp !== 'Hire custom operator') &&
                   imp &&
                   !edited
                 ) && (
@@ -155,14 +158,15 @@ export const Summary = () => {
   const rollerTotal       = useSelector(get.roller.total) || 0;
   const tillageTotal      = useSelector(get.tillage.total) || 0;
   const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + -fertilityTotal + +terminationTotal;
+  const tillageAllTotal   = useSelector(get.tillageAll.total) || 0;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal - fertilityTotal + +terminationTotal + +tillageAllTotal;
 
   const SummaryRow = ({parm, desc}) => {
     return parm ? <tr><td>{desc}</td><td>{dollars(Math.abs(parm))}</td></tr> : null;
   } // SummaryRow
 
   const Costs = () => {
-    console.log(coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal);
+    console.log(coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, tillageAllTotal);
     if (total > 0) {
       return (
         <>
@@ -186,11 +190,17 @@ export const Summary = () => {
               </>
             }
             {
-              true && terminationTotal > 0 &&
-              <>
+              true && terminationTotal > 0 && (
                 <SummaryRow parm={terminationTotal} desc="Termination" />
-              </>
+              )
             }
+
+            {
+              tillageAllTotal > 0 && (
+                <SummaryRow parm={tillageAllTotal} desc="Tillage" />
+              )
+            }
+            
           </tbody>
         </>
       )
@@ -198,16 +208,23 @@ export const Summary = () => {
   }; // Costs
 
   const Benefits = () => {
-    if (fertilityTotal > 0) {
+    if (fertilityTotal > 0 || tillageAllTotal < 0) {
       return (
         <>
           <thead>
             <tr><th>Description</th><th>Benefits</th></tr>
           </thead>
           <tbody>
-            {fertilityTotal > 0 && (
-              <SummaryRow parm={fertilityTotal} desc="Fertility" />
-            )}
+            {
+              fertilityTotal > 0 && (
+                <SummaryRow parm={fertilityTotal} desc="Fertility" />
+              )
+            }
+            {
+              tillageAllTotal < 0 && (
+                <SummaryRow parm={tillageAllTotal} desc="Tillage" />
+              )
+            }
           </tbody>
         </>
       );
