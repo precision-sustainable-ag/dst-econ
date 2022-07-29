@@ -283,6 +283,13 @@ const afterChange = {
     state.tillage3.implement = '';
     if (payload === 'Yes') {
       state.focus = 'tillage3.implement';
+    } else if (state.tillage1.q1 === 'Yes') {
+      state.screen = 'Fertility';
+    }
+  },
+  'tillage1.q1': (state, {payload}) => {
+    if (payload === 'Yes' && state.tillage3.q2 === 'No') {
+      state.screen = 'Fertility';
     }
   },
   'additional.grazing': (state, {payload}) => {

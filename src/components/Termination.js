@@ -138,6 +138,17 @@ const Termination = () => {
       <div className="Termination">
         <h1>Economic Decision Aid for Cover Crops: Termination</h1>
         <strong>Cover Crop Establishment</strong>
+        <p>
+          In order to accurately evaluate the economic impact of implementing cover crops into your rotation, we only want to consider management decisions directly associated with the use of cover crops.
+          In this module we will consider any activity associated with termination of the cover crop, but only activities that are incurred specific to the cover crop.
+          For example, if you plan to use tillage to terminate the cover crop but would normally conduct the same tillage pass if no cover crop had been planted then the costs associated with tillage will not be considered in this evaluation.
+          This module has four methods of termination; herbicide, tillage, using a crop roller, and using a crop roller combined with herbicide.
+        </p>
+        <p>
+          Also, the costs associated with machinery are dependent upon the annual hours of use.
+          In this module you can accept the default value (for hours of annual use) or customize with the estimated hours associated with your operation.
+          This will more accurately represent costs in your operation.
+        </p>
         <form>
           <table className={current + ' inputs'}>
             <thead>

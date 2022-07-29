@@ -99,7 +99,7 @@ const Tillage = () => {
               />
 
               <Logic
-                current={current}
+                current="tillage1"
                 property="q5"
                 q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
                 a={['Yes', 'No']}
