@@ -6,7 +6,7 @@ import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, queue, getDefaults, test} from '../store/store';
 
-const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.q3|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
+const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
 
 const Planting = () => {
   // console.log('Render: Planting');
@@ -27,9 +27,18 @@ const Planting = () => {
     <>
       <h1>Economic Decision Aid for Cover Crops: Planting Decisions</h1>
       <div id="About">
-        Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
-        Only activities that are incurred because a cover crop is planted are charged to the cover crop.
-        If you were going to do the activity without planting a cover crop, its cost is not considered a cost of growing the cover crop.
+        <p>
+          In order to accurately evaluate the economic impact of implementing cover crops into your rotation, we only want to consider management decisions directly associated with the use of cover crops.
+          In this module we will consider any activity associated with planting cover crops, but only new activity.
+          There are many potential options for planting cover crops; including aerial application.
+          Input per acre costs associated with using an airplane by selecting "hire custom operator" on the drop-down menu.
+          As another example, if utilizing a no-til drill to plant cover crops select the appropriate equipment on the drop-down menu and proceed to answer questions on tractor horsepower.
+        </p>
+        <p>
+          Also, the costs associated with machinery are dependent upon the annual hours of use.
+          In this module you can accept the default value (for hours of annual use) or customize with the estimated hours associated with your operation.
+          This will more accurately represent costs in your operation.
+        </p>
       </div>
       <hr/>
 
@@ -63,7 +72,6 @@ const Planting = () => {
         dev && (
           <button
             onClick={() => {
-              dispatch(set.planting.q3('Self'));
               queue(() => {
                 dispatch(set.planting.implement('Presswheel Drill; 16 Ft'));
                 test('planting.power', '105 HP MFWD Tractor');

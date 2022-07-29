@@ -27,9 +27,19 @@ const Seedbed = () => {
     <>
       <h1>Economic Decision Aid for Cover Crops: Seedbed Preparation</h1>
       <div id="About">
-        Decisions surrounding cover crop decisions require understanding how they will be impacted by the prior cash crop.
-        Only activities that are incurred because a cover crop is planted are charged to the cover crop.
-        If you were going to do the activity without planting a cover crop, its cost is not considered a cost of growing the cover crop.
+        <p>
+          In order to accurately evaluate the economic impact of implementing cover crops into your rotation, we only want to consider management decisions directly associated with the use of cover crops.
+          In this module we will consider only activities that are incurred because a cover crop is planted.
+          For example, if you would normally conduct tillage (e.g. vertical tillage pass on corn stalks) after harvest this would not be considered an additional cost associated with cover crops.
+          Ensure your inputs are only those specific to seedbed preparation for cover crops.
+          For example, if you will no longer conduct fall tillage (e.g. inline or deep ripping) due to planting cover crops you will account for these changes in the Tillage Module.
+        </p>
+
+        <p>
+          Also, the costs associated with machinery are dependent upon the annual hours of use.
+          In this module you can accept the default value (for hours of annual use) or customize with the estimated hours associated with your operation.
+          This will more accurately represent costs in your operation.
+        </p>
       </div>
       <hr/>
 
@@ -54,7 +64,7 @@ const Seedbed = () => {
             <Logic
               current={current}
               property="implement"
-              q="What type of seedbed preparation will be done?"
+              q="How will seedbed preparation be done?"
               type="Tillage"
               shown={state.q1 === 'Yes'}
             />

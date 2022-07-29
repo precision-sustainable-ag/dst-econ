@@ -1,6 +1,7 @@
 import {Input} from './Inputs';
 import {useEffect} from 'react';
 
+import {Icon} from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../store/store';
 
@@ -24,12 +25,33 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   switch (question) {
     case 'Annual Use (acres on implement)':
       property = 'annualUseAcres';
+      question = (
+        <>
+          {question}
+          <Icon>
+            help
+            <p>Costs associated with tractor and implement use are based upon annual use.</p>
+            <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
+          </Icon>
+        </>
+      );
+
       q = q || question;
       a = 'number';
       shown = currentImplement && currentImplement !== custom;
       break;
     case 'Annual Use (hours on power)':
       property = 'annualUseHours';
+      question = (
+        <>
+          {question}
+          <Icon>
+            help
+            <p>Costs associated with tractor and implement use are based upon annual use.</p>
+            <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
+          </Icon>
+        </>
+      );
       q = q || question;
       a = 'number';
       shown = currentImplement && currentImplement !== custom;
@@ -47,6 +69,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       break;
     case 'Estimated':
       property = 'total';
+      estimated = context.estimated;
       q = (currentImplement === custom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : q || `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;

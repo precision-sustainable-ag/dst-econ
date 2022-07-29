@@ -12,6 +12,7 @@ export const ClearInputs = ({defaults}) => {
           clearInputs(defaults);
         }
       }}
+      title="Clear all inputs for the current module."
     >
       Clear inputs
     </Button>

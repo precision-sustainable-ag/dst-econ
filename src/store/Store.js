@@ -56,6 +56,9 @@ const shared = {
 };
 
 let initialState = {
+  help   : '',
+  helpX  : 0,
+  helpY  : 0,  
   focus: null,
   firstName: '',
   lastName: '',
@@ -141,7 +144,7 @@ let initialState = {
     ...shared,
     unitCost:    (state) => db.herbicides[state.termination.product]?.['Cost ($)'],
     rate:        (state) => db.herbicides[state.termination.product]?.['Rate'],
-    productCost: (state) => state.termination.unitCost * state.termination.rate,
+    productCost: (state) => (state.termination.unitCost * state.termination.rate) || undefined,
   },
   fertility: {
     ...shared,
@@ -237,46 +240,12 @@ const afterChange = {
       state.screen = 'Planting';
     }
   },
-  'seedbed.q3': (state, {payload}) => {
-    switch (payload) {
-      case 'Self':
-        state.focus = 'seedbed.implement';
-        state.seedbed.estimated = state.seedbed.total = undefined;
-        break;
-      case 'Custom Operator':
-        state.focus = 'seedbed.total';
-        state.seedbed.estimated = state.seedbed.total = db.costDefaults['Seedbed preparation'].cost;
-        break;
-      default:
-    }
-  },
-  'planting.q3': (state, {payload}) => {
-    switch (payload) {
-      case 'Self':
-        state.focus = 'planting.implement';
-        state.planting.estimated = state.planting.total = undefined;
-        break;
-      case 'Custom Operator':
-        state.focus = 'planting.total';
-        state.planting.estimated = state.planting.total = db.costDefaults['Planting'].cost;
-        break;
-      default:
-    }
+  'termination.product': (state) => {
+    state.focus = 'termination.unitCost'
   },
   'termination.q2': (state, {payload}) => {
     if (payload === 'Yes') {
       state.screen = 'Tillage';
-    }
-  },
-  'termination.q3': (state, {payload}) => {
-    switch (payload) {
-      case 'Self':
-        state.focus = 'termination.method';
-        break;
-      case 'Custom Operator':
-        state.focus = 'termination.customCost';
-        break;
-      default:
     }
   },
   'termination.method': (state) => {
@@ -365,10 +334,12 @@ const afterChange = {
       const def = {
         seedbed  : 'Seedbed preparation',
         planting : 'Planting',
-        tillage  : 'Planting',
-        tillage1 : 'Planting',
-        tillage2 : 'Planting',
-        tillage3 : 'Planting',
+        tillage  : 'Seedbed preparation',
+        tillage1 : 'Seedbed preparation',
+        tillage2 : 'Seedbed preparation',
+        tillage3 : 'Seedbed preparation',
+        chemical : 'Herbicide application',
+        roller   : 'Roller',
       }[section];
 
       state.focus = section + '.total';
