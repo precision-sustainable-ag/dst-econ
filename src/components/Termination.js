@@ -180,6 +180,27 @@ const Termination = () => {
               />
 
               {
+                state.q2 === 'Yes' && (
+                  <>
+                    <tr>
+                      <td colSpan="2">
+                        Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
+                        For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
+                        Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
+                      </td>
+                    </tr>
+                    <Logic
+                      current={current}
+                      property="q3"
+                      q="Will you change the herbicides use in your tank mix?"
+                      a={['Yes', 'No']}
+                      shown={state.q2 === 'Yes'}
+                    />
+                  </>
+                )
+              }
+
+              {
                 state.q2 === 'No' && (
                   <>
                     {/herbicide/i.test(method) && <Herbicide/>}

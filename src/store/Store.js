@@ -118,7 +118,7 @@ let initialState = {
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
-  $fertApplication: undefined, // db.costDefaults['Custom Fertilizer Appl'].cost
+  $fertApplication: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
   $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
@@ -243,8 +243,8 @@ const afterChange = {
   'termination.product': (state) => {
     state.focus = 'termination.unitCost'
   },
-  'termination.q2': (state, {payload}) => {
-    if (payload === 'Yes') {
+  'termination.q3': (state, {payload}) => {
+    if (payload === 'No') {
       state.screen = 'Tillage';
     }
   },
