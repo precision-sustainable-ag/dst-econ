@@ -151,92 +151,58 @@ export const Summary = () => {
   const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
   const seedbedTotal      = useSelector(get.seedbed.total) || 0;
   const plantingTotal     = useSelector(get.planting.total) || 0;
-  const fertilityTotal    = useSelector(get.fertility.total) || 0;
+  const fertilityTotal    = -useSelector(get.fertility.total) || 0;
 
   const productCost       = useSelector(get.termination.productCost) || 0;
   const chemicalTotal     = useSelector(get.chemical.total) || 0;
   const rollerTotal       = useSelector(get.roller.total) || 0;
   const tillageTotal      = useSelector(get.tillage.total) || 0;
-  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal;
+  const herbicideTotal    = (useSelector(get.termination.additionalTotal) || 0) - (useSelector(get.termination.reducedTotal) || 0);
+  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal + herbicideTotal;
   const tillageAllTotal   = useSelector(get.tillageAll.total) || 0;
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal - fertilityTotal + +terminationTotal + +tillageAllTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal + +tillageAllTotal;
 
-  const SummaryRow = ({parm, desc}) => {
-    return parm ? <tr><td>{desc}</td><td>{dollars(Math.abs(parm))}</td></tr> : null;
+  const SummaryRow = ({parm, desc, type}) => {
+    if (
+      (type === 'Costs'    && parm > 0) ||
+      (type === 'Benefits' && parm < 0)
+    ) {
+      return <tr><td>{desc}</td><td>{dollars(Math.abs(parm))}</td></tr>;
+    } else {
+      return null;
+    }
   } // SummaryRow
 
-  const Costs = () => {
-    console.log(coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, tillageAllTotal);
-    if (total > 0) {
+  const CostsBenefits = ({type}) => {
+    console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, terminationTotal, tillageAllTotal});
+    if (
+      (type === 'Costs'    && (coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || terminationTotal > 0 || tillageAllTotal > 0)) ||
+      (type === 'Benefits' && (coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || terminationTotal < 0 || tillageAllTotal < 0))
+    ) {
       return (
         <>
           <thead>
-            <tr><th>Description</th><th>Costs</th></tr>
+            <tr><th>Description</th><th>{type}</th></tr>
           </thead>
           <tbody>
-            <SummaryRow parm={coverCropTotal}   desc="Seed expense" />
-            <SummaryRow parm={seedbedTotal}     desc="Seed bed preparation" />
-            <SummaryRow parm={plantingTotal}    desc="Planting" />
-            {fertilityTotal < 0 && <SummaryRow parm={fertilityTotal} desc="Fertility" />}
-    
-            {
-              false && terminationTotal > 0 &&
-              <>
-                <tr><th colSpan="100">Termination</th></tr>
-                <SummaryRow parm={chemicalTotal}    desc="Chemical" />
-                <SummaryRow parm={rollerTotal}      desc="Roller" />
-                <SummaryRow parm={tillageTotal}     desc="Tillage" />
-                <SummaryRow parm={productCost}      desc="Product cost" />
-              </>
-            }
-            {
-              true && terminationTotal > 0 && (
-                <SummaryRow parm={terminationTotal} desc="Termination" />
-              )
-            }
-
-            {
-              tillageAllTotal > 0 && (
-                <SummaryRow parm={tillageAllTotal} desc="Tillage" />
-              )
-            }
-            
+            <SummaryRow type={type} parm={coverCropTotal}   desc="Seed expense" />
+            <SummaryRow type={type} parm={seedbedTotal}     desc="Seed bed preparation" />
+            <SummaryRow type={type} parm={plantingTotal}    desc="Planting" />
+            <SummaryRow type={type} parm={fertilityTotal}   desc="Fertility" />
+            <SummaryRow type={type} parm={terminationTotal} desc="Termination" />
+            <SummaryRow type={type} parm={tillageAllTotal}  desc="Tillage" />
           </tbody>
         </>
       )
     }
-  }; // Costs
+  }; // CostsBenefits
 
-  const Benefits = () => {
-    if (fertilityTotal > 0 || tillageAllTotal < 0) {
-      return (
-        <>
-          <thead>
-            <tr><th>Description</th><th>Benefits</th></tr>
-          </thead>
-          <tbody>
-            {
-              fertilityTotal > 0 && (
-                <SummaryRow parm={fertilityTotal} desc="Fertility" />
-              )
-            }
-            {
-              tillageAllTotal < 0 && (
-                <SummaryRow parm={tillageAllTotal} desc="Tillage" />
-              )
-            }
-          </tbody>
-        </>
-      );
-    }
-  }; // Benefits
-  
   return (
     total !== 0 && (
       <table id="Summary">
         <caption>Summary</caption>
-        <Costs/>
-        <Benefits/>
+        <CostsBenefits type="Costs" />
+        <CostsBenefits type="Benefits" />
         <tfoot>
           <tr><td>Total</td><td>{dollars(total)}</td></tr>
         </tfoot>

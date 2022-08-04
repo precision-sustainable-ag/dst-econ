@@ -118,7 +118,7 @@ let initialState = {
   fertNAdded: 0,
   fertPAdded: 0,
   fertKAdded: 0,
-  $fertApplication: undefined, // db.costDefaults['Custom Fertilizer Appl'].cost
+  $fertApplication: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
   $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
@@ -145,6 +145,34 @@ let initialState = {
     unitCost:    (state) => db.herbicides[state.termination.product]?.['Cost ($)'],
     rate:        (state) => db.herbicides[state.termination.product]?.['Rate'],
     productCost: (state) => (state.termination.unitCost * state.termination.rate) || undefined,
+    additionalHerbicides: [],
+    additionalRates:      [],
+    additionalPrices:     [],
+    additionalTotal: (state) => {
+      let total = 0;
+  
+      state.termination.additionalHerbicides
+        .forEach((s, n) => {
+          if (s) {
+            total += (state.termination.additionalRates[n] || 0) * (state.termination.additionalPrices[n] || 0);
+          }
+        });
+      return total;
+    },
+    reducedHerbicides:    [],
+    reducedRates:         [],
+    reducedPrices:        [],
+    reducedTotal: (state) => {
+      let total = 0;
+  
+      state.termination.reducedHerbicides
+        .forEach((s, n) => {
+          if (s) {
+            total += (state.termination.reducedRates[n] || 0) * (state.termination.reducedPrices[n] || 0);
+          }
+        });
+      return total;
+    },
   },
   fertility: {
     ...shared,
@@ -244,7 +272,12 @@ const afterChange = {
     state.focus = 'termination.unitCost'
   },
   'termination.q2': (state, {payload}) => {
-    if (payload === 'Yes') {
+    if (payload === 'Yes' && state.termination.method !== 'Herbicide application') {
+      state.screen = 'Tillage';
+    }
+  },
+  'termination.q3': (state, {payload}) => {
+    if (payload === 'No') {
       state.screen = 'Tillage';
     }
   },
@@ -260,6 +293,20 @@ const afterChange = {
     state.tillage.implement = '';
     state.tillage.power = '';
     state.tillage.total = 0;
+  },
+  'termination.additionalHerbicides': (state, {payload}) => {
+    const index = payload.index;
+    const value = payload.value;
+
+    state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
+    state.termination.additionalRates[index]  = db.herbicides[value]?.['Rate'];
+  },
+  'termination.reducedHerbicides': (state, {payload}) => {
+    const index = payload.index;
+    const value = payload.value;
+
+    state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
+    state.termination.reducedRates[index]  = db.herbicides[value]?.['Rate'];
   },
   'tillage1.q2': (state, {payload}) => {
     state.tillage1.estimated = 0;
@@ -283,6 +330,13 @@ const afterChange = {
     state.tillage3.implement = '';
     if (payload === 'Yes') {
       state.focus = 'tillage3.implement';
+    } else if (state.tillage1.q1 === 'Yes') {
+      state.screen = 'Fertility';
+    }
+  },
+  'tillage1.q1': (state, {payload}) => {
+    if (payload === 'Yes' && state.tillage3.q2 === 'No') {
+      state.screen = 'Fertility';
     }
   },
   'additional.grazing': (state, {payload}) => {

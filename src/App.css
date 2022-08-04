@@ -78,6 +78,10 @@ div.caption {
   text-align: center;
 }
 
+caption {
+  font-weight: bold;
+}
+
 .th, th {
   text-align: center;
   background: #eee;

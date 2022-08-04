@@ -17,14 +17,22 @@ const Fertility = () => {
   const dfertN            = db.rates.Nitrogen.value;
   const $fertCost         = useSelector(get.$fertCost);
   const total             = useSelector(get.fertility.total);
-  const $fertApplication  = useSelector(get.$fertApplication);
-  const dFertApplication  = db.costDefaults['Custom Fertilizer Appl'].cost;
+  const $fertApplication  = useSelector(get.$fertApplication) || 0;
+  const dFertApplication  = 0; // db.costDefaults['Custom Fertilizer Appl'].cost;
   const $fertCredit       = useSelector(get.$fertCredit);
 
   return (
     <div className="Fertility">
       <form>
         <h1>Economic Decision Aid for Cover Crops: Fertility</h1>
+        <p>
+          Integrating cover crops into your rotation can affect fertility in multiple ways.
+          One of the most commonly cited impacts is incorporating a legume into your cover crop mix.
+          Depending upon the species selected and maturity at termination the legume cover crop can provide a nitrogen credit for your rotation.
+          Many cover crops have also demonstrated an ability to reduce the export of subsurface drainage water and dissolved nutrients such as nitrogen and phosphorous.
+          In this module you can input your estimates of macronutrients saved (or not applied) and the value of those macronutrients.
+          Alternatively, if you intend to apply additional nutrients with the integration of cover crops you can also provide those values.
+        </p>
         <table>
           <thead>
             <tr><th colSpan={4}><ClearInputs defaults={defaults} /></th></tr>
