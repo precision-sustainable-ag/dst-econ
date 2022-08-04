@@ -298,15 +298,19 @@ const afterChange = {
     const index = payload.index;
     const value = payload.value;
 
-    state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
-    state.termination.additionalRates[index]  = db.herbicides[value]?.['Rate'];
+    if (value) {
+      state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
+      state.termination.additionalRates[index]  = db.herbicides[value]?.['Rate'];
+    }
   },
   'termination.reducedHerbicides': (state, {payload}) => {
     const index = payload.index;
     const value = payload.value;
 
-    state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
-    state.termination.reducedRates[index]  = db.herbicides[value]?.['Rate'];
+    if (value) {
+      state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
+      state.termination.reducedRates[index]  = db.herbicides[value]?.['Rate'];
+    }
   },
   'tillage1.q2': (state, {payload}) => {
     state.tillage1.estimated = 0;
@@ -748,7 +752,7 @@ export const clearInputs = (defaults) => {
       for (const k of key.split('.')) {
         s = s[k];
       }
-      console.log(key, typeof defaults[key], defaults[key]);
+      // console.log(key, typeof defaults[key], defaults[key]);
       mystore.dispatch(s(defaults[key]));
     } catch(error) {
       console.log(error);
