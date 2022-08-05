@@ -203,7 +203,7 @@ export const Summary = () => {
   const acres = useSelector(get.acres);
 
   return (
-    total !== 0 && (
+    total && (
       <table id="Summary">
         <caption>Summary</caption>
         {(farm || field || acres) && (

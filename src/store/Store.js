@@ -716,7 +716,7 @@ export const queue = (f, time=1) => {
 queue.i = 0;
 
 let status = '';
-loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions']);
+loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities']);
 
 export const dollars = (n) => {
   if (!isFinite(n)) {
