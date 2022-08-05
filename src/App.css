@@ -527,3 +527,11 @@ body.hotkeys u {
   cursor: pointer;
   color: #444;
 }
+
+.Erosion td:nth-child(1) {
+  width: 30rem;
+}
+
+.Erosion td:nth-child(2) {
+  width: 15rem;
+}

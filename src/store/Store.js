@@ -123,6 +123,10 @@ let initialState = {
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
   planting: {...shared},
+  erosion:  {
+    ...shared,
+    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.acres
+  },
   chemical: {...shared},
   roller:   {...shared},
   tillage:  {...shared},
@@ -206,6 +210,7 @@ let initialState = {
   shown: {
     seedbed:      {...shared},
     planting:     {...shared},
+    erosion:      {...shared},
     termination:  {...shared},
     fertility:    {...shared},
     chemical:     {...shared},
@@ -368,6 +373,18 @@ const afterChange = {
       state.additional.springDryMatter = undefined;
       state.additional.springWaste = 0.50;
     }
+  },
+  'erosion.q1': (state, {payload}) => {
+    if (payload === 'No') {
+      state.screen = 'Additional';
+    }
+  },
+  'erosion.q2': (state, {payload}) => {
+    state.erosion.q3 = {
+      'Skid steer'  : 80,
+      'Trackhoe'    : 100,
+      'Dozer'       : 125
+    }[payload];
   },
 };
 

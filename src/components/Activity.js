@@ -152,7 +152,7 @@ export const Summary = () => {
   const seedbedTotal      = useSelector(get.seedbed.total) || 0;
   const plantingTotal     = useSelector(get.planting.total) || 0;
   const fertilityTotal    = -useSelector(get.fertility.total) || 0;
-
+  const erosionTotal      = -useSelector(get.erosion.total) || 0;
   const productCost       = useSelector(get.termination.productCost) || 0;
   const chemicalTotal     = useSelector(get.chemical.total) || 0;
   const rollerTotal       = useSelector(get.roller.total) || 0;
@@ -160,7 +160,7 @@ export const Summary = () => {
   const herbicideTotal    = (useSelector(get.termination.additionalTotal) || 0) - (useSelector(get.termination.reducedTotal) || 0);
   const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal + herbicideTotal;
   const tillageAllTotal   = useSelector(get.tillageAll.total) || 0;
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +terminationTotal + +tillageAllTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal;
 
   const SummaryRow = ({parm, desc, type}) => {
     if (
@@ -174,10 +174,10 @@ export const Summary = () => {
   } // SummaryRow
 
   const CostsBenefits = ({type}) => {
-    console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, terminationTotal, tillageAllTotal});
+    console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal});
     if (
-      (type === 'Costs'    && (coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || terminationTotal > 0 || tillageAllTotal > 0)) ||
-      (type === 'Benefits' && (coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || terminationTotal < 0 || tillageAllTotal < 0))
+      (type === 'Costs'    && (coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || erosionTotal > 0 || terminationTotal > 0 || tillageAllTotal > 0)) ||
+      (type === 'Benefits' && (coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || erosionTotal < 0 || terminationTotal < 0 || tillageAllTotal < 0))
     ) {
       return (
         <>
@@ -188,19 +188,34 @@ export const Summary = () => {
             <SummaryRow type={type} parm={coverCropTotal}   desc="Seed expense" />
             <SummaryRow type={type} parm={seedbedTotal}     desc="Seed bed preparation" />
             <SummaryRow type={type} parm={plantingTotal}    desc="Planting" />
-            <SummaryRow type={type} parm={fertilityTotal}   desc="Fertility" />
             <SummaryRow type={type} parm={terminationTotal} desc="Termination" />
             <SummaryRow type={type} parm={tillageAllTotal}  desc="Tillage" />
+            <SummaryRow type={type} parm={fertilityTotal}   desc="Fertility" />
+            <SummaryRow type={type} parm={erosionTotal}     desc="Erosion" />
           </tbody>
         </>
       )
     }
   }; // CostsBenefits
 
+  const farm  = useSelector(get.farm);
+  const field = useSelector(get.field);
+  const acres = useSelector(get.acres);
+
   return (
     total !== 0 && (
       <table id="Summary">
         <caption>Summary</caption>
+        {(farm || field || acres) && (
+          <>
+            <thead></thead>
+            <tbody>
+              {farm  && <tr><td>Farm </td><td>{farm} </td></tr>}
+              {field && <tr><td>Field</td><td>{field}</td></tr>}
+              {acres && <tr><td>Acres</td><td>{acres}</td></tr>}
+            </tbody>
+          </>
+        )}
         <CostsBenefits type="Costs" />
         <CostsBenefits type="Benefits" />
         <tfoot>
