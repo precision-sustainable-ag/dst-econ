@@ -12,10 +12,6 @@ const Tillage = () => {
   const current = 'tillage1';
   const dev = useSelector(get.dev);
 
-  const farm  = useSelector(get.farm);
-  const field = useSelector(get.field);
-  const acres = useSelector(get.acres);
-
   const state = useSelector(get[current]);
   const tillage1 = useSelector(get.tillage1);
   const tillage3 = useSelector(get.tillage3);
@@ -65,14 +61,6 @@ const Tillage = () => {
           Other growers have switched from conventional tillage to no-til planting after making a switch to extensive use of cover crops.
           Review the <span className="link" onClick={() => dispatch(set.screen('Resources'))}>Resources page</span> for additional information.
         </p>
-
-        <table>
-          <tbody>
-            {farm  && <tr><td>Farm:  </td><td>{farm} </td></tr>}
-            {field && <tr><td>Field: </td><td>{field}</td></tr>}
-            {acres && <tr><td>Acres: </td><td>{acres}</td></tr>}
-          </tbody>
-        </table>
 
         <form>
           <table className={current + ' inputs'}>

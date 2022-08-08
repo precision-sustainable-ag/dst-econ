@@ -123,6 +123,10 @@ let initialState = {
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
   planting: {...shared},
+  erosion:  {
+    ...shared,
+    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.acres
+  },
   chemical: {...shared},
   roller:   {...shared},
   tillage:  {...shared},
@@ -199,13 +203,13 @@ let initialState = {
     baleTime: undefined,
     tractor: '',
     lbsNotFed: (state) => {
-      const e = state.additional;
-      return (((e.fallDryMatter * e.fallWaste) + (e.springDryMatter * e.springWaste)) / e.dryMatter)/(1 - e.wasted);
+      return (((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted);
     },
   },
   shown: {
     seedbed:      {...shared},
     planting:     {...shared},
+    erosion:      {...shared},
     termination:  {...shared},
     fertility:    {...shared},
     chemical:     {...shared},
@@ -298,15 +302,19 @@ const afterChange = {
     const index = payload.index;
     const value = payload.value;
 
-    state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
-    state.termination.additionalRates[index]  = db.herbicides[value]?.['Rate'];
+    if (value) {
+      state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
+      state.termination.additionalRates[index]  = db.herbicides[value]?.['Rate'];
+    }
   },
   'termination.reducedHerbicides': (state, {payload}) => {
     const index = payload.index;
     const value = payload.value;
 
-    state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
-    state.termination.reducedRates[index]  = db.herbicides[value]?.['Rate'];
+    if (value) {
+      state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
+      state.termination.reducedRates[index]  = db.herbicides[value]?.['Rate'];
+    }
   },
   'tillage1.q2': (state, {payload}) => {
     state.tillage1.estimated = 0;
@@ -364,6 +372,18 @@ const afterChange = {
       state.additional.springDryMatter = undefined;
       state.additional.springWaste = 0.50;
     }
+  },
+  'erosion.q1': (state, {payload}) => {
+    if (payload === 'No') {
+      state.screen = 'Additional';
+    }
+  },
+  'erosion.q2': (state, {payload}) => {
+    state.erosion.q3 = {
+      'Skid steer'  : 80,
+      'Trackhoe'    : 100,
+      'Dozer'       : 125
+    }[payload];
   },
 };
 
@@ -429,12 +449,14 @@ const afterChange = {
 
 const sets = {};
 const gets = {};
+const allkeys = {};
 
 const funcs = {};
 const methods = {};
 
 const processMethods = ((state, key) => {
   if (methods[key]) {
+    // console.log(key, methods[key]);
     for (let k in methods[key]) {
       let st = state;
       for (const key of k.split('.').slice(0, -1)) st = st[key];
@@ -451,6 +473,7 @@ const builders = (builder) => {
       const isArray = Array.isArray(obj[key]);
       const isObject = !isArray && obj[key] instanceof Object;
       const fullkey = parents.length ? parents.join('.') + '.' + key : key;
+      allkeys[fullkey] = true;
 
       if (key !== 'name') { // TODO: implements
         get[key] = (state) => {
@@ -466,14 +489,23 @@ const builders = (builder) => {
         if (typeof obj[key] === 'function') {
           funcs[fullkey] = obj[key];
           // console.log(obj[key]);
-          let m = obj[key].toString().match(/e\.[$_\w.(]+/g);  // state.* unbuilt, e.* built
-          
-          if (m) {
-            m = m.map(s => s.split(/e\./)[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
-            m.forEach(m => {
-              methods[m] = methods[m] || {};
-              methods[m][fullkey] = funcs[fullkey];
-            });
+
+          //  let m = obj[key].toString().match(/e\.[$_\w.(]+/g);  // state.* unbuilt, e.* built
+          //  
+          //  if (m) {
+          //    m = m.map(s => s.split(/e\./)[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
+          //    m.forEach(m => {
+          //      methods[m] = methods[m] || {};
+          //      methods[m][fullkey] = funcs[fullkey];
+          //    });
+          //  }
+          const func = obj[key].toString();
+
+          for (const key in allkeys) {
+            if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
+              methods[key] = methods[key] || {};
+              methods[key][fullkey] = funcs[fullkey];
+            }
           }
   
           obj[key] = 0; // TODO: Can't be undefined
@@ -512,15 +544,11 @@ const builders = (builder) => {
               processMethods(state, fullkey);
 
             if (afterChange[fullkey]) {
-              let m = afterChange[fullkey].toString().match(/state.[$_\w.(]+/g);
-          
-              if (m) {
-                m = m.forEach(s => {
-                  s = s.split('state.')[1];
-                  if (s) {
-                    processMethods(state, s.split(/\.\w+\(/)[0]);
-                  }
-                });
+              const func = afterChange[fullkey].toString();
+              for (const key in allkeys) {
+                if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
+                  processMethods(state, key);
+                }
               }
             }
           }
@@ -534,6 +562,8 @@ const builders = (builder) => {
   } // recurse
 
   recurse(initialState, sets, gets);
+  // console.log(allkeys);
+
 } // builders
 
 export const runBuilders = () => createReducer(initialState, builders);
@@ -695,7 +725,7 @@ export const queue = (f, time=1) => {
 queue.i = 0;
 
 let status = '';
-loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions']);
+loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities']);
 
 export const dollars = (n) => {
   if (!isFinite(n)) {
@@ -737,7 +767,7 @@ export const getDefaults = (parms) => {
     }
     def[parm] = s;
   });
-  console.log(def);
+  // console.log(def);
   return def;
 } // getDefaults
 
@@ -748,7 +778,7 @@ export const clearInputs = (defaults) => {
       for (const k of key.split('.')) {
         s = s[k];
       }
-      console.log(key, typeof defaults[key], defaults[key]);
+      // console.log(key, typeof defaults[key], defaults[key]);
       mystore.dispatch(s(defaults[key]));
     } catch(error) {
       console.log(error);

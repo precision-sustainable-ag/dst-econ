@@ -48,6 +48,7 @@ function App() {
     Resources,
     'Airtables': {
       coefficients: '',
+      commodities: '',
       costDefaults: '',
       herbicides: '',
       implements: '',
@@ -110,6 +111,7 @@ function App() {
       case 'Revenue'      : return <Revenue />;
       case 'Resources'    : return <Resources/>;
       case 'coefficients' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
+      case 'commodities'  : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" />;
       case 'costDefaults' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
       case 'herbicides'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" />;
       case 'implements'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" />;
@@ -267,7 +269,7 @@ function App() {
     });
   }, [dispatch]);
 
-  console.log(screen);
+  // console.log(screen);
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
