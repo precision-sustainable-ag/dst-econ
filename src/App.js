@@ -269,7 +269,7 @@ function App() {
     });
   }, [dispatch]);
 
-  console.log(screen);
+  // console.log(screen);
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (

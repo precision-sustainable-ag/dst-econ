@@ -174,7 +174,7 @@ export const Summary = () => {
   } // SummaryRow
 
   const CostsBenefits = ({type}) => {
-    console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal});
+    // console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal});
     if (
       (type === 'Costs'    && (coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || erosionTotal > 0 || terminationTotal > 0 || tillageAllTotal > 0)) ||
       (type === 'Benefits' && (coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || erosionTotal < 0 || terminationTotal < 0 || tillageAllTotal < 0))
