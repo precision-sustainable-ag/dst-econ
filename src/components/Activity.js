@@ -198,21 +198,23 @@ export const Summary = () => {
     }
   }; // CostsBenefits
 
-  const farm  = useSelector(get.farm);
-  const field = useSelector(get.field);
-  const acres = useSelector(get.acres);
+  const farm      = useSelector(get.farm);
+  const field     = useSelector(get.field);
+  const acres     = useSelector(get.acres);
+  const cashCrop  = useSelector(get.cashCrop);
 
   return (
     total && (
       <table id="Summary">
         <caption>Summary</caption>
-        {(farm || field || acres) && (
+        {(farm || field || acres || cashCrop) && (
           <>
             <thead></thead>
             <tbody>
-              {farm  && <tr><td>Farm </td><td>{farm} </td></tr>}
-              {field && <tr><td>Field</td><td>{field}</td></tr>}
-              {acres && <tr><td>Acres</td><td>{acres}</td></tr>}
+              {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
+              {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
+              {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
+              {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
             </tbody>
           </>
         )}

@@ -123,6 +123,7 @@ let initialState = {
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
   planting: {...shared},
+  yield: {...shared},
   erosion:  {
     ...shared,
     total: (state) => (state.erosion.q3 * state.erosion.q4) / state.acres
@@ -209,6 +210,7 @@ let initialState = {
   shown: {
     seedbed:      {...shared},
     planting:     {...shared},
+    yield:        {...shared},
     erosion:      {...shared},
     termination:  {...shared},
     fertility:    {...shared},

@@ -5,6 +5,12 @@ import {get, set, test, getDefaults, dollars} from '../store/store';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Yield = () => {
+  const dispatch = useDispatch();
+  const current = 'yield';
+  const state = useSelector(get[current]);
+  const dev = useSelector(get.dev);
+  const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
+
   return (
     <div className="Yield">
       <h1>Economic Decision Aid for Cover Crops: Yield</h1>
@@ -32,6 +38,55 @@ const Yield = () => {
         <img alt="yield" src="yield.png" />
       </div>
 
+      <table>
+        <tbody>
+          <Logic
+            current={current}
+            property="q1"
+            q={
+              <>
+                What is the expected yield for {cashCrop} in this field?
+                <Icon>
+                  help
+                  <p>User may enter a trend adjusted APH, APH, or typical yield for this field.</p>
+                </Icon>
+              </>
+            }
+            a="number"
+          />
+
+          <Logic
+            current={current}
+            property="q2"
+            q="Do you want your financial analysis to use the typical yield estimates or the cover crop adjusted yield estimates?"
+            a={['Use typical yield estimates', 'Use cover crop adjusted yield estimates']}
+          />
+
+          <Logic
+            current={current}
+            property="q3"
+            q="Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?"
+            a={['1', '3', '5']}
+          />
+
+        </tbody>
+      </table>
+      {
+        dev && (
+          <>
+            <button
+              onClick={() => {
+                dispatch(set.yield.q1('100'));
+                dispatch(set.cashCrop('Soybeans'));
+                dispatch(set.yield.q2('Use typical yield estimates'));
+                dispatch(set.yield.q3('5'));
+              }}
+            >
+              Test data
+            </button>
+          </>
+        )
+      }
     </div>
   )
 } // Yield

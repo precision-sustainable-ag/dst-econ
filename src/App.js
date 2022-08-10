@@ -280,7 +280,7 @@ function App() {
         if (/^help/.test(e.target.innerHTML)) {
           dispatch(set.help(e.target.innerHTML.slice(4)));
           dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-          dispatch(set.helpY(e.pageY - 20));
+          dispatch(set.helpY(e.pageY - 20 - window.scrollY));
         } else {
           dispatch(set.help(''));
         }
