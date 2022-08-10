@@ -1,6 +1,6 @@
 import Activity from './Activity';
 import {Input} from './Inputs';
-
+import {Icon} from '@mui/material';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, test, getDefaults, db} from '../store/store';
@@ -40,8 +40,8 @@ const Additional = () => {
         <tbody>
           <tr>
             <td>
-              If you cash rent this field, will the landowner contribute to seed costs or other costs associated with planting cover crops?<br/>
-              If yes, please enter the estimated cash contribution ($/acre)
+              If you cash rent this field, will the landowner contribute to seed costs or other costs associated with planting cover crops?
+              <p>If yes, please enter the estimated cash contribution ($/acre)</p>
             </td>
             <td>
               <Input id="additional.$landowner" />
@@ -50,8 +50,28 @@ const Additional = () => {
 
           <tr>
             <td>
-              Do you anticipate participation in a state or federal program that will provide a cost-share payment for using cover crops?<br/>
-              If yes, please enter the estimated cash contribution ($/acre)
+              The NRCS financial assistance estimate in this table is the basic or multiple species assistance for that state in 2022.
+              Assuming available funds, higher rates may be available for special conditions.
+              <Icon>
+                help
+                <p>
+                  The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
+                  The amount of financial assistance varies by state, cover crop practice and specific priorities.
+                </p>
+                <p>
+                  Priority programs include helping historically underserved audiences and water source protection.
+                  Financial assistance for planting multiple species is often greater than when planting a single species.
+                </p>
+                <p>
+                  The number of years that farms can receive cover crop financial assistance is usually limited.
+                </p>
+              </Icon>
+              <p>
+                Do you anticipate participation in any other government program that will provide financial assistance for using cover crops?
+              </p>
+              <p>
+                If yes, please enter the estimated cash contribution ($/acre)
+              </p>
             </td>
             <td>
               <Input id="additional.$costShare" />
@@ -60,8 +80,10 @@ const Additional = () => {
 
           <tr>
             <td>
-              Do you anticipate participation in a voluntary carbon offset program that will provide a payment based on carbon reducing practices such as cover crops?<br/>
-              If yes, please enter the estimated cash contribution ($/acre)
+              Do you anticipate participation in a voluntary carbon offset program that will provide a payment based on carbon reducing practices such as cover crops?
+              <p>
+                If yes, please enter the estimated cash contribution ($/acre)
+              </p>
             </td>
             <td>
               <Input id="additional.$carbonOffset" />
