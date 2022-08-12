@@ -135,13 +135,23 @@ let initialState = {
         +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['five year'])).toFixed(0),
       ];
 
+      state.yield.impact = [
+        r[0] - state.yield.typical,
+        r[1] - state.yield.typical,
+        r[2] - state.yield.typical,
+      ];
+
       if (/typical/.test(state.yield.q2)) {
-        state.yield.total = state.yield.typical;
+        state.yield.total = 0;
       } else {
-        state.yield.total = r[['1', '3', '5'].indexOf(state.yield.q4)];
+        console.log(state.yield.impact);
+        console.log(['1', '3', '5'].indexOf(state.yield.q4));
+        state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
+
       return r;
-    }
+    },
+    impact: [],
   },
   erosion:  {
     ...shared,

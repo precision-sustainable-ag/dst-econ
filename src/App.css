@@ -536,16 +536,3 @@ body.hotkeys u {
   width: 15rem;
 }
 
-#YieldSummary {
-  display: flex;
-  margin-top: 10px;
-  width: 100%;
-}
-
-#YieldSummary th {
-  vertical-align: bottom;
-}
-
-#YieldSummary td {
-  text-align: right;
-}
