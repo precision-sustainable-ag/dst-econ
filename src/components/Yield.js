@@ -1,6 +1,10 @@
 import Logic from './Logic';
 import {Icon} from '@mui/material';
 
+import Highcharts from 'highcharts';
+
+import HighchartsReact from 'highcharts-react-official';
+
 import {get, set, test, getDefaults, dollars} from '../store/store';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -8,9 +12,69 @@ const Yield = () => {
   const dispatch = useDispatch();
   const current = 'yield';
   const state = useSelector(get[current]);
+  const typical = state.typical;
+  const adjusted = state.adjusted;
+
+  console.log(state);
   const dev = useSelector(get.dev);
   const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
 
+  Highcharts.setOptions({
+    chart: {
+      animation: false,
+      height: 300,
+    },
+    lang: {
+      numericSymbols: null
+    },
+    colors: ['#058DC7', 'orange']
+  });
+
+  const options = {
+    chart: {
+      type: 'column',
+    },
+    plotOptions: {
+      series: {
+        animation: false,
+      }
+    },
+    title: {
+      text: 'Yields'
+    },
+    xAxis: {
+      title: {
+        text: 'Years growing cover crops in this field'
+      },
+      categories: [
+        '1',
+        '3',
+        '5'
+      ],      
+    },
+    yAxis: {
+      title: {
+        text: 'bushels/acre'
+      },
+      min: typical > 500 ? 500 : 0,
+      labels: {
+        formatter: function () {
+          return '$' + this.axis.defaultLabelFormatter.call(this);
+        }            
+    }      
+    },
+    series: [
+      {
+        name: 'Typical',
+        data: [typical, typical, typical]
+      },
+      {
+        name: 'Cover Crop Adjusted',
+        data: adjusted
+      },
+    ],
+  }
+  
   return (
     <div className="Yield">
       <h1>Economic Decision Aid for Cover Crops: Yield</h1>
@@ -38,11 +102,11 @@ const Yield = () => {
         <img alt="yield" src="yield.png" />
       </div>
 
-      <table>
+      <table style={{maxWidth: 900}}>
         <tbody>
           <Logic
             current={current}
-            property="q1"
+            property="yield"
             q={
               <>
                 What is the expected yield for {cashCrop} in this field?
@@ -64,25 +128,79 @@ const Yield = () => {
 
           <Logic
             current={current}
-            property="q3"
+            property="price"
+            q="Commodity price"
+            a="number"
+          />
+
+          <Logic
+            current={current}
+            property="q4"
+            type="radio"
             q="Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?"
             a={['1', '3', '5']}
           />
 
         </tbody>
       </table>
+      
+      {
+        adjusted[0] ? (
+          <div id="YieldSummary">
+            <table>
+              <thead>
+                <tr>
+                  <th>Year</th><th>Typical</th><th>Cover Crop<br/>Adjusted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>{dollars(typical)}</td>
+                  <td>{dollars(adjusted[0])}</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>{dollars(typical)}</td>
+                  <td>{dollars(adjusted[1])}</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>{dollars(typical)}</td>
+                  <td>{dollars(adjusted[2])}</td>
+                </tr>
+              </tbody>
+            </table>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={options}
+            />
+          </div>
+        ) : null
+      }
+
       {
         dev && (
           <>
             <button
               onClick={() => {
-                dispatch(set.yield.q1('100'));
+                dispatch(set.yield.yield('150'));
                 dispatch(set.cashCrop('Soybeans'));
                 dispatch(set.yield.q2('Use typical yield estimates'));
-                dispatch(set.yield.q3('5'));
+                dispatch(set.yield.q4('5'));
               }}
             >
-              Test data
+              Test Soybeans
+            </button>
+            <button
+              onClick={() => {
+                dispatch(set.yield.yield('150'));
+                dispatch(set.cashCrop('Corn'));
+                dispatch(set.yield.q2('Use typical yield estimates'));
+                dispatch(set.yield.q4('5'));
+              }}
+            >
+              Test Corn
             </button>
           </>
         )

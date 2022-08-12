@@ -535,3 +535,17 @@ body.hotkeys u {
 .Erosion td:nth-child(2) {
   width: 15rem;
 }
+
+#YieldSummary {
+  display: flex;
+  margin-top: 10px;
+  width: 100%;
+}
+
+#YieldSummary th {
+  vertical-align: bottom;
+}
+
+#YieldSummary td {
+  text-align: right;
+}
