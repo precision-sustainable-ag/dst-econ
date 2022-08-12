@@ -108,7 +108,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       <td style={style}>
         {
           Array.isArray(a) ?
-            a.length < 3 ? 
+            a.length < 3 || type === "radio" ? 
               <Input
                 id={current + '.' + property}
                 type="radio"

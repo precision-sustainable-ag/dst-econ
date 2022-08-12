@@ -5,7 +5,7 @@ import {MenuItem, Button} from '@mui/material';
 import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {get, set} from './store/store';
+import {get, set, db} from './store/store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';
@@ -80,12 +80,16 @@ function App() {
       />
     )
   } // Help
+
+  const cashCrop = useSelector(get.cashCrop);
   
   const MyMenu = (s) => {
     return (
       Object.keys(s).map(scr => {
         if (typeof s[scr] === 'object') {
           return <strong key={scr}>{scr} {MyMenu(s[scr])}</strong>
+        } else if (scr === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
+          return null;
         } else {
           return <MenuItem data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
         }
@@ -280,7 +284,7 @@ function App() {
         if (/^help/.test(e.target.innerHTML)) {
           dispatch(set.help(e.target.innerHTML.slice(4)));
           dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-          dispatch(set.helpY(e.pageY - 20));
+          dispatch(set.helpY(e.pageY - 20 - window.scrollY));
         } else {
           dispatch(set.help(''));
         }

@@ -59,6 +59,8 @@ const Home = () => {
               dispatch(set.firstName('Rick'));
               dispatch(set.lastName('Hitchcock'));
 
+              dispatch(set.cashCrop('Corn'));
+
               test('fullName', 'Rick Hitchcock');
               test('fullName2', 'Rick Hitchcock');
             }}

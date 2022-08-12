@@ -123,6 +123,26 @@ let initialState = {
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
   planting: {...shared},
+  yield: {
+    ...shared,
+    yield: undefined,
+    price: (state) => db.commodities[state.cashCrop]?.price,
+    typical: (state) => state.yield.yield * state.yield.price,
+    adjusted: (state) => {
+      const r = [
+        +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['one year'])).toFixed(0),
+        +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['three year'])).toFixed(0),
+        +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['five year'])).toFixed(0),
+      ];
+
+      if (/typical/.test(state.yield.q2)) {
+        state.yield.total = state.yield.typical;
+      } else {
+        state.yield.total = r[['1', '3', '5'].indexOf(state.yield.q4)];
+      }
+      return r;
+    }
+  },
   erosion:  {
     ...shared,
     total: (state) => (state.erosion.q3 * state.erosion.q4) / state.acres
@@ -209,6 +229,7 @@ let initialState = {
   shown: {
     seedbed:      {...shared},
     planting:     {...shared},
+    yield:        {...shared},
     erosion:      {...shared},
     termination:  {...shared},
     fertility:    {...shared},
