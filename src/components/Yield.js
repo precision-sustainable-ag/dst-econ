@@ -6,7 +6,10 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import {get, set, test, getDefaults, dollars} from '../store/store';
+import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
+
+const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 
 const Yield = () => {
   const dispatch = useDispatch();
@@ -107,6 +110,13 @@ const Yield = () => {
 
       <table style={{maxWidth: 900}}>
         <tbody>
+          <tr>
+            <th colSpan="2">
+              Yield
+              <ClearInputs defaults={defaults} />
+            </th>
+          </tr>
+
           <Logic
             current={current}
             property="yield"

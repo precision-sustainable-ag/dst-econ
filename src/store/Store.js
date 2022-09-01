@@ -1,4 +1,4 @@
-import {configureStore, createAction, createReducer} from '@reduxjs/toolkit'; // include "current" for troubleshooting
+import {createStore, set, get} from './redux-autosetters';
 
 const shared = {
   q1: '',
@@ -123,6 +123,21 @@ let initialState = {
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
   planting: {...shared},
+  herbicide: {
+    ...shared,
+    product1: '',
+    unitCost1:    (state) => db.herbicides[state.herbicide.product1]?.['Cost ($)'],
+    rate1:        (state) => db.herbicides[state.herbicide.product1]?.['Rate'],
+    productCost1: (state) => (state.herbicide.unitCost1 * state.herbicide.rate1) || undefined,
+
+    product2: '',
+    unitCost2:    (state) => db.herbicides[state.herbicide.product2]?.['Cost ($)'],
+    rate2:        (state) => db.herbicides[state.herbicide.product2]?.['Rate'],
+    productCost2: (state) => (state.herbicide.unitCost2 * state.herbicide.rate2) || undefined,
+  },
+  herbicideAdditional: {...shared},
+  herbicideReduced: {...shared},
+  herbicideFall: {...shared},
   yield: {
     ...shared,
     yield: undefined,
@@ -144,8 +159,8 @@ let initialState = {
       if (/typical/.test(state.yield.q2)) {
         state.yield.total = 0;
       } else {
-        console.log(state.yield.impact);
-        console.log(['1', '3', '5'].indexOf(state.yield.q4));
+        // console.log(state.yield.impact);
+        // console.log(['1', '3', '5'].indexOf(state.yield.q4));
         state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
 
@@ -237,18 +252,22 @@ let initialState = {
     },
   },
   shown: {
-    seedbed:      {...shared},
-    planting:     {...shared},
-    yield:        {...shared},
-    erosion:      {...shared},
-    termination:  {...shared},
-    fertility:    {...shared},
-    chemical:     {...shared},
-    roller:       {...shared},
-    tillage:      {...shared},
-    tillage1:     {...shared},
-    tillage2:     {...shared},
-    tillage3:     {...shared},
+    seedbed:          {...shared},
+    planting:         {...shared},
+    herbicide:        {...shared},
+    herbicideAdditional:  {...shared},
+    herbicideReduced:    {...shared},
+    herbicideFall:    {...shared},
+    yield:            {...shared},
+    erosion:          {...shared},
+    termination:      {...shared},
+    fertility:        {...shared},
+    chemical:         {...shared},
+    roller:           {...shared},
+    tillage:          {...shared},
+    tillage1:         {...shared},
+    tillage2:         {...shared},
+    tillage3:         {...shared},
   },
 };
 
@@ -287,6 +306,25 @@ const afterChange = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
+    }
+  },
+  'herbicide.q2': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideAdditional.estimated = 0;
+      state.herbicideAdditional.total = 0;
+      state.herbicideAdditional.implement = '';
+    }
+  },
+  'herbicide.q5': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideReduced.estimated = 0;
+      state.herbicideReduced.total = 0;
+    }
+  },
+  'herbicide.q8': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideFall.estimated = 0;
+      state.herbicideFall.total = 0;
     }
   },
   'seedbed.q1': (state, {payload}) => {
@@ -418,7 +456,7 @@ const afterChange = {
   },
 };
 
-['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3', 'herbicideAdditional', 'herbicideReduced', 'herbicideFall'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -445,11 +483,16 @@ const afterChange = {
         tillage3 : 'Seedbed preparation',
         chemical : 'Herbicide application',
         roller   : 'Roller',
+        herbicideAdditional: 'Herbicide application',
+        herbicideReduced: 'Herbicide application',
+        herbicideFall: 'Herbicide application',
       }[section];
 
       state.focus = section + '.total';
       console.log(db.costDefaults);
       obj.estimated = obj.total = db.costDefaults[def].cost;
+    } else if (payload === 'I will not be making an additional application') {
+      return;
     } else if (payload) {
       const p = db.implements[payload];
     
@@ -476,142 +519,6 @@ const afterChange = {
     }
   };
 
-});
-
-const sets = {};
-const gets = {};
-const allkeys = {};
-
-const funcs = {};
-const methods = {};
-
-const processMethods = ((state, key) => {
-  if (methods[key]) {
-    // console.log(key, methods[key]);
-    for (let k in methods[key]) {
-      let st = state;
-      for (const key of k.split('.').slice(0, -1)) st = st[key];
-      const l = k.includes('.') ? k.split('.').slice(-1)[0] : k;
-      st[l] = methods[key][k](state);
-      processMethods(state, k);
-    }
-  }
-});
-
-const builders = (builder) => {
-  const recurse = (obj, set, get, parents = []) => {
-    Object.keys(obj).forEach((key) => {
-      const isArray = Array.isArray(obj[key]);
-      const isObject = !isArray && obj[key] instanceof Object;
-      const fullkey = parents.length ? parents.join('.') + '.' + key : key;
-      allkeys[fullkey] = true;
-
-      if (key !== 'name') { // TODO: implements
-        get[key] = (state) => {
-          let st = state;
-          for (const k of parents) st = st[k];
-
-          if (!st) {
-            alert('Unknown: ' + fullkey);
-          }
-          return st[key];
-        }
-
-        if (typeof obj[key] === 'function') {
-          funcs[fullkey] = obj[key];
-          // console.log(obj[key]);
-
-          //  let m = obj[key].toString().match(/e\.[$_\w.(]+/g);  // state.* unbuilt, e.* built
-          //  
-          //  if (m) {
-          //    m = m.map(s => s.split(/e\./)[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
-          //    m.forEach(m => {
-          //      methods[m] = methods[m] || {};
-          //      methods[m][fullkey] = funcs[fullkey];
-          //    });
-          //  }
-          const func = obj[key].toString();
-
-          for (const key in allkeys) {
-            if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
-              methods[key] = methods[key] || {};
-              methods[key][fullkey] = funcs[fullkey];
-            }
-          }
-  
-          obj[key] = 0; // TODO: Can't be undefined
-          // return;
-        }
-      }
-
-      if (key !== 'name') { // TODO: implements
-        set[key] = createAction(fullkey);
-
-        builder
-          .addCase(set[key], (state, action) => {
-            let st = state;
-            for (const k of parents) st = st[k];
-
-            if (isArray && Number.isFinite(action.payload.index)) {
-              const {index, value} = action.payload;
-              if (st[key][index] !== value) { // TODO: is this check needed?
-                st[key][index] = value;
-              }
-            } else {
-              if (st[key] !== action.payload) { // TODO: is this check needed?
-                st[key] = action.payload;
-              }
-            }
-            
-            if (afterChange[fullkey]) {
-              const ac = afterChange[fullkey](state, action);
-              if (ac) {
-                ac.forEach(parm => afterChange[parm](state, action));
-              }
-            }
-
-            // TODO:  Is the first of these needed?
-              processMethods(state, key);
-              processMethods(state, fullkey);
-
-            if (afterChange[fullkey]) {
-              const func = afterChange[fullkey].toString();
-              for (const key in allkeys) {
-                if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
-                  processMethods(state, key);
-                }
-              }
-            }
-          }
-        );
-      }
-
-      if (isObject) {
-        recurse(obj[key], set[key], get[key], [...parents, key]);
-      }
-    });
-  } // recurse
-
-  recurse(initialState, sets, gets);
-  // console.log(allkeys);
-
-} // builders
-
-export const runBuilders = () => createReducer(initialState, builders);
-
-const mystore = configureStore({
-  reducer: createReducer(initialState, builders)
-});
-
-export const store = mystore;
-
-export const set = sets;
-export const get = gets;
-
-console.log({
-  set,
-  funcs,
-  methods
 });
 
 const getCosts = (state, current) => {
@@ -722,7 +629,7 @@ const loadData = async(tables) => {
     });
   });
 
-  mystore.dispatch(set.status(status));
+  store.dispatch(set.status(status));
 
   // fill in missing values:
   for (const key in db) {
@@ -743,7 +650,7 @@ const loadData = async(tables) => {
   if (tables.length) {
     loadData(tables);
   } else {
-    mystore.dispatch(set.screen('Home'));
+    store.dispatch(set.screen('Home'));
   }
 } // loadData
 
@@ -769,9 +676,9 @@ export const dollars = (n) => {
 } // dollars
 
 export const test = (key, result) => {
-  let value = get[key]?.(mystore.getState())?.toString();
+  let value = get[key]?.(store.getState())?.toString();
   if (value !== result.toString()) {
-    value = mystore.getState();
+    value = store.getState();
 
     for (const k of key.split('.')) {
       value = value[k];
@@ -780,7 +687,7 @@ export const test = (key, result) => {
     if (value?.toString() !== result.toString()) {
       // I'd prefer console.error, but that requires showing all react_devtools_backend.js
       console.info(`${key} should be ${result} instead of ${value}`);
-      console.info(get[key]?.(mystore.getState()));
+      console.info(get[key]?.(store.getState()));
     }
   }
 } // test
@@ -810,10 +717,13 @@ export const clearInputs = (defaults) => {
         s = s[k];
       }
       // console.log(key, typeof defaults[key], defaults[key]);
-      mystore.dispatch(s(defaults[key]));
+      store.dispatch(s(defaults[key]));
     } catch(error) {
-      console.log(error);
+      console.log(key, error);
     }
   }
 } // clearInputs
 
+export const store = createStore(initialState, {afterChange});
+
+export {set, get} from './redux-autosetters';

@@ -50,6 +50,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   id.split('.').forEach(k => sel = sel[k]);
   if (!sel) {
     console.warn('Unknown Input: ' + id);
+    alert('Unknown Input: ' + id);
   }
 
   let sel2 = useSelector(sel);

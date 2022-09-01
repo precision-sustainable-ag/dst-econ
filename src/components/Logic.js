@@ -5,17 +5,19 @@ import {Icon} from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../store/store';
 
-const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style}) => {
+const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
-  const custom = 'Hire custom operator';
 
+  const iscustom = ['Hire custom operator', 'I will not be making an additional application'].includes(currentImplement);
+
+  console.log(currentImplement, custom);
   if (property === 'implement') {
-    a = [custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
+    a = [...custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
     // shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
     if (shown !== false) {
       shown = true;
@@ -38,7 +40,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
 
       q = q || question;
       a = 'number';
-      shown = currentImplement && currentImplement !== custom;
+      shown = currentImplement && !iscustom;
       break;
     case 'Annual Use (hours on power)':
       property = 'annualUseHours';
@@ -54,28 +56,28 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       );
       q = q || question;
       a = 'number';
-      shown = currentImplement && currentImplement !== custom;
+      shown = currentImplement && !iscustom;
       break;
     case 'Acres/hour':
       q = q || question;
       a = acresHour;
-      shown = currentImplement && currentImplement !== custom;
+      shown = currentImplement && !iscustom;
       break;
     case 'power':
       property = 'power';
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
-      shown = currentImplement && currentImplement !== custom;
+      shown = currentImplement && !iscustom;
       break;
     case 'Estimated':
       property = 'total';
       estimated = context.estimated;
-      q = (currentImplement === custom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : q || `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
+      q = (iscustom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)` : q || `Estimated relevant cost (${dollars(estimated)}/acre)`) || question;
       a = 'dollar';
       value = total || estimated;
-      shown = context.q3 || currentImplement;
+      shown = context.q3 || currentImplement !== 'I will not be making an additional application';
       warning = (
-        (currentImplement === custom || context.q3 === 'Custom Operator') && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
+        (iscustom || context.q3 === 'Custom Operator') && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ?
           <div className="warning">
             Warning: {dollars(context.total)} is outside the expected range for this activity.
           </div>
