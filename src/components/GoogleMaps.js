@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {TextField, OutlinedInput, Icon} from '@mui/material';
 import {Input} from './Inputs';
@@ -27,6 +27,44 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
       }, 200),
     [],
   );
+
+  const geocode = useCallback((newValue) => {
+    setOptions(newValue ? [newValue, ...options] : options);
+    if (newValue) {
+      dispatch(set.location(newValue.description));
+      const geocoder = new window.google.maps.Geocoder();
+
+      geocoder.geocode({
+        address: newValue.description,
+        region: 'en-US',
+      }, (results) => {
+        let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
+        if (state) {
+          state = state[0].long_name;
+          dispatch(set.state(state));
+        } else {
+          dispatch(set.state(''));
+        }
+        
+        if (results && results[0]) {
+          dispatch(set.lat(results[0].geometry.location.lat().toFixed(4)));
+          dispatch(set.lon(results[0].geometry.location.lng().toFixed(4)));
+        }
+      });
+    }
+  }, [dispatch, options]); // geocode
+
+  React.useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        const selected = document.querySelector('li.Mui-focused');
+        if (selected) {
+          dispatch(set.location(selected.textContent));
+          geocode({description: selected.textContent});
+        }
+      }
+    });
+  }, [dispatch, geocode]);
 
   React.useEffect(() => {
     let active = true;
@@ -66,31 +104,7 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
         isOptionEqualToValue={(option, value) => {return false;}}  // TODO
         
-        onChange={(_, newValue) => {
-          setOptions(newValue ? [newValue, ...options] : options);
-          if (newValue) {
-            dispatch(set.location(newValue.description));
-            const geocoder = new window.google.maps.Geocoder();
-
-            geocoder.geocode({
-              address: newValue.description,
-              region: 'en-US',
-            }, (results, status) => {
-              let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
-              if (state) {
-                state = state[0].long_name;
-                dispatch(set.state(state));
-              } else {
-                dispatch(set.state(''));
-              }
-              
-              if (results && results[0]) {
-                dispatch(set.lat(results[0].geometry.location.lat().toFixed(4)));
-                dispatch(set.lon(results[0].geometry.location.lng().toFixed(4)));
-              }
-            });
-          }
-        }}
+        onChange={(_, newValue) => {geocode(newValue);}}
 
         onInputChange={(_, newInputValue) => {
           setInputValue(newInputValue);
@@ -220,16 +234,16 @@ const Map = ({field=false, autoFocus}) => {
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
             center={{lat: +lat, lng: +lon}}
-            zzoom={mapZoom}
+            zoom={mapZoom}
 
-            zonGoogleApiLoaded={initGeocoder}
+            onGoogleApiLoaded={initGeocoder}
             
-            zyesIWantToUseGoogleMapApiInternals
-            zonClick={mapChange}
-            zonZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
-            zonMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
+            yesIWantToUseGoogleMapApiInternals
+            onClick={mapChange}
+            onZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
+            onMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
 
-            zonLoad={
+            onLoad={
               // prevent tabbing through map
               // got to be a better way than setting a timeout
               setTimeout(() => {
@@ -237,7 +251,7 @@ const Map = ({field=false, autoFocus}) => {
               }, 1000)
             }
 
-            zoptions={(map) => ({
+            options={(map) => ({
               mapTypeId: mapType,
               fullscreenControl: false,
               scaleControl: true,

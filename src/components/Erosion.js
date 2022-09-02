@@ -49,7 +49,7 @@ const Erosion = () => {
                 <Logic
                   current={current}
                   property="q4"
-                  q="On average, estimate the annualized number of hours to repair tile outlets, fix erosion issues, repair terrace breakovers or other issues for this particular field.                 "
+                  q="On average, estimate the reduced annualized number of hours to repair tile outlets, fix erosion issues, repair terrace breakovers or other issues for this particular field."
                   a="number"
                 />
 
