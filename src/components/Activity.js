@@ -164,7 +164,7 @@ export const Summary = () => {
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal;
 
   const SummaryRow = ({parm, desc, type}) => {
-    const style = type === 'Costs' ? {color: 'red'} : {color: 'darkgreen'};
+    const style = type === 'Costs' ? {color: 'red'} : {color: 'black'};
 
     if (
       (type === 'Costs'    && parm > 0) ||
@@ -212,7 +212,7 @@ export const Summary = () => {
   const acres     = useSelector(get.acres);
   const cashCrop  = useSelector(get.cashCrop);
 
-  const style = total > 0 ? {color: 'red'} : {color: 'darkgreen'};
+  const style = total > 0 ? {color: 'red'} : {color: 'black'};
 
   return (
     (total || farm || field || acres || cashCrop) && (

@@ -81,6 +81,7 @@ let initialState = {
   mapZoom: 13,
   location: '',
   state: 'New Jersey',
+  stateAbbreviation: 'NJ',
   farm: '',
   field: '',
   acres: undefined,
@@ -421,7 +422,13 @@ const afterChange = {
   'additional.nrcs': (state, {payload}) => {
     if (payload === 'Yes') {
       state.focus = 'additional.$costShare';
-      // state.additional.$costShare = 0;
+      const data = db.eqip[state.stateAbbreviation];
+      const species = state.species.filter(e => e);
+      if (species.length === 1) {
+        state.additional.$costShare = data?.basic;
+      } else if (species.length > 1) {
+        state.additional.$costShare = data?.multiple || data?.basic;
+      }
     } else {
       state.additional.$costShare = 0;
     }

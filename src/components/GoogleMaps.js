@@ -40,8 +40,8 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
       }, (results) => {
         let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
         if (state) {
-          state = state[0].long_name;
-          dispatch(set.state(state));
+          dispatch(set.state(state[0].long_name));
+          dispatch(set.stateAbbreviation(state[0].short_name))
         } else {
           dispatch(set.state(''));
         }
