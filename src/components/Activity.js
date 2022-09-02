@@ -160,15 +160,22 @@ export const Summary = () => {
   const herbicideTotal    = (useSelector(get.termination.additionalTotal) || 0) - (useSelector(get.termination.reducedTotal) || 0);
   const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal + herbicideTotal;
   const tillageAllTotal   = useSelector(get.tillageAll.total) || 0;
-  const yieldTotal        = useSelector(get.yield.total) || 0;
+  const yieldTotal        = -useSelector(get.yield.total) || 0;
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal;
 
   const SummaryRow = ({parm, desc, type}) => {
+    const style = type === 'Costs' ? {color: 'red'} : {color: 'darkgreen'};
+
     if (
       (type === 'Costs'    && parm > 0) ||
       (type === 'Benefits' && parm < 0)
     ) {
-      return <tr><td>{desc}</td><td>{dollars(Math.abs(parm))}</td></tr>;
+      return (
+        <tr>
+          <td>{desc}</td>
+          <td style={style}>{dollars(Math.abs(parm))}</td>
+        </tr>
+      );
     } else {
       return null;
     }
@@ -205,6 +212,8 @@ export const Summary = () => {
   const acres     = useSelector(get.acres);
   const cashCrop  = useSelector(get.cashCrop);
 
+  const style = total > 0 ? {color: 'red'} : {color: 'darkgreen'};
+
   return (
     (total || farm || field || acres || cashCrop) && (
       <table id="Summary">
@@ -224,7 +233,10 @@ export const Summary = () => {
         <CostsBenefits type="Benefits" />
         {total ? (
           <tfoot>
-            <tr><td>Total</td><td>{dollars(total)}</td></tr>
+            <tr>
+              <td>Total</td>
+              <td style={style}>{dollars(Math.abs(total))}</td>
+            </tr>
           </tfoot>
         ) : null}
       </table>
