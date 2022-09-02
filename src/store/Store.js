@@ -248,7 +248,7 @@ let initialState = {
     baleTime: undefined,
     tractor: '',
     lbsNotFed: (state) => {
-      return (((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted);
+      return (+((((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted)).toFixed(0)) || '';
     },
   },
   shown: {

@@ -166,7 +166,7 @@ const Additional = () => {
                       }
 
                       <tr>
-                        <td>lbs hay not fed (per ac)</td>
+                        <td>pounds hay not fed (per acre)</td>
                         <td>{context.lbsNotFed}</td>
                       </tr>
                       <tr>
@@ -186,7 +186,7 @@ const Additional = () => {
                         <td><Input id="additional.hoursAcre" /></td>
                       </tr>
                       <tr>
-                        <td>What is the average size of bales you feed (lbs/bale)?</td>
+                        <td>What is the average size of bales you feed (pounds/bale)?</td>
                         <td><Input id="additional.baleSize" /></td>
                       </tr>
                       <tr>
