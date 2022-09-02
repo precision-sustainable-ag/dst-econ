@@ -91,7 +91,7 @@ const Activity = ({type, instructions=true}) => {
           <table id="Costs">
             <thead>
               <tr>
-                <th rowSpan="2">Cost Description</th>
+                <th rowSpan="2" style={{verticalAlign: 'bottom'}}>Cost Description</th>
                 <th colSpan="4">{heading}</th>
                 <th className="hidden"></th>
                 <th className="hidden"></th>

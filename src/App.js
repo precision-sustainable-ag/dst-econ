@@ -87,8 +87,24 @@ function App() {
   const MyMenu = (s) => {
     return (
       Object.keys(s).map(scr => {
-        if (typeof s[scr] === 'object') {
-          return <strong key={scr}>{scr} {MyMenu(s[scr])}</strong>
+        if (scr === 'Airtables') {
+          if (mockup) {
+            return null;
+          } else {
+            return (
+              <details>
+                <summary>{scr}</summary>
+                <strong key={scr}>{MyMenu(s[scr])}</strong>
+              </details>
+            );
+          }
+        } else if (typeof s[scr] === 'object') {
+          return (
+            <>
+              <strong key={scr}>{scr}</strong>
+              {MyMenu(s[scr])}
+            </>
+          )
         } else if (scr === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
           return null;
         } else {
@@ -226,6 +242,7 @@ function App() {
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
+  const mockup = useSelector(get.mockup) === 'true' ? 'mockup' : '';
 
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
@@ -276,11 +293,12 @@ function App() {
   }, [dispatch]);
 
   // console.log(screen);
+
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <div
-      className="App"
+      className={mockup}
       
       onClick={(e) => {
         if (/^help/.test(e.target.innerHTML)) {
@@ -293,7 +311,7 @@ function App() {
       }}
     >
       <Summary/>
-      <nav onClick={changeScreen}>
+      <nav onClick={changeScreen} className="{cl}">
         {MyMenu(screens)}
       </nav>
 

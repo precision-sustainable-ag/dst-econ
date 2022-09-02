@@ -180,6 +180,6 @@ const Species = () => {
   )
 } // Species
 
-Species.menu = <span><u>C</u>over Crop selection</span>;
+Species.menu = <span><u>C</u>over Crop Selection</span>;
 
 export default Species;

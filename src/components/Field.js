@@ -155,6 +155,6 @@ const Field = () => {
   );
 } // Field
 
-Field.menu = <span>Field and Far<u>m</u></span>;
+Field.menu = <span>Field &amp; Far<u>m</u></span>;
 
 export default Field;
