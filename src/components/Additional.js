@@ -69,14 +69,24 @@ const Additional = () => {
               <p>
                 Do you anticipate participation in any other government program that will provide financial assistance for using cover crops?
               </p>
-              <p>
-                If yes, please enter the estimated cash contribution ($/acre)
-              </p>
             </td>
             <td>
-              <Input id="additional.$costShare" />
+              <Input id="additional.nrcs" options={['Yes', 'No']} type="radio" />
             </td>
           </tr>
+
+          {
+            context.nrcs === 'Yes' && (
+              <tr>
+                <td>
+                  Please enter the estimated cash contribution ($/acre)
+                </td>
+                <td>
+                  <Input id="additional.$costShare" />
+                </td>
+              </tr>
+            )
+          }
 
           <tr>
             <td>

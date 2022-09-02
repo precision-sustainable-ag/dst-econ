@@ -229,6 +229,7 @@ let initialState = {
   },
   additional: {
     $landowner: '0.00',
+    nrcs: '',
     $costShare: '0.00',
     $carbonOffset: '0.00',
     grazing: '',
@@ -414,6 +415,14 @@ const afterChange = {
   'tillage1.q1': (state, {payload}) => {
     if (payload === 'Yes' && state.tillage3.q2 === 'No') {
       state.screen = 'Fertility';
+    }
+  },
+  'additional.nrcs': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.$costShare';
+      // state.additional.$costShare = 0;
+    } else {
+      state.additional.$costShare = 0;
     }
   },
   'additional.grazing': (state, {payload}) => {
@@ -663,7 +672,7 @@ export const queue = (f, time=1) => {
 queue.i = 0;
 
 let status = '';
-loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities']);
+loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities', 'eqip']);
 
 export const dollars = (n) => {
   if (!isFinite(n)) {

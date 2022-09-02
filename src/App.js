@@ -49,6 +49,7 @@ function App() {
     'Airtables': {
       coefficients: '',
       commodities: '',
+      eqip: '',
       costDefaults: '',
       herbicides: '',
       implements: '',
@@ -117,6 +118,7 @@ function App() {
       case 'coefficients' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
       case 'commodities'  : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" />;
       case 'costDefaults' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
+      case 'eqip'         : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT" />;
       case 'herbicides'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" />;
       case 'implements'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" />;
       case 'power'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" />;
