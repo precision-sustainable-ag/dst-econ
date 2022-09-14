@@ -8,12 +8,21 @@ import './index.css';
 const container = document.getElementById('root');
 const root = createRoot(container);
 
+// breaks Map:
+/*
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  );
+*/
+
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
 
 document.title = 'CC-ECON';

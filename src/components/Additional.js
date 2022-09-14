@@ -50,24 +50,24 @@ const Additional = () => {
 
           <tr>
             <td>
-              The NRCS financial assistance estimate in this table is the basic or multiple species assistance for that state in 2022.
-              Assuming available funds, higher rates may be available for special conditions.
-              <Icon>
-                help
-                <p>
-                  The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
-                  The amount of financial assistance varies by state, cover crop practice and specific priorities.
-                </p>
-                <p>
-                  Priority programs include helping historically underserved audiences and water source protection.
-                  Financial assistance for planting multiple species is often greater than when planting a single species.
-                </p>
-                <p>
-                  The number of years that farms can receive cover crop financial assistance is usually limited.
-                </p>
-              </Icon>
+              <p>Do you plan to participate in a state or federal program (e.g. USDA EQIP or USDA CSP) that provides financial assistance for using cover crops?</p>
               <p>
-                Do you anticipate participation in any other government program that will provide financial assistance for using cover crops?
+                If you click yes, an estimate of the NRCS EQIP state program (Practice 340) rate for your location and seeding mix is shown in the input box.
+                You can change this financial assistance estimate to represent your specific opportunities.
+                <Icon>
+                  help
+                  <p>
+                    The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
+                    The amount of financial assistance varies by state, cover crop practice and specific priorities.
+                  </p>
+                  <p>
+                    Priority programs include helping historically underserved audiences and water source protection.
+                    Financial assistance for planting multiple species is often greater than when planting a single species.
+                  </p>
+                  <p>
+                    The number of years that farms can receive cover crop financial assistance is usually limited.
+                  </p>
+                </Icon>
               </p>
             </td>
             <td>

@@ -229,7 +229,7 @@ const Map = ({field=false, autoFocus}) => {
     <>
       <GoogleMaps field={field} autoFocus={autoFocus}/>
       {
-        false && lat && lon &&
+        true && lat && lon &&
         <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
