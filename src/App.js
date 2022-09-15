@@ -116,31 +116,31 @@ function App() {
 
   const Screen = () => {
     switch (screen) {
-      case 'Home'         : return <Home />;
+      case 'Home'         : return <React.StrictMode><Home /></React.StrictMode>;
       case 'Field'        : return <Field />;
-      case 'Species'      : return <Species />;
-      case 'Seedbed'      : return <Seedbed />;
-      case 'Planting'     : return <Planting />;
-      case 'Termination'  : return <Termination />;
-      case 'Tillage'      : return <Tillage />;
-      case 'Fertility'    : return <Fertility />;
-      case 'Herbicide'    : return <Herbicide />;
-      case 'Erosion'      : return <Erosion />;
-      case 'Additional'   : return <Additional />;
-      case 'Yield'        : return <Yield />;
-      case 'Practices'    : return <Practices />;
-      case 'Revenue'      : return <Revenue />;
-      case 'Resources'    : return <Resources/>;
-      case 'coefficients' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
-      case 'commodities'  : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" />;
-      case 'costDefaults' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
-      case 'eqip'         : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT" />;
-      case 'herbicides'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" />;
-      case 'implements'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" />;
-      case 'power'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" />;
-      case 'rates'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" />;
-      case 'seedList'     : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" />;
-      case 'stateRegions' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" />;
+      case 'Species'      : return <React.StrictMode><Species /></React.StrictMode>;
+      case 'Seedbed'      : return <React.StrictMode><Seedbed /></React.StrictMode>;
+      case 'Planting'     : return <React.StrictMode><Planting /></React.StrictMode>;
+      case 'Termination'  : return <React.StrictMode><Termination /></React.StrictMode>;
+      case 'Tillage'      : return <React.StrictMode><Tillage /></React.StrictMode>;
+      case 'Fertility'    : return <React.StrictMode><Fertility /></React.StrictMode>;
+      case 'Herbicide'    : return <React.StrictMode><Herbicide /></React.StrictMode>;
+      case 'Erosion'      : return <React.StrictMode><Erosion /></React.StrictMode>;
+      case 'Additional'   : return <React.StrictMode><Additional /></React.StrictMode>;
+      case 'Yield'        : return <React.StrictMode><Yield /></React.StrictMode>;
+      case 'Practices'    : return <React.StrictMode><Practices /></React.StrictMode>;
+      case 'Revenue'      : return <React.StrictMode><Revenue /></React.StrictMode>;
+      case 'Resources'    : return <React.StrictMode><Resources/></React.StrictMode>;
+      case 'coefficients' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" /></React.StrictMode>;
+      case 'commodities'  : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" /></React.StrictMode>;
+      case 'costDefaults' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" /></React.StrictMode>;
+      case 'eqip'         : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT" /></React.StrictMode>;
+      case 'herbicides'   : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" /></React.StrictMode>;
+      case 'implements'   : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" /></React.StrictMode>;
+      case 'power'        : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" /></React.StrictMode>;
+      case 'rates'        : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" /></React.StrictMode>;
+      case 'seedList'     : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" /></React.StrictMode>;
+      case 'stateRegions' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" /></React.StrictMode>;
       default: 
     }
   } // Screen
