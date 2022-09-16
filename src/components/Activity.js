@@ -216,30 +216,32 @@ export const Summary = () => {
 
   return (
     (total || farm || field || acres || cashCrop) && (
-      <table id="Summary">
-        <caption>Summary</caption>
-        {(farm || field || acres || cashCrop) && (
-          <>
-            <thead></thead>
-            <tbody>
-              {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
-              {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
-              {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
-              {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
-            </tbody>
-          </>
-        )}
-        <CostsBenefits type="Costs" />
-        <CostsBenefits type="Benefits" />
-        {total ? (
-          <tfoot>
-            <tr>
-              <td>Total</td>
-              <td style={style}>{dollars(Math.abs(total))}</td>
-            </tr>
-          </tfoot>
-        ) : null}
-      </table>
+      <div id="Summary">
+        <table>
+          <caption>Summary</caption>
+          {(farm || field || acres || cashCrop) && (
+            <>
+              <thead></thead>
+              <tbody>
+                {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
+                {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
+                {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
+                {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
+              </tbody>
+            </>
+          )}
+          <CostsBenefits type="Costs" />
+          <CostsBenefits type="Benefits" />
+          {total ? (
+            <tfoot>
+              <tr>
+                <td>Total</td>
+                <td style={style}>{dollars(Math.abs(total))}</td>
+              </tr>
+            </tfoot>
+          ) : null}
+        </table>
+      </div>
     )
   );
 } // Summary

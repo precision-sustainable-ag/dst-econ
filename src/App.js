@@ -2,6 +2,7 @@ import './App.css';
 
 import React from 'react';
 import {MenuItem, Button} from '@mui/material';
+
 import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -88,13 +89,13 @@ function App() {
     return (
       Object.keys(s).map(scr => {
         if (scr === 'Airtables') {
-          if (mockup) {
+          if (!dev) {
             return null;
           } else {
             return (
               <details>
                 <summary>{scr}</summary>
-                <strong key={scr}>{MyMenu(s[scr])}</strong>
+                {MyMenu(s[scr])}
               </details>
             );
           }
@@ -108,7 +109,7 @@ function App() {
         } else if (scr === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
           return null;
         } else {
-          return <MenuItem data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
+          return <Button data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</Button>
         }
       })
     );
@@ -146,9 +147,9 @@ function App() {
   } // Screen
 
   const changeScreen = (e) => {
-    const menu = e.target.closest('LI');
+    const menu = e.target.closest('button');
 
-    if (menu.tagName === 'LI') {
+    if (menu.tagName === 'BUTTON') {
       const scr = menu.dataset.scr;
 
       if (scr !== 'Resources') {
@@ -242,7 +243,7 @@ function App() {
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
-  const mockup = useSelector(get.mockup) === 'true' ? 'mockup' : '';
+  const dev = useSelector(get.dev);
 
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
@@ -298,8 +299,6 @@ function App() {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <div
-      className={mockup}
-      
       onClick={(e) => {
         if (/^help/.test(e.target.innerHTML)) {
           dispatch(set.help(e.target.innerHTML.slice(4)));
@@ -310,9 +309,12 @@ function App() {
         }
       }}
     >
-      <Summary/>
+      <Summary />
       <nav onClick={changeScreen} className="{cl}">
-        {MyMenu(screens)}
+        <div id="Menu">
+          {MyMenu(screens)}
+        </div>
+        <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
       </nav>
 
       <div id="Main">

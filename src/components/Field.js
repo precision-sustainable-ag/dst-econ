@@ -32,7 +32,7 @@ const Field = () => {
         </p>
 
         <ClearInputs defaults={defaults} />
-        <table className="fullWidth">
+        <table>
           <tbody>
             <tr>
               <td rowSpan="6">
