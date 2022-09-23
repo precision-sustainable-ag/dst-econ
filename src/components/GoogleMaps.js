@@ -10,7 +10,7 @@ import {get, set} from '../store/store';
 
 const autocompleteService = { current: null };
 
-const GoogleMaps = ({autoFocus=false, field=false}) => {
+const GoogleMaps = ({autoFocus=false, field=false, inputs=true}) => {
   const dispatch = useDispatch();
 
   const lat = +useSelector(get.lat);
@@ -94,35 +94,39 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
   return (
     <>
-      <Input
-        id="location"
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-        options={options}
-        autoComplete
-        includeInputInList
-        filterSelectedOptions
-
-        isOptionEqualToValue={(option, value) => {return false;}}  // TODO
-        
-        onChange={(_, newValue) => {geocode(newValue);}}
-
-        onInputChange={(_, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-
-        renderInput={(params) => {
-          return (
-            <>
-              <TextField
-                {...params}
-                autoFocus={autoFocus}
-                label="Find your Location"
-                style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
-              />
-            </>
-          )
-        }}
-      />
+      {
+        inputs && (
+          <Input
+            id="location"
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+            options={options}
+            autoComplete
+            includeInputInList
+            filterSelectedOptions
+    
+            isOptionEqualToValue={(option, value) => {return false;}}  // TODO
+            
+            onChange={(_, newValue) => {geocode(newValue);}}
+    
+            onInputChange={(_, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+    
+            renderInput={(params) => {
+              return (
+                <>
+                  <TextField
+                    {...params}
+                    autoFocus={autoFocus}
+                    label="Find your Location"
+                    style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
+                  />
+                </>
+              )
+            }}
+          />
+        )
+      }
       
       {
         field &&
@@ -151,30 +155,36 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
         </>
       }
 
-      <p/>
-      <div tabIndex="-1">
-        If you know your exact coordinates, you can enter them here:
-        <p/>
-        <Input
-          id="lat"
-          value={lat}
-          label="Latitude"
-          type="number"
-          sx={{margin: 1}}
-        />
-        <Input
-          id="lon"
-          value={lon}
-          label="Longitude"
-          type="number"
-          sx={{margin: 1}}
-        />
-      </div>
+      {
+        inputs && (
+          <>
+            <p />
+            <div tabIndex="-1">
+              If you know your exact coordinates, you can enter them here:
+              <p/>
+              <Input
+                id="lat"
+                value={lat}
+                label="Latitude"
+                type="number"
+                sx={{margin: 1}}
+              />
+              <Input
+                id="lon"
+                value={lon}
+                label="Longitude"
+                type="number"
+                sx={{margin: 1}}
+              />
+            </div>
+          </>
+        )
+      }
     </>
   );
-}
+} // GoogleMaps
 
-const Map = ({field=false, autoFocus}) => {
+const Map = ({field=false, autoFocus, inputs=true, id='GoogleMap', mapOptions={}}) => {
   const dispatch = useDispatch();
   const lat = +useSelector(get.lat);
   const lon = +useSelector(get.lon);
@@ -216,62 +226,68 @@ const Map = ({field=false, autoFocus}) => {
     Geocoder = new maps.Geocoder();
   };
 
-  if (false) {
-    return (
-      <>
-        <GoogleMaps field={field} autoFocus={autoFocus}/>
-        work in progress
-      </>
-    )
-  }
-
   return (
-    <>
-      <GoogleMaps field={field} autoFocus={autoFocus}/>
+    <div id={id}>
       {
-        true && lat && lon &&
-        <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
-            center={{lat: +lat, lng: +lon}}
-            zoom={mapZoom}
-
-            onGoogleApiLoaded={initGeocoder}
-            
-            yesIWantToUseGoogleMapApiInternals
-            onClick={mapChange}
-            onZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
-            onMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
-
-            onLoad={
-              // prevent tabbing through map
-              // got to be a better way than setting a timeout
-              setTimeout(() => {
-                document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex', -1));
-              }, 1000)
-            }
-
-            options={(map) => ({
-              mapTypeId: mapType,
-              fullscreenControl: false,
-              scaleControl: true,
-              mapTypeControl: true,
-              mapTypeControlOptions: {
-                style: map.MapTypeControlStyle.HORIZONTAL_BAR,
-                mapTypeIds: [
-                  'roadmap',
-                  'satellite',
-                  'hybrid',
-                  'terrain'
-                ]
-              },
-            })}
-          >
-            <Marker lat={+lat} lng={+lon} />
-          </GoogleMapReact>
-        </div>
+        inputs && (
+          <>
+            <strong>Where is your Field located?</strong>
+            <p>
+              Enter your address or zip code to determine your field's location.<br/>
+              You can then zoom in and click to pinpoint it on the map.
+            </p>
+          </>
+        )
       }
-    </>
+
+      <GoogleMaps field={field} autoFocus={autoFocus} inputs={inputs} />
+      {
+        lat && lon ? (
+          <div style={{height: '100%'}}>
+            <GoogleMapReact
+              bootstrapURLKeys={{key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg'}}
+              center={{lat: +lat, lng: +lon}}
+              zoom={mapOptions.zoom || mapZoom}
+
+              onGoogleApiLoaded={initGeocoder}
+              
+              yesIWantToUseGoogleMapApiInternals
+              onClick={mapChange}
+              onZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
+              onMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
+
+              onLoad={
+                // prevent tabbing through map
+                // got to be a better way than setting a timeout
+                setTimeout(() => {
+                  document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex', -1));
+                }, 1000)
+              }
+
+              options={(map) => ({
+                mapTypeId: mapType,
+                fullscreenControl: false,
+                scaleControl: true,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                  style: map.MapTypeControlStyle.HORIZONTAL_BAR,
+                  mapTypeIds: [
+                    'roadmap',
+                    'satellite',
+                    'hybrid',
+                    'terrain'
+                  ]
+                },
+                ...mapOptions
+              })}
+            >
+              <Marker lat={+lat} lng={+lon} />
+            </GoogleMapReact>
+          </div>
+        )
+        : null
+      }
+    </div>
   );
 } // Map
 

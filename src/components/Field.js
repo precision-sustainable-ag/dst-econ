@@ -12,6 +12,8 @@ const Field = () => {
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop  = useSelector(get.cashCrop);
   const dev       = useSelector(get.dev);
+  const width = useSelector(get.screenWidth);
+  const height = useSelector(get.screenHeight);
 
   return (
     <>
@@ -31,18 +33,24 @@ const Field = () => {
           Please answer all of the following:
         </p>
 
-        <ClearInputs defaults={defaults} />
         <table>
+          <thead>
+            <tr>
+              <td colSpan={2} style={{position: 'relative'}}>
+                &nbsp;
+                <ClearInputs defaults={defaults} />
+              </td>
+            </tr>
+          </thead>
           <tbody>
             <tr>
-              <td rowSpan="6">
-                <h2>Where is your Field located?</h2>
-                <p>
-                  Enter your address or zip code to determine your field's location.<br/>
-                  You can then zoom in and click to pinpoint it on the map.
-                </p>
-                <Map autoFocus/>
-              </td>
+              {
+                (width <= 91600 || height <= 650) && (
+                  <td rowSpan="6">
+                    <Map autoFocus/>
+                  </td>
+                )
+              }
               <td>
                 <h2>What is the name of your Farm?</h2>
                 <Input id="farm" fullWidth/>

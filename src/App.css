@@ -7,19 +7,7 @@
 }
 
 html {
-  background: #eee;
-}
-
-html, body {
-  margin: auto;
-  padding: 0;
-  max-width: 1200px;
-}
-
-body {
-  background: white;
-  border: 1px solid #ccc;
-  position: relative;
+  background: #bbb;
 }
 
 .selected {
@@ -36,43 +24,28 @@ body {
 }
 
 #Main {
-  padding: 0.5rem;
-  padding-right: 13rem;
-  min-height: 100vh;
+  padding: 0 0.5rem;
+  background: white;
+  min-height: calc(100vh - 15rem);
 }
 
 #Menu {
-  display: inline-block;
-  position: relative;
-  left: 130px;
-  margin-right: 18rem;
+  padding-left: 130px;
 }
 
 nav {
   position: sticky;
   top: 0;
-  white-space: normal;
   background: #eee;
   padding: 0.5em;
-  border: none;
-  color: grey;
   z-index: 999;  /* prevent position: sticky from covering navigation */
-  border-bottom: 1px solid #ddd;
-}
-
-nav strong,
-[data-scr=Resources] {
-  display: block;
-  border-top: 1px solid #bbb !important;
-  padding-top: 0.5em;
+  border-bottom: 1px solid #bbb;
 }
 
 nav button {
-  display: inline-block;
-  margin-bottom: 0.5em;
   width: 7rem;
   height: 3.5rem;
-  background: #33f !important;
+  background: rgb(25, 118, 210) !important;
   margin: 0.2rem !important;
   text-transform: none !important;
   border-radius: 10px !important;
@@ -80,7 +53,7 @@ nav button {
 }
 
 nav button.selected {
-  background: #6f6 !important;
+  background: #6d6 !important;
   font-weight: bold;
   color: black !important;
 }
@@ -292,12 +265,18 @@ form.Species tr > td:nth-child(3) {
   text-transform: none;
 }
 
-div.navigation {
+#Navigation {
+  position: fixed;
+  bottom: 0;
+  height: 3.5rem;
+  width: 1000px;
+  padding: 0.5rem;
+  zbackground: #ddd;
+  border-top: 1px solid #bbb;
   text-align: center;
-  margin: 1rem 0;
 }
 
-div.navigation button {
+#Navigation button {
   margin-right: 2rem;
 }
 
@@ -307,21 +286,22 @@ div.navigation button {
 }
 
 #Summary {
-  position: absolute;
-  z-index: 10000;
-  height: 100vh;
-  background: #f4eddd;
-  border: 1px solid #e3dccc;
-  padding: 0.5rem;
-  top: 0;
-  right: 0;
   font-size: 0.8rem;
-  width: 16em;
+  width: 200px;
+  position: fixed;
+  top: 2%;
+  left: calc(1000px + 2% + 5px);
 }
 
 #Summary table {
   position: sticky;
+  width: 100%;
   top: 0;
+  background: white;
+  outline: 3px solid white;
+}
+
+#Summary caption {
   background: white;
 }
 
@@ -559,7 +539,7 @@ body.hotkeys u {
 .help {
   position: fixed;
   background: #eee;
-  z-index: 10000;
+  z-index: 100000;
   padding: 0.5em;
   border-radius: 5px;
   box-shadow: 5px 5px 15px 5px #000;
@@ -567,7 +547,7 @@ body.hotkeys u {
 }
 
 .MuiIcon-root {
-  zoom: 0.8;
+  /* zoom: 0.8; */
   opacity: 0.6;
   cursor: pointer;
   color: #444;
@@ -590,4 +570,30 @@ body.hotkeys u {
 
 summary {
   cursor: pointer;
+}
+
+#AppMap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw + 60%);
+  height: 100vh;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+#GoogleMap {
+  height: 400px;
+  width: 100%;
+}
+
+#Container {
+  display: flex;
+  flex-direction: row;
+  width: 1200px;
+  border: 1px solid #ddd;
+}
+
+#Container > * {
+  z-index: 1;
 }

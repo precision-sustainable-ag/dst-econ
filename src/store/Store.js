@@ -73,10 +73,14 @@ let initialState = {
     a: [4, 3, 2, 1],
   },
   screen: 'Loading',
+  screenWidth: window.innerWidth,
+  screenHeight: window.innerHeight,
   status: '',
   previousScreen: 'Home',
   lat: 40.7849,
   lon: -74.8073,
+  // lat: 0,
+  // lon: 0,
   mapType: 'hybrid',
   mapZoom: 13,
   location: '',
@@ -741,6 +745,19 @@ export const clearInputs = (defaults) => {
   }
 } // clearInputs
 
-export const store = createStore(initialState, {afterChange});
+// let resizeTimer;
+
+const reducers = {
+  resize: (state) => {
+    // Cannot perform 'set' on a proxy that has been revoked
+    // clearTimeout(resizeTimer);
+    // resizeTimer = setTimeout(() => {
+      state.screenWidth  = window.innerWidth;
+      state.screenHeight = window.innerHeight;
+    // }, 100);
+  }
+}
+
+export const store = createStore(initialState, {afterChange, reducers});
 
 export {set, get} from './redux-autosetters';

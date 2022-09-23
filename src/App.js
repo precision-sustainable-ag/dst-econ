@@ -6,7 +6,7 @@ import {MenuItem, Button} from '@mui/material';
 import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {get, set, db} from './store/store';
+import {get, set, db, reducers} from './store/store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';
@@ -25,6 +25,7 @@ import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
 import {Summary}    from './components/Activity';
+import Map          from './components/GoogleMaps';
 
 function App() {
   const screens = {
@@ -192,7 +193,7 @@ function App() {
     }
 
     return (
-      <div className="navigation">
+      <div id="Navigation">
         {
           back &&
           <Button
@@ -244,7 +245,10 @@ function App() {
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
   const dev = useSelector(get.dev);
+  const width = useSelector(get.screenWidth);
+  const height = useSelector(get.screenHeight);
 
+  console.log(width);
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
 
@@ -291,37 +295,75 @@ function App() {
         dispatch(set.help(''));
       }
     });
+
+    window.addEventListener('resize', () => {
+      dispatch({type: 'resize'});
+    });
   }, [dispatch]);
 
   // console.log(screen);
+
+  const showMap = width > 1200;
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <div
-      onClick={(e) => {
-        if (/^help/.test(e.target.innerHTML)) {
-          dispatch(set.help(e.target.innerHTML.slice(4)));
-          dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-          dispatch(set.helpY(e.pageY - 20 - window.scrollY));
-        } else {
-          dispatch(set.help(''));
-        }
+      id="Container"
+      style={{
+        margin: showMap ? '1% 2%' : 0,
+        maxHeight: showMap ? '90vh' : 'auto',
+        overflow: 'auto',
       }}
     >
-      <Summary />
-      <nav onClick={changeScreen} className="{cl}">
-        <div id="Menu">
-          {MyMenu(screens)}
-        </div>
-        <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
-      </nav>
+      {
+        width > 1200 && height > 650 && (
+          <Map
+            id="AppMap"
+            inputs={false}
+            mapOptions={{
+              mapTypeControl: false,
+              disableDefaultUI: true,
+              zoom: 20,
+            }}
+          />
+        )
+      }
 
-      <div id="Main">
-        <Help />
-        <Screen />
+      <div
+        style={{
+          background: 'white',
+          width: 1000,
+          height: 'calc(100vh - 4rem)',
+          overflow: 'auto',
+          paddingBottom: '2rem',
+        }}
+        onClick={(e) => {
+          if (/^help/.test(e.target.innerHTML)) {
+            dispatch(set.help(e.target.innerHTML.slice(4)));
+            dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
+            dispatch(set.helpY(e.pageY - 20 - window.scrollY));
+          } else {
+            dispatch(set.help(''));
+          }
+        }}
+      >
+        <nav onClick={changeScreen} className="{cl}">
+          <div id="Menu">
+            {MyMenu(screens)}
+          </div>
+          <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
+        </nav>
+
+        <div id="Main">
+          <Help />
+          <Screen />
+        </div>
         <Navigation current={screen} />
       </div>
+
+      <Summary />
+  
     </div>
   );
 }
