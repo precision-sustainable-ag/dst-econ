@@ -76,7 +76,7 @@ let initialState = {
   screenWidth: window.innerWidth,
   screenHeight: window.innerHeight,
   status: '',
-  previousScreen: 'Home',
+  previousScreen: 'Field',
   lat: 40.7849,
   lon: -74.8073,
   // lat: 0,
@@ -671,7 +671,7 @@ const loadData = async(tables) => {
   if (tables.length) {
     loadData(tables);
   } else {
-    store.dispatch(set.screen('Home'));
+    store.dispatch(set.screen('Field'));
   }
 } // loadData
 

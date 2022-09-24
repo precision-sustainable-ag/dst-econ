@@ -29,7 +29,7 @@ import Map          from './components/GoogleMaps';
 
 function App() {
   const screens = {
-    Home,
+    // Home,
     Modules: {
       Field,
       Species,
@@ -311,9 +311,8 @@ function App() {
     <div
       id="Container"
       style={{
-        margin: showMap ? '1% 2%' : 0,
-        maxHeight: showMap ? '90vh' : 'auto',
-        overflow: 'auto',
+        margin: showMap ? '1rem 2%' : 0,
+        maxHeight: showMap ? 'calc(100vh - 2rem)' : 'auto',
       }}
     >
       {
@@ -331,13 +330,7 @@ function App() {
       }
 
       <div
-        style={{
-          background: 'white',
-          width: 1000,
-          height: 'calc(100vh - 4rem)',
-          overflow: 'auto',
-          paddingBottom: '2rem',
-        }}
+        id="Left"
         onClick={(e) => {
           if (/^help/.test(e.target.innerHTML)) {
             dispatch(set.help(e.target.innerHTML.slice(4)));
@@ -349,6 +342,16 @@ function App() {
         }}
       >
         <nav onClick={changeScreen} className="{cl}">
+          <div
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: '120%',
+              marginBottom: '0.25rem',
+            }}
+          >
+            Cover Crop Decision Support Tool
+          </div>
           <div id="Menu">
             {MyMenu(screens)}
           </div>
@@ -359,6 +362,7 @@ function App() {
           <Help />
           <Screen />
         </div>
+        
         <Navigation current={screen} />
       </div>
 

@@ -92,6 +92,6 @@ const Erosion = () => {
   );
 } // Erosion
 
-Erosion.menu = <span>Soil <u>E</u>rosion Control</span>;
+Erosion.menu = <span><u>E</u>rosion Control</span>;
 
 export default Erosion;

@@ -23,39 +23,27 @@ html {
   width: 30rem;
 }
 
-#Main {
-  padding: 0 0.5rem;
-  background: white;
-  min-height: calc(100vh - 15rem);
-}
-
 #Menu {
   padding-left: 130px;
 }
 
-nav {
-  position: sticky;
-  top: 0;
-  background: #eee;
-  padding: 0.5em;
-  z-index: 999;  /* prevent position: sticky from covering navigation */
-  border-bottom: 1px solid #bbb;
+nav button {
+  background: transparent;
+  text-transform: none !important;
+  font-size: 0.9rem !important;
+  height: 1.5rem;
 }
 
-nav button {
-  width: 7rem;
-  height: 3.5rem;
-  background: rgb(25, 118, 210) !important;
-  margin: 0.2rem !important;
-  text-transform: none !important;
-  border-radius: 10px !important;
+nav * {
   color: white !important;
 }
 
+nav details {
+  display: inline-block;
+}
+
 nav button.selected {
-  background: #6d6 !important;
-  font-weight: bold;
-  color: black !important;
+  background-color: rgb(25, 118, 210, 0.5);
 }
 
 nav button:not(.selected):hover {
@@ -265,17 +253,6 @@ form.Species tr > td:nth-child(3) {
   text-transform: none;
 }
 
-#Navigation {
-  position: fixed;
-  bottom: 0;
-  height: 3.5rem;
-  width: 1000px;
-  padding: 0.5rem;
-  zbackground: #ddd;
-  border-top: 1px solid #bbb;
-  text-align: center;
-}
-
 #Navigation button {
   margin-right: 2rem;
 }
@@ -298,11 +275,11 @@ form.Species tr > td:nth-child(3) {
   width: 100%;
   top: 0;
   background: white;
-  outline: 3px solid white;
+  outline: 1px solid black;
 }
 
 #Summary caption {
-  background: white;
+  background: rgb(255, 255, 255, 0.8);
 }
 
 #Summary thead {
@@ -469,7 +446,6 @@ input[type="number"] {
 
 .loading {
   margin: 0.5rem;
-  color: #aaa;
 }
 
 .link {
@@ -529,11 +505,11 @@ th {
 
 u {
   text-decoration: none;
-  border-bottom: 1px solid #88f;
+  border-bottom: 1px solid #bbb;
 }
 
 body.hotkeys u {
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid #333;
 }
 
 .help {
@@ -563,9 +539,11 @@ body.hotkeys u {
 
 #PSALogo {
   position: absolute;
-  top: 2.5rem;
+  filter: invert(1);
+  top: 1.3rem;
   left: 0.25rem;
   width: 8rem;
+  zbackground-color: rgb(255, 255, 255, 0.8);
 }
 
 summary {
@@ -576,24 +554,57 @@ summary {
   position: fixed;
   top: 0;
   left: 0;
-  width: calc(100vw + 60%);
+  width: calc(100vw + 1200px - 12%);
   height: 100vh;
-  opacity: 0.8;
+  opacity: 0.6;
   pointer-events: none;
 }
 
 #GoogleMap {
-  height: 400px;
+  height: 300px;
   width: 100%;
 }
 
 #Container {
+  position: relative;
   display: flex;
   flex-direction: row;
   width: 1200px;
   border: 1px solid #ddd;
 }
 
+#Left {
+  width: 1000px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  padding: 0.5rem;
+  background-color: rgba(30, 30, 30, 0.8);
+  height: 6rem;
+}
+
+#Main {
+  padding: 0 0.5rem;
+  background: white;
+  z-index: -1;
+  height: calc(100vh - (6rem + 1.5rem + 4rem));
+  overflow: auto;
+}
+
+#Navigation {
+  height: 1.5rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
 #Container > * {
   z-index: 1;
+}
+
+h1 {
+  font-size: 1rem;
+  display: none;
 }

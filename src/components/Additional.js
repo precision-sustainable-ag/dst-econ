@@ -256,6 +256,6 @@ const Additional = () => {
   );
 } // Additional
 
-Additional.menu = <span><u>A</u>dditional considerations</span>;
+Additional.menu = <span>Ot<u>h</u>er</span>;
 
 export default Additional;
