@@ -1,4 +1,3 @@
-import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
 import {ClearInputs} from './ClearInputs';
@@ -87,7 +86,6 @@ const Planting = () => {
           </button>
         )
       }
-      <Activity type={current}/>
     </>
   )
 } // Planting

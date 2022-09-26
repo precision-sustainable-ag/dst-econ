@@ -1,4 +1,3 @@
-import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
 import {ClearInputs} from './ClearInputs';
@@ -415,10 +414,6 @@ const Termination = () => {
           </>
         )
       }
-
-      {/herbicide/i.test(method) && <Activity type="chemical" />}
-      {/roller/i.test(method)    && <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />}
-      {method === 'Tillage'      && <Activity type="tillage"  />}
     </>
   )
 } // Termination

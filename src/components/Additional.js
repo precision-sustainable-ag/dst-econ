@@ -1,4 +1,3 @@
-import Activity from './Activity';
 import {Input} from './Inputs';
 import {Icon} from '@mui/material';
 import {ClearInputs} from './ClearInputs';

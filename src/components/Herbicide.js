@@ -1,4 +1,3 @@
-import Activity from './Activity';
 import Logic from './Logic';
 import {ClearInputs} from './ClearInputs';
 
@@ -237,10 +236,6 @@ const Herbicide = () => {
           </tbody>
         </table>
       </form>
-
-      <Activity type="herbicideAdditional" />
-      <Activity type="herbicideReduced" instructions={state.q2 === 'No'} />
-      <Activity type="herbicideFall" instructions={state.q2 === 'No' && state.q5 === 'No'} />
     </div>
   )
 } // Herbicide

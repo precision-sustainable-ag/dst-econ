@@ -306,6 +306,17 @@ function App() {
     window.addEventListener('resize', () => {
       dispatch({type: 'resize'});
     });
+
+    document.addEventListener('focusin', ({target}) => {
+      if (target.type !== 'checkbox') {
+        console.log(target.id);
+        dispatch(set.focused(target.id));
+      }
+    });
+
+    document.addEventListener('scroll', (e) => {
+      dispatch(set.scrollTop(e.target.scrollTop));
+    }, true);
   }, [dispatch]);
 
   // console.log(screen);

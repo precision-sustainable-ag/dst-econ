@@ -1,5 +1,4 @@
 import Map from './GoogleMaps';
-import Activity from './Activity';
 import {Input} from './Inputs';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
@@ -158,7 +157,6 @@ const Field = () => {
           Test data
         </button>
       )}
-      <Activity type="species"/>
     </>
   );
 } // Field

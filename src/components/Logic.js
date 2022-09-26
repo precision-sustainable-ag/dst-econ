@@ -1,21 +1,24 @@
 import {Input} from './Inputs';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 
 import {Icon} from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../store/store';
 
+import Activity from './Activity';
+
 const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
+  const focused           = useSelector(get.focused);
+  console.log(focused);
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
 
   const iscustom = ['Hire custom operator', 'I will not be making an additional application'].includes(currentImplement);
 
-  console.log(currentImplement, custom);
   if (property === 'implement') {
     a = [...custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
     // shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
@@ -143,6 +146,11 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
           a
         }
         <span className="suffix">{suffix}</span>
+        {
+          property === 'implement' && focused.match(current) && /(implement|power|annualUse)/.test(focused) && (
+            <Activity type={current} />
+          )
+        }
       </td>
     </tr> :
     null

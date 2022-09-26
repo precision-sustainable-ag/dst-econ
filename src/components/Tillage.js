@@ -1,4 +1,3 @@
-import Activity from './Activity';
 import Logic from './Logic';
 
 import {useSelector, useDispatch} from 'react-redux';
@@ -38,6 +37,11 @@ const Tillage = () => {
           type="Tillage"
           shown={state.q2 === 'Yes'}
         />
+
+        <Logic current={current} question="power" />
+        <Logic current={current} question="Annual Use (acres on implement)" />
+        <Logic current={current} question="Annual Use (hours on power)" />
+        <Logic current={current} question="Acres/hour" />
 
         <Logic 
           current={current}
@@ -205,9 +209,6 @@ const Tillage = () => {
         )
       }
 
-      <Activity type="tillage1" />
-      <Activity type="tillage2" instructions={false} />
-      <Activity type="tillage3" instructions={false} />
     </>
   )
 } // Tillage

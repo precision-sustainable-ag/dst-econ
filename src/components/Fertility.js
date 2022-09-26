@@ -1,4 +1,3 @@
-import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {ClearInputs} from './ClearInputs';
@@ -141,7 +140,6 @@ const Fertility = () => {
         </>
       )
       }
-      <Activity type={current}/>
     </div>
   )
 } // Fertility

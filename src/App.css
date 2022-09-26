@@ -39,7 +39,6 @@ nav button {
   text-transform: none !important;
   font-size: 0.9rem !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  zheight: 1.5rem;
 }
 
 nav details {
@@ -53,7 +52,6 @@ nav {
 nav button.selected {
   color: rgba(3, 3, 3) !important;
   background: #eee !important;
-  
 }
 
 nav button:not(.selected):hover {
@@ -117,6 +115,14 @@ label {
 #Breakdown {
   display: inline-block;
   margin-right: 1em;
+}
+
+#Breakdown table {
+  font-size: 80%;
+}
+
+#Breakdown table span {
+  transform: scale(0.8);
 }
 
 #Breakdown.noImplementCost tr > :nth-child(2),
@@ -501,11 +507,15 @@ th {
 
 u {
   text-decoration: none;
-  border-bottom: 1px solid #bbb;
+  border-bottom: 1px solid #777;
 }
 
 body.hotkeys u {
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #ddd;
+}
+
+button.selected u {
+  border-bottom: none;
 }
 
 .help {
@@ -533,7 +543,7 @@ body.hotkeys u {
 #PSALogo {
   position: absolute;
   filter: invert(1);
-  top: 1.3rem;
+  top: 2rem;
   left: 0.25rem;
   width: 8rem;
   zbackground-color: rgb(255, 255, 255, 0.8);
@@ -578,24 +588,21 @@ nav {
   padding: 0.5rem;
   background-color: rgba(30, 30, 30, 0.8);
   height: 7rem;
+  z-index: 1;
 }
 
 #Main {
   padding: 0 0.5rem;
   background: white;
-  z-index: -1;
   height: calc(100vh - (6rem + 1.5rem + 4rem));
   overflow: auto;
+  z-index: 1;
 }
 
 #Navigation {
   height: 1.5rem;
   padding: 0.5rem;
   text-align: center;
-}
-
-#Container > * {
-  z-index: 1;
 }
 
 h1 {
@@ -613,3 +620,4 @@ h1 {
   border: 1px solid #aaa;
   border-radius: 6px;
 }
+
