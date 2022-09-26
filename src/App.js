@@ -5,8 +5,11 @@ import {MenuItem, Button} from '@mui/material';
 
 import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import Draggable from 'react-draggable';
+import Card from '@mui/material/Card';
+import {CardContent} from '@mui/material';
 
-import {get, set, db, reducers} from './store/store';
+import {get, set, db} from './store/store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';
@@ -70,17 +73,21 @@ function App() {
       left: helpX,
       top: helpY,
       maxWidth:  `calc(100vw - ${helpX}px - 20px)`,
-      maxHeight: `calc(100vh - ${helpY}px - 20px)`,
+      maxHeight: `calc(94vh - ${helpY}px - 20px)`,
       overflow: 'auto'
     }
   
     return (
       help &&
-      <div
-        className="help"
-        style={style}
-        dangerouslySetInnerHTML={{ __html: help }}
-      />
+      <Draggable>
+        <Card className="help" style={style}>
+          <CardContent>
+            <div
+              dangerouslySetInnerHTML={{ __html: help }}
+            />
+          </CardContent>
+        </Card>
+      </Draggable>
     )
   } // Help
 
@@ -337,7 +344,9 @@ function App() {
             dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
             dispatch(set.helpY(e.pageY - 20 - window.scrollY));
           } else {
-            dispatch(set.help(''));
+            if (!e.target.closest('.help')) {
+              dispatch(set.help(''));
+            }
           }
         }}
       >

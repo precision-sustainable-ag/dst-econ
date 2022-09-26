@@ -28,26 +28,36 @@ html {
 }
 
 nav button {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  font-family: Roboto, Arial;
+  font-weight: normal !important;
+  margin-right: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  border-radius: 16px !important;
+  padding: 0 12px !important;
   text-transform: none !important;
   font-size: 0.9rem !important;
-  height: 1.5rem;
-}
-
-nav * {
-  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  zheight: 1.5rem;
 }
 
 nav details {
   display: inline-block;
 }
 
+nav {
+  color: #eee;
+}
+
 nav button.selected {
-  background-color: rgb(25, 118, 210, 0.5);
+  color: rgba(3, 3, 3) !important;
+  background: #eee !important;
+  
 }
 
 nav button:not(.selected):hover {
-  background: #66f !important;
+  background: rgba(255, 255, 255, 0.2) !important;
 }
 
 nav strong {
@@ -257,29 +267,15 @@ form.Species tr > td:nth-child(3) {
   margin-right: 2rem;
 }
 
-[data-scr=Home], [data-scr=Resources] {
-  padding-left: 0 !important;
-  font-weight: bold !important;
-}
-
 #Summary {
   font-size: 0.8rem;
   width: 200px;
-  position: fixed;
-  top: 2%;
   left: calc(1000px + 2% + 5px);
 }
 
 #Summary table {
-  position: sticky;
   width: 100%;
-  top: 0;
   background: white;
-  outline: 1px solid black;
-}
-
-#Summary caption {
-  background: rgb(255, 255, 255, 0.8);
 }
 
 #Summary thead {
@@ -514,11 +510,8 @@ body.hotkeys u {
 
 .help {
   position: fixed;
-  background: #eee;
+  background-color: #f8f4f2 !important;
   z-index: 100000;
-  padding: 0.5em;
-  border-radius: 5px;
-  box-shadow: 5px 5px 15px 5px #000;
   font-size: 80%;
 }
 
@@ -570,6 +563,7 @@ summary {
   display: flex;
   flex-direction: row;
   width: 1200px;
+  max-width: 100vw;
   border: 1px solid #ddd;
 }
 
@@ -583,7 +577,7 @@ summary {
 nav {
   padding: 0.5rem;
   background-color: rgba(30, 30, 30, 0.8);
-  height: 6rem;
+  height: 7rem;
 }
 
 #Main {
@@ -607,4 +601,15 @@ nav {
 h1 {
   font-size: 1rem;
   display: none;
+}
+
+.cursor {
+  display: block;
+  text-align: center;
+  transform: translateY(-0.5rem);
+  cursor: grab;
+  background: #ddd;
+  padding: 0.3rem;
+  border: 1px solid #aaa;
+  border-radius: 6px;
 }

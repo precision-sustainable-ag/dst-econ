@@ -3,6 +3,17 @@ import {Input} from './Inputs';
 import {useSelector} from 'react-redux';
 import {get, dollars} from '../store/store';
 
+import Card from '@mui/material/Card';
+import {CardContent} from '@mui/material';
+import {makeStyles} from '@mui/styles';
+import Draggable from 'react-draggable';
+
+const useStyles = makeStyles({
+  root: {
+    boxShadow: '2px 3px rgba(20, 20, 20, 0.7)',
+  }
+});
+
 const Activity = ({type, instructions=true}) => {
   const state             = useSelector(get[type]);
   const estimated         = state.estimated;
@@ -213,34 +224,43 @@ export const Summary = () => {
   const cashCrop  = useSelector(get.cashCrop);
 
   const style = total > 0 ? {color: 'red'} : {color: 'black'};
+  const classes = useStyles();
 
   return (
     (total || farm || field || acres || cashCrop) && (
-      <div id="Summary">
-        <table>
-          <caption>Summary</caption>
-          {(farm || field || acres || cashCrop) && (
-            <>
-              <thead></thead>
-              <tbody>
-                {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
-                {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
-                {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
-                {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
-              </tbody>
-            </>
-          )}
-          <CostsBenefits type="Costs" />
-          <CostsBenefits type="Benefits" />
-          {total ? (
-            <tfoot>
-              <tr>
-                <td>Total</td>
-                <td style={style}>{dollars(Math.abs(total))}</td>
-              </tr>
-            </tfoot>
-          ) : null}
-        </table>
+      <div>
+        <Draggable handle="strong">
+          <Card variant="outlined" className={classes.root} style={{backgroundColor: '#eee'}}>
+            <CardContent>
+              <div id="Summary">
+                <strong className="cursor">Summary</strong>
+                <table>
+                  {(farm || field || acres || cashCrop) && (
+                    <>
+                      <thead></thead>
+                      <tbody>
+                        {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
+                        {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
+                        {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
+                        {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
+                      </tbody>
+                    </>
+                  )}
+                  <CostsBenefits type="Costs" />
+                  <CostsBenefits type="Benefits" />
+                  {total ? (
+                    <tfoot>
+                      <tr>
+                        <td>Total</td>
+                        <td style={style}>{dollars(Math.abs(total))}</td>
+                      </tr>
+                    </tfoot>
+                  ) : null}
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </Draggable>          
       </div>
     )
   );
