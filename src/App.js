@@ -335,26 +335,39 @@ function App() {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <>
+      {
+        mapVisible && (
+          <Map
+            id="AppMap"
+            inputs={false}
+            mapOptions={{
+              mapTypeControl: false,
+              disableDefaultUI: true,
+              zoom: maxZoom,
+            }}
+          />
+        )
+      }
+
+      {
+        screenWidth >= 1200 && screenHeight > 650 && (
+          <Button
+            id="ToggleMap"
+            onClick={() => 
+              dispatch(set.showMap(!showMap))
+            }
+          >
+            {showMap ? 'Hide map' : 'Show map'}
+          </Button>
+        )
+      }
+
       <div
         id="Container"
         style={{
           margin: mapVisible ? '1rem 2%' : 'auto',
         }}
       >
-        {
-          mapVisible && (
-            <Map
-              id="AppMap"
-              inputs={false}
-              mapOptions={{
-                mapTypeControl: false,
-                disableDefaultUI: true,
-                zoom: maxZoom,
-              }}
-            />
-          )
-        }
-
         <div
           id="Left"
           onClick={(e) => {
@@ -396,19 +409,6 @@ function App() {
 
         <Summary />
       </div>
-
-      {
-        screenWidth >= 1200 && screenHeight > 650 && (
-          <Button
-            id="ToggleMap"
-            onClick={() => 
-              dispatch(set.showMap(!showMap))
-            }
-          >
-            {showMap ? 'Hide map' : 'Show map'}
-          </Button>
-        )
-      }
     </>
   );
 }

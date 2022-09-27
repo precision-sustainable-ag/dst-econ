@@ -2,9 +2,206 @@ import {Input} from './Inputs';
 import {Icon} from '@mui/material';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, db} from '../store/store';
+import {get, set, test, getDefaults} from '../store/store';
 
 const Additional = () => {
+  const Stop = () => <div className="stop"></div>;
+
+  const Considerations = () => (
+    <>
+      <div className="grid2">
+        <header>
+          Additional considerations
+          <ClearInputs defaults={defaults} />
+        </header>
+
+        <div>
+          <p>
+            If you cash rent this field, will the landowner contribute to seed costs or other costs associated with planting cover crops?
+          </p>
+          <p>If yes, please enter the estimated cash contribution ($/acre)</p>
+        </div>
+        <div><Input id="additional.$landowner" /></div>
+
+        <div>
+          <p>
+            Do you plan to participate in a state or federal program (e.g. USDA EQIP or USDA CSP) that provides financial assistance for using cover crops?
+          </p>
+          <p>
+            If you click yes, an estimate of the NRCS EQIP state program (Practice 340) rate for your location and seeding mix is shown in the input box.
+            You can change this financial assistance estimate to represent your specific opportunities.
+            <Icon>
+              help
+              <p>
+                The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
+                The amount of financial assistance varies by state, cover crop practice and specific priorities.
+              </p>
+              <p>
+                Priority programs include helping historically underserved audiences and water source protection.
+                Financial assistance for planting multiple species is often greater than when planting a single species.
+              </p>
+              <p>
+                The number of years that farms can receive cover crop financial assistance is usually limited.
+              </p>
+            </Icon>
+          </p>
+        </div>
+        <div><Input id="additional.nrcs" options={['Yes', 'No']} type="radio" /></div>
+
+        <div hidden={context.nrcs !== 'Yes'}>
+          Please enter the estimated cash contribution ($/acre)
+        </div>
+        <div><Input id="additional.$costShare" /></div>
+
+        <div>
+          <p>
+            Do you anticipate participation in a voluntary carbon offset program that will provide a payment based on carbon reducing practices such as cover crops?
+          </p>
+          <p>
+            If yes, please enter the estimated cash contribution ($/acre)
+          </p>
+        </div>
+        <div><Input id="additional.$carbonOffset" /></div>
+
+        <div>
+          <p>
+            Will you participate in a cover crop insurance discount program?
+          </p>
+          <p>
+            If yes, please enter the estimated cash savings on your crop insurance premium ($/acre).
+            <Icon>
+              help
+              <p>
+                Growers may be eligible for discounts on their crop insurance premiums by planting cover crops.
+              </p>
+              <p>
+                For example, the State of Iowa has offered a $5 per acre crop insurance discount program administered by the Iowa Department of Agriculture and Land Stewardship and the USDA Risk Management Agency (RMA) when growers planted a fall seeded cover crop.
+                Similar programs have been available in Illinois.
+                Note that some insurance policies may be excluded (e.g. Whole-Farm Revenue Protection or written agreements).
+              </p>
+            </Icon>
+          </p>
+        </div>
+        <div>
+          <Input id="additional.$insuranceDiscount" />
+        </div>
+      </div>
+    </>
+  ) // Considerations
+
+  const Grazing = () => {
+    /*
+      const Graze = (({type}) => (
+        <>
+          <div>Do you intend to {type} graze?</div>
+          <div><Input id={`additional.${type}Graze`} options={['Yes', 'No']} type="radio" /></div>
+
+          {
+            context[type + 'Graze'] === 'Yes' && (
+              <>
+                <div>How many pounds of dry matter per acre will be harvested (grazed by cows)?</div>
+                <div><Input id={`additional.${type}DryMatter`} /></div>
+
+                <div>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</div>
+                <div><Input id={`additional.${type}Waste`} type="percent" /></div>
+              </>
+            )
+          }
+        </>
+      )) // Graze
+    */
+
+    const Graze = (({type}) => (
+      <>
+        <div>Do you intend to {type} graze?</div>
+        <div><Input id={`additional.${type}Graze`} options={['Yes', 'No']} type="radio" /></div>
+
+        <div hidden={context[type + 'Graze'] !== 'Yes'}>
+          Amount of forage for {type} grazing
+        </div>
+        <div>
+          <Input
+            id={`additional.${type}Grazing`}
+            options={['Low', 'Medium', 'High']}
+            type="radio"
+          />
+        </div>
+      </>
+    )) // Graze
+
+    return (
+      <>
+        <br/>
+        <div className="grid2">
+          <header>Grazing Cover Crops</header>
+
+          <div className="colspan">
+            Diversified crop and livestock operators can take advantage of the forage value cover crops provide.
+            Growers without livestock may also find potential lease opportunities with livestock operators in their area.
+            The following question will help you evaluate the financial impact of grazing livestock.
+          </div>
+
+          <div>Do you intend on grazing your cover crops?</div>
+          <div><Input id="additional.grazing" options={['Yes', 'No']} type="radio" /></div>
+          {context.grazing !== 'Yes' && <Stop />}
+          
+          <div>Do you intend to lease your cover crop acres to a livestock producer (not graze them with your operation)?</div>
+          <div><Input id="additional.lease" options={['Yes', 'No']} type="radio" /></div>
+
+          {context.lease === '' && <Stop />}
+
+          {
+            context.lease === 'Yes' && (
+              <>
+                <div>
+                  What is the approximate value (per acre) you will receive for leasing your cover crop acres for grazing?
+                </div>
+                <div><Input id="additional.$lease" /></div>
+                <Stop />
+              </>
+            )
+          }
+
+          <Graze type="fall" />
+          <Graze type="spring" />
+
+          {
+            /* Removed per Sep 6 DST Review:
+              <div>pounds hay not fed (per acre)</div>
+              <div>{context.lbsNotFed}</div>
+
+              <div>What is the dry matter percentage (DM%) of the hay you feed?</div>
+              <div><Input id="additional.dryMatter" type="percent" /></div>
+              
+              <div>How much hay is wasted by cows in the feedlot?</div>
+              <div><Input id="additional.wasted" type="percent" /></div>
+
+              <div>What is the average size of bales you feed (pounds/bale)?</div>
+              <div><Input id="additional.baleSize" /></div>
+              
+              <div>What is the approximate amount of time it takes you to feed one bale of hay during the winter months?</div>
+              <div><Input id="additional.baleTime" /></div>
+
+              <div>What tractor do you use for feeding?</div>
+              <div>
+                <Input
+                  id="additional.tractor"
+                  options={['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))]}
+                />
+              </div>
+            */
+          }
+          
+          <div>What is the value of the hay you feed? ($/ton)</div>
+          <div><Input id="additional.$hay" /></div>
+          
+          <div>How much additional time (hours per acre) will be required for management of the grazing operation?</div>
+          <div><Input id="additional.hoursAcre" /></div>
+        </div>
+      </>
+    );
+  } // Grazing
+
   const dispatch = useDispatch();
   const context = useSelector(get.additional);
   const dev = useSelector(get.dev);
@@ -27,198 +224,9 @@ const Additional = () => {
         You will find a number of resources links to explore potential programs for your operation.
       </p>
 
-      <table>
-        <thead>
-          <tr>
-            <th colSpan="2">
-              Additional considerations
-              <ClearInputs defaults={defaults} />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              If you cash rent this field, will the landowner contribute to seed costs or other costs associated with planting cover crops?
-              <p>If yes, please enter the estimated cash contribution ($/acre)</p>
-            </td>
-            <td>
-              <Input id="additional.$landowner" />
-            </td>
-          </tr>
+      <Considerations />
 
-          <tr>
-            <td>
-              <p>Do you plan to participate in a state or federal program (e.g. USDA EQIP or USDA CSP) that provides financial assistance for using cover crops?</p>
-              <p>
-                If you click yes, an estimate of the NRCS EQIP state program (Practice 340) rate for your location and seeding mix is shown in the input box.
-                You can change this financial assistance estimate to represent your specific opportunities.
-                <Icon>
-                  help
-                  <p>
-                    The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
-                    The amount of financial assistance varies by state, cover crop practice and specific priorities.
-                  </p>
-                  <p>
-                    Priority programs include helping historically underserved audiences and water source protection.
-                    Financial assistance for planting multiple species is often greater than when planting a single species.
-                  </p>
-                  <p>
-                    The number of years that farms can receive cover crop financial assistance is usually limited.
-                  </p>
-                </Icon>
-              </p>
-            </td>
-            <td>
-              <Input id="additional.nrcs" options={['Yes', 'No']} type="radio" />
-            </td>
-          </tr>
-
-          {
-            context.nrcs === 'Yes' && (
-              <tr>
-                <td>
-                  Please enter the estimated cash contribution ($/acre)
-                </td>
-                <td>
-                  <Input id="additional.$costShare" />
-                </td>
-              </tr>
-            )
-          }
-
-          <tr>
-            <td>
-              Do you anticipate participation in a voluntary carbon offset program that will provide a payment based on carbon reducing practices such as cover crops?
-              <p>
-                If yes, please enter the estimated cash contribution ($/acre)
-              </p>
-            </td>
-            <td>
-              <Input id="additional.$carbonOffset" />
-            </td>
-          </tr>
-        
-        </tbody>
-      </table>
-
-      <h4>Grazing Cover Crops</h4>
-      <p>
-        Diversified crop and livestock operators can take advantage of the forage value cover crops provide.
-        Growers without livestock may also find potential lease opportunities with livestock operators in their area.
-        The following question will help you evaluate the financial impact of grazing livestock.
-      </p>
-
-      <table>
-        <tbody>
-          <tr>
-            <td>Do you intend on grazing your cover crops?</td>
-            <td><Input id="additional.grazing" options={['Yes', 'No']} type="radio"/></td>
-          </tr>
-
-          {
-            context.grazing === 'Yes' && (
-              <>
-                <tr>
-                  <td>Do you intend to lease your cover crop acres to a livestock producer (not graze them with your operation)?</td>
-                  <td><Input id="additional.lease" options={['Yes', 'No']} type="radio" /></td>
-                </tr>
-
-                {
-                  context.lease === 'Yes' && (
-                    <tr>
-                      <td>What is the approximate value (per acre) you will receive for leasing your cover crop acres for grazing?</td>
-                      <td><Input id="additional.$lease" /></td>
-                    </tr>
-                  )
-                }
-
-                {
-                  context.lease === 'No' && (
-                    <>
-                      <tr>
-                        <td>Do you intend to fall graze?</td>
-                        <td><Input id="additional.fallGraze" options={['Yes', 'No']} type="radio" /></td>
-                      </tr>
-                      {
-                        context.fallGraze === 'Yes' && (
-                          <>
-                            <tr>
-                              <td>How many pounds of dry matter per acre will be harvested (grazed by cows)?</td>
-                              <td><Input id="additional.fallDryMatter" /></td>
-                            </tr>
-                            <tr>
-                              <td>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</td>
-                              <td><Input id="additional.fallWaste" type="percent" /></td>
-                            </tr>
-                          </>
-                        )
-                      }
-
-                      <tr>
-                        <td>Do you intend to spring graze?</td>
-                        <td><Input id="additional.springGraze" options={['Yes', 'No']} type="radio" /></td>
-                      </tr>
-                      {
-                        context.springGraze === 'Yes' && (
-                          <>
-                            <tr>
-                              <td>How many pounds of dry matter per acre will be harvested (grazed by cows)?</td>
-                              <td><Input id="additional.springDryMatter" /></td>
-                            </tr>
-                            <tr>
-                              <td>What % of the cover crop growth will not be utilized (waste) due to hoof action and/or selective grazing?</td>
-                              <td><Input id="additional.springWaste" type="percent" /></td>
-                            </tr>
-                          </>
-                        )
-                      }
-
-                      <tr>
-                        <td>pounds hay not fed (per acre)</td>
-                        <td>{context.lbsNotFed}</td>
-                      </tr>
-                      <tr>
-                        <td>What is the dry matter percentage (DM%) of the hay you feed?</td>
-                        <td><Input id="additional.dryMatter" type="percent" /></td>
-                      </tr>
-                      <tr>
-                        <td>How much hay is wasted by cows in the feedlot?</td>
-                        <td><Input id="additional.wasted" type="percent" /></td>
-                      </tr>
-                      <tr>
-                        <td>What is the value of the hay you feed?</td>
-                        <td><Input id="additional.$hay" /></td>
-                      </tr>
-                      <tr>
-                        <td>How much additional time (hours per acre) will be required for management of the grazing operation?</td>
-                        <td><Input id="additional.hoursAcre" /></td>
-                      </tr>
-                      <tr>
-                        <td>What is the average size of bales you feed (pounds/bale)?</td>
-                        <td><Input id="additional.baleSize" /></td>
-                      </tr>
-                      <tr>
-                        <td>What is the approximate amount of time it takes you to feed one bale of hay during the winter months?</td>
-                        <td><Input id="additional.baleTime" /></td>
-                      </tr>
-                      <tr>
-                        <td>What tractor do you use for feeding?</td>
-                        <td>
-                          <Input
-                            id="additional.tractor"
-                            options={['', ...Object.keys(db.power).sort((a, b) => a.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))]}
-                          />
-                        </td>
-                      </tr>
-                    </>
-                  )
-                }
-              </>
-            )
-          }
-        </tbody>
-      </table>
+      <Grazing />
 
       {
         dev && (
@@ -256,5 +264,6 @@ const Additional = () => {
 } // Additional
 
 Additional.menu = <span>Ot<u>h</u>er</span>;
+// Additional.menu = <span>Additional Considerationss</span> ;
 
 export default Additional;
