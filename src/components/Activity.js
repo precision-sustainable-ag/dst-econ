@@ -34,7 +34,6 @@ const Activity = ({type}) => {
   const screenHeight      = useSelector(get.screenHeight);
   const focused           = useSelector(get.focused);
   const state             = useSelector(get[type]);
-  const scrollTop         = useSelector(get.scrollTop);
 
   const estimated         = state.estimated;
   const tot               = state.total;

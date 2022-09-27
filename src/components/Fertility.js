@@ -8,7 +8,6 @@ const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertiliz
 
 const Fertility = () => {
   const dispatch = useDispatch();
-  const current = 'fertility';
   const dev         = useSelector(get.dev);
 
   const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';

@@ -252,10 +252,13 @@ function App() {
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
   const dev = useSelector(get.dev);
-  const width = useSelector(get.screenWidth);
-  const height = useSelector(get.screenHeight);
+  const screenWidth = useSelector(get.screenWidth);
+  const screenHeight = useSelector(get.screenHeight);
+  const showMap = useSelector(get.showMap);
+  const lat = useSelector(get.lat);
+  const lon = useSelector(get.lon);
+  const maxZoom = useSelector(get.maxZoom);
 
-  console.log(width);
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
 
@@ -321,74 +324,92 @@ function App() {
 
   // console.log(screen);
 
-  const showMap = width > 1200;
+  const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
+
+  const mz = new window.google.maps.MaxZoomService();
+  mz.getMaxZoomAtLatLng({lat, lng: lon}, (result) => {
+    dispatch(set.maxZoom(result.zoom));
+  });
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
-    <div
-      id="Container"
-      style={{
-        margin: showMap ? '1rem 2%' : 0,
-        maxHeight: showMap ? 'calc(100vh - 2rem)' : 'auto',
-      }}
-    >
-      {
-        width > 1200 && height > 650 && (
-          <Map
-            id="AppMap"
-            inputs={false}
-            mapOptions={{
-              mapTypeControl: false,
-              disableDefaultUI: true,
-              zoom: 20,
-            }}
-          />
-        )
-      }
-
+    <>
       <div
-        id="Left"
-        onClick={(e) => {
-          if (/^help/.test(e.target.innerHTML)) {
-            dispatch(set.help(e.target.innerHTML.slice(4)));
-            dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-            dispatch(set.helpY(e.pageY - 20 - window.scrollY));
-          } else {
-            if (!e.target.closest('.help')) {
-              dispatch(set.help(''));
-            }
-          }
+        id="Container"
+        style={{
+          margin: mapVisible ? '1rem 2%' : 'auto',
         }}
       >
-        <nav onClick={changeScreen} className="{cl}">
-          <div
-            style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: '120%',
-              marginBottom: '0.25rem',
-            }}
-          >
-            Cover Crop Decision Support Tool
-          </div>
-          <div id="Menu">
-            {MyMenu(screens)}
-          </div>
-          <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
-        </nav>
+        {
+          mapVisible && (
+            <Map
+              id="AppMap"
+              inputs={false}
+              mapOptions={{
+                mapTypeControl: false,
+                disableDefaultUI: true,
+                zoom: maxZoom,
+              }}
+            />
+          )
+        }
 
-        <div id="Main">
-          <Help />
-          <Screen />
+        <div
+          id="Left"
+          onClick={(e) => {
+            if (/^help/.test(e.target.innerHTML)) {
+              dispatch(set.help(e.target.innerHTML.slice(4)));
+              dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
+              dispatch(set.helpY(e.pageY - 20 - window.scrollY));
+            } else {
+              if (!e.target.closest('.help')) {
+                dispatch(set.help(''));
+              }
+            }
+          }}
+        >
+          <nav onClick={changeScreen} className="{cl}">
+            <div
+              style={{
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: '120%',
+                marginBottom: '0.25rem',
+              }}
+            >
+              Cover Crop Decision Support Tool
+            </div>
+            <div id="Menu">
+              {MyMenu(screens)}
+            </div>
+            <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
+          </nav>
+
+          <div id="Main">
+            <Help />
+            <Screen />
+          </div>
+          
+          <Navigation current={screen} />
         </div>
-        
-        <Navigation current={screen} />
+
+        <Summary />
       </div>
 
-      <Summary />
-  
-    </div>
+      {
+        screenWidth >= 1200 && screenHeight > 650 && (
+          <Button
+            id="ToggleMap"
+            onClick={() => 
+              dispatch(set.showMap(!showMap))
+            }
+          >
+            {showMap ? 'Hide map' : 'Show map'}
+          </Button>
+        )
+      }
+    </>
   );
 }
 

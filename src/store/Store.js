@@ -67,7 +67,6 @@ let initialState = {
   fullName: (state) => state.firstName + ' ' + state.lastName,
   fullName2: (state) => state.fullName,
   dev: new URLSearchParams(window.location.search).get('dev'),
-  mockup: new URLSearchParams(window.location.search).get('mockup'),
   test: '',
   test2: {a: {b: {c: 3}}},
   array1: ['This ', 'is ', 'a ', 'test'],
@@ -77,6 +76,8 @@ let initialState = {
   screen: 'Loading',
   screenWidth: window.innerWidth,
   screenHeight: window.innerHeight,
+  showMap: window.innerWidth > 1200,
+  maxZoom: 20, // max zoom of satellite imagery for current lat/lon; used on home map
   status: '',
   previousScreen: 'Field',
   lat: 40.7985,
