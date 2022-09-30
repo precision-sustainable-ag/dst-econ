@@ -1,7 +1,7 @@
 import Logic from './Logic';
 import {Icon} from '@mui/material';
 
-import {get, set, test, getDefaults, dollars} from '../store/store';
+import {get, set, test, getDefaults, dollars} from '../store/Store';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Erosion = () => {
@@ -49,7 +49,7 @@ const Erosion = () => {
                 <Logic
                   current={current}
                   property="q4"
-                  q="On average, estimate the annualized number of hours to repair tile outlets, fix erosion issues, repair terrace breakovers or other issues for this particular field.                 "
+                  q="On average, estimate the reduced annualized number of hours to repair tile outlets, fix erosion issues, repair terrace breakovers or other issues for this particular field."
                   a="number"
                 />
 
@@ -92,6 +92,6 @@ const Erosion = () => {
   );
 } // Erosion
 
-Erosion.menu = <span>Soil <u>e</u>rosion control</span>;
+Erosion.menu = <span><u>E</u>rosion Control</span>;
 
 export default Erosion;

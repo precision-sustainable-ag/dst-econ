@@ -1,15 +1,13 @@
-import Activity from './Activity';
 import {Input} from './Inputs';
 
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, getDefaults, test, db} from '../store/store';
+import {get, set, dollars, getDefaults, test, db} from '../store/Store';
 
 const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertilizer|fertNAdded|fertPAdded|fertKAdded|$fertApplication|$fertCredit|$fertCost|fertility.total');
 
 const Fertility = () => {
   const dispatch = useDispatch();
-  const current = 'fertility';
   const dev         = useSelector(get.dev);
 
   const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';
@@ -141,7 +139,6 @@ const Fertility = () => {
         </>
       )
       }
-      <Activity type={current}/>
     </div>
   )
 } // Fertility

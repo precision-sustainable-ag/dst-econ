@@ -5,24 +5,30 @@ import Highcharts from 'highcharts';
 
 import HighchartsReact from 'highcharts-react-official';
 
-import {get, set, test, getDefaults, dollars} from '../store/store';
+import {get, set, test, getDefaults, dollars} from '../store/Store';
+import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
+
+const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 
 const Yield = () => {
   const dispatch = useDispatch();
   const current = 'yield';
   const state = useSelector(get[current]);
-  const typical = state.typical;
+  const typical  = state.typical;
   const adjusted = state.adjusted;
+  const impact   = state.impact;
 
   console.log(state);
   const dev = useSelector(get.dev);
   const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
 
+  const width = 700;
+  const width2 = width - 570;
+
   Highcharts.setOptions({
     chart: {
       animation: false,
-      height: 300,
     },
     lang: {
       numericSymbols: null
@@ -33,6 +39,8 @@ const Yield = () => {
   const options = {
     chart: {
       type: 'column',
+      width: width,
+      height: 250,
     },
     plotOptions: {
       series: {
@@ -40,23 +48,25 @@ const Yield = () => {
       }
     },
     title: {
-      text: 'Yields'
+      text: 'Revenue'
     },
     xAxis: {
-      title: {
-        text: 'Years growing cover crops in this field'
+      tickLength: 0,
+      labels: {
+        enabled: false,
       },
-      categories: [
-        '1',
-        '3',
-        '5'
-      ],      
+      title: {
+      },
     },
     yAxis: {
       title: {
-        text: 'bushels/acre'
+        useHTML: true,
+        text: `
+          <div style="height: ${width2}px; display: flex;">
+            <div style="align-self: flex-end;">dollars/acre</div>
+          </div>
+        `
       },
-      min: typical > 500 ? 500 : 0,
       labels: {
         formatter: function () {
           return '$' + this.axis.defaultLabelFormatter.call(this);
@@ -65,13 +75,9 @@ const Yield = () => {
     },
     series: [
       {
-        name: 'Typical',
-        data: [typical, typical, typical]
-      },
-      {
-        name: 'Cover Crop Adjusted',
-        data: adjusted
-      },
+        showInLegend: false,
+        data: impact
+      }
     ],
   }
   
@@ -104,6 +110,13 @@ const Yield = () => {
 
       <table style={{maxWidth: 900}}>
         <tbody>
+          <tr>
+            <th colSpan="2">
+              Yield
+              <ClearInputs defaults={defaults} />
+            </th>
+          </tr>
+
           <Logic
             current={current}
             property="yield"
@@ -112,7 +125,7 @@ const Yield = () => {
                 What is the expected yield for {cashCrop} in this field?
                 <Icon>
                   help
-                  <p>User may enter a trend adjusted APH, APH, or typical yield for this field.</p>
+                  <p>User may enter their APH, trend adjusted APH, or typical yield for this field.</p>
                 </Icon>
               </>
             }
@@ -130,7 +143,7 @@ const Yield = () => {
             current={current}
             property="price"
             q="Commodity price"
-            a="number"
+            a="dollar"
           />
 
           <Logic
@@ -146,35 +159,45 @@ const Yield = () => {
       
       {
         adjusted[0] ? (
-          <div id="YieldSummary">
-            <table>
-              <thead>
-                <tr>
-                  <th>Year</th><th>Typical</th><th>Cover Crop<br/>Adjusted</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>{dollars(typical)}</td>
-                  <td>{dollars(adjusted[0])}</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>{dollars(typical)}</td>
-                  <td>{dollars(adjusted[1])}</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>{dollars(typical)}</td>
-                  <td>{dollars(adjusted[2])}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div style={{width: width}}>
             <HighchartsReact
               highcharts={Highcharts}
               options={options}
             />
+
+            <div>
+              <table style={{width: '100%', textAlign: 'center', font: '12px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif', color: '#444'}}>
+                <tbody>
+                  <tr>
+                    <td>Year</td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>5</td>
+                  </tr>
+                  <tr>
+                    <td style={{width: width2 + 55}}>
+                      <div style={{display: 'inline-block', width: 10, height: 10, background: '#058DC7', marginRight: 4}}></div>
+                      Cover crop yield impact<br/>($/acre)
+                    </td>
+                    <td>{dollars(impact[0])}</td>
+                    <td>{dollars(impact[1])}</td>
+                    <td>{dollars(impact[2])}</td>
+                  </tr>
+                  <tr>
+                    <td>Typical Yield<br/>($/acre)</td>
+                    <td>{dollars(typical)}</td>
+                    <td>{dollars(typical)}</td>
+                    <td>{dollars(typical)}</td>
+                  </tr>
+                  <tr>
+                    <td>Cover Crop Adjusted Yield<br/>($/acre)</td>
+                    <td>{dollars(adjusted[0])}</td>
+                    <td>{dollars(adjusted[1])}</td>
+                    <td>{dollars(adjusted[2])}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : null
       }
@@ -186,7 +209,7 @@ const Yield = () => {
               onClick={() => {
                 dispatch(set.yield.yield('150'));
                 dispatch(set.cashCrop('Soybeans'));
-                dispatch(set.yield.q2('Use typical yield estimates'));
+                dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
                 dispatch(set.yield.q4('5'));
               }}
             >
@@ -196,7 +219,7 @@ const Yield = () => {
               onClick={() => {
                 dispatch(set.yield.yield('150'));
                 dispatch(set.cashCrop('Corn'));
-                dispatch(set.yield.q2('Use typical yield estimates'));
+                dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
                 dispatch(set.yield.q4('5'));
               }}
             >

@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: dstecon 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dstecon
+  template:
+    metadata:
+      labels:
+        app: dstecon 
+    spec:
+      containers:
+        - name: dstecon 
+          image: containerregistry4pd7i.azurecr.io/dstecon
+          ports:
+          - containerPort: 80

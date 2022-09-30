@@ -1,4 +1,4 @@
-import {clearInputs} from '../store/store';
+import {clearInputs} from '../store/Store';
 import {Button} from '@mui/material';
 
 export const ClearInputs = ({defaults}) => {

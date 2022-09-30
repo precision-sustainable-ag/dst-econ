@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {TextField, OutlinedInput, Icon} from '@mui/material';
 import {Input} from './Inputs';
@@ -6,11 +6,11 @@ import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {get, set} from '../store/Store';
 
 const autocompleteService = { current: null };
 
-const GoogleMaps = ({autoFocus=false, field=false}) => {
+const GoogleMaps = ({autoFocus=false, field=false, inputs=true}) => {
   const dispatch = useDispatch();
 
   const lat = +useSelector(get.lat);
@@ -27,6 +27,44 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
       }, 200),
     [],
   );
+
+  const geocode = useCallback((newValue) => {
+    setOptions(newValue ? [newValue, ...options] : options);
+    if (newValue) {
+      dispatch(set.location(newValue.description));
+      const geocoder = new window.google.maps.Geocoder();
+
+      geocoder.geocode({
+        address: newValue.description,
+        region: 'en-US',
+      }, (results) => {
+        let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
+        if (state) {
+          dispatch(set.state(state[0].long_name));
+          dispatch(set.stateAbbreviation(state[0].short_name))
+        } else {
+          dispatch(set.state(''));
+        }
+        
+        if (results && results[0]) {
+          dispatch(set.lat(results[0].geometry.location.lat().toFixed(4)));
+          dispatch(set.lon(results[0].geometry.location.lng().toFixed(4)));
+        }
+      });
+    }
+  }, [dispatch, options]); // geocode
+
+  React.useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        const selected = document.querySelector('li.Mui-focused');
+        if (selected) {
+          dispatch(set.location(selected.textContent));
+          geocode({description: selected.textContent});
+        }
+      }
+    });
+  }, [dispatch, geocode]);
 
   React.useEffect(() => {
     let active = true;
@@ -56,59 +94,39 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
 
   return (
     <>
-      <Input
-        id="location"
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
-        options={options}
-        autoComplete
-        includeInputInList
-        filterSelectedOptions
-
-        isOptionEqualToValue={(option, value) => {return false;}}  // TODO
-        
-        onChange={(_, newValue) => {
-          setOptions(newValue ? [newValue, ...options] : options);
-          if (newValue) {
-            dispatch(set.location(newValue.description));
-            const geocoder = new window.google.maps.Geocoder();
-
-            geocoder.geocode({
-              address: newValue.description,
-              region: 'en-US',
-            }, (results, status) => {
-              let state = results ? results[0].address_components.filter(obj => obj.types[0] === 'administrative_area_level_1') : '';
-              if (state) {
-                state = state[0].long_name;
-                dispatch(set.state(state));
-              } else {
-                dispatch(set.state(''));
-              }
-              
-              if (results && results[0]) {
-                dispatch(set.lat(results[0].geometry.location.lat().toFixed(4)));
-                dispatch(set.lon(results[0].geometry.location.lng().toFixed(4)));
-              }
-            });
-          }
-        }}
-
-        onInputChange={(_, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-
-        renderInput={(params) => {
-          return (
-            <>
-              <TextField
-                {...params}
-                autoFocus={autoFocus}
-                label="Find your Location"
-                style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
-              />
-            </>
-          )
-        }}
-      />
+      {
+        inputs && (
+          <Input
+            id="location"
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+            options={options}
+            autoComplete
+            includeInputInList
+            filterSelectedOptions
+    
+            isOptionEqualToValue={(option, value) => {return false;}}  // TODO
+            
+            onChange={(_, newValue) => {geocode(newValue);}}
+    
+            onInputChange={(_, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+    
+            renderInput={(params) => {
+              return (
+                <>
+                  <TextField
+                    {...params}
+                    autoFocus={autoFocus}
+                    label="Find your Location"
+                    style={{width: field ? '50%' : '100%', float: field ? 'left' : ''}}
+                  />
+                </>
+              )
+            }}
+          />
+        )
+      }
       
       {
         field &&
@@ -137,30 +155,36 @@ const GoogleMaps = ({autoFocus=false, field=false}) => {
         </>
       }
 
-      <p/>
-      <div tabIndex="-1">
-        If you know your exact coordinates, you can enter them here:
-        <p/>
-        <Input
-          id="lat"
-          value={lat}
-          label="Latitude"
-          type="number"
-          sx={{margin: 1}}
-        />
-        <Input
-          id="lon"
-          value={lon}
-          label="Longitude"
-          type="number"
-          sx={{margin: 1}}
-        />
-      </div>
+      {
+        inputs && (
+          <>
+            <p />
+            <div tabIndex="-1">
+              If you know your exact coordinates, you can enter them here:
+              <p/>
+              <Input
+                id="lat"
+                value={lat}
+                label="Latitude"
+                type="number"
+                sx={{margin: 1}}
+              />
+              <Input
+                id="lon"
+                value={lon}
+                label="Longitude"
+                type="number"
+                sx={{margin: 1}}
+              />
+            </div>
+          </>
+        )
+      }
     </>
   );
-}
+} // GoogleMaps
 
-const Map = ({field=false, autoFocus}) => {
+const Map = ({field=false, autoFocus, inputs=true, id='GoogleMap', mapOptions={}}) => {
   const dispatch = useDispatch();
   const lat = +useSelector(get.lat);
   const lon = +useSelector(get.lon);
@@ -202,62 +226,68 @@ const Map = ({field=false, autoFocus}) => {
     Geocoder = new maps.Geocoder();
   };
 
-  if (false) {
-    return (
-      <>
-        <GoogleMaps field={field} autoFocus={autoFocus}/>
-        work in progress
-      </>
-    )
-  }
-
   return (
-    <>
-      <GoogleMaps field={field} autoFocus={autoFocus}/>
+    <div id={id}>
       {
-        false && lat && lon &&
-        <div style={{ height: '400px', width: '100%' }} id="GoogleMap">
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg' }}
-            center={{lat: +lat, lng: +lon}}
-            zzoom={mapZoom}
-
-            zonGoogleApiLoaded={initGeocoder}
-            
-            zyesIWantToUseGoogleMapApiInternals
-            zonClick={mapChange}
-            zonZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
-            zonMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
-
-            zonLoad={
-              // prevent tabbing through map
-              // got to be a better way than setting a timeout
-              setTimeout(() => {
-                document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex', -1));
-              }, 1000)
-            }
-
-            zoptions={(map) => ({
-              mapTypeId: mapType,
-              fullscreenControl: false,
-              scaleControl: true,
-              mapTypeControl: true,
-              mapTypeControlOptions: {
-                style: map.MapTypeControlStyle.HORIZONTAL_BAR,
-                mapTypeIds: [
-                  'roadmap',
-                  'satellite',
-                  'hybrid',
-                  'terrain'
-                ]
-              },
-            })}
-          >
-            <Marker lat={+lat} lng={+lon} />
-          </GoogleMapReact>
-        </div>
+        inputs && (
+          <>
+            <strong>Where is your Field located?</strong>
+            <p>
+              Enter your address or zip code to determine your field's location.<br/>
+              You can then zoom in and click to pinpoint it on the map.
+            </p>
+          </>
+        )
       }
-    </>
+
+      <GoogleMaps field={field} autoFocus={autoFocus} inputs={inputs} />
+      {
+        lat && lon ? (
+          <div style={{height: '100%'}}>
+            <GoogleMapReact
+              bootstrapURLKeys={{key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg'}}
+              center={{lat: +lat, lng: +lon}}
+              zoom={mapOptions.zoom || mapZoom}
+
+              onGoogleApiLoaded={initGeocoder}
+              
+              yesIWantToUseGoogleMapApiInternals
+              onClick={mapChange}
+              onZoomAnimationEnd={(zoom) => dispatch(set.mapZoom(zoom))}
+              onMapTypeIdChange={(type)  => dispatch(set.mapType(type))}
+
+              onLoad={
+                // prevent tabbing through map
+                // got to be a better way than setting a timeout
+                setTimeout(() => {
+                  document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex', -1));
+                }, 1000)
+              }
+
+              options={(map) => ({
+                mapTypeId: mapType,
+                fullscreenControl: false,
+                scaleControl: true,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                  style: map.MapTypeControlStyle.HORIZONTAL_BAR,
+                  mapTypeIds: [
+                    'roadmap',
+                    'satellite',
+                    'hybrid',
+                    'terrain'
+                  ]
+                },
+                ...mapOptions
+              })}
+            >
+              <Marker lat={+lat} lng={+lon} />
+            </GoogleMapReact>
+          </div>
+        )
+        : null
+      }
+    </div>
   );
 } // Map
 

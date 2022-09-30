@@ -1,6 +1,6 @@
 import {useEffect, useState, useRef, useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {get, set} from '../store/Store';
 
 import {
   Autocomplete as MUIAutocomplete,
@@ -50,6 +50,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   id.split('.').forEach(k => sel = sel[k]);
   if (!sel) {
     console.warn('Unknown Input: ' + id);
+    alert('Unknown Input: ' + id);
   }
 
   let sel2 = useSelector(sel);

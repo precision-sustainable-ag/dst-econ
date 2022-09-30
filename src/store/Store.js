@@ -1,4 +1,4 @@
-import {configureStore, createAction, createReducer} from '@reduxjs/toolkit'; // include "current" for troubleshooting
+import {createStore, set, get} from './redux-autosetters';
 
 const shared = {
   q1: '',
@@ -60,6 +60,8 @@ let initialState = {
   helpX  : 0,
   helpY  : 0,  
   focus: null,
+  focused: null,
+  scrollTop: 0,
   firstName: '',
   lastName: '',
   fullName: (state) => state.firstName + ' ' + state.lastName,
@@ -72,14 +74,21 @@ let initialState = {
     a: [4, 3, 2, 1],
   },
   screen: 'Loading',
+  screenWidth: window.innerWidth,
+  screenHeight: window.innerHeight,
+  showMap: window.innerWidth > 1200,
+  maxZoom: 20, // max zoom of satellite imagery for current lat/lon; used on home map
   status: '',
-  previousScreen: 'Home',
-  lat: 40.7849,
-  lon: -74.8073,
+  previousScreen: 'Field',
+  lat: 40.7985,
+  lon: -74.8215,
+  // lat: 0,
+  // lon: 0,
   mapType: 'hybrid',
   mapZoom: 13,
   location: '',
   state: 'New Jersey',
+  stateAbbreviation: 'NJ',
   farm: '',
   field: '',
   acres: undefined,
@@ -123,6 +132,21 @@ let initialState = {
   $fertCost: (state) => -(state.fertNAdded * state.$fertN + state.fertPAdded * state.$fertP + state.fertKAdded * state.$fertK) - state.$fertApplication,
   seedbed:  {...shared},
   planting: {...shared},
+  herbicide: {
+    ...shared,
+    product1: '',
+    unitCost1:    (state) => db.herbicides[state.herbicide.product1]?.['Cost ($)'],
+    rate1:        (state) => db.herbicides[state.herbicide.product1]?.['Rate'],
+    productCost1: (state) => (state.herbicide.unitCost1 * state.herbicide.rate1) || undefined,
+
+    product2: '',
+    unitCost2:    (state) => db.herbicides[state.herbicide.product2]?.['Cost ($)'],
+    rate2:        (state) => db.herbicides[state.herbicide.product2]?.['Rate'],
+    productCost2: (state) => (state.herbicide.unitCost2 * state.herbicide.rate2) || undefined,
+  },
+  herbicideAdditional: {...shared},
+  herbicideReduced: {...shared},
+  herbicideFall: {...shared},
   yield: {
     ...shared,
     yield: undefined,
@@ -135,13 +159,23 @@ let initialState = {
         +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['five year'])).toFixed(0),
       ];
 
+      state.yield.impact = [
+        r[0] - state.yield.typical,
+        r[1] - state.yield.typical,
+        r[2] - state.yield.typical,
+      ];
+
       if (/typical/.test(state.yield.q2)) {
-        state.yield.total = state.yield.typical;
+        state.yield.total = 0;
       } else {
-        state.yield.total = r[['1', '3', '5'].indexOf(state.yield.q4)];
+        // console.log(state.yield.impact);
+        // console.log(['1', '3', '5'].indexOf(state.yield.q4));
+        state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
+
       return r;
-    }
+    },
+    impact: [],
   },
   erosion:  {
     ...shared,
@@ -204,17 +238,21 @@ let initialState = {
   },
   additional: {
     $landowner: '0.00',
+    nrcs: '',
     $costShare: '0.00',
     $carbonOffset: '0.00',
+    $insuranceDiscount: '0.00',
     grazing: '',
     lease: '',
     $lease: undefined,
     fallGraze: undefined,
     fallDryMatter: undefined,
     fallWaste: 0.50,
+    fallGrazing: '',
     springGraze: undefined,
     springDryMatter: undefined,
     springWaste: 0.50,
+    springGrazing: '',
     dryMatter: undefined,
     wasted: undefined,
     $hay: undefined,
@@ -223,22 +261,26 @@ let initialState = {
     baleTime: undefined,
     tractor: '',
     lbsNotFed: (state) => {
-      return (((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted);
+      return (+((((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted)).toFixed(0)) || '';
     },
   },
   shown: {
-    seedbed:      {...shared},
-    planting:     {...shared},
-    yield:        {...shared},
-    erosion:      {...shared},
-    termination:  {...shared},
-    fertility:    {...shared},
-    chemical:     {...shared},
-    roller:       {...shared},
-    tillage:      {...shared},
-    tillage1:     {...shared},
-    tillage2:     {...shared},
-    tillage3:     {...shared},
+    seedbed:          {...shared},
+    planting:         {...shared},
+    herbicide:        {...shared},
+    herbicideAdditional:  {...shared},
+    herbicideReduced:    {...shared},
+    herbicideFall:    {...shared},
+    yield:            {...shared},
+    erosion:          {...shared},
+    termination:      {...shared},
+    fertility:        {...shared},
+    chemical:         {...shared},
+    roller:           {...shared},
+    tillage:          {...shared},
+    tillage1:         {...shared},
+    tillage2:         {...shared},
+    tillage3:         {...shared},
   },
 };
 
@@ -277,6 +319,25 @@ const afterChange = {
       state.fertPAdded = 0;
       state.fertKAdded = 0;
       state.focus = '$fertApplication';
+    }
+  },
+  'herbicide.q2': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideAdditional.estimated = 0;
+      state.herbicideAdditional.total = 0;
+      state.herbicideAdditional.implement = '';
+    }
+  },
+  'herbicide.q5': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideReduced.estimated = 0;
+      state.herbicideReduced.total = 0;
+    }
+  },
+  'herbicide.q8': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideFall.estimated = 0;
+      state.herbicideFall.total = 0;
     }
   },
   'seedbed.q1': (state, {payload}) => {
@@ -368,6 +429,20 @@ const afterChange = {
       state.screen = 'Fertility';
     }
   },
+  'additional.nrcs': (state, {payload}) => {
+    if (payload === 'Yes') {
+      state.focus = 'additional.$costShare';
+      const data = db.eqip[state.stateAbbreviation];
+      const species = state.species.filter(e => e);
+      if (species.length === 1) {
+        state.additional.$costShare = data?.basic;
+      } else if (species.length > 1) {
+        state.additional.$costShare = data?.multiple || data?.basic;
+      }
+    } else {
+      state.additional.$costShare = 0;
+    }
+  },
   'additional.grazing': (state, {payload}) => {
     if (payload === 'No') {
       state.screen = 'Yield';
@@ -408,7 +483,7 @@ const afterChange = {
   },
 };
 
-['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3', 'herbicideAdditional', 'herbicideReduced', 'herbicideFall'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -435,11 +510,16 @@ const afterChange = {
         tillage3 : 'Seedbed preparation',
         chemical : 'Herbicide application',
         roller   : 'Roller',
+        herbicideAdditional: 'Herbicide application',
+        herbicideReduced: 'Herbicide application',
+        herbicideFall: 'Herbicide application',
       }[section];
 
       state.focus = section + '.total';
       console.log(db.costDefaults);
       obj.estimated = obj.total = db.costDefaults[def].cost;
+    } else if (payload === 'I will not be making an additional application') {
+      return;
     } else if (payload) {
       const p = db.implements[payload];
     
@@ -466,142 +546,6 @@ const afterChange = {
     }
   };
 
-});
-
-const sets = {};
-const gets = {};
-const allkeys = {};
-
-const funcs = {};
-const methods = {};
-
-const processMethods = ((state, key) => {
-  if (methods[key]) {
-    // console.log(key, methods[key]);
-    for (let k in methods[key]) {
-      let st = state;
-      for (const key of k.split('.').slice(0, -1)) st = st[key];
-      const l = k.includes('.') ? k.split('.').slice(-1)[0] : k;
-      st[l] = methods[key][k](state);
-      processMethods(state, k);
-    }
-  }
-});
-
-const builders = (builder) => {
-  const recurse = (obj, set, get, parents = []) => {
-    Object.keys(obj).forEach((key) => {
-      const isArray = Array.isArray(obj[key]);
-      const isObject = !isArray && obj[key] instanceof Object;
-      const fullkey = parents.length ? parents.join('.') + '.' + key : key;
-      allkeys[fullkey] = true;
-
-      if (key !== 'name') { // TODO: implements
-        get[key] = (state) => {
-          let st = state;
-          for (const k of parents) st = st[k];
-
-          if (!st) {
-            alert('Unknown: ' + fullkey);
-          }
-          return st[key];
-        }
-
-        if (typeof obj[key] === 'function') {
-          funcs[fullkey] = obj[key];
-          // console.log(obj[key]);
-
-          //  let m = obj[key].toString().match(/e\.[$_\w.(]+/g);  // state.* unbuilt, e.* built
-          //  
-          //  if (m) {
-          //    m = m.map(s => s.split(/e\./)[1]?.split(/\.\w+\(/)[0]);  // remove .forEach(, etc.
-          //    m.forEach(m => {
-          //      methods[m] = methods[m] || {};
-          //      methods[m][fullkey] = funcs[fullkey];
-          //    });
-          //  }
-          const func = obj[key].toString();
-
-          for (const key in allkeys) {
-            if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
-              methods[key] = methods[key] || {};
-              methods[key][fullkey] = funcs[fullkey];
-            }
-          }
-  
-          obj[key] = 0; // TODO: Can't be undefined
-          // return;
-        }
-      }
-
-      if (key !== 'name') { // TODO: implements
-        set[key] = createAction(fullkey);
-
-        builder
-          .addCase(set[key], (state, action) => {
-            let st = state;
-            for (const k of parents) st = st[k];
-
-            if (isArray && Number.isFinite(action.payload.index)) {
-              const {index, value} = action.payload;
-              if (st[key][index] !== value) { // TODO: is this check needed?
-                st[key][index] = value;
-              }
-            } else {
-              if (st[key] !== action.payload) { // TODO: is this check needed?
-                st[key] = action.payload;
-              }
-            }
-            
-            if (afterChange[fullkey]) {
-              const ac = afterChange[fullkey](state, action);
-              if (ac) {
-                ac.forEach(parm => afterChange[parm](state, action));
-              }
-            }
-
-            // TODO:  Is the first of these needed?
-              processMethods(state, key);
-              processMethods(state, fullkey);
-
-            if (afterChange[fullkey]) {
-              const func = afterChange[fullkey].toString();
-              for (const key in allkeys) {
-                if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
-                  processMethods(state, key);
-                }
-              }
-            }
-          }
-        );
-      }
-
-      if (isObject) {
-        recurse(obj[key], set[key], get[key], [...parents, key]);
-      }
-    });
-  } // recurse
-
-  recurse(initialState, sets, gets);
-  // console.log(allkeys);
-
-} // builders
-
-export const runBuilders = () => createReducer(initialState, builders);
-
-const mystore = configureStore({
-  reducer: createReducer(initialState, builders)
-});
-
-export const store = mystore;
-
-export const set = sets;
-export const get = gets;
-
-console.log({
-  set,
-  funcs,
-  methods
 });
 
 const getCosts = (state, current) => {
@@ -712,7 +656,7 @@ const loadData = async(tables) => {
     });
   });
 
-  mystore.dispatch(set.status(status));
+  store.dispatch(set.status(status));
 
   // fill in missing values:
   for (const key in db) {
@@ -733,7 +677,7 @@ const loadData = async(tables) => {
   if (tables.length) {
     loadData(tables);
   } else {
-    mystore.dispatch(set.screen('Home'));
+    store.dispatch(set.screen('Field'));
   }
 } // loadData
 
@@ -746,7 +690,7 @@ export const queue = (f, time=1) => {
 queue.i = 0;
 
 let status = '';
-loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities']);
+loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities', 'eqip']);
 
 export const dollars = (n) => {
   if (!isFinite(n)) {
@@ -759,9 +703,9 @@ export const dollars = (n) => {
 } // dollars
 
 export const test = (key, result) => {
-  let value = get[key]?.(mystore.getState())?.toString();
+  let value = get[key]?.(store.getState())?.toString();
   if (value !== result.toString()) {
-    value = mystore.getState();
+    value = store.getState();
 
     for (const k of key.split('.')) {
       value = value[k];
@@ -770,7 +714,7 @@ export const test = (key, result) => {
     if (value?.toString() !== result.toString()) {
       // I'd prefer console.error, but that requires showing all react_devtools_backend.js
       console.info(`${key} should be ${result} instead of ${value}`);
-      console.info(get[key]?.(mystore.getState()));
+      console.info(get[key]?.(store.getState()));
     }
   }
 } // test
@@ -800,10 +744,26 @@ export const clearInputs = (defaults) => {
         s = s[k];
       }
       // console.log(key, typeof defaults[key], defaults[key]);
-      mystore.dispatch(s(defaults[key]));
+      store.dispatch(s(defaults[key]));
     } catch(error) {
-      console.log(error);
+      console.log(key, error);
     }
   }
 } // clearInputs
 
+// let resizeTimer;
+
+const reducers = {
+  resize: (state) => {
+    // Cannot perform 'set' on a proxy that has been revoked
+    // clearTimeout(resizeTimer);
+    // resizeTimer = setTimeout(() => {
+      state.screenWidth  = window.innerWidth;
+      state.screenHeight = window.innerHeight;
+    // }, 100);
+  }
+}
+
+export const store = createStore(initialState, {afterChange, reducers});
+
+export {set, get} from './redux-autosetters';

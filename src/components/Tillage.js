@@ -1,8 +1,7 @@
-import Activity from './Activity';
 import Logic from './Logic';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, dollars} from '../store/store';
+import {get, set, test, getDefaults, dollars} from '../store/Store';
 import {ClearInputs} from './ClearInputs';
 
 const defaults = getDefaults('tillage1.q1|tillage1.q2|tillage1.q6|tillage1.q9|tillage1.implement|tillage1.estimated|tillage1.total|tillage2.q2|tillage2.estimated|tillage2.total|tillage3.q2|tillage3.estimated|tillage3.total|tillage2.implement|tillage3.implement');
@@ -38,6 +37,11 @@ const Tillage = () => {
           type="Tillage"
           shown={state.q2 === 'Yes'}
         />
+
+        <Logic current={current} question="power" />
+        <Logic current={current} question="Annual Use (acres on implement)" />
+        <Logic current={current} question="Annual Use (hours on power)" />
+        <Logic current={current} question="Acres/hour" />
 
         <Logic 
           current={current}
@@ -205,9 +209,6 @@ const Tillage = () => {
         )
       }
 
-      <Activity type="tillage1" />
-      <Activity type="tillage2" instructions={false} />
-      <Activity type="tillage3" instructions={false} />
     </>
   )
 } // Tillage

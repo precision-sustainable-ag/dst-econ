@@ -1,11 +1,10 @@
-import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
 import {ClearInputs} from './ClearInputs';
 import {Input} from './Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, db, clearInputs, dollars} from '../store/store';
+import {get, set, test, getDefaults, db, clearInputs, dollars} from '../store/Store';
 
 const defaults = getDefaults('termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product');
 
@@ -415,10 +414,6 @@ const Termination = () => {
           </>
         )
       }
-
-      {/herbicide/i.test(method) && <Activity type="chemical" />}
-      {/roller/i.test(method)    && <Activity type="roller"   instructions={method !== 'Roller with follow-up herbicide'} />}
-      {method === 'Tillage'      && <Activity type="tillage"  />}
     </>
   )
 } // Termination

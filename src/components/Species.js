@@ -1,8 +1,7 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, test, db, getDefaults} from '../store/store';
+import {get, set, dollars, test, db, getDefaults} from '../store/Store';
 import {Input} from './Inputs';
 import {ClearInputs} from './ClearInputs';
-import Activity from './Activity';
 
 const defaults = getDefaults('rates|species|prices');
 
@@ -175,11 +174,10 @@ const Species = () => {
           </button>
         )
       }
-      <Activity type="species"/>
     </>
   )
 } // Species
 
-Species.menu = <span><u>C</u>over Crop selection</span>;
+Species.menu = <span><u>C</u>over Crops</span>;
 
 export default Species;

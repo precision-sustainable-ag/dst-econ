@@ -2,10 +2,14 @@ import './App.css';
 
 import React from 'react';
 import {MenuItem, Button} from '@mui/material';
+
 import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import Draggable from 'react-draggable';
+import Card from '@mui/material/Card';
+import {CardContent} from '@mui/material';
 
-import {get, set, db} from './store/store';
+import {get, set, db} from './store/Store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';
@@ -24,10 +28,11 @@ import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
 import {Summary}    from './components/Activity';
+import Map          from './components/GoogleMaps';
 
 function App() {
   const screens = {
-    Home,
+    // Home,
     Modules: {
       Field,
       Species,
@@ -49,6 +54,7 @@ function App() {
     'Airtables': {
       coefficients: '',
       commodities: '',
+      eqip: '',
       costDefaults: '',
       herbicides: '',
       implements: '',
@@ -67,17 +73,21 @@ function App() {
       left: helpX,
       top: helpY,
       maxWidth:  `calc(100vw - ${helpX}px - 20px)`,
-      maxHeight: `calc(100vh - ${helpY}px - 20px)`,
+      maxHeight: `calc(94vh - ${helpY}px - 20px)`,
       overflow: 'auto'
     }
   
     return (
       help &&
-      <div
-        className="help"
-        style={style}
-        dangerouslySetInnerHTML={{ __html: help }}
-      />
+      <Draggable>
+        <Card className="help" style={style}>
+          <CardContent>
+            <div
+              dangerouslySetInnerHTML={{ __html: help }}
+            />
+          </CardContent>
+        </Card>
+      </Draggable>
     )
   } // Help
 
@@ -86,12 +96,28 @@ function App() {
   const MyMenu = (s) => {
     return (
       Object.keys(s).map(scr => {
-        if (typeof s[scr] === 'object') {
-          return <strong key={scr}>{scr} {MyMenu(s[scr])}</strong>
+        if (scr === 'Airtables') {
+          if (!dev) {
+            return null;
+          } else {
+            return (
+              <details>
+                <summary>{scr}</summary>
+                {MyMenu(s[scr])}
+              </details>
+            );
+          }
+        } else if (typeof s[scr] === 'object') {
+          return (
+            <>
+              <strong key={scr}>{scr}</strong>
+              {MyMenu(s[scr])}
+            </>
+          )
         } else if (scr === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
           return null;
         } else {
-          return <MenuItem data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</MenuItem>
+          return <Button data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</Button>
         }
       })
     );
@@ -99,38 +125,39 @@ function App() {
 
   const Screen = () => {
     switch (screen) {
-      case 'Home'         : return <Home />;
+      case 'Home'         : return <React.StrictMode><Home /></React.StrictMode>;
       case 'Field'        : return <Field />;
-      case 'Species'      : return <Species />;
-      case 'Seedbed'      : return <Seedbed />;
-      case 'Planting'     : return <Planting />;
-      case 'Termination'  : return <Termination />;
-      case 'Tillage'      : return <Tillage />;
-      case 'Fertility'    : return <Fertility />;
-      case 'Herbicide'    : return <Herbicide />;
-      case 'Erosion'      : return <Erosion />;
-      case 'Additional'   : return <Additional />;
-      case 'Yield'        : return <Yield />;
-      case 'Practices'    : return <Practices />;
-      case 'Revenue'      : return <Revenue />;
-      case 'Resources'    : return <Resources/>;
-      case 'coefficients' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" />;
-      case 'commodities'  : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" />;
-      case 'costDefaults' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" />;
-      case 'herbicides'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" />;
-      case 'implements'   : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" />;
-      case 'power'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" />;
-      case 'rates'        : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" />;
-      case 'seedList'     : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" />;
-      case 'stateRegions' : return <Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" />;
+      case 'Species'      : return <React.StrictMode><Species /></React.StrictMode>;
+      case 'Seedbed'      : return <React.StrictMode><Seedbed /></React.StrictMode>;
+      case 'Planting'     : return <React.StrictMode><Planting /></React.StrictMode>;
+      case 'Termination'  : return <React.StrictMode><Termination /></React.StrictMode>;
+      case 'Tillage'      : return <React.StrictMode><Tillage /></React.StrictMode>;
+      case 'Fertility'    : return <React.StrictMode><Fertility /></React.StrictMode>;
+      case 'Herbicide'    : return <React.StrictMode><Herbicide /></React.StrictMode>;
+      case 'Erosion'      : return <React.StrictMode><Erosion /></React.StrictMode>;
+      case 'Additional'   : return <React.StrictMode><Additional /></React.StrictMode>;
+      case 'Yield'        : return <React.StrictMode><Yield /></React.StrictMode>;
+      case 'Practices'    : return <React.StrictMode><Practices /></React.StrictMode>;
+      case 'Revenue'      : return <React.StrictMode><Revenue /></React.StrictMode>;
+      case 'Resources'    : return <React.StrictMode><Resources/></React.StrictMode>;
+      case 'coefficients' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" /></React.StrictMode>;
+      case 'commodities'  : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" /></React.StrictMode>;
+      case 'costDefaults' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" /></React.StrictMode>;
+      case 'eqip'         : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT" /></React.StrictMode>;
+      case 'herbicides'   : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" /></React.StrictMode>;
+      case 'implements'   : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" /></React.StrictMode>;
+      case 'power'        : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" /></React.StrictMode>;
+      case 'rates'        : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" /></React.StrictMode>;
+      case 'seedList'     : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" /></React.StrictMode>;
+      case 'stateRegions' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" /></React.StrictMode>;
       default: 
     }
   } // Screen
 
   const changeScreen = (e) => {
-    const menu = e.target.closest('LI');
+    const menu = e.target.closest('button');
 
-    if (menu.tagName === 'LI') {
+    if (menu.tagName === 'BUTTON') {
       const scr = menu.dataset.scr;
 
       if (scr !== 'Resources') {
@@ -173,7 +200,7 @@ function App() {
     }
 
     return (
-      <div className="navigation">
+      <div id="Navigation">
         {
           back &&
           <Button
@@ -224,6 +251,13 @@ function App() {
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
+  const dev = useSelector(get.dev);
+  const screenWidth = useSelector(get.screenWidth);
+  const screenHeight = useSelector(get.screenHeight);
+  const showMap = useSelector(get.showMap);
+  const lat = useSelector(get.lat);
+  const lon = useSelector(get.lon);
+  const maxZoom = useSelector(get.maxZoom);
 
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
@@ -271,36 +305,111 @@ function App() {
         dispatch(set.help(''));
       }
     });
+
+    window.addEventListener('resize', () => {
+      dispatch({type: 'resize'});
+    });
+
+    document.addEventListener('focusin', ({target}) => {
+      if (target.type !== 'checkbox') {
+        console.log(target.id);
+        dispatch(set.focused(target.id));
+      }
+    });
+
+    document.addEventListener('scroll', (e) => {
+      dispatch(set.scrollTop(e.target.scrollTop));
+    }, true);
   }, [dispatch]);
 
   // console.log(screen);
+
+  const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
+
+  const mz = new window.google.maps.MaxZoomService();
+  mz.getMaxZoomAtLatLng({lat, lng: lon}, (result) => {
+    dispatch(set.maxZoom(result.zoom));
+  });
+
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
-    <div
-      className="App"
-      
-      onClick={(e) => {
-        if (/^help/.test(e.target.innerHTML)) {
-          dispatch(set.help(e.target.innerHTML.slice(4)));
-          dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-          dispatch(set.helpY(e.pageY - 20 - window.scrollY));
-        } else {
-          dispatch(set.help(''));
-        }
-      }}
-    >
-      <Summary/>
-      <nav onClick={changeScreen}>
-        {MyMenu(screens)}
-      </nav>
+    <>
+      {
+        mapVisible && (
+          <Map
+            id="AppMap"
+            inputs={false}
+            mapOptions={{
+              mapTypeControl: false,
+              disableDefaultUI: true,
+              zoom: maxZoom,
+            }}
+          />
+        )
+      }
 
-      <div id="Main">
-        <Help />
-        <Screen />
-        <Navigation current={screen} />
+      {
+        screenWidth >= 1200 && screenHeight > 650 && (
+          <Button
+            id="ToggleMap"
+            onClick={() => 
+              dispatch(set.showMap(!showMap))
+            }
+          >
+            {showMap ? 'Hide map' : 'Show map'}
+          </Button>
+        )
+      }
+
+      <div
+        id="Container"
+        style={{
+          margin: mapVisible ? '1rem 2%' : 'auto',
+        }}
+      >
+        <div
+          id="Left"
+          onClick={(e) => {
+            if (/^help/.test(e.target.innerHTML)) {
+              dispatch(set.help(e.target.innerHTML.slice(4)));
+              dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
+              dispatch(set.helpY(e.pageY - 20 - window.scrollY));
+            } else {
+              if (!e.target.closest('.help')) {
+                dispatch(set.help(''));
+              }
+            }
+          }}
+        >
+          <nav onClick={changeScreen} className="{cl}">
+            <div
+              style={{
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: '120%',
+                marginBottom: '0.25rem',
+              }}
+            >
+              Cover Crop Decision Support Tool
+            </div>
+            <div id="Menu">
+              {MyMenu(screens)}
+            </div>
+            <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
+          </nav>
+
+          <div id="Main">
+            <Help />
+            <Screen />
+          </div>
+          
+          <Navigation current={screen} />
+        </div>
+
+        <Summary />
       </div>
-    </div>
+    </>
   );
 }
 

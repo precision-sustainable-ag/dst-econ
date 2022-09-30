@@ -1,10 +1,9 @@
-import Activity from './Activity';
 import Logic from './Logic';
 import {useEffect} from 'react';
 import {ClearInputs} from './ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, queue, getDefaults, test} from '../store/store';
+import {get, set, queue, getDefaults, test} from '../store/Store';
 
 const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage|seedbed.annualUseAcres|seedbed.acresHour|seedbed.annualUseHours');
 
@@ -102,11 +101,10 @@ const Seedbed = () => {
           </button>
         )
       }
-      <Activity type={current} />
     </>
   )
 } // Seedbed
 
-Seedbed.menu = <span><u>S</u>eedbed preparation</span>;
+Seedbed.menu = <span><u>S</u>eedbed Preparation</span>;
 
 export default Seedbed;

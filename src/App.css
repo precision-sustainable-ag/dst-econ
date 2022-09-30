@@ -6,20 +6,13 @@
   box-sizing: border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  max-width: 1400px;
+html {
+  background: #bbb;
 }
 
 .selected {
   color: white;
   background: navy;
-}
-
-#Main {
-  margin-left: calc(16em + 1em);
-  width: calc(100vw - (16em + 16em));
 }
 
 .Additional table {
@@ -30,31 +23,43 @@ html, body {
   width: 30rem;
 }
 
+#Menu {
+  padding-left: 130px;
+}
+
 nav button {
-  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  font-family: Roboto, Arial;
+  font-weight: normal !important;
+  margin-right: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  border-radius: 16px !important;
+  padding: 0 12px !important;
+  text-transform: none !important;
+  font-size: 0.9rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+nav details {
+  display: inline-block;
 }
 
 nav {
-  position: fixed;
-  height: 100vh;
-  overflow: auto;
-  top: 0;
-  width: 16em;
-  margin-right: 1em;
-  padding: 0.5em;
-  background: #eee;
-  border: 1px solid #ddd;
-  z-index: 999;  /* prevent position: sticky from covering navigation */
+  color: #eee;
 }
 
-nav button {
-  display: block;
-  width: calc(100% - 2em);
-  text-align: left;
+nav button.selected {
+  color: rgba(3, 3, 3) !important;
+  background: #eee !important;
 }
 
-nav span button {
-  margin-left: 1.5em;
+nav button:not(.selected):hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+nav strong {
+  display: none;
 }
 
 .size {
@@ -110,6 +115,14 @@ label {
 #Breakdown {
   display: inline-block;
   margin-right: 1em;
+}
+
+#Breakdown table {
+  font-size: 80%;
+}
+
+#Breakdown table span {
+  transform: scale(0.8);
 }
 
 #Breakdown.noImplementCost tr > :nth-child(2),
@@ -186,7 +199,7 @@ label {
   width: 6em;
 }
 
-li.selected {
+li.selected, button.selected {
   font-weight: bold;
   color: #246;
   background: #ccc;
@@ -256,32 +269,19 @@ form.Species tr > td:nth-child(3) {
   text-transform: none;
 }
 
-div.navigation {
-  text-align: center;
-  margin: 1rem 0;
-}
-
-div.navigation button {
-  margin-right: 2rem
-}
-
-[data-scr=Home], [data-scr=Resources] {
-  padding-left: 0 !important;
-  font-weight: bold !important;
-}
-
-nav strong, [data-scr=Resources] {
-  display: block;
-  border-top: 1px solid #bbb !important;
-  padding-top: 0.5em;
+#Navigation button {
+  margin-right: 2rem;
 }
 
 #Summary {
-  position: fixed;
-  top: 0.5rem;
-  right: 1rem;
   font-size: 0.8rem;
-  width: 16em;
+  width: 200px;
+  left: calc(1000px + 2% + 5px);
+}
+
+#Summary table {
+  width: 100%;
+  background: white;
 }
 
 #Summary thead {
@@ -294,6 +294,10 @@ nav strong, [data-scr=Resources] {
 
 #Summary td:nth-child(2) {
   text-align: right;
+}
+
+.Field table {
+  width: 100%;
 }
 
 .Field tr {
@@ -325,10 +329,6 @@ nav strong, [data-scr=Resources] {
 .MuiSelect-root * {
   width: 100% !important;
   display: none !important;
-}
-
-.fullWidth {
-  width: calc(100vw - 16em);
 }
 
 table.seedbed td:nth-child(1),
@@ -364,19 +364,6 @@ input[type="number"] {
   width: 50%;
 }
 
-/*
-#Main > * {
-  display: none;
-}
-
-#Main.Home > .Home, 
-#Main.Field > .Field,
-#Main.Species > .Species,
-#Main.Resources > .Resources {
-  display: block !important;
-}
-*/
-
 .MuiAutocomplete-inputRoot {
   padding: 0 !important;
 }
@@ -389,6 +376,11 @@ input[type="number"] {
   font-size: 100%;
   margin-bottom: 0.3rem;
   margin-top: 0.8rem;
+}
+
+.airtable {
+  position: relative;
+  z-index: 10000;
 }
 
 .airtable td, .airtable th {
@@ -443,7 +435,6 @@ input[type="number"] {
 
 .loading {
   margin: 0.5rem;
-  color: #aaa;
 }
 
 .link {
@@ -503,26 +494,32 @@ th {
 
 u {
   text-decoration: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #777;
 }
 
 body.hotkeys u {
-  text-decoration: underline;
+  border-bottom: 1px solid #ddd;
+}
+
+button.selected u {
   border-bottom: none;
 }
 
 .help {
   position: fixed;
-  background: #eee;
-  z-index: 1000;
-  padding: 0.5em;
-  border-radius: 5px;
-  box-shadow: 5px 5px 15px 5px #000;
-  font-size: 80%;
+  background-color: #f8f4f2 !important;
+  z-index: 100000;
+  font-size: 90%;
+  max-width: 50rem !important;
+}
+
+.help p:first-child,
+.help p:last-child {
+  margin: 0;
 }
 
 .MuiIcon-root {
-  zoom: 0.8;
+  /* zoom: 0.8; */
   opacity: 0.6;
   cursor: pointer;
   color: #444;
@@ -536,16 +533,131 @@ body.hotkeys u {
   width: 15rem;
 }
 
-#YieldSummary {
-  display: flex;
-  margin-top: 10px;
+#PSALogo {
+  position: absolute;
+  filter: invert(1);
+  top: 2rem;
+  left: 0.25rem;
+  width: 8rem;
+  zbackground-color: rgb(255, 255, 255, 0.8);
+}
+
+summary {
+  cursor: pointer;
+}
+
+#AppMap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw + 1200px - 12%);
+  height: 100vh;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+#GoogleMap {
+  height: 300px;
   width: 100%;
 }
 
-#YieldSummary th {
-  vertical-align: bottom;
+#Container {
+  display: flex;
+  flex-direction: row;
+  width: 1200px;
+  max-width: 100vw;
 }
 
-#YieldSummary td {
-  text-align: right;
+#Left {
+  width: 1000px;
+  height: 100%;
+  position: relative;
+}
+
+nav {
+  padding: 0.5rem;
+  background-color: rgba(30, 30, 30, 0.8);
+  height: 7rem;
+  z-index: 1;
+}
+
+#Main {
+  padding: 0 0.5rem;
+  padding-bottom: 2rem;
+  background: white;
+  height: calc(100vh - (6rem + 1.5rem + 4rem));
+  overflow: auto;
+  z-index: 1;
+}
+
+#Navigation {
+  height: 1.5rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1rem;
+  display: none;
+}
+
+.cursor {
+  display: block;
+  text-align: center;
+  transform: translateY(-0.5rem);
+  cursor: grab;
+  background: #ddd;
+  padding: 0.3rem;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+}
+
+#ToggleMap {
+  position: fixed;
+  right: 0.3rem;
+  top: 0.3rem;
+  background: rgba(220, 220, 220, 0.8);
+  text-transform: none;
+}
+
+.MuiIcon-root {
+  font-size: 1.2rem !important;
+  color: green;
+}
+
+td > p:first-child {
+  margin-top: 0;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  border: 1px solid #666;
+}
+
+.grid2 > div {
+  border-bottom: 1px solid #bbb;
+  border-right: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.grid2 header {
+  grid-column: 1 / 3;
+  text-align: center;
+  background: #eee;
+  padding: 0.5rem;
+  position: relative;
+  border-bottom: 1px solid #bbb;
+  font-weight: bold;
+}
+
+div[hidden] + div,
+.stop ~ * {
+  display: none;
+}
+
+.grid2 .colspan {
+  grid-column: 1 / 3;
+  padding: 0.5rem;
+  border-bottom: 1px solid #bbb;
 }
