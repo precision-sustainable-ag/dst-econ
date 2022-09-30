@@ -58,7 +58,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'precisionsustainableagdstecon.develop'
+    environment: 'precisionsustainableagdstecon.production'
     strategy:
       runOnce:
         deploy:
@@ -93,7 +93,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - reviewApp: develop
+          - reviewApp: production
 
           - task: Kubernetes@1
             displayName: 'Create a new namespace for the pull request'
