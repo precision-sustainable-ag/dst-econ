@@ -1,4 +1,4 @@
-import {db} from '../store/store';
+import {db} from '../store/Store';
 
 const Airtable = ({name, url}) => {
   const table = db[name];

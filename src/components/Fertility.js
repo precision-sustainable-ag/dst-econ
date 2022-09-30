@@ -2,7 +2,7 @@ import {Input} from './Inputs';
 
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, getDefaults, test, db} from '../store/store';
+import {get, set, dollars, getDefaults, test, db} from '../store/Store';
 
 const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertilizer|fertNAdded|fertPAdded|fertKAdded|$fertApplication|$fertCredit|$fertCost|fertility.total');
 

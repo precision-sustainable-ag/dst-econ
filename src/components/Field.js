@@ -2,7 +2,7 @@ import Map from './GoogleMaps';
 import {Input} from './Inputs';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults} from '../store/store';
+import {get, set, test, getDefaults} from '../store/Store';
 
 const defaults = getDefaults('lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description');
 

@@ -3,7 +3,7 @@ import {useEffect, useRef} from 'react';
 
 import {Icon} from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, db} from '../store/store';
+import {get, set, dollars, db} from '../store/Store';
 
 import Activity from './Activity';
 

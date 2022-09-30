@@ -1,7 +1,7 @@
 import Logic from './Logic';
 import {Icon} from '@mui/material';
 
-import {get, set, test, getDefaults, dollars} from '../store/store';
+import {get, set, test, getDefaults, dollars} from '../store/Store';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Erosion = () => {

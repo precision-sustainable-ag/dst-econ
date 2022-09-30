@@ -5,7 +5,7 @@ import Highcharts from 'highcharts';
 
 import HighchartsReact from 'highcharts-react-official';
 
-import {get, set, test, getDefaults, dollars} from '../store/store';
+import {get, set, test, getDefaults, dollars} from '../store/Store';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 

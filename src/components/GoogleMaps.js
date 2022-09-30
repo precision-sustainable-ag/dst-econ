@@ -6,7 +6,7 @@ import throttle from 'lodash/throttle';
 import GoogleMapReact from 'google-map-react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/store';
+import {get, set} from '../store/Store';
 
 const autocompleteService = { current: null };
 

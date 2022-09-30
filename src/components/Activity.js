@@ -1,7 +1,7 @@
 import {Input} from './Inputs';
 
 import {useSelector} from 'react-redux';
-import {get, dollars} from '../store/store';
+import {get, dollars} from '../store/Store';
 
 import {CardContent, Icon, Card} from '@mui/material';
 import {makeStyles} from '@mui/styles';

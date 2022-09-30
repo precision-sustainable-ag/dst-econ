@@ -9,7 +9,7 @@ import Draggable from 'react-draggable';
 import Card from '@mui/material/Card';
 import {CardContent} from '@mui/material';
 
-import {get, set, db} from './store/store';
+import {get, set, db} from './store/Store';
 
 import Home         from './components/Home';
 import Field        from './components/Field';

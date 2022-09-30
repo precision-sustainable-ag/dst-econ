@@ -1,5 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, test, db, getDefaults} from '../store/store';
+import {get, set, dollars, test, db, getDefaults} from '../store/Store';
 import {Input} from './Inputs';
 import {ClearInputs} from './ClearInputs';
 

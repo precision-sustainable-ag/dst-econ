@@ -2,7 +2,7 @@ import {Input} from './Inputs';
 import {Icon} from '@mui/material';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults} from '../store/store';
+import {get, set, test, getDefaults} from '../store/Store';
 
 const Additional = () => {
   const Stop = () => <div className="stop"></div>;

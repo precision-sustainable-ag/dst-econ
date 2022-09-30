@@ -20,7 +20,7 @@ const initialState = {
 
 To write to the store:
 ```
-import {set} from '../store/store';
+import {set} from '../store/Store';
 const dispatch = useDispatch();
 dispatch(set.screen('Seedbed'));
 dispatch(set.seedbed.total(999));
@@ -28,14 +28,14 @@ dispatch(set.seedbed.total(999));
 
 To read from the store:
 ```
-import {get} from '../store/store';
+import {get} from '../store/Store';
 const screen = useSelector(get.screen);
 const total = useSelector(get.seedbed.total);
 ```
 
 You can still access the store like this:
 ```
-import {get} from '../store/store';
+import {get} from '../store/Store';
 const screen = useSelector(state => state.screen);
 const total = useSelector(state => state.seedbed.total);
 ```
