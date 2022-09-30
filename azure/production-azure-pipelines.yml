@@ -88,7 +88,7 @@ stages:
     pool:
       vmImage: $(vmImageName)
 
-    environment: 'dstecon.$(k8sNamespaceForPR)'
+    environment: 'precisionsustainableagdstecon.$(k8sNamespaceForPR)'
     strategy:
       runOnce:
         deploy:
