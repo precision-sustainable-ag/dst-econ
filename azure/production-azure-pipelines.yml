@@ -58,7 +58,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'precisionsustainableagdstecon.production'
+    environment: 'dstecon.production'
     strategy:
       runOnce:
         deploy:
@@ -88,7 +88,7 @@ stages:
     pool:
       vmImage: $(vmImageName)
 
-    environment: 'precisionsustainableagdstecon.$(k8sNamespaceForPR)'
+    environment: 'dstecon.$(k8sNamespaceForPR)'
     strategy:
       runOnce:
         deploy:
