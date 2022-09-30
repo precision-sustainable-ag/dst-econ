@@ -58,7 +58,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'dstecon.production'
+    environment: 'precisionsustainableagdstecon.production'
     strategy:
       runOnce:
         deploy:
