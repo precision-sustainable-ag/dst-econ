@@ -396,7 +396,7 @@ function App() {
             <div id="Menu">
               {MyMenu(screens)}
             </div>
-            <img alt="logo" src="PSALogo-text.png" id="PSALogo"/>
+            <img alt="logo" src="PSAlogo-text.png" id="PSALogo"/>
           </nav>
 
           <div id="Main">
