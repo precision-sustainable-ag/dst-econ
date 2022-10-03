@@ -22,7 +22,7 @@ const Fertility = () => {
   return (
     <div className="Fertility">
       <form>
-        <h1>Economic Decision Aid for Cover Crops: Fertility</h1>
+        <h1>Fertility</h1>
         <p>
           Integrating cover crops into your rotation can affect fertility in multiple ways.
           One of the most commonly cited impacts is incorporating a legume into your cover crop mix.

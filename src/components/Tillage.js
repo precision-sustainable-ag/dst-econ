@@ -57,7 +57,7 @@ const Tillage = () => {
   return (
     <>
       <div className="Tillage">
-        <h1>Economic Decision Aid for Cover Crops: Tillage</h1>
+        <h1>Tillage</h1>
         <p>
           As a reminder to the user, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
           Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.

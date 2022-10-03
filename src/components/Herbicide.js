@@ -12,7 +12,7 @@ const Herbicide = () => {
 
   return (
     <div className="Herbicide">
-      <h1>Economic Decision Aid for Cover Crops: Herbicide</h1>
+      <h1>Herbicide</h1>
       <p>
         This module will address reductions or additional herbicide costs associated with integrating cover crops into your rotation.
         As a reminder, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops.

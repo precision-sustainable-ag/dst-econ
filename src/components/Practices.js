@@ -1,6 +1,6 @@
 const Practices = () => (
   <div className="Practices">
-    <h1>Economic Decision Aid for Cover Crops: Summary of Practices</h1>
+    <h1>Summary of Practices</h1>
   </div>
 ) // Practices
 

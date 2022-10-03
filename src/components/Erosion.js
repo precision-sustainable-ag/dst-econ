@@ -12,7 +12,7 @@ const Erosion = () => {
 
   return (
     <div className="Erosion">
-      <h1>Economic Decision Aid for Cover Crops: Soil Erosion Control</h1>
+      <h1>Soil Erosion Control</h1>
       <p>
         Using cover crops has been documented to provide benefits with controlling soil erosion.
         Select the <span className="link" onClick={() => dispatch(set.screen('Resources'))}>Resources page</span> button at the bottom of this page if you would like to read more about which cover crops can provide strong erosion control benefits.
