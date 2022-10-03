@@ -210,7 +210,7 @@ const Additional = () => {
 
   return (
     <div className="Additional">
-      <h1>Economic Decision Aid for Cover Crops: Additional Considerations</h1>
+      <h1>Additional Considerations</h1>
       <p>
         This portion of the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> will address additional considerations that may impact the profitability of using cover crops in your operation.
         Please respond to questions for each of the sections below.

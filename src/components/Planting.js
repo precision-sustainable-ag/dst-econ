@@ -24,7 +24,7 @@ const Planting = () => {
 
   return (
     <>
-      <h1>Economic Decision Aid for Cover Crops: Planting Decisions</h1>
+      <h1>Planting Decisions</h1>
       <div id="About">
         <p>
           In order to accurately evaluate the economic impact of implementing cover crops into your rotation, we only want to consider management decisions directly associated with the use of cover crops.

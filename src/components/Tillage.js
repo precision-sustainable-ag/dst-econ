@@ -43,13 +43,16 @@ const Tillage = () => {
         <Logic current={current} question="Annual Use (hours on power)" />
         <Logic current={current} question="Acres/hour" />
 
-        <Logic 
-          current={current}
-          question="Estimated"
-          q={q4}
-          total={Number.isFinite(state.total) ? state.total : estimated}
-          estimated={estimated}
-        />
+        {state.q2 === 'Yes' && (
+          <Logic 
+            current={current}
+            question="Estimated"
+            q={q4}
+            total={Number.isFinite(state.total) ? state.total : estimated}
+            estimated={estimated}
+            shown={state.q2 === 'Yes'}
+          />
+        )}
       </>
     );
   } // Costs
@@ -57,7 +60,7 @@ const Tillage = () => {
   return (
     <>
       <div className="Tillage">
-        <h1>Economic Decision Aid for Cover Crops: Tillage</h1>
+        <h1>Tillage</h1>
         <p>
           As a reminder to the user, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
           Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.

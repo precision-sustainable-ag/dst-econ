@@ -17,7 +17,7 @@ const Field = () => {
   return (
     <>
       <form className="Field">
-        <h1>Economic Decision Aid for Cover Crops: Field and Farm</h1>
+        <h1>Field and Farm</h1>
         
         <p>
           Our first step with the <strong><em>Cover Crop Economic DST (Decision Support Tool)</em></strong> is to provide basic information on the field you wish to examine.

@@ -88,7 +88,7 @@ const Species = () => {
     <>
       <form className="Species">
         <div>
-          <h1>Economic Decision Aid for Cover Crops: Species Selection</h1>
+          <h1>Cover Crops Species Selection</h1>
 
           <div id="About">
             <p>In this section, you will select a cover crop and seeding rates as well as an estimated cost of the cover crop seed ($/pound).</p>

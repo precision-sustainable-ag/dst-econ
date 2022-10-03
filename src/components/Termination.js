@@ -200,8 +200,7 @@ const Termination = () => {
   return (
     <>
       <div className="Termination">
-        <h1>Economic Decision Aid for Cover Crops: Termination</h1>
-        <strong>Cover Crop Establishment</strong>
+        <h1>Termination</h1>
         <p>
           In order to accurately evaluate the economic impact of implementing cover crops into your rotation, we only want to consider management decisions directly associated with the use of cover crops.
           In this module we will consider any activity associated with termination of the cover crop, but only activities that are incurred specific to the cover crop.

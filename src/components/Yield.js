@@ -83,7 +83,7 @@ const Yield = () => {
   
   return (
     <div className="Yield">
-      <h1>Economic Decision Aid for Cover Crops: Yield</h1>
+      <h1>Yield</h1>
       <p>
         When using cover crops in your rotation, yields of your cash crops may be affected.
         Results from farmer surveys indicate many farmers report a yield increase when using cover crops, although experiences have also resulted in decreased yields under certain conditions.
