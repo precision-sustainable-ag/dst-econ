@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 
 import {TextField, OutlinedInput, Icon} from '@mui/material';
 import {Input} from './Inputs';
@@ -157,27 +157,25 @@ const GoogleMaps = ({autoFocus=false, field=false, inputs=true}) => {
 
       {
         inputs && (
-          <>
-            <p />
-            <div tabIndex="-1">
-              If you know your exact coordinates, you can enter them here:
-              <p/>
-              <Input
-                id="lat"
-                value={lat}
-                label="Latitude"
-                type="number"
-                sx={{margin: 1}}
-              />
-              <Input
-                id="lon"
-                value={lon}
-                label="Longitude"
-                type="number"
-                sx={{margin: 1}}
-              />
-            </div>
-          </>
+          <div style={{margin: '1rem 0'}}>
+            If you know your exact coordinates, you can enter them here:
+            <p/>
+            <Input
+              id="lat"
+              value={lat}
+              label="Latitude"
+              type="number"
+              sx={{margin: 1}}
+            />
+            <Input
+              id="lon"
+              value={lon}
+              label="Longitude"
+              type="number"
+              sx={{margin: 1}}
+            />
+            <p/>
+          </div>
         )
       }
     </>
@@ -226,6 +224,30 @@ const Map = ({field=false, autoFocus, inputs=true, id='GoogleMap', mapOptions={}
     Geocoder = new maps.Geocoder();
   };
 
+  const [fullsize, setFullsize] = useState(false);
+
+  useEffect(() => {
+    document.addEventListener('keydown', ({key}) => {
+      if (key === 'Escape') {
+        setFullsize(false);
+      }
+    });
+  }, []);
+
+  const mapStyle = fullsize 
+    ? {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      zIndex: 999,
+    }
+    : {
+      position: 'relative',
+      height: '100%',
+    }
+
   return (
     <div id={id}>
       {
@@ -243,7 +265,17 @@ const Map = ({field=false, autoFocus, inputs=true, id='GoogleMap', mapOptions={}
       <GoogleMaps field={field} autoFocus={autoFocus} inputs={inputs} />
       {
         lat && lon ? (
-          <div style={{height: '100%'}}>
+          <div style={mapStyle}>
+            <span
+              className="expand"
+              onClick={() => {
+                setFullsize(!fullsize);
+              }}
+              title="Toggle fullscreen view"
+            >
+              &#x26F6;
+            </span>
+
             <GoogleMapReact
               bootstrapURLKeys={{key: 'AIzaSyD8U1uYvUozOeQI0LCEB_emU9Fo3wsAylg'}}
               center={{lat: +lat, lng: +lon}}
@@ -260,7 +292,13 @@ const Map = ({field=false, autoFocus, inputs=true, id='GoogleMap', mapOptions={}
                 // prevent tabbing through map
                 // got to be a better way than setting a timeout
                 setTimeout(() => {
-                  document.querySelectorAll('#GoogleMap *').forEach(item => item.setAttribute('tabindex', -1));
+                  document
+                    .querySelectorAll('#GoogleMap *')
+                    .forEach(item => {
+                      if (item.tagName !== 'INPUT') {
+                        item.setAttribute('tabIndex', -1);
+                      }
+                    });
                 }, 1000)
               }
 

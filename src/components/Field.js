@@ -11,8 +11,8 @@ const Field = () => {
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop  = useSelector(get.cashCrop);
   const dev       = useSelector(get.dev);
-  const width = useSelector(get.screenWidth);
-  const height = useSelector(get.screenHeight);
+  const width     = useSelector(get.screenWidth);
+  const height    = useSelector(get.screenHeight);
 
   return (
     <>

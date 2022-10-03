@@ -312,7 +312,6 @@ function App() {
 
     document.addEventListener('focusin', ({target}) => {
       if (target.type !== 'checkbox') {
-        console.log(target.id);
         dispatch(set.focused(target.id));
       }
     });
