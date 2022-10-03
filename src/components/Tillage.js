@@ -43,13 +43,16 @@ const Tillage = () => {
         <Logic current={current} question="Annual Use (hours on power)" />
         <Logic current={current} question="Acres/hour" />
 
-        <Logic 
-          current={current}
-          question="Estimated"
-          q={q4}
-          total={Number.isFinite(state.total) ? state.total : estimated}
-          estimated={estimated}
-        />
+        {state.q2 === 'Yes' && (
+          <Logic 
+            current={current}
+            question="Estimated"
+            q={q4}
+            total={Number.isFinite(state.total) ? state.total : estimated}
+            estimated={estimated}
+            shown={state.q2 === 'Yes'}
+          />
+        )}
       </>
     );
   } // Costs
