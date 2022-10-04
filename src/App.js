@@ -364,7 +364,7 @@ function App() {
       <div
         id="Container"
         style={{
-          margin: mapVisible ? '1rem 2%' : 'auto',
+          margin: mapVisible ? '1rem 2%' : '1rem 2%'  // 'auto',
         }}
       >
         <div

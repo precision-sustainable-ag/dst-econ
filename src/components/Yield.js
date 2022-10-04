@@ -1,6 +1,7 @@
+import {useEffect, useState} from 'react';
 import Logic from './Logic';
-import {Icon} from '@mui/material';
-
+import {Card, CardContent, Icon} from '@mui/material';
+import Draggable from 'react-draggable';
 import Highcharts from 'highcharts';
 
 import HighchartsReact from 'highcharts-react-official';
@@ -18,13 +19,23 @@ const Yield = () => {
   const typical  = state.typical;
   const adjusted = state.adjusted;
   const impact   = state.impact;
+  const screenWidth = useSelector(get.screenWidth);
 
-  console.log(state);
+  const [plotLeft, setPlotLeft] = useState(0);
+
+  useEffect(() => {
+    const plot = document.querySelector('.highcharts-plot-background'); 
+    if (plot) {
+      const plotLeft = plot?.x?.baseVal.value;
+      setPlotLeft(plotLeft);
+    }
+  }, []);
+  
   const dev = useSelector(get.dev);
   const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
 
-  const width = 700;
-  const width2 = width - 570;
+  const width = screenWidth > 1400 ? 400 : 700;
+  const width2 = width / 5;
 
   Highcharts.setOptions({
     chart: {
@@ -36,19 +47,20 @@ const Yield = () => {
     colors: ['#058DC7', 'orange']
   });
 
-  const options = {
+  const chartOptions = {
     chart: {
       type: 'column',
-      width: width,
-      height: 250,
+      zwidth: width,
+      height: 200,
     },
     plotOptions: {
       series: {
         animation: false,
+        zpointWidth: 15,
       }
     },
     title: {
-      text: 'Revenue'
+      text: screenWidth > 1400 ? '' : 'Revenue'
     },
     xAxis: {
       tickLength: 0,
@@ -80,6 +92,19 @@ const Yield = () => {
       }
     ],
   }
+  
+  const chartStyle = screenWidth > 1400
+    ? {
+      position: 'absolute',
+      bottom: '2%',
+      left: '100%',
+      background: '#eee',
+      boxShadow: '2px 3px rgb(20 20 20 / 70%)',
+      width: width,
+    }
+    : {
+      width: width
+    };
   
   return (
     <div className="Yield">
@@ -159,46 +184,58 @@ const Yield = () => {
       
       {
         adjusted[0] ? (
-          <div style={{width: width}}>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={options}
-            />
+          <Draggable>
+            <Card style={chartStyle}>
+              <CardContent>
+                <div>
+                  {
+                    screenWidth > 1400 && (
+                      <strong className="cursor">Revenue</strong>
+                    )
+                  }
+                  
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={chartOptions}
+                  />
 
-            <div>
-              <table style={{width: '100%', textAlign: 'center', font: '12px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif', color: '#444'}}>
-                <tbody>
-                  <tr>
-                    <td>Year</td>
-                    <td>1</td>
-                    <td>3</td>
-                    <td>5</td>
-                  </tr>
-                  <tr>
-                    <td style={{width: width2 + 55}}>
-                      <div style={{display: 'inline-block', width: 10, height: 10, background: '#058DC7', marginRight: 4}}></div>
-                      Cover crop yield impact<br/>($/acre)
-                    </td>
-                    <td>{dollars(impact[0])}</td>
-                    <td>{dollars(impact[1])}</td>
-                    <td>{dollars(impact[2])}</td>
-                  </tr>
-                  <tr>
-                    <td>Typical Yield<br/>($/acre)</td>
-                    <td>{dollars(typical)}</td>
-                    <td>{dollars(typical)}</td>
-                    <td>{dollars(typical)}</td>
-                  </tr>
-                  <tr>
-                    <td>Cover Crop Adjusted Yield<br/>($/acre)</td>
-                    <td>{dollars(adjusted[0])}</td>
-                    <td>{dollars(adjusted[1])}</td>
-                    <td>{dollars(adjusted[2])}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+                  <div style={{background: 'white'}}>
+                    <table style={{width: 'calc(100% - 12px)', textAlign: 'center', font: '12px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif', color: '#444', background: 'white', border: 'none'}}>
+                      <tbody>
+                        <tr>
+                          <td>Year</td>
+                          <td>1</td>
+                          <td>3</td>
+                          <td>5</td>
+                        </tr>
+                        <tr>
+                          <td style={{width: plotLeft}}>
+                            <div style={{display: 'inline-block', width: 10, height: 10, background: '#058DC7', marginRight: 4}}></div>
+                            Cover crop yield impact<br/>($/acre)
+                          </td>
+                          <td>{dollars(impact[0])}</td>
+                          <td>{dollars(impact[1])}</td>
+                          <td>{dollars(impact[2])}</td>
+                        </tr>
+                        <tr>
+                          <td>Typical Yield<br/>($/acre)</td>
+                          <td>{dollars(typical)}</td>
+                          <td>{dollars(typical)}</td>
+                          <td>{dollars(typical)}</td>
+                        </tr>
+                        <tr>
+                          <td>Cover Crop Adjusted Yield<br/>($/acre)</td>
+                          <td>{dollars(adjusted[0])}</td>
+                          <td>{dollars(adjusted[1])}</td>
+                          <td>{dollars(adjusted[2])}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Draggable>
         ) : null
       }
 

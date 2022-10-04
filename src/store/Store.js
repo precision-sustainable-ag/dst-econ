@@ -66,7 +66,7 @@ let initialState = {
   lastName: '',
   fullName: (state) => state.firstName + ' ' + state.lastName,
   fullName2: (state) => state.fullName,
-  dev: new URLSearchParams(window.location.search).get('dev'),
+  dev: /(localhost|dev)/i.test(window.location),
   test: '',
   test2: {a: {b: {c: 3}}},
   array1: ['This ', 'is ', 'a ', 'test'],
