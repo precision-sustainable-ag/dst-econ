@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react';
 import Logic from './Logic';
-import {Card, CardContent, Icon} from '@mui/material';
+import {Card, CardContent} from '@mui/material';
 import Draggable from 'react-draggable';
 import Highcharts from 'highcharts';
 
 import HighchartsReact from 'highcharts-react-official';
 
-import {get, set, test, getDefaults, dollars} from '../store/Store';
+import {Help} from '../shared/Help';
+import {get, set, getDefaults, dollars} from '../store/Store';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -148,10 +149,9 @@ const Yield = () => {
             q={
               <>
                 What is the expected yield for {cashCrop} in this field?
-                <Icon>
-                  help
+                <Help>
                   <p>User may enter their APH, trend adjusted APH, or typical yield for this field.</p>
-                </Icon>
+                </Help>
               </>
             }
             a="number"

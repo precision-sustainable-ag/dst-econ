@@ -1,7 +1,7 @@
-import {Input} from './Inputs';
-import {useEffect, useRef} from 'react';
+import {Input} from '../shared/Inputs';
+import {Help} from '../shared/Help';
+import {useEffect} from 'react';
 
-import {Icon} from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../store/Store';
 
@@ -12,7 +12,6 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
   const focused           = useSelector(get.focused);
-  console.log(focused);
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
@@ -33,11 +32,10 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       question = (
         <>
           {question}
-          <Icon>
-            help
+          <Help>
             <p>Costs associated with tractor and implement use are based upon annual use.</p>
             <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
-          </Icon>
+          </Help>
         </>
       );
 
@@ -50,11 +48,10 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
       question = (
         <>
           {question}
-          <Icon>
-            help
+          <Help>
             <p>Costs associated with tractor and implement use are based upon annual use.</p>
             <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
-          </Icon>
+          </Help>
         </>
       );
       q = q || question;

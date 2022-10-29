@@ -500,19 +500,6 @@ button.selected u {
   border-bottom: none;
 }
 
-.help {
-  position: fixed;
-  background-color: #f8f4f2 !important;
-  z-index: 100000;
-  font-size: 90%;
-  max-width: 50rem !important;
-}
-
-.help p:first-child,
-.help p:last-child {
-  margin: 0;
-}
-
 .MuiIcon-root {
   /* zoom: 0.8; */
   opacity: 0.6;
@@ -667,3 +654,10 @@ div[hidden] + div,
   z-index: 1;
   cursor: pointer;
 }
+
+/* pushpin for autocomplete
+li::before {
+  content: "\1F4CC";
+  margin-right: 0.5rem;
+}
+*/

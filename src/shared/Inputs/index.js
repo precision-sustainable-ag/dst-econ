@@ -1,18 +1,18 @@
-import {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set} from '../store/Store';
-
 import {
-  Autocomplete as MUIAutocomplete,
   TextField,
   Radio,
   RadioGroup,
   FormControlLabel,
   Checkbox,
   FormLabel,
+  Autocomplete as MUIAutocomplete,
 } from '@mui/material';
 
-import React from 'react';
+import {get, set} from '../../store/Store';
+
+import './styles.scss';
 
 const keyPress = (event) => {
   if (event.key === 'Enter') {  // focus next field
@@ -63,7 +63,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
   const [changed, setChanged] = useState(false);
 
-  const isArray = Array.isArray(sel2);
+  const isArray = Array.isArray(sel2) && !props.multiple; // TODO
 
   if (!type && /\$/.test(id)) {
     type = 'dollar';
@@ -95,7 +95,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
       setValue(val);
       setChanged(false);
     }
-    if (focus) { // TODO: is props.autoFocus working?
+    if (focus) {
       if (focusRef.current) {
         const input = focusRef.current.querySelector('input');
         input.focus();
@@ -195,6 +195,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     )
   } else if (options) {
     // let max = Math.max.apply(Math, options.map(option => option.description ? option.description.length : option.length));
+
     const max = '100%';
     if (!isOptionEqualToValue) {
       isOptionEqualToValue = (option, value) => option.value === value?.value;
@@ -212,7 +213,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         )
       }
     }
-  
+
     return (
       <MUIAutocomplete
         {...props}
@@ -223,11 +224,12 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
         sx={{width: max}}
 
-        isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
+        // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
 
         groupBy={props.groupBy}
         getOptionLabel={props.getOptionLabel}
         onInputChange={props.onInputChange}
+
         includeInputInList={props.includeInputInList}
         filterSelectedOptions={props.filterSelectedOptions}
 
@@ -237,8 +239,8 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
         value={v}
 
-        onChange={(e, value) => {
-          update(e, value);
+        onChange={(evt, value) => {
+          update(evt, value);
         }}
       />
     )

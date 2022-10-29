@@ -1,6 +1,6 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, test, db, getDefaults} from '../store/Store';
-import {Input} from './Inputs';
+import {Input} from '../shared/Inputs';
 import {ClearInputs} from './ClearInputs';
 
 const defaults = getDefaults('rates|species|prices');

@@ -1,4 +1,4 @@
-import {Input} from './Inputs';
+import {Input} from '../shared/Inputs';
 
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';

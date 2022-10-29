@@ -1,8 +1,8 @@
 import Logic from './Logic';
 import {ClearInputs} from './ClearInputs';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set, db, queue, getDefaults, test} from '../store/Store';
+import {useSelector} from 'react-redux';
+import {get, db, getDefaults} from '../store/Store';
 
 const defaults = getDefaults('herbicide.q1|herbicide.q2|herbicide.q3|herbicide.q4|herbicide.q5|herbicide.q6|herbicide.q7|herbicide.q8|herbicide.q9|herbicide.q10|herbicideAdditional.implement|herbicideReduced.implement|herbicideFall.implement');
 

@@ -2,6 +2,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
 import {store} from './store/Store';
+import {HashRouter as Router} from 'react-router-dom';
 import App from './App';
 import './index.css';
 
@@ -12,17 +13,21 @@ const root = createRoot(container);
 /*
   root.render(
     <React.StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <Router>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </Router>
     </React.StrictMode>
   );
 */
 
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <Router>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </Router>
 );
 
 document.title = 'CC-ECON';

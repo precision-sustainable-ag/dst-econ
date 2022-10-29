@@ -1,9 +1,10 @@
-import {Input} from './Inputs';
+import {Input} from '../shared/Inputs';
+import {Help} from '../shared/Help';
 
 import {useSelector} from 'react-redux';
 import {get, dollars} from '../store/Store';
 
-import {CardContent, Icon, Card} from '@mui/material';
+import {CardContent, Card} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import Draggable from 'react-draggable';
 
@@ -140,10 +141,9 @@ const Activity = ({type}) => {
                       <tr>
                         <th rowSpan="2" style={{verticalAlign: 'bottom'}}>
                           Cost Description
-                          <Icon>
-                            help
+                          <Help>
                             <Instructions/>
-                          </Icon>
+                          </Help>
                         </th>
                         <th colSpan="4">{heading}</th>
                         <th className="hidden"></th>

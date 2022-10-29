@@ -1,7 +1,7 @@
 import Logic from './Logic';
 import {useEffect} from 'react';
 import {ClearInputs} from './ClearInputs';
-import {Input} from './Inputs';
+import {Input} from '../shared/Inputs';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, test, getDefaults, db, clearInputs, dollars} from '../store/Store';

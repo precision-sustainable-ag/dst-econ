@@ -56,9 +56,6 @@ const shared = {
 };
 
 let initialState = {
-  help   : '',
-  helpX  : 0,
-  helpY  : 0,  
   focus: null,
   focused: null,
   scrollTop: 0,
@@ -86,6 +83,7 @@ let initialState = {
   // lon: 0,
   mapType: 'hybrid',
   mapZoom: 13,
+  mapPolygon: [],
   location: '',
   state: 'New Jersey',
   stateAbbreviation: 'NJ',
@@ -135,13 +133,13 @@ let initialState = {
   herbicide: {
     ...shared,
     product1: '',
-    unitCost1:    (state) => db.herbicides[state.herbicide.product1]?.['Cost ($)'],
-    rate1:        (state) => db.herbicides[state.herbicide.product1]?.['Rate'],
+    unitCost1:    (state) => db.herbicides?.[state.herbicide.product1]?.['Cost ($)'],
+    rate1:        (state) => db.herbicides?.[state.herbicide.product1]?.['Rate'],
     productCost1: (state) => (state.herbicide.unitCost1 * state.herbicide.rate1) || undefined,
 
     product2: '',
-    unitCost2:    (state) => db.herbicides[state.herbicide.product2]?.['Cost ($)'],
-    rate2:        (state) => db.herbicides[state.herbicide.product2]?.['Rate'],
+    unitCost2:    (state) => db.herbicides?.[state.herbicide.product2]?.['Cost ($)'],
+    rate2:        (state) => db.herbicides?.[state.herbicide.product2]?.['Rate'],
     productCost2: (state) => (state.herbicide.unitCost2 * state.herbicide.rate2) || undefined,
   },
   herbicideAdditional: {...shared},
@@ -150,13 +148,13 @@ let initialState = {
   yield: {
     ...shared,
     yield: undefined,
-    price: (state) => db.commodities[state.cashCrop]?.price,
+    price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
       const r = [
-        +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['one year'])).toFixed(0),
-        +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['three year'])).toFixed(0),
-        +(state.yield.typical * (1 + db.commodities[state.cashCrop]?.['five year'])).toFixed(0),
+        +(state.yield.typical * (1 + db.commodities?.[state.cashCrop]?.['one year'])).toFixed(0),
+        +(state.yield.typical * (1 + db.commodities?.[state.cashCrop]?.['three year'])).toFixed(0),
+        +(state.yield.typical * (1 + db.commodities?.[state.cashCrop]?.['five year'])).toFixed(0),
       ];
 
       state.yield.impact = [
@@ -200,8 +198,8 @@ let initialState = {
   },
   termination: {
     ...shared,
-    unitCost:    (state) => db.herbicides[state.termination.product]?.['Cost ($)'],
-    rate:        (state) => db.herbicides[state.termination.product]?.['Rate'],
+    unitCost:    (state) => db.herbicides?.[state.termination.product]?.['Cost ($)'],
+    rate:        (state) => db.herbicides?.[state.termination.product]?.['Rate'],
     productCost: (state) => (state.termination.unitCost * state.termination.rate) || undefined,
     additionalHerbicides: [],
     additionalRates:      [],
@@ -285,6 +283,13 @@ let initialState = {
 };
 
 const afterChange = {
+  lat: (state) => {
+    const mz = new window.google.maps.MaxZoomService();
+
+    mz.getMaxZoomAtLatLng({lat: +state.lat, lng: +state.lon}, (result) => {
+      store.dispatch(set.maxZoom(result.zoom))
+    });
+  },
   priorCrop: (state, {payload}) => {
     if (payload === 'Other') {
       state.focus = 'otherPriorCrop';
@@ -761,6 +766,10 @@ const reducers = {
       state.screenWidth  = window.innerWidth;
       state.screenHeight = window.innerHeight;
     // }, 100);
+  },
+  updateLocation: (state, {payload}) => {
+    state = {...state, ...payload};
+    return state;
   }
 }
 

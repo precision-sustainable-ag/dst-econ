@@ -1,7 +1,7 @@
 import Logic from './Logic';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults, dollars} from '../store/Store';
+import {get, set, getDefaults, dollars} from '../store/Store';
 import {ClearInputs} from './ClearInputs';
 
 const defaults = getDefaults('tillage1.q1|tillage1.q2|tillage1.q6|tillage1.q9|tillage1.implement|tillage1.estimated|tillage1.total|tillage2.q2|tillage2.estimated|tillage2.total|tillage3.q2|tillage3.estimated|tillage3.total|tillage2.implement|tillage3.implement');

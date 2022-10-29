@@ -1,7 +1,7 @@
 import Logic from './Logic';
-import {Icon} from '@mui/material';
+import {Help} from '../shared/Help';
 
-import {get, set, test, getDefaults, dollars} from '../store/Store';
+import {get, set, dollars} from '../store/Store';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Erosion = () => {
@@ -56,10 +56,9 @@ const Erosion = () => {
                 <tr style={{background: 'yellow'}}>
                   <td>
                     Calculation of cost savings
-                    <Icon>
-                      help
+                    <Help>
                       <p>If erosion repair occurs less than once/year, estimate the time it takes when done and divide by the number of years between repair activities</p>
-                    </Icon>
+                    </Help>
                   </td>
                   <td>
                     {dollars(state.total)}

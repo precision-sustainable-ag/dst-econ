@@ -1,5 +1,5 @@
-import {Input} from './Inputs';
-import {Icon} from '@mui/material';
+import {Input} from '../shared/Inputs';
+import {Help} from '../shared/Help';
 import {ClearInputs} from './ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, test, getDefaults} from '../store/Store';
@@ -30,8 +30,7 @@ const Additional = () => {
           <p>
             If you click yes, an estimate of the NRCS EQIP state program (Practice 340) rate for your location and seeding mix is shown in the input box.
             You can change this financial assistance estimate to represent your specific opportunities.
-            <Icon>
-              help
+            <Help>
               <p>
                 The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
                 The amount of financial assistance varies by state, cover crop practice and specific priorities.
@@ -43,7 +42,7 @@ const Additional = () => {
               <p>
                 The number of years that farms can receive cover crop financial assistance is usually limited.
               </p>
-            </Icon>
+            </Help>
           </p>
         </div>
         <div><Input id="additional.nrcs" options={['Yes', 'No']} type="radio" /></div>
@@ -69,8 +68,7 @@ const Additional = () => {
           </p>
           <p>
             If yes, please enter the estimated cash savings on your crop insurance premium ($/acre).
-            <Icon>
-              help
+            <Help>
               <p>
                 Growers may be eligible for discounts on their crop insurance premiums by planting cover crops.
               </p>
@@ -79,7 +77,7 @@ const Additional = () => {
                 Similar programs have been available in Illinois.
                 Note that some insurance policies may be excluded (e.g. Whole-Farm Revenue Protection or written agreements).
               </p>
-            </Icon>
+            </Help>
           </p>
         </div>
         <div>

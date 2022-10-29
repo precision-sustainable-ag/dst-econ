@@ -1,13 +1,10 @@
 import './App.css';
 
 import React from 'react';
-import {MenuItem, Button} from '@mui/material';
+import {Button} from '@mui/material';
 
 import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import Draggable from 'react-draggable';
-import Card from '@mui/material/Card';
-import {CardContent} from '@mui/material';
 
 import {get, set, db} from './store/Store';
 
@@ -28,7 +25,19 @@ import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
 import {Summary}    from './components/Activity';
-import Map          from './components/GoogleMaps';
+
+import Map          from './shared/GoogleMaps';
+
+const holdWarn = console.warn;
+console.warn = (msg, ...subst) => {
+  // Deprecation: moment
+  // Autocomplete: useless warning, which has an overcomplicated isOptionEqualTo solution
+  //               https://github.com/mui/material-ui/issues/29727
+
+  if (!/Deprecation|Autocomplete/.test(msg + subst)) {
+    holdWarn(msg, ...subst);
+  }
+}
 
 function App() {
   const screens = {
@@ -65,32 +74,6 @@ function App() {
     },
   };
 
-  const Help = () => {
-    const help  = useSelector(get.help);
-    const helpX = useSelector(get.helpX);
-    const helpY = useSelector(get.helpY);
-    const style = {
-      left: helpX,
-      top: helpY,
-      maxWidth:  `calc(100vw - ${helpX}px - 20px)`,
-      maxHeight: `calc(94vh - ${helpY}px - 20px)`,
-      overflow: 'auto'
-    }
-  
-    return (
-      help &&
-      <Draggable>
-        <Card className="help" style={style}>
-          <CardContent>
-            <div
-              dangerouslySetInnerHTML={{ __html: help }}
-            />
-          </CardContent>
-        </Card>
-      </Draggable>
-    )
-  } // Help
-
   const cashCrop = useSelector(get.cashCrop);
   
   const MyMenu = (s) => {
@@ -101,7 +84,7 @@ function App() {
             return null;
           } else {
             return (
-              <details>
+              <details key={scr}>
                 <summary>{scr}</summary>
                 {MyMenu(s[scr])}
               </details>
@@ -109,10 +92,10 @@ function App() {
           }
         } else if (typeof s[scr] === 'object') {
           return (
-            <>
-              <strong key={scr}>{scr}</strong>
+            <span key={scr}>
+              <strong>{scr}</strong>
               {MyMenu(s[scr])}
-            </>
+            </span>
           )
         } else if (scr === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
           return null;
@@ -255,8 +238,6 @@ function App() {
   const screenWidth = useSelector(get.screenWidth);
   const screenHeight = useSelector(get.screenHeight);
   const showMap = useSelector(get.showMap);
-  const lat = useSelector(get.lat);
-  const lon = useSelector(get.lon);
   const maxZoom = useSelector(get.maxZoom);
 
   const [hotkeys, setHotKeys] = useState(false);
@@ -300,11 +281,11 @@ function App() {
   }, [dispatch, hotkeys, screen]);
 
   useEffect(() => {
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        dispatch(set.help(''));
-      }
-    });
+    // document.addEventListener('keydown', (e) => {
+    //   if (e.key === 'Escape') {
+    //     dispatch(set.help(''));
+    //   }
+    // });
 
     window.addEventListener('resize', () => {
       dispatch({type: 'resize'});
@@ -312,7 +293,7 @@ function App() {
 
     document.addEventListener('focusin', ({target}) => {
       if (target.type !== 'checkbox') {
-        dispatch(set.focused(target.id));
+        dispatch(set.focused(target.id));  // TODO
       }
     });
 
@@ -324,11 +305,6 @@ function App() {
   // console.log(screen);
 
   const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
-
-  const mz = new window.google.maps.MaxZoomService();
-  mz.getMaxZoomAtLatLng({lat, lng: lon}, (result) => {
-    dispatch(set.maxZoom(result.zoom));
-  });
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
@@ -369,17 +345,17 @@ function App() {
       >
         <div
           id="Left"
-          onClick={(e) => {
-            if (/^help/.test(e.target.innerHTML)) {
-              dispatch(set.help(e.target.innerHTML.slice(4)));
-              dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-              dispatch(set.helpY(e.pageY - 20 - window.scrollY));
-            } else {
-              if (!e.target.closest('.help')) {
-                dispatch(set.help(''));
-              }
-            }
-          }}
+          // onClick={(e) => {
+          //   if (/^help/.test(e.target.innerHTML)) {
+          //     dispatch(set.help(e.target.innerHTML.slice(4)));
+          //     dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
+          //     dispatch(set.helpY(e.pageY - 20 - window.scrollY));
+          //   } else {
+          //     if (!e.target.closest('.help')) {
+          //       dispatch(set.help(''));
+          //     }
+          //   }
+          // }}
         >
           <nav onClick={changeScreen} className="{cl}">
             <div
@@ -399,7 +375,6 @@ function App() {
           </nav>
 
           <div id="Main">
-            <Help />
             <Screen />
           </div>
           
