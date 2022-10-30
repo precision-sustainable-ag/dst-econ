@@ -1,8 +1,8 @@
-import {Input} from '../shared/Inputs';
-import {Help} from '../shared/Help';
-import {ClearInputs} from './ClearInputs';
+import {Input} from '../../shared/Inputs';
+import {Help} from '../../shared/Help';
+import {ClearInputs} from '../ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults} from '../store/Store';
+import {get, set, test, getDefaults} from '../../store/Store';
 
 const Additional = () => {
   const Stop = () => <div className="stop"></div>;

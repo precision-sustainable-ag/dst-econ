@@ -1,11 +1,11 @@
-import {Input} from '../shared/Inputs';
-import {Help} from '../shared/Help';
+import {Input} from '../../shared/Inputs';
+import {Help} from '../../shared/Help';
 import {useEffect} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, db} from '../store/Store';
+import {get, set, dollars, db} from '../../store/Store';
 
-import Activity from './Activity';
+import Activity from '../Activity';
 
 const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
   // console.log('Render: Logic ' + property);

@@ -1,15 +1,14 @@
 import {useEffect, useState} from 'react';
-import Logic from './Logic';
-import {Card, CardContent} from '@mui/material';
+import {useSelector, useDispatch} from 'react-redux';
 import Draggable from 'react-draggable';
+import {Card, CardContent} from '@mui/material';
 import Highcharts from 'highcharts';
-
 import HighchartsReact from 'highcharts-react-official';
 
-import {Help} from '../shared/Help';
-import {get, set, getDefaults, dollars} from '../store/Store';
-import {ClearInputs} from './ClearInputs';
-import {useSelector, useDispatch} from 'react-redux';
+import {get, set, getDefaults, dollars} from '../../store/Store';
+import Logic from '../Logic';
+import {Help} from '../../shared/Help';
+import {ClearInputs} from '../ClearInputs';
 
 const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 

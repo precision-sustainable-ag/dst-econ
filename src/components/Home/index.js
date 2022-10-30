@@ -1,6 +1,6 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test} from '../store/Store';
-import {Input} from '../shared/Inputs';
+import {get, set, test} from '../../store/Store';
+import {Input} from '../../shared/Inputs';
 
 let n = 0;
 

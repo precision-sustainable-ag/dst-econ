@@ -28,6 +28,15 @@ import {Summary}    from './components/Activity';
 
 import Map          from './shared/GoogleMaps';
 
+const holdError = console.error;
+console.error = (msg, ...subst) => {
+  // Draggable: can't get this to work https://stackoverflow.com/a/63603903/3903374
+
+  if (!/Draggable/.test(msg + subst)) {
+    holdError(msg, ...subst);
+  }
+}
+
 const holdWarn = console.warn;
 console.warn = (msg, ...subst) => {
   // Deprecation: moment

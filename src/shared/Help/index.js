@@ -5,40 +5,40 @@ import Draggable from 'react-draggable';
 import './styles.scss';
 
 export const Help = (props) => {
-  const [helpX, setHelpX] = useState(0);
-  const [helpY, setHelpY] = useState(0);
-  const [moved, setMoved] = useState(false);
-
   const ref = useRef(null);
   const dragRef = useRef(null);
   const nodeRef = useRef(null);
 
-  // in case ancestor is also draggable:
-  if (nodeRef?.current && !moved) {
-    setMoved(true);
-    document.querySelector('#root').appendChild(nodeRef.current);
+  const [open, setOpen] = useState(false);
+
+  let top = 0;
+  let left = 0;
+  
+  const rect = ref?.current?.getBoundingClientRect();
+
+  if (rect) {
+    top = rect.top;
+    left = rect.left;
   }
 
   const style = {
-    left: helpX,
-    top: helpY,
-    maxWidth:  `calc(100vw - ${helpX}px - 20px)`,
-    maxHeight: `calc(94vh - ${helpY}px - 20px)`,
-    transform: 'none',
-    display: helpX === 0 ? 'none' : 'block',
-  }
+    width:  `min(30rem, 100vw - ${left}px - 20px)`,
+    maxHeight: `calc(94vh - ${top}px - 20px)`,
+    overflow: 'auto',
+    display: open ? 'block' : 'none',
+  };
 
   useEffect(() => {
     const keydown = ({key}) => {
       if (key === 'Escape') {
-        setHelpX(0);
-        setHelpY(0);
+        setOpen(false);
       }
     };
 
-    const click = (() => {
-      setHelpX(0);
-      setHelpY(0);
+    const click = ((e) => {
+      if (e.target !== ref.current) {
+        setOpen(false);
+      }
     });
 
     document.addEventListener('keydown', keydown);
@@ -51,23 +51,18 @@ export const Help = (props) => {
   }, []);
 
   return (
-    <span ref={ref}>
+    <>
       <Icon
-        onClick={(e) => {
-          if (helpX) {
-            setHelpX(0);
-            setHelpY(0);
-          } else {
-            dragRef.current.state.x = 0;
-            dragRef.current.state.y = 0;
-            setHelpX(Math.min(e.pageX + 20, window.innerWidth - 400));
-            setHelpY(e.pageY - 20 - window.scrollY);
-            e.stopPropagation();
-          }
+        ref={ref}
+        onClick={() => {
+          dragRef.current.state.x = 0;
+          dragRef.current.state.y = 0;
+          setOpen(!open);
         }}
       >
         help
       </Icon>
+      
       <Draggable
         ref={dragRef}
         nodeRef={nodeRef}
@@ -83,6 +78,6 @@ export const Help = (props) => {
           </CardContent>
         </Card>
       </Draggable>
-    </span>
+    </>
   )
 } // Help

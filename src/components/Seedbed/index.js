@@ -1,9 +1,9 @@
-import Logic from './Logic';
 import {useEffect} from 'react';
-import {ClearInputs} from './ClearInputs';
-
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, queue, getDefaults, test} from '../store/Store';
+
+import {get, set, queue, getDefaults, test} from '../../store/Store';
+import Logic from '../Logic';
+import {ClearInputs} from '../ClearInputs';
 
 const defaults = getDefaults('seedbed.total|seedbed.q1|seedbed.implement|seedbed.power|seedbed.implementsCost|seedbed.powerCost|seedbed.Labor|seedbed.Fuel|seedbed.Depreciation|seedbed.Interest|seedbed.Repairs|seedbed.Taxes|seedbed.Insurance|seedbed.Storage|seedbed.annualUseAcres|seedbed.acresHour|seedbed.annualUseHours');
 

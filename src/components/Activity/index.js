@@ -1,12 +1,13 @@
-import {Input} from '../shared/Inputs';
-import {Help} from '../shared/Help';
+import {Input} from '../../shared/Inputs';
+import {Help} from '../../shared/Help';
 
 import {useSelector} from 'react-redux';
-import {get, dollars} from '../store/Store';
+import {get, dollars} from '../../store/Store';
 
 import {CardContent, Card} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import Draggable from 'react-draggable';
+import './styles.scss';
 
 const useStyles = makeStyles({
   root: {
@@ -115,7 +116,7 @@ const Activity = ({type}) => {
         left: onMap ? 'calc(900px + 4vw)' : rect.x + rect.width + 20,
         top: top,
         zIndex: 1,
-        whiteSpace: 'nowrap',
+        zwhiteSpace: 'nowrap',
       }
     }
   }

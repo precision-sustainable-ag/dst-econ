@@ -1,9 +1,9 @@
-import Logic from './Logic';
+import Logic from '../Logic';
 import {useEffect} from 'react';
-import {ClearInputs} from './ClearInputs';
+import {ClearInputs} from '../ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, queue, getDefaults, test} from '../store/Store';
+import {get, set, queue, getDefaults, test} from '../../store/Store';
 
 const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
 

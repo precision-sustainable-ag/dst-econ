@@ -1,7 +1,7 @@
-import Logic from './Logic';
-import {Help} from '../shared/Help';
+import Logic from '../Logic';
+import {Help} from '../../shared/Help';
 
-import {get, set, dollars} from '../store/Store';
+import {get, set, dollars} from '../../store/Store';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Erosion = () => {

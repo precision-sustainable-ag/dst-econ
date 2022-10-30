@@ -1,8 +1,8 @@
-import Map from '../shared/GoogleMaps';
-import {Input} from '../shared/Inputs';
-import {ClearInputs} from './ClearInputs';
+import Map from '../../shared/GoogleMaps';
+import {Input} from '../../shared/Inputs';
+import {ClearInputs} from '../ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, test, getDefaults} from '../store/Store';
+import {get, set, test, getDefaults} from '../../store/Store';
 
 const defaults = getDefaults('lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description');
 
