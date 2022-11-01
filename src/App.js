@@ -24,7 +24,7 @@ import Practices    from './components/Practices';
 import Revenue      from './components/Revenue';
 import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
-import {Summary}    from './components/Activity';
+import Activity, {Summary}    from './components/Activity';
 
 import Map          from './shared/GoogleMaps';
 
@@ -311,8 +311,6 @@ function App() {
     }, true);
   }, [dispatch]);
 
-  // console.log(screen);
-
   const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
 
   if (screen === 'Loading') {
@@ -389,7 +387,7 @@ function App() {
           
           <Navigation current={screen} />
         </div>
-
+        <Activity />
         <Summary />
       </div>
     </>

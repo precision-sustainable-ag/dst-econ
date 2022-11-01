@@ -112,7 +112,7 @@ const Herbicide = () => {
             }
 
             {
-              state.q1 === 'Yes' && (
+              state.q1 === 'Yes' && state.q2 && (
                 <>
                   <tr><th colSpan="100">Reduced Herbicides</th></tr>
                   <Logic
@@ -166,6 +166,7 @@ const Herbicide = () => {
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
                     shown={state.q1}
+                    custom={['I will not be making an additional application', 'Hire custom operator']}
                   />
 
                   <Logic current="herbicideReduced" question="power" />

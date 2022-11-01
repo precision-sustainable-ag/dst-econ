@@ -35,7 +35,6 @@ const keyPress = (event) => {
 } // keyPress
 
 const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', value, onChange, onInput, immediate, ...props}) => {
-  // console.log(`Render: Input ${id}`);
   const dispatch = useDispatch();
 
   let obj = id;
@@ -151,6 +150,8 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     props.className = (props.className || '') + ' ' + type;
   }
 
+  const showInfo = document.activeElement === focusRef?.current?.querySelector('input');
+
   useEffect(() => {
     if (value) {
       update(
@@ -264,7 +265,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
             id={id}
             value={v === undefined ? '' : v}  // https://github.com/facebook/react/issues/6222
 
-            onFocus={(e) => e.target.select()}
+            onFocus={(e) => {
+              setTimeout(() => {
+                e.target.select();
+              }, 10);
+            }}
 
             size="small"
 
@@ -323,6 +328,13 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               }
             }}
           />
+          {props.info && (
+            <div
+              className="info"
+            >
+              {props.info}
+            </div>
+          )}
           {props.warning}
         </>
     )

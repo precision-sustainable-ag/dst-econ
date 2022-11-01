@@ -343,6 +343,7 @@ const afterChange = {
     if (payload === 'No') {
       state.herbicideFall.estimated = 0;
       state.herbicideFall.total = 0;
+      state.screen = 'Erosion';
     }
   },
   'seedbed.q1': (state, {payload}) => {

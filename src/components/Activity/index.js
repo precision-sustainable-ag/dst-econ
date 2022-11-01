@@ -1,8 +1,7 @@
 import {Input} from '../../shared/Inputs';
-import {Help} from '../../shared/Help';
 
-import {useSelector} from 'react-redux';
-import {get, dollars} from '../../store/Store';
+import {useDispatch, useSelector} from 'react-redux';
+import {set, get, dollars} from '../../store/Store';
 
 import {CardContent, Card} from '@mui/material';
 import {makeStyles} from '@mui/styles';
@@ -15,28 +14,15 @@ const useStyles = makeStyles({
   }
 });
 
-const Instructions = () => (
-  <>
-    <p>
-      Farmers view costs differently, so this table allows the user to customize the cost estimation to fit their needs.
-      The default cost estimation assumes all ownership and variable costs are relevant.
-      However, some farmers will want to focus on the cash costs of fuel and labor.
-      Removing the check from the box would allow such an analysis.
-      Others would want to ignore all costs that definitely do not change with use so they would uncheck the boxes for interest, taxes, insurance and shed.
-    </p>
-    <p>
-      Basically, the costs you want to count toward the cost of cover crops should have a checkmark beside it.
-      If you are not concerned with certain costs, remove the checkmark.
-    </p>
-  </>
-) // Instructions
-
-const Activity = ({type}) => {
+const Activity = () => {
+  const dispatch = useDispatch();
   const width             = useSelector(get.screenWidth);
   const screenHeight      = useSelector(get.screenHeight);
-  const focused           = useSelector(get.focused);
-  const state             = useSelector(get[type]);
+  const focused           = useSelector(get.focused) || '';
 
+  const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
+
+  const state             = useSelector(get[type]);
   const estimated         = state.estimated;
   const tot               = state.total;
   const edited            = estimated !== tot;
@@ -44,6 +30,10 @@ const Activity = ({type}) => {
   const ImplementsCost    = state.implementsCost;
   const PowerCost         = state.powerCost;
   const state3            = useSelector(get[type]).q3;
+
+  if (!focused.includes('.total')) {
+    return null;
+  }
 
   const heading = {
     seedbed:      'Seedbed Preparation',
@@ -101,23 +91,20 @@ const Activity = ({type}) => {
   let style;
   const onMap = width > 1400;
 
-  if (/annualUse/.test(focused) || (onMap && /implement|power/.test(focused))) {
-    const rect = document.querySelector(`[id="${focused.split('.')[0]}.annualUseAcres"]`)?.getBoundingClientRect();
+  const rect = document.querySelector(`[id="${focused.split('.')[0]}.annualUseAcres"]`)?.getBoundingClientRect();
 
-    if (rect) {
-      let top = onMap ? rect.y - 120 : rect.y - 20;
-    
-      if (top + 480 > screenHeight) {
-        top = Math.max(0, screenHeight - 480);
-      }
+  if (rect) {
+    let top = onMap ? rect.y - 120 : rect.y - 20;
+  
+    if (top + 480 > screenHeight) {
+      top = Math.max(0, screenHeight - 480);
+    }
 
-      style = {
-        position: 'absolute',
-        left: onMap ? 'calc(900px + 4vw)' : rect.x + rect.width + 20,
-        top: top,
-        zIndex: 1,
-        zwhiteSpace: 'nowrap',
-      }
+    style = {
+      position: 'fixed',
+      left: onMap ? 'calc(920px + 4vw)' : rect.x + rect.width + 20,
+      top: top,
+      zIndex: 1,
     }
   }
 
@@ -127,81 +114,79 @@ const Activity = ({type}) => {
       !edited
     ) && (
     <>
-      {
-        style && (
-          <Draggable>
-            <div
-              className={cname}
-              id="Breakdown"
-              style={style}
-            >
-              <Card style={{background: '#f8f8f8'}}>
-                <CardContent>
-                  <table id="Costs">
-                    <thead>
-                      <tr>
-                        <th rowSpan="2" style={{verticalAlign: 'bottom'}}>
-                          Cost Description
-                          <Help>
-                            <Instructions/>
-                          </Help>
-                        </th>
-                        <th colSpan="4">{heading}</th>
-                        <th className="hidden"></th>
-                        <th className="hidden"></th>
-                        <th className="hidden"></th>
-                      </tr>
-                      <tr>
-                        <th className="hidden"></th>
-                        <th>
-                          <label>
-                            Implement<br/>Cost<br/>($/acre)
-                            <br/>
-                            <Input
-                              id={type + '.implementsCost'}
-                              type="checkbox"
-                              tabIndex={-1}
-                            />
-                          </label>
-                        </th>
-                        <th>
-                          <label>
-                            Power<br/>Cost<br/>($/acre)
-                            <br/>
-                            <Input
-                              id={type + '.powerCost'}
-                              type="checkbox"
-                              tabIndex={-1}
-                            />
-                          </label>
-                        </th>
-                        <th>Relevant<br/>Cost<br/>($/acre)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <Costs desc="Labor"        lookup="Labor" />
-                      <Costs desc="Fuel"         lookup=""/>
-                      <Costs desc="Depreciation" lookup="Depreciation"/>
-                      <Costs desc="Interest"     lookup="Interest"/>
-                      <Costs desc="Repairs"      lookup="Repairs"/>
-                      <Costs desc="Taxes"        lookup="Taxes"/>
-                      <Costs desc="Insurance"    lookup="Insurance"/>
-                      <Costs desc="Storage shed" lookup="Storage"/>
-                      <tr className="total">
-                        <td>Total</td>
-                        <td>{'$' + state.$implements.total.toFixed(2)}</td>
-                        <td>{'$' + state.$power.total.toFixed(2)}</td>
-                        <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+      <Draggable>
+        <div
+          className={cname}
+          id="Breakdown"
+          style={style}
+          onClick={() => {
+            setTimeout(() => {
+              dispatch(set.focus(focused));
+            }, 1);
+          }}
+        >
+          <Card style={{background: '#f8f8f8'}}>
+            <CardContent>
+              <table id="Costs">
+                <thead>
+                  <tr>
+                    <th rowSpan="2" style={{verticalAlign: 'bottom'}}>
+                      Cost Description
+                    </th>
+                    <th colSpan="4">{heading}</th>
+                    <th className="hidden"></th>
+                    <th className="hidden"></th>
+                    <th className="hidden"></th>
+                  </tr>
+                  <tr>
+                    <th className="hidden"></th>
+                    <th>
+                      <label>
+                        Implement<br/>Cost<br/>($/acre)
+                        <br/>
+                        <Input
+                          id={type + '.implementsCost'}
+                          type="checkbox"
+                          tabIndex={-1}
+                        />
+                      </label>
+                    </th>
+                    <th>
+                      <label>
+                        Power<br/>Cost<br/>($/acre)
+                        <br/>
+                        <Input
+                          id={type + '.powerCost'}
+                          type="checkbox"
+                          tabIndex={-1}
+                        />
+                      </label>
+                    </th>
+                    <th>Relevant<br/>Cost<br/>($/acre)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <Costs desc="Labor"        lookup="Labor" />
+                  <Costs desc="Fuel"         lookup=""/>
+                  <Costs desc="Depreciation" lookup="Depreciation"/>
+                  <Costs desc="Interest"     lookup="Interest"/>
+                  <Costs desc="Repairs"      lookup="Repairs"/>
+                  <Costs desc="Taxes"        lookup="Taxes"/>
+                  <Costs desc="Insurance"    lookup="Insurance"/>
+                  <Costs desc="Storage shed" lookup="Storage"/>
+                  <tr className="total">
+                    <td>Total</td>
+                    <td>{'$' + state.$implements.total.toFixed(2)}</td>
+                    <td>{'$' + state.$power.total.toFixed(2)}</td>
+                    <td>{'$' + (state.$implements.total + state.$power.total).toFixed(2)}</td>
+                  </tr>
+                </tbody>
+              </table>
 
-                </CardContent>
-              </Card>
-            </div>
-          </Draggable>
-        )
-      }
+            </CardContent>
+          </Card>
+        </div>
+      </Draggable>
     </>
   );
 
