@@ -262,37 +262,35 @@ export const Summary = () => {
     (total || farm || field || acres || cashCrop) && (
       <div>
         <Draggable handle="strong">
-          <Card variant="outlined" className={classes.root} style={{backgroundColor: '#eee'}}>
+          <Card id="Summary" variant="outlined" className={classes.root} style={{backgroundColor: '#eee'}}>
             <CardContent>
-              <div id="Summary">
-                <strong className="cursor">Summary</strong>
-                <table>
-                  {(farm || field || acres || cashCrop) && (
-                    <>
-                      <thead></thead>
-                      <tbody>
-                        {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
-                        {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
-                        {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
-                        {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
-                      </tbody>
-                    </>
-                  )}
-                  <CostsBenefits type="Costs" />
-                  <CostsBenefits type="Benefits" />
-                  {total ? (
-                    <tfoot>
-                      <tr>
-                        <td>Total</td>
-                        <td style={style}>{dollars(Math.abs(total))}</td>
-                      </tr>
-                    </tfoot>
-                  ) : null}
-                </table>
-              </div>
+              <strong className="cursor">Summary</strong>
+              <table>
+                {(farm || field || acres || cashCrop) && (
+                  <>
+                    <thead></thead>
+                    <tbody>
+                      {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
+                      {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
+                      {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
+                      {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
+                    </tbody>
+                  </>
+                )}
+                <CostsBenefits type="Costs" />
+                <CostsBenefits type="Benefits" />
+                {total ? (
+                  <tfoot>
+                    <tr>
+                      <td>Total</td>
+                      <td style={style}>{dollars(Math.abs(total))}</td>
+                    </tr>
+                  </tfoot>
+                ) : null}
+              </table>
             </CardContent>
           </Card>
-        </Draggable>          
+        </Draggable>
       </div>
     )
   );

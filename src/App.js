@@ -174,7 +174,7 @@ function App() {
   
     const mods = {Home, ...screens.Modules, ...screens['Economic Impact'], Resources};
 
-    const s = ['Home','Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Erosion','Additional','Yield','Practices','Revenue','Resources'];
+    const s = ['Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Erosion','Additional','Yield','Practices','Revenue','Resources'];
   
     if (current === 'Resources') {
       back = previousScreen;
@@ -350,46 +350,32 @@ function App() {
           margin: mapVisible ? '1rem 2%' : '1rem 2%'  // 'auto',
         }}
       >
-        <div
-          id="Left"
-          // onClick={(e) => {
-          //   if (/^help/.test(e.target.innerHTML)) {
-          //     dispatch(set.help(e.target.innerHTML.slice(4)));
-          //     dispatch(set.helpX(Math.min(e.pageX + 20, window.innerWidth - 400)));
-          //     dispatch(set.helpY(e.pageY - 20 - window.scrollY));
-          //   } else {
-          //     if (!e.target.closest('.help')) {
-          //       dispatch(set.help(''));
-          //     }
-          //   }
-          // }}
-        >
-          <nav onClick={changeScreen} className="{cl}">
-            <div
-              style={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '120%',
-                marginBottom: '0.25rem',
-              }}
-            >
-              Cover Crop Decision Support Tool
-            </div>
-            <div id="Menu">
-              {MyMenu(screens)}
-            </div>
-            <img alt="logo" src="PSAlogo-text.png" id="PSALogo"/>
-          </nav>
-
-          <div id="Main">
-            <Screen />
+        <nav onClick={changeScreen} className="{cl}">
+          <div
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: '120%',
+              marginBottom: '0.25rem',
+            }}
+          >
+            Cover Crop Decision Support Tool
           </div>
-          
-          <Navigation current={screen} />
+          <div id="Menu">
+            {MyMenu(screens)}
+          </div>
+          <img alt="logo" src="PSAlogo-text.png" id="PSALogo"/>
+        </nav>
+
+        <div id="Main">
+          <Screen />
         </div>
-        <Activity />
-        <Summary />
+          
+        <Navigation current={screen} />
       </div>
+      
+      <Activity />
+      <Summary />
     </>
   );
 }
