@@ -27,39 +27,43 @@ html {
   padding-left: 130px;
 }
 
-nav button {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-  font-family: Roboto, Arial;
-  font-weight: normal !important;
-  margin-right: 1rem !important;
-  margin-bottom: 0.5rem !important;
-  border-radius: 16px !important;
-  padding: 0 12px !important;
-  text-transform: none !important;
-  font-size: 0.9rem !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-nav details {
-  display: inline-block;
-}
-
 nav {
   color: #eee;
-}
+  padding: 0.5rem;
+  background-color: rgba(30, 30, 30, 0.8);
+  height: 7rem;
+  z-index: 1;
+    
+  button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    font-family: Roboto, Arial;
+    font-weight: normal !important;
+    margin-right: 1rem !important;
+    margin-bottom: 0.5rem !important;
+    border-radius: 16px !important;
+    padding: 0 12px !important;
+    text-transform: none !important;
+    font-size: 0.9rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
 
-nav button.selected {
-  color: rgba(3, 3, 3) !important;
-  background: #eee !important;
-}
+  details {
+    display: inline-block;
+  }
 
-nav button:not(.selected):hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
+  button.selected {
+    color: rgba(3, 3, 3) !important;
+    background: #eee !important;
+  }
+  
+  button:not(.selected):hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
 
-nav strong {
-  display: none;
+  strong {
+    display: none;
+  }
 }
 
 .size {
@@ -110,26 +114,6 @@ td, th {
 
 label {
   cursor: pointer;
-}
-
-#Breakdown {
-  display: inline-block;
-  margin-right: 1em;
-}
-
-#Breakdown table {
-  font-size: 80%;
-}
-
-#Breakdown table span {
-  transform: scale(0.8);
-}
-
-#Breakdown.noImplementCost tr > :nth-child(2),
-#Breakdown.noPowerCost tr > :nth-child(3),
-#Breakdown.noImplementCost.noPowerCost tr > :nth-child(4) {
-  background: #ddd;
-  color: #888;
 }
 
 .hidden {
@@ -460,13 +444,6 @@ summary {
   width: 1000px;
   height: 100%;
   position: relative;
-}
-
-nav {
-  padding: 0.5rem;
-  background-color: rgba(30, 30, 30, 0.8);
-  height: 7rem;
-  z-index: 1;
 }
 
 #Main {

@@ -1,70 +1,47 @@
 #Breakdown {
   position: fixed;
+  display: inline-block;
+  margin-right: 1em;
+
+  table {
+    font-size: 80%;
+
+    span {
+      transform: scale(0.8);
+    }
+
+    td {
+      white-space: nowrap;
+    }    
+  }
+
+  &.noImplementCost tr > :nth-child(2),
+  &.noPowerCost tr > :nth-child(3),
+  &.noImplementCost.noPowerCost tr > :nth-child(4) {
+    background: #ddd;
+    color: #888;
+  }
 }
 
-#Breakdown td {
-  white-space: nowrap;
-}
+#Costs {
+  td:nth-child(n + 2),
+  tr.total td {
+    text-align: right;
+  }
 
-#Activity td:nth-child(n + 2) {
-  width: 15em !important;
-  text-align: left !important;
-}
+  tr > :nth-child(2n + 2) {
+    border-left: 1px solid #444;
+  }
 
-#Activity th, #Costs th {
-  text-align: center;
-}
+  tr:first-child th {
+    vertical-align: bottom;
+  }
 
-#Activity tr > :nth-child(2n + 2) {
-  border-left: 1px solid black;
-}
+  tr:last-child td {
+    border-top: 1px solid #444;
+  }
 
-#Activity td:nth-child(n + 2),
-#Costs td:nth-child(n + 2) {
-  text-align: right;
-}
-
-#Costs tr > :nth-child(4n + 2) {
-  border-left: 1px solid black;
-}
-
-#Activity.seedbed tr > :nth-child(1):not(.hidden),
-#Activity.seedbed tr > :nth-child(2):not(.hidden),
-#Activity.seedbed tr > :nth-child(3):not(.hidden) {
-  display: table-cell;
-}
-
-#Activity.planting tr > :nth-child(1):not(.hidden),
-#Activity.planting tr > :nth-child(4):not(.hidden),
-#Activity.planting tr > :nth-child(5):not(.hidden) {
-  display: table-cell;
-}
-
-#Costs.seedbed tr > :nth-child(1):not(.hidden),
-#Costs.seedbed tr > :nth-child(2):not(.hidden),
-#Costs.seedbed tr > :nth-child(3):not(.hidden),
-#Costs.seedbed tr > :nth-child(4):not(.hidden),
-#Costs.seedbed tr > :nth-child(5):not(.hidden) {
-  display: table-cell;
-}
-
-#Costs.planting tr > :nth-child(1):not(.hidden),
-#Costs.planting tr > :nth-child(6):not(.hidden),
-#Costs.planting tr > :nth-child(7):not(.hidden),
-#Costs.planting tr > :nth-child(8):not(.hidden),
-#Costs.planting tr > :nth-child(9):not(.hidden) {
-  display: table-cell;
-}
-
-#Activity tr > :nth-child(1),
-#Costs    tr > :nth-child(1) {
-  width: 10em;
-}
-
-#Activity tr > :nth-child(n + 2) {
-  width: calc(12em + 2px);
-}
-
-#Costs tr > :nth-child(n + 2) {
-  width: 6em;
+  th {
+    border-bottom: 1px solid #444;
+  }
 }

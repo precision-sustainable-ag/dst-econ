@@ -83,7 +83,7 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
           </div>
         : null
       );
-      info = (
+      info = iscustom ? '' : (
         <>
           <p>
             Farmers view costs differently, so the table to the right allows you to customize the cost estimation to fit their needs.

@@ -133,10 +133,7 @@ const Activity = () => {
                     <th rowSpan="2" style={{verticalAlign: 'bottom'}}>
                       Cost Description
                     </th>
-                    <th colSpan="4">{heading}</th>
-                    <th className="hidden"></th>
-                    <th className="hidden"></th>
-                    <th className="hidden"></th>
+                    <th colSpan="3">{heading}</th>
                   </tr>
                   <tr>
                     <th className="hidden"></th>

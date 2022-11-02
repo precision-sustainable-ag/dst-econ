@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 
 import React from 'react';
 import {Button} from '@mui/material';
@@ -149,7 +149,7 @@ function App() {
   const changeScreen = (e) => {
     const menu = e.target.closest('button');
 
-    if (menu.tagName === 'BUTTON') {
+    if (menu?.tagName === 'BUTTON') {
       const scr = menu.dataset.scr;
 
       if (scr !== 'Resources') {
