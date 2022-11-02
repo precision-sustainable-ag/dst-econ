@@ -63,3 +63,7 @@
 *:focus-within ~ .info {
   display: block;
 }
+
+*:focus-within ~ .help {
+  display: none;
+}

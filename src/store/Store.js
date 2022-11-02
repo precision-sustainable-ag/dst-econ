@@ -326,6 +326,13 @@ const afterChange = {
       state.focus = '$fertApplication';
     }
   },
+  'herbicide.q1': (state, {payload}) => {
+    if (payload === 'No') {
+      state.herbicideAdditional.estimated = 0;
+      state.herbicideAdditional.total = 0;
+      state.herbicideAdditional.implement = '';
+    }
+  },
   'herbicide.q2': (state, {payload}) => {
     if (payload === 'No') {
       state.herbicideAdditional.estimated = 0;

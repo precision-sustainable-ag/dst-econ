@@ -8,6 +8,7 @@ import {
   Checkbox,
   FormLabel,
   Autocomplete as MUIAutocomplete,
+  Icon,
 } from '@mui/material';
 
 import {get, set} from '../../store/Store';
@@ -329,11 +330,22 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
             }}
           />
           {props.info && (
-            <div
-              className="info"
-            >
-              {props.info}
-            </div>
+            <>
+              <Icon
+                style={{marginTop: 6, marginLeft: 2}}
+                onClick={() => {
+                  dispatch(set.focus(id));
+                }}
+                className="help"
+              >
+                help
+              </Icon>
+              <div
+                className="info"
+              >
+                {props.info}
+              </div>
+            </>
           )}
           {props.warning}
         </>
