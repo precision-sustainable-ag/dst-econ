@@ -194,16 +194,12 @@ export const Summary = () => {
   const coverCropTotal    = useSelector(get.coverCropTotal) || 0;
   const seedbedTotal      = useSelector(get.seedbed.total) || 0;
   const plantingTotal     = useSelector(get.planting.total) || 0;
+  const terminationTotal  = useSelector(get.termination.total) || 0;
+  const tillageAllTotal   = useSelector(get.tillageAll.total) || 0;
   const fertilityTotal    = -useSelector(get.fertility.total) || 0;
   const erosionTotal      = -useSelector(get.erosion.total) || 0;
-  const productCost       = useSelector(get.termination.productCost) || 0;
-  const chemicalTotal     = useSelector(get.chemical.total) || 0;
-  const rollerTotal       = useSelector(get.roller.total) || 0;
-  const tillageTotal      = useSelector(get.tillage.total) || 0;
-  const herbicideTotal    = (useSelector(get.termination.additionalTotal) || 0) - (useSelector(get.termination.reducedTotal) || 0);
-  const terminationTotal  = productCost + chemicalTotal + rollerTotal + tillageTotal + herbicideTotal;
-  const tillageAllTotal   = useSelector(get.tillageAll.total) || 0;
   const yieldTotal        = -useSelector(get.yield.total) || 0;
+
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal;
 
   const SummaryRow = ({parm, desc, type}) => {

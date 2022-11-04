@@ -1,3 +1,5 @@
+import {current} from '@reduxjs/toolkit';
+
 import {createStore, set, get} from './redux-autosetters';
 
 const shared = {
@@ -215,9 +217,9 @@ let initialState = {
         });
       return total;
     },
-    reducedHerbicides:    [],
-    reducedRates:         [],
-    reducedPrices:        [],
+    reducedHerbicides:  [],
+    reducedRates:       [],
+    reducedPrices:      [],
     reducedTotal: (state) => {
       let total = 0;
   
@@ -227,7 +229,12 @@ let initialState = {
             total += (state.termination.reducedRates[n] || 0) * (state.termination.reducedPrices[n] || 0);
           }
         });
+
       return total;
+    },
+    total: (state) => {
+      return (state.termination.productCost || 0) + (state.chemical.total || 0) + (state.roller.total || 0) +
+             (state.tillage.total || 0) + ((state.termination.additionalTotal || 0) - (state.termination.reducedTotal || 0))
     },
   },
   fertility: {
@@ -263,22 +270,22 @@ let initialState = {
     },
   },
   shown: {
-    seedbed:          {...shared},
-    planting:         {...shared},
-    herbicide:        {...shared},
+    seedbed:              {...shared},
+    planting:             {...shared},
+    herbicide:            {...shared},
     herbicideAdditional:  {...shared},
-    herbicideReduced:    {...shared},
-    herbicideFall:    {...shared},
-    yield:            {...shared},
-    erosion:          {...shared},
-    termination:      {...shared},
-    fertility:        {...shared},
-    chemical:         {...shared},
-    roller:           {...shared},
-    tillage:          {...shared},
-    tillage1:         {...shared},
-    tillage2:         {...shared},
-    tillage3:         {...shared},
+    herbicideReduced:     {...shared},
+    herbicideFall:        {...shared},
+    yield:                {...shared},
+    erosion:              {...shared},
+    termination:          {...shared},
+    fertility:            {...shared},
+    chemical:             {...shared},
+    roller:               {...shared},
+    tillage:              {...shared},
+    tillage1:             {...shared},
+    tillage2:             {...shared},
+    tillage3:             {...shared},
   },
 };
 
@@ -374,10 +381,47 @@ const afterChange = {
     if (payload === 'Yes' && state.termination.method !== 'Herbicide application') {
       state.screen = 'Tillage';
     }
+    state.termination.additionalHerbicides = [];
+    state.termination.additionalRates      = [];
+    state.termination.additionalPrices     = [];
+
+    state.termination.reducedHerbicides    = [];
+    state.termination.reducedRates         = [];
+    state.termination.reducedPrices        = [];
+
+    state.termination.product = '';
+    state.termination.unitCost = 0;
+    state.termination.rate = 0;
+
+    state.chemical.implement = '';
+    state.chemical.power = '';
+    state.chemical.annualUseAcres = 0;
+    state.chemical.annualUseHours = 0;
+    state.chemical.total = 0;
+
+    state.roller.implement = '';
+    state.roller.power = '';
+    state.roller.annualUseAcres = 0;
+    state.roller.annualUseHours = 0;
+    state.roller.total = 0;
+
+    state.tillage.implement = '';
+    state.tillage.power = '';
+    state.tillage.annualUseAcres = 0;
+    state.tillage.annualUseHours = 0;
+    state.tillage.total = 0;
   },
   'termination.q3': (state, {payload}) => {
     if (payload === 'No') {
       state.screen = 'Tillage';
+
+      state.termination.additionalHerbicides = [];
+      state.termination.additionalRates      = [];
+      state.termination.additionalPrices     = [];
+
+      state.termination.reducedHerbicides    = [];
+      state.termination.reducedRates         = [];
+      state.termination.reducedPrices        = [];
     }
   },
   'termination.method': (state) => {

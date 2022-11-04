@@ -67,3 +67,12 @@
 *:focus-within ~ .help {
   display: none;
 }
+
+body.debug .input[id]::before {
+  content: attr(id);
+  white-space: pre;
+  font: 10px arial;
+  color: brown;
+  padding: 0.3rem;
+  opacity: 0.8;
+}

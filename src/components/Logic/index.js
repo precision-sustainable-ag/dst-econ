@@ -4,7 +4,7 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, dollars, db} from '../../store/Store';
 
-const Logic = ({current, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
+const Logic = ({current, intro, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
   // console.log('Render: Logic ' + property);
   const dispatch = useDispatch();
   const holdShown         = useSelector(get.shown);
@@ -18,7 +18,6 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
 
   if (property === 'implement') {
     a = [...custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
-    // shown = /chemical|roller|tillage/.test(current) || context.q3 === 'Self';
     if (shown !== false) {
       shown = true;
     }
@@ -120,47 +119,51 @@ const Logic = ({current, question, q, a, property, type, shown=true, suffix='', 
 
   return (
     current && shown ?
-    <tr className={current}>
-      <td style={style}>{q}</td>
-      <td style={style}>
-        {
-          Array.isArray(a) ?
-            a.length < 3 || type === "radio" ? 
+    <>
+      {intro && <tr><td colSpan={2}>{intro}</td></tr>}
+      <tr className={current}>
+        <td style={style}>{q}</td>
+        <td style={style}>
+          {
+            Array.isArray(a) ?
+              a.length < 3 || type === "radio" ? 
+                <Input
+                  id={current + '.' + property}
+                  type="radio"
+                  options={a}
+                  onChange={onChange}
+                />
+              :
+                <Input
+                  id={current + '.' + property}
+                  onChange={onChange}
+                  options={a}
+                />
+            :
+            
+            /number|dollar/.test(a) ?
               <Input
                 id={current + '.' + property}
-                type="radio"
-                options={a}
                 onChange={onChange}
+                onInput={onInput}
+                type={a}
+                value={value}
+                warning={warning}
+                info={info}
               />
             :
-              <Input
-                id={current + '.' + property}
-                onChange={onChange}
-                options={a}
-              />
-          :
-          
-          /number|dollar/.test(a) ?
-            <Input
-              id={current + '.' + property}
-              onChange={onChange}
-              onInput={onInput}
-              type={a}
-              value={value}
-              warning={warning}
-              info={info}
-            />
-          :
-          
-          isFinite(a) ? 
-            '$' + (+a).toFixed(2)
-          :
-          
-          a
-        }
-        <span className="suffix">{suffix}</span>
-      </td>
-    </tr> :
+            
+            isFinite(a) ? 
+              '$' + (+a).toFixed(2)
+            :
+            
+            a
+          }
+          <span className="suffix">{suffix}</span>
+        </td>
+      </tr>
+    </>
+    :
     null
   )
 } // Logic

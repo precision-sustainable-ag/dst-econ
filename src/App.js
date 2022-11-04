@@ -380,4 +380,8 @@ function App() {
   );
 }
 
+document.addEventListener('dblclick', () => {
+  document.body.classList.toggle('debug');
+});
+
 export default App;

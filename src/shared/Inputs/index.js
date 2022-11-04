@@ -151,8 +151,6 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     props.className = (props.className || '') + ' ' + type;
   }
 
-  const showInfo = document.activeElement === focusRef?.current?.querySelector('input');
-
   useEffect(() => {
     if (value) {
       update(
@@ -178,9 +176,11 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         <FormLabel>{props.label}</FormLabel>
         <RadioGroup
           {...props}
+          className="input"
+          id={id}
         >
           {options.map((option, i) => (
-            <FormControlLabel 
+            <FormControlLabel
               value={option}
               key={option}
               control={<Radio sx={{padding: '0.2rem 0.5rem'}} />}
@@ -217,34 +217,36 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
     }
 
     return (
-      <MUIAutocomplete
-        {...props}
+      <div className="input" id={id}>
+        <MUIAutocomplete
+          {...props}
 
-        id={id}
-        onKeyPress={keyPress}
-        ref={focusRef}
+          id={id}
+          onKeyPress={keyPress}
+          ref={focusRef}
 
-        sx={{width: max}}
+          sx={{width: max}}
 
-        // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
+          // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
 
-        groupBy={props.groupBy}
-        getOptionLabel={props.getOptionLabel}
-        onInputChange={props.onInputChange}
+          groupBy={props.groupBy}
+          getOptionLabel={props.getOptionLabel}
+          onInputChange={props.onInputChange}
 
-        includeInputInList={props.includeInputInList}
-        filterSelectedOptions={props.filterSelectedOptions}
+          includeInputInList={props.includeInputInList}
+          filterSelectedOptions={props.filterSelectedOptions}
 
-        renderInput={renderInput}
-        
-        options={options}
+          renderInput={renderInput}
+          
+          options={options}
 
-        value={v}
+          value={v}
 
-        onChange={(evt, value) => {
-          update(evt, value);
-        }}
-      />
+          onChange={(evt, value) => {
+            update(evt, value);
+          }}
+        />
+      </div>
     )
   } else {
     return (
@@ -260,7 +262,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
           }}
         />
         :
-        <>
+        <span className="input" id={id}>
           <TextField
             {...props}
             id={id}
@@ -348,7 +350,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
             </>
           )}
           {props.warning}
-        </>
+        </span>
     )
   }
 } // Input

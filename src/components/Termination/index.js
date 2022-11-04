@@ -7,7 +7,8 @@ import {useEffect} from 'react';
 import {ClearInputs} from '../ClearInputs';
 import {Input} from '../../shared/Inputs';
 
-const defaults = getDefaults('termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product');
+const def = 'termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product'.split('|');
+const defaults = getDefaults(def);
 
 const HerbicidesRow = ({n, prop}) => {
   const additional = useSelector(get.termination.additionalHerbicides);
@@ -56,11 +57,11 @@ const OtherHerbicides = ({state, prop, description}) => {
           state[prop + 'Herbicides'].map((s, n) => {
             return (
               s &&
-              <HerbicidesRow key={n} n={n} state={state} prop={prop} description={description} />
+              <HerbicidesRow key={n} n={n} prop={prop} />
             )
           })
         }
-        <HerbicidesRow key={state[prop + 'Herbicides'].length} n={state[prop + 'Herbicides'].length} prop={prop} description={description} />
+        <HerbicidesRow key={state[prop + 'Herbicides'].length} n={state[prop + 'Herbicides'].length} prop={prop} />
       </tbody>
       <tfoot>
         <tr>
@@ -75,7 +76,6 @@ const OtherHerbicides = ({state, prop, description}) => {
 
 const Termination = () => {
   // console.log('Render: Termination');
-
   const Herbicide = () => (
     <>
       <tr><th colSpan="100">Product</th></tr>
@@ -190,6 +190,7 @@ const Termination = () => {
 
   useSelector(get.current);
   useSelector(get.shown[current]);
+
   const method = useSelector(get.termination.method);
 
   const state = useSelector(get[current]);
@@ -243,43 +244,34 @@ const Termination = () => {
                 shown={state.method}
               />
 
+              <Logic
+                current={current}
+                intro="Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
+                       For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
+                       Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
+                      "
+                property="q3"
+                q="Will you change the herbicides use in your tank mix?"
+                a={['Yes', 'No']}
+                shown={state.method === 'Herbicide application' && state.q2 === 'Yes'}
+              />
               {
-                state.method === 'Herbicide application' && state.q2 === 'Yes' && (
-                  <>
-                    <tr>
-                      <td colSpan="2">
-                        Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
-                        For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
-                        Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
-                      </td>
-                    </tr>
-                    <Logic
-                      current={current}
-                      property="q3"
-                      q="Will you change the herbicides use in your tank mix?"
-                      a={['Yes', 'No']}
-                      shown={state.q2 === 'Yes'}
-                    />
-                    {
-                      state.q3 === 'Yes' && (
-                        <tr>
-                          <td colSpan="3">
-                            <OtherHerbicides state={state} description="Additional Herbicides" prop="additional" />
-                            <OtherHerbicides state={state} description="Reduced Herbicides"    prop="reduced" />
-                          </td>
-                        </tr>
-                      )
-                    }
-                  </>
+                state.q3 === 'Yes' && (
+                  <tr>
+                    <td colSpan="3">
+                      <OtherHerbicides state={state} description="Additional Herbicides" prop="additional" />
+                      <OtherHerbicides state={state} description="Reduced Herbicides"    prop="reduced" />
+                    </td>
+                  </tr>
                 )
               }
 
               {
                 state.q2 === 'No' && (
                   <>
-                    {/herbicide/i.test(method) && <Herbicide/>}
-                    {/Roller/.test(method) && <Roller/>}
-                    {/Tillage/.test(method) && <Tillage/>}
+                    {/herbicide/i.test(method) && <Herbicide />}
+                    {/Roller/.test(method) && <Roller />}
+                    {/Tillage/.test(method) && <Tillage />}
                   </>
                 )
               }
