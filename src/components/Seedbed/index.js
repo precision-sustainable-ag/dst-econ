@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {get, set, queue, getDefaults, test} from '../../store/Store';
+import {get, set, getDefaults, exampleSeedbed} from '../../store/Store';
 import Logic from '../Logic';
 import {ClearInputs} from '../ClearInputs';
 
@@ -82,24 +82,7 @@ const Seedbed = () => {
         </table>
       </form>
       {
-        dev && (
-          <button
-            onClick={() => {
-              dispatch(set.seedbed.q1('Yes'));
-              queue(() => {
-                dispatch(set.seedbed.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
-                test('seedbed.power', '200 HP MFWD Tractor');
-                test('seedbed.annualUseAcres', 670);
-                test('seedbed.annualUseHours', 500);
-                test('seedbed.acresHour', 8.37);
-                test('seedbed.estimated', 18.34);
-                test('seedbed.total', 18.34);
-              });
-            }}
-          >
-            Test data
-          </button>
-        )
+        dev && <button onClick={exampleSeedbed}>Test data</button>
       }
     </>
   )

@@ -1,8 +1,8 @@
 import Logic from '../Logic';
 import {ClearInputs} from '../ClearInputs';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {get, set, db, getDefaults, clearInputs} from '../../store/Store';
+import {useSelector} from 'react-redux';
+import {get, db, getDefaults, clearInputs, exampleHerbicides} from '../../store/Store';
 
 const herbicideDefaults   = getDefaults(Object.keys(get.herbicide).map(parm => 'herbicide.' + parm));
 const fallDefaults        = getDefaults(Object.keys(get.herbicideFall).map(parm => 'herbicideFall.' + parm));
@@ -12,7 +12,6 @@ const reducedDefaults     = getDefaults(Object.keys(get.herbicideReduced).map(pa
 const defaults = {...herbicideDefaults, ...fallDefaults, ...additionalDefaults, ...reducedDefaults};
 
 const Herbicide = () => {
-  const dispatch = useDispatch();
   const current = 'herbicide';
   const state = useSelector(get[current]);
   const additionalProduct = useSelector(get.herbicideAdditional.product);
@@ -256,30 +255,9 @@ const Herbicide = () => {
           </tbody>
         </table>
       </form>
+      
       {
-        dev && (
-          <>
-            <button
-              onClick={() => {
-                dispatch(set.herbicide.q1('Yes'));
-                dispatch(set.herbicide.q2('Yes'));
-                dispatch(set.herbicideAdditional.product('atrazine'));
-
-                dispatch(set.herbicide.q5('Yes'));
-                dispatch(set.herbicideReduced.product('liberty'));
-
-                dispatch(set.herbicideAdditional.implement('Boom Sprayer, Pull-Type; 90 Ft'));
-                dispatch(set.herbicideReduced.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
-
-                dispatch(set.herbicide.q8('Yes'));
-                dispatch(set.herbicideFall.savings(300));
-                dispatch(set.herbicideFall.implement('Boom Sprayer, Pull-Type; 90 Ft'));
-              }}
-            >
-              Test
-            </button>
-          </>
-        )
+        dev && <button onClick={exampleHerbicides}>Test</button>
       }
     </div>
   )

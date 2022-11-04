@@ -1,4 +1,4 @@
-import {current} from '@reduxjs/toolkit';
+// import {current} from '@reduxjs/toolkit';
 
 import {createStore, set, get} from './redux-autosetters';
 
@@ -769,6 +769,101 @@ export const clearInputs = (defaults, exclude=[]) => {
 
 // let resizeTimer;
 
+export const exampleSpecies = () => {
+  store.dispatch(set.species({index: 0, value: 'Clover, Crimson'}));
+  store.dispatch(set.species({index: 1, value: 'Clover, Berseem'}));
+} // exampleSpecies
+
+export const exampleHerbicides = () => {
+  const herbicideDefaults   = getDefaults(Object.keys(get.herbicide).map(parm => 'herbicide.' + parm));
+  const fallDefaults        = getDefaults(Object.keys(get.herbicideFall).map(parm => 'herbicideFall.' + parm));
+  const additionalDefaults  = getDefaults(Object.keys(get.herbicideAdditional).map(parm => 'herbicideAdditional.' + parm));
+  const reducedDefaults     = getDefaults(Object.keys(get.herbicideReduced).map(parm => 'herbicideReduced.' + parm));
+  
+  const defaults = {...herbicideDefaults, ...fallDefaults, ...additionalDefaults, ...reducedDefaults};
+
+  clearInputs(defaults);
+
+  store.dispatch(set.herbicide.q1('Yes'));
+  store.dispatch(set.herbicide.q2('Yes'));
+  store.dispatch(set.herbicideAdditional.product('atrazine'));
+
+  store.dispatch(set.herbicide.q5('Yes'));
+  store.dispatch(set.herbicideReduced.product('liberty'));
+
+  store.dispatch(set.herbicideAdditional.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+  store.dispatch(set.herbicideReduced.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
+
+  store.dispatch(set.herbicide.q8('Yes'));
+  store.dispatch(set.herbicideFall.savings(300));
+  store.dispatch(set.herbicideFall.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+} // exampleHerbicides
+
+export const exampleSeedbed = () => {
+  store.dispatch(set.seedbed.q1('Yes'));
+  store.dispatch(set.seedbed.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
+} // exampleSeedbed
+
+export const examplePlanting = () => {
+  store.dispatch(set.planting.implement('Presswheel Drill; 16 Ft'));
+} // examplePlanting
+
+export const exampleTermination1 = () => {
+  clearTermination();
+  store.dispatch(set.termination.q2('No'));
+  store.dispatch(set.termination.method('Herbicide application'));
+  store.dispatch(set.termination.product('atrazine'));
+  store.dispatch(set.termination.unitCost(333));
+  store.dispatch(set.termination.product('dicamba'));
+  store.dispatch(set.chemical.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
+} // exampleTermination1
+
+export const exampleTermination2 = () => {
+  clearTermination();
+  store.dispatch(set.termination.method('Herbicide application'));
+  store.dispatch(set.termination.q2('Yes'));
+  store.dispatch(set.termination.q3('Yes'));
+
+  store.dispatch(set.termination.additionalHerbicides({value: 'dicamba', index: 0}));
+  store.dispatch(set.termination.additionalRates({value: 3, index: 0}));
+  store.dispatch(set.termination.additionalPrices({value: 4, index: 0}));
+
+  store.dispatch(set.termination.additionalHerbicides({value: 'atrazine', index: 1}));
+  store.dispatch(set.termination.additionalRates({value: 5, index: 1}));
+  store.dispatch(set.termination.additionalPrices({value: 6, index: 1}));
+
+  store.dispatch(set.termination.reducedHerbicides({value: 'liberty', index: 0}));
+  store.dispatch(set.termination.reducedRates({value: 7, index: 0}));
+  store.dispatch(set.termination.reducedPrices({value: 8, index: 0}));
+} // exampleTermination2
+
+export const exampleTermination3 = () => {
+  clearTermination();
+  store.dispatch(set.termination.q2('No'));
+  store.dispatch(set.termination.method('Roller'));
+  store.dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+} // exampleTermination2
+
+export const exampleTermination4 = () => {
+  clearTermination();
+  store.dispatch(set.termination.q2('No'));
+  store.dispatch(set.termination.method('Tillage'));
+  store.dispatch(set.tillage.implement('Chisel Plow; 23 Ft'));
+} // exampleTermination4
+
+export const exampleTermination5 = () => {
+  clearTermination();
+  store.dispatch(set.termination.q2('No'));
+  store.dispatch(set.termination.method('Roller with follow-up herbicide'));
+  store.dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+  store.dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+} // exampleTermination5
+
+const clearTermination = () => {
+  const defaults = getDefaults('termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product');
+  clearInputs(defaults);
+} // clearTermination
+
 const reducers = {
   resize: (state) => {
     // Cannot perform 'set' on a proxy that has been revoked
@@ -781,7 +876,7 @@ const reducers = {
   updateLocation: (state, {payload}) => {
     state = {...state, ...payload};
     return state;
-  }
+  },
 }
 
 export const store = createStore(initialState, {afterChange, reducers});

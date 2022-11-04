@@ -3,7 +3,7 @@ import {useEffect} from 'react';
 import {ClearInputs} from '../ClearInputs';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {get, set, queue, getDefaults, test} from '../../store/Store';
+import {get, set, getDefaults, examplePlanting} from '../../store/Store';
 
 const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
 
@@ -69,23 +69,7 @@ const Planting = () => {
       </form>
 
       {
-        dev && (
-          <button
-            onClick={() => {
-              queue(() => {
-                dispatch(set.planting.implement('Presswheel Drill; 16 Ft'));
-                test('planting.power', '105 HP MFWD Tractor');
-                test('planting.annualUseAcres', 509);
-                test('planting.annualUseHours', 450);
-                test('planting.acresHour', 6.79);
-                test('planting.estimated', 17.60);
-                test('planting.total', 17.60);
-              });
-            }}
-          >
-            Test data
-          </button>
-        )
+        dev && <button onClick={examplePlanting}>Test data</button>
       }
     </>
   )

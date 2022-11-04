@@ -36,7 +36,7 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
       }
     }
   });
-      
+
   const builders = (builder) => {
     const recurse = (obj, set, get, parents = []) => {
       Object.keys(obj).forEach((key) => {

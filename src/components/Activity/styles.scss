@@ -9,6 +9,10 @@
   table {
     width: 100%;
     background: white;
+
+    td:nth-child(2) {
+      text-align: right;
+    }  
   }  
 
   thead {
@@ -18,10 +22,6 @@
   tfoot {
     background: yellow
   }
-
-  td:nth-child(2) {
-    text-align: right;
-  }  
 }
 
 #Breakdown {

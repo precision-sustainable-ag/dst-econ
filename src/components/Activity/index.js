@@ -234,7 +234,7 @@ export const Summary = () => {
           </thead>
           <tbody>
             <SummaryRow type={type} parm={coverCropTotal}   desc="Seed expense" />
-            <SummaryRow type={type} parm={seedbedTotal}     desc="Seed bed preparation" />
+            <SummaryRow type={type} parm={seedbedTotal}     desc="Seedbed preparation" />
             <SummaryRow type={type} parm={plantingTotal}    desc="Planting" />
             <SummaryRow type={type} parm={terminationTotal} desc="Termination" />
             <SummaryRow type={type} parm={tillageAllTotal}  desc="Tillage" />
@@ -268,10 +268,10 @@ export const Summary = () => {
                   <>
                     <thead></thead>
                     <tbody>
-                      {farm     && <tr><td>Farm     </td><td>{farm}     </td></tr>}
-                      {field    && <tr><td>Field    </td><td>{field}    </td></tr>}
-                      {acres    && <tr><td>Acres    </td><td>{acres}    </td></tr>}
-                      {cashCrop && <tr><td>Cash crop</td><td>{cashCrop} </td></tr>}
+                      {farm     && <tr><td>Farm     </td><td style={{textAlign: 'left'}}>{farm}     </td></tr>}
+                      {field    && <tr><td>Field    </td><td style={{textAlign: 'left'}}>{field}    </td></tr>}
+                      {acres    && <tr><td>Acres    </td><td style={{textAlign: 'left'}}>{acres}    </td></tr>}
+                      {cashCrop && <tr><td>Cash crop</td><td style={{textAlign: 'left'}}>{cashCrop} </td></tr>}
                     </tbody>
                   </>
                 )}
