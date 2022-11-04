@@ -7,8 +7,7 @@ import {useEffect} from 'react';
 import {ClearInputs} from '../ClearInputs';
 import {Input} from '../../shared/Inputs';
 
-const def = 'termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product'.split('|');
-const defaults = getDefaults(def);
+const defaults = getDefaults('termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product');
 
 const HerbicidesRow = ({n, prop}) => {
   const additional = useSelector(get.termination.additionalHerbicides);
@@ -74,9 +73,11 @@ const OtherHerbicides = ({state, prop, description}) => {
   )
 } // OtherHerbicides
 
-const Termination = () => {
-  // console.log('Render: Termination');
-  const Herbicide = () => (
+const Herbicide = () => {
+  const current = 'termination';
+  const state = useSelector(get[current]);
+  
+  return (
     <>
       <tr><th colSpan="100">Product</th></tr>
       <Logic
@@ -130,59 +131,62 @@ const Termination = () => {
         a={'dollar'}
       />
     </>
-  ); // Herbicide
+  )
+}; // Herbicide
 
-  const Roller = () => (
-    <>
-      <tr><th colSpan="100">Roller Equipment</th></tr>
-      <Logic
-        current="roller"
-        property="implement"
-        q="How will this roller termination be done?"
-        type="Termination"
-      />
+const Roller = () => (
+  <>
+    <tr><th colSpan="100">Roller Equipment</th></tr>
+    <Logic
+      current="roller"
+      property="implement"
+      q="How will this roller termination be done?"
+      type="Termination"
+    />
 
-      <Logic current="roller" question="power" />
+    <Logic current="roller" question="power" />
 
-      <Logic current="roller" question="Annual Use (acres on implement)" />
-      <Logic current="roller" question="Annual Use (hours on power)" />
-      <Logic current="roller" question="Acres/hour" />
+    <Logic current="roller" question="Annual Use (acres on implement)" />
+    <Logic current="roller" question="Annual Use (hours on power)" />
+    <Logic current="roller" question="Acres/hour" />
 
-      <Logic
-        current="roller"
-        question="Estimated"
-        q="Roller equipment cost ($/acre)"
-        a={'dollar'}
-      />
-    </>
-  ); // Roller
+    <Logic
+      current="roller"
+      question="Estimated"
+      q="Roller equipment cost ($/acre)"
+      a={'dollar'}
+    />
+  </>
+); // Roller
 
-  const Tillage = () => (
-    <>
-      <tr><th colSpan="100">Tillage Equipment</th></tr>
-      <Logic
-        current="tillage"
-        property="implement"
-        q="How will this tillage be done?"
-        type="Tillage"
-        zshown={false}
-      />
+const Tillage = () => (
+  <>
+    <tr><th colSpan="100">Tillage Equipment</th></tr>
+    <Logic
+      current="tillage"
+      property="implement"
+      q="How will this tillage be done?"
+      type="Tillage"
+      zshown={false}
+    />
 
-      <Logic current="tillage" question="power" />
+    <Logic current="tillage" question="power" />
 
-      <Logic current="tillage" question="Annual Use (acres on implement)" />
-      <Logic current="tillage" question="Annual Use (hours on power)" />
-      <Logic current="tillage" question="Acres/hour" />
+    <Logic current="tillage" question="Annual Use (acres on implement)" />
+    <Logic current="tillage" question="Annual Use (hours on power)" />
+    <Logic current="tillage" question="Acres/hour" />
 
-      <Logic
-        current="tillage"
-        question="Estimated"
-        q="Tillage equipment cost ($/acre)"
-        a={'dollar'}
-      />
-    </>
-  ); // Tillage
+    <Logic
+      current="tillage"
+      question="Estimated"
+      q="Tillage equipment cost ($/acre)"
+      a={'dollar'}
+    />
+  </>
+); // Tillage
 
+const Termination = () => {
+  console.log('Render: Termination');
   const dispatch = useDispatch();
   const current = 'termination';
 
@@ -230,9 +234,8 @@ const Termination = () => {
                 property="method"
                 q="Cover Crop termination method"
                 a={['', 'Herbicide application', 'Roller', 'Roller with follow-up herbicide', 'Tillage']}
-                onChange={(_, value) => {
-                  clearInputs(defaults);
-                  dispatch(set.termination.method(value));
+                onChange={() => {
+                  clearInputs(defaults, ['termination.method']);
                 }}
               />
 
@@ -242,6 +245,12 @@ const Termination = () => {
                 q="Would you do this field activity if you did not have a cover crop?"
                 a={['Yes', 'No']}
                 shown={state.method}
+                onChange={(_, value) => {
+                  clearInputs(defaults, ['termination.method', 'termination.q2']);
+                  if (value === 'Yes' && state.method !== 'Herbicide application') {
+                    dispatch(set.screen('Tillage'));
+                  }
+                }}
               />
 
               <Logic
@@ -254,6 +263,12 @@ const Termination = () => {
                 q="Will you change the herbicides use in your tank mix?"
                 a={['Yes', 'No']}
                 shown={state.method === 'Herbicide application' && state.q2 === 'Yes'}
+                onChange={(_, value) => {
+                  clearInputs(defaults);
+                  if (value === 'No') {
+                    dispatch(set.screen('Tillage'));
+                  }
+                }}
               />
               {
                 state.q3 === 'Yes' && (

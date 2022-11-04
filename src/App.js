@@ -48,6 +48,18 @@ console.warn = (msg, ...subst) => {
   }
 }
 
+const MyButton = (props) => {
+  const cashCrop = useSelector(get.cashCrop);
+
+  if (props['data-scr'] === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
+    return null;
+  } else {
+    return (
+      <Button {...props}/>
+    )
+  }
+} // MyButton
+
 function App() {
   const screens = {
     // Home,
@@ -83,8 +95,6 @@ function App() {
     },
   };
 
-  const cashCrop = useSelector(get.cashCrop);
-  
   const MyMenu = (s) => {
     return (
       Object.keys(s).map(scr => {
@@ -106,10 +116,16 @@ function App() {
               {MyMenu(s[scr])}
             </span>
           )
-        } else if (scr === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
-          return null;
         } else {
-          return <Button data-scr={scr} key={scr} className={scr === screen ? 'selected' : ''}>{s[scr].menu || scr}</Button>
+          return (
+            <MyButton
+              data-scr={scr}
+              key={scr}
+              className={scr === screen ? 'selected' : ''}
+            >
+              {s[scr].menu || scr}
+            </MyButton>
+          )
         }
       })
     );
@@ -290,12 +306,6 @@ function App() {
   }, [dispatch, hotkeys, screen]);
 
   useEffect(() => {
-    // document.addEventListener('keydown', (e) => {
-    //   if (e.key === 'Escape') {
-    //     dispatch(set.help(''));
-    //   }
-    // });
-
     window.addEventListener('resize', () => {
       dispatch({type: 'resize'});
     });

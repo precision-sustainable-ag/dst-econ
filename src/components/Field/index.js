@@ -46,7 +46,7 @@ const Field = () => {
               {
                 (width <= 91600 || height <= 650) && (
                   <td rowSpan="6">
-                    <Map autoFocus/>
+                    <Map />
                   </td>
                 )
               }

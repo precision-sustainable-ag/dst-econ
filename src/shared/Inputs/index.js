@@ -102,7 +102,7 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         setTimeout(() => {
           input.focus();
           dispatch(set.focus(null));
-        }, 100);
+        }, 1000);  // wait for all Inputs to load
       }
     }
   }, [changed, val, focus, dispatch, props]);

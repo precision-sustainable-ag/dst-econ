@@ -290,6 +290,11 @@ let initialState = {
 };
 
 const afterChange = {
+  screen: (state) => {
+    if (state.screen === 'Field') {
+      state.focus = 'location';
+    }
+  },
   lat: (state) => {
     const mz = new window.google.maps.MaxZoomService();
 
@@ -374,68 +379,9 @@ const afterChange = {
       state.screen = 'Planting';
     }
   },
+// Termination ___________________________________________________________________________
   'termination.product': (state) => {
     state.focus = 'termination.unitCost'
-  },
-  'termination.q2': (state, {payload}) => {
-    if (payload === 'Yes' && state.termination.method !== 'Herbicide application') {
-      state.screen = 'Tillage';
-    }
-    state.termination.additionalHerbicides = [];
-    state.termination.additionalRates      = [];
-    state.termination.additionalPrices     = [];
-
-    state.termination.reducedHerbicides    = [];
-    state.termination.reducedRates         = [];
-    state.termination.reducedPrices        = [];
-
-    state.termination.product = '';
-    state.termination.unitCost = 0;
-    state.termination.rate = 0;
-
-    state.chemical.implement = '';
-    state.chemical.power = '';
-    state.chemical.annualUseAcres = 0;
-    state.chemical.annualUseHours = 0;
-    state.chemical.total = 0;
-
-    state.roller.implement = '';
-    state.roller.power = '';
-    state.roller.annualUseAcres = 0;
-    state.roller.annualUseHours = 0;
-    state.roller.total = 0;
-
-    state.tillage.implement = '';
-    state.tillage.power = '';
-    state.tillage.annualUseAcres = 0;
-    state.tillage.annualUseHours = 0;
-    state.tillage.total = 0;
-  },
-  'termination.q3': (state, {payload}) => {
-    if (payload === 'No') {
-      state.screen = 'Tillage';
-
-      state.termination.additionalHerbicides = [];
-      state.termination.additionalRates      = [];
-      state.termination.additionalPrices     = [];
-
-      state.termination.reducedHerbicides    = [];
-      state.termination.reducedRates         = [];
-      state.termination.reducedPrices        = [];
-    }
-  },
-  'termination.method': (state) => {
-    state.chemical.implement = '';
-    state.chemical.power = '';
-    state.chemical.total = 0;
-
-    state.roller.implement = '';
-    state.roller.power = '';
-    state.roller.total = 0;
-
-    state.tillage.implement = '';
-    state.tillage.power = '';
-    state.tillage.total = 0;
   },
   'termination.additionalHerbicides': (state, {payload}) => {
     const index = payload.index;
@@ -455,6 +401,7 @@ const afterChange = {
       state.termination.reducedRates[index]  = db.herbicides[value]?.['Rate'];
     }
   },
+// Tillage ___________________________________________________________________________
   'tillage1.q2': (state, {payload}) => {
     state.tillage1.estimated = 0;
     state.tillage1.total = 0;
@@ -793,8 +740,9 @@ export const getDefaults = (parms) => {
   return def;
 } // getDefaults
 
-export const clearInputs = (defaults) => {
+export const clearInputs = (defaults, exclude=[]) => {
   for (const key in defaults) {
+    if (exclude.includes(key)) continue;
     try {
       let s = set;
       for (const k of key.split('.')) {
