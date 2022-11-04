@@ -15,6 +15,11 @@ const Herbicide = () => {
   const dispatch = useDispatch();
   const current = 'herbicide';
   const state = useSelector(get[current]);
+  const additionalProduct = useSelector(get.herbicideAdditional.product);
+  const additionalCost = useSelector(get.herbicideAdditional.cost);
+  const reducedProject = useSelector(get.herbicideReduced.product);
+  const reducedCost = useSelector(get.herbicideReduced.cost);
+
   const dev = useSelector(get.dev);
 
   return (
@@ -78,7 +83,7 @@ const Herbicide = () => {
                     property="unitCost"
                     q="Cost per unit of product"
                     a={'dollar'}
-                    suffix={db.herbicides[state.product1]?.['Unit (cost)']}
+                    suffix={db.herbicides[additionalProduct]?.['Unit (cost)']}
                   />
 
                   <Logic
@@ -86,14 +91,14 @@ const Herbicide = () => {
                     property="rate"
                     q="Application rate"
                     a={'number'}
-                    suffix={db.herbicides[state.product1]?.['Unit (rate)']}
+                    suffix={db.herbicides[additionalProduct]?.['Unit (rate)']}
                   />
 
                   <Logic
                     current="herbicideAdditional"
-                    property="productCost"
+                    property="cost"
                     q="Product cost"
-                    a={state.productCost1}
+                    a={additionalCost}
                   />
       
                   <Logic
@@ -155,7 +160,7 @@ const Herbicide = () => {
                     property="unitCost"
                     q="Cost per unit of product"
                     a={'dollar'}
-                    suffix={db.herbicides[state.product2]?.['Unit (cost)']}
+                    suffix={db.herbicides[reducedProject]?.['Unit (cost)']}
                   />
 
                   <Logic
@@ -163,14 +168,14 @@ const Herbicide = () => {
                     property="rate"
                     q="Application rate"
                     a={'number'}
-                    suffix={db.herbicides[state.product2]?.['Unit (rate)']}
+                    suffix={db.herbicides[reducedProject]?.['Unit (rate)']}
                   />
 
                   <Logic
                     current="herbicideReduced"
-                    property="productCost"
+                    property="cost"
                     q="Product cost"
-                    a={state.productCost2}
+                    a={reducedCost}
                   />
 
                   <Logic

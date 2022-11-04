@@ -134,21 +134,21 @@ let initialState = {
   planting: {...shared},
   herbicide: {
     ...shared,
-    total: (state) => (state.herbicideAdditional.productCost + state.herbicideAdditional.total + state.herbicideFall.total) - (state.herbicideReduced.productCost + state.herbicideReduced.total + state.herbicideFall.savings),
+    total: (state) => (state.herbicideAdditional.cost + state.herbicideAdditional.total + state.herbicideFall.total) - (state.herbicideReduced.cost + state.herbicideReduced.total + state.herbicideFall.savings),
   },
   herbicideAdditional: {
     ...shared,
     product: '',
-    unitCost:    (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Cost ($)'],
-    rate:        (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Rate'],
-    productCost: (state) => (state.herbicideAdditional.unitCost * state.herbicideAdditional.rate) || 0,
+    unitCost: (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Cost ($)'],
+    rate: (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Rate'],
+    cost: (state) => (state.herbicideAdditional.unitCost * state.herbicideAdditional.rate) || 0,
   },
   herbicideReduced: {
     ...shared,
     product: '',
-    unitCost:    (state) => db.herbicides?.[state.herbicideReduced.product]?.['Cost ($)'],
-    rate:        (state) => db.herbicides?.[state.herbicideReduced.product]?.['Rate'],
-    productCost: (state) => (state.herbicideReduced.unitCost * state.herbicideReduced.rate) || 0,
+    unitCost: (state) => db.herbicides?.[state.herbicideReduced.product]?.['Cost ($)'],
+    rate: (state) => db.herbicides?.[state.herbicideReduced.product]?.['Rate'],
+    cost: (state) => (state.herbicideReduced.unitCost * state.herbicideReduced.rate) || 0,
   },
   herbicideFall: {
     ...shared,
