@@ -134,19 +134,26 @@ let initialState = {
   planting: {...shared},
   herbicide: {
     ...shared,
-    product1: '',
-    unitCost1:    (state) => db.herbicides?.[state.herbicide.product1]?.['Cost ($)'],
-    rate1:        (state) => db.herbicides?.[state.herbicide.product1]?.['Rate'],
-    productCost1: (state) => (state.herbicide.unitCost1 * state.herbicide.rate1) || undefined,
-
-    product2: '',
-    unitCost2:    (state) => db.herbicides?.[state.herbicide.product2]?.['Cost ($)'],
-    rate2:        (state) => db.herbicides?.[state.herbicide.product2]?.['Rate'],
-    productCost2: (state) => (state.herbicide.unitCost2 * state.herbicide.rate2) || undefined,
+    total: (state) => (state.herbicideAdditional.productCost + state.herbicideAdditional.total + state.herbicideFall.total) - (state.herbicideReduced.productCost + state.herbicideReduced.total + state.herbicideFall.savings),
   },
-  herbicideAdditional: {...shared},
-  herbicideReduced: {...shared},
-  herbicideFall: {...shared},
+  herbicideAdditional: {
+    ...shared,
+    product: '',
+    unitCost:    (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Cost ($)'],
+    rate:        (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Rate'],
+    productCost: (state) => (state.herbicideAdditional.unitCost * state.herbicideAdditional.rate) || 0,
+  },
+  herbicideReduced: {
+    ...shared,
+    product: '',
+    unitCost:    (state) => db.herbicides?.[state.herbicideReduced.product]?.['Cost ($)'],
+    rate:        (state) => db.herbicides?.[state.herbicideReduced.product]?.['Rate'],
+    productCost: (state) => (state.herbicideReduced.unitCost * state.herbicideReduced.rate) || 0,
+  },
+  herbicideFall: {
+    ...shared,
+    savings : 0,
+  },
   yield: {
     ...shared,
     yield: undefined,
@@ -293,6 +300,10 @@ const afterChange = {
   screen: (state) => {
     if (state.screen === 'Field') {
       state.focus = 'location';
+    }
+    const main = document.querySelector('#Main');
+    if (main) {
+      main.scrollTop = 0;
     }
   },
   lat: (state) => {

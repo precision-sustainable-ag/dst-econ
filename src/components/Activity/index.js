@@ -199,8 +199,9 @@ export const Summary = () => {
   const fertilityTotal    = -useSelector(get.fertility.total) || 0;
   const erosionTotal      = -useSelector(get.erosion.total) || 0;
   const yieldTotal        = -useSelector(get.yield.total) || 0;
+  const herbicideTotal    = useSelector(get.herbicide.total) || 0;
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal + +herbicideTotal;
 
   const SummaryRow = ({parm, desc, type}) => {
     const style = type === 'Costs' ? {color: 'red'} : {color: 'black'};
@@ -223,8 +224,8 @@ export const Summary = () => {
   const CostsBenefits = ({type}) => {
     // console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal, yieldTotal});
     if (
-      (type === 'Costs'    && (coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || erosionTotal > 0 || terminationTotal > 0 || tillageAllTotal > 0 || yieldTotal > 0)) ||
-      (type === 'Benefits' && (coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || erosionTotal < 0 || terminationTotal < 0 || tillageAllTotal < 0 || yieldTotal < 0))
+      (type === 'Costs'    && (coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0 || terminationTotal > 0 || tillageAllTotal > 0 || yieldTotal > 0)) ||
+      (type === 'Benefits' && (coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || herbicideTotal < 0 || erosionTotal < 0 || terminationTotal < 0 || tillageAllTotal < 0 || yieldTotal < 0))
     ) {
       return (
         <>
@@ -238,6 +239,7 @@ export const Summary = () => {
             <SummaryRow type={type} parm={terminationTotal} desc="Termination" />
             <SummaryRow type={type} parm={tillageAllTotal}  desc="Tillage" />
             <SummaryRow type={type} parm={fertilityTotal}   desc="Fertility" />
+            <SummaryRow type={type} parm={herbicideTotal}   desc="Herbicides" />
             <SummaryRow type={type} parm={erosionTotal}     desc="Erosion" />
             <SummaryRow type={type} parm={yieldTotal}       desc="Yield" />
           </tbody>

@@ -299,6 +299,7 @@ const Termination = () => {
           <>
             <button
               onClick={() => {
+                clearInputs(defaults);
                 dispatch(set.termination.q2('Yes'));
                 test('screen', 'Tillage');
                 dispatch(set.screen('Termination'));
@@ -337,6 +338,7 @@ const Termination = () => {
 
             <button
               onClick={() => {
+                clearInputs(defaults);
                 dispatch(set.termination.method('Herbicide application'));
                 dispatch(set.termination.q2('Yes'));
                 dispatch(set.termination.q3('Yes'));
@@ -359,6 +361,7 @@ const Termination = () => {
 
             <button
               onClick={() => {
+                clearInputs(defaults);
                 dispatch(set.termination.q2('Yes'));
                 test('screen', 'Tillage');
                 dispatch(set.screen('Termination'));
@@ -378,6 +381,7 @@ const Termination = () => {
 
             <button
               onClick={() => {
+                clearInputs(defaults);
                 dispatch(set.termination.q2('Yes'));
                 test('screen', 'Tillage');
                 dispatch(set.screen('Termination'));
@@ -399,6 +403,7 @@ const Termination = () => {
 
             <button
               onClick={() => {
+                clearInputs(defaults);
                 dispatch(set.termination.q2('Yes'));
                 test('screen', 'Tillage');
                 dispatch(set.screen('Termination'));

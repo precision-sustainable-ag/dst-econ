@@ -154,7 +154,7 @@ const Logic = ({current, intro, question, q, a, property, type, shown=true, suff
             :
             
             isFinite(a) ? 
-              '$' + (+a).toFixed(2)
+              <span className="input" id={current + '.' + property}>{'$' + (+a).toFixed(2)}</span>
             :
             
             a
