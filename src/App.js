@@ -275,7 +275,10 @@ function App() {
       console.log(u);
       if (u.length) {
         setHotKeys(true);
-        const hk = {};
+        const hk = {
+          y: 'Yield'
+        };
+
         u.forEach(el => {
           if (el.closest('span').parentNode.dataset.scr) {
             hk[el.textContent.toLowerCase()] = el.closest('span').parentNode.dataset.scr;

@@ -788,7 +788,7 @@ export const exampleHerbicides = () => {
   store.dispatch(set.herbicideReduced.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
 
   store.dispatch(set.herbicide.q8('Yes'));
-  store.dispatch(set.herbicideFall.savings(300));
+  store.dispatch(set.herbicideFall.savings(20));
   store.dispatch(set.herbicideFall.implement('Boom Sprayer, Pull-Type; 90 Ft'));
 } // exampleHerbicides
 
@@ -951,6 +951,20 @@ export const exampleErosion = () => {
   store.dispatch(set.erosion.q2('Trackhoe'));
   store.dispatch(set.erosion.q4(20));
 } // exampleErosion
+
+export const exampleYield1 = () => {
+  store.dispatch(set.yield.yield('150'));
+  store.dispatch(set.cashCrop('Soybeans'));
+  store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
+  store.dispatch(set.yield.q4('5'));
+} // exampleYield1
+
+export const exampleYield2 = () => {
+  store.dispatch(set.yield.yield('150'));
+  store.dispatch(set.cashCrop('Corn'));
+  store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
+  store.dispatch(set.yield.q4('5'));
+} // exampleYield2
 
 const reducers = {
   resize: (state) => {

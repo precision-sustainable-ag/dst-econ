@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import Draggable from 'react-draggable';
 import {Card, CardContent} from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import {get, set, getDefaults, dollars} from '../../store/Store';
+import {get, getDefaults, dollars, exampleYield1, exampleYield2} from '../../store/Store';
 import Logic from '../Logic';
 import {Help} from '../../shared/Help';
 import {ClearInputs} from '../ClearInputs';
@@ -13,7 +13,6 @@ import {ClearInputs} from '../ClearInputs';
 const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 
 const Yield = () => {
-  const dispatch = useDispatch();
   const current = 'yield';
   const state = useSelector(get[current]);
   const typical  = state.typical;
@@ -50,13 +49,11 @@ const Yield = () => {
   const chartOptions = {
     chart: {
       type: 'column',
-      zwidth: width,
-      height: 200,
+      height: 100,
     },
     plotOptions: {
       series: {
         animation: false,
-        zpointWidth: 15,
       }
     },
     title: {
@@ -97,7 +94,7 @@ const Yield = () => {
     ? {
       position: 'absolute',
       bottom: '2%',
-      left: '100%',
+      left: '1000px',
       background: '#eee',
       boxShadow: '2px 3px rgb(20 20 20 / 70%)',
       width: width,
@@ -241,26 +238,8 @@ const Yield = () => {
       {
         dev && (
           <>
-            <button
-              onClick={() => {
-                dispatch(set.yield.yield('150'));
-                dispatch(set.cashCrop('Soybeans'));
-                dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
-                dispatch(set.yield.q4('5'));
-              }}
-            >
-              Test Soybeans
-            </button>
-            <button
-              onClick={() => {
-                dispatch(set.yield.yield('150'));
-                dispatch(set.cashCrop('Corn'));
-                dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
-                dispatch(set.yield.q4('5'));
-              }}
-            >
-              Test Corn
-            </button>
+            <button onClick={exampleYield1}>Test Soybeans</button>
+            <button onClick={exampleYield2}>Test Corn</button>
           </>
         )
       }

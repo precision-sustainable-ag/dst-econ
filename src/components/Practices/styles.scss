@@ -35,4 +35,10 @@
   td:not([colspan]):nth-child(1) {
     border-right: none;
   }
+
+  .total td {
+    background: yellow;
+    border-top: 2px solid black;
+    color: black;
+  }
 }
