@@ -1,4 +1,5 @@
 import {configureStore, createAction, createReducer} from '@reduxjs/toolkit';
+// import {current} from '@reduxjs/toolkit';
 
 export const set = {};
 export const get = {};
@@ -7,6 +8,22 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
   const funcs = {};
   const methods = {};
   const allkeys = {};
+
+  const getAllkeys = (obj, parents = []) => {
+    Object.keys(obj).forEach(key => {
+      const isArray = Array.isArray(obj[key]);
+      const isObject = !isArray && obj[key] instanceof Object && typeof obj[key] !== 'function';
+      const fullkey = parents.length ? parents.join('.') + '.' + key : key;
+  
+      allkeys[fullkey] = true;
+  
+      if (isObject) {
+        getAllkeys(obj[key], [...parents, key]);
+      };
+    });
+  } // getAllkeys
+
+  getAllkeys(initialState);
 
   const processMethods = ((state, key) => {
     if (methods[key]) {
@@ -19,14 +36,13 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
       }
     }
   });
-      
+
   const builders = (builder) => {
     const recurse = (obj, set, get, parents = []) => {
       Object.keys(obj).forEach((key) => {
         const isArray = Array.isArray(obj[key]);
-        const isObject = !isArray && obj[key] instanceof Object;
+        const isObject = !isArray && obj[key] instanceof Object && typeof obj[key] !== 'function';
         const fullkey = parents.length ? parents.join('.') + '.' + key : key;
-        allkeys[fullkey] = true;
   
         get[key] = (state) => {
           let st = state;
@@ -35,13 +51,13 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
           if (!st) {
             alert('Unknown: ' + fullkey);
           }
+
           return st[key];
         }
 
         if (typeof obj[key] === 'function') {
           funcs[fullkey] = obj[key];
           const func = obj[key].toString();
-
           for (const key in allkeys) {
             if (func.match(new RegExp(`${key.replace(/[.$]/g, c => '\\' + c)}`))) {
               methods[key] = methods[key] || {};
@@ -49,7 +65,7 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
             }
           }
   
-          obj[key] = 0; // TODO: Can't be undefined
+          obj[key] = funcs[fullkey](initialState);
         }
   
         set[key] = createAction(fullkey);
@@ -99,12 +115,42 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
       builder.addCase(action, reducers[key]);
     }
 
+    builder.addCase(createAction('api'), (state, {payload}) => {
+      fetch(payload.url)
+        .then(response => response.json())
+        .then(data => {
+          if (typeof payload.callback === 'function') {
+            payload.callback(data);
+          // } else if (payload.callback in state) {  // state is no longer applicable here
+          //   state[payload.callback] = data;
+          } else {
+            alert('Error: ' + JSON.stringify(payload, null, 2));
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+
     recurse(initialState, set, get);
+
+    builder.addDefaultCase((state, action) => {
+      if (action.type !== '@@INIT') {
+        console.log('Unknown action: ' + JSON.stringify(action));
+      }
+    });
   } // builders
 
   const reducer = createReducer(initialState, builders);
 
+  console.log(methods);
+  console.log(funcs);
+
   return configureStore({
-    reducer
+    reducer,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
   });
 } // createStore

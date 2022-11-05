@@ -1,0 +1,73 @@
+#Summary {
+  position: fixed;
+  font-size: 0.8rem;
+  width: 230px;
+  left: calc(1000px + 2% + 5px);
+  top: 0.8rem;
+  z-index: 999;
+
+  table {
+    width: 100%;
+    background: white;
+
+    td:nth-child(2) {
+      text-align: right;
+    }  
+  }  
+
+  thead {
+    background: #eee;
+  }
+ 
+  tfoot {
+    background: yellow
+  }
+}
+
+#Breakdown {
+  position: fixed;
+  display: inline-block;
+  margin-right: 1em;
+
+  table {
+    font-size: 80%;
+
+    span {
+      transform: scale(0.8);
+    }
+
+    td {
+      white-space: nowrap;
+    }    
+  }
+
+  &.noImplementCost tr > :nth-child(2),
+  &.noPowerCost tr > :nth-child(3),
+  &.noImplementCost.noPowerCost tr > :nth-child(4) {
+    background: #ddd;
+    color: #888;
+  }
+}
+
+#Costs {
+  td:nth-child(n + 2),
+  tr.total td {
+    text-align: right;
+  }
+
+  tr > :nth-child(2n + 2) {
+    border-left: 1px solid #444;
+  }
+
+  tr:first-child th {
+    vertical-align: bottom;
+  }
+
+  tr:last-child td {
+    border-top: 1px solid #444;
+  }
+
+  th {
+    border-bottom: 1px solid #444;
+  }
+}
