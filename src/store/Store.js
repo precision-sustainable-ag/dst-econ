@@ -943,6 +943,15 @@ export const exampleFertilityCost = () => {
   store.dispatch(set.useFertilizer('Yes'));
 } // exampleFertilityCost
 
+export const exampleErosion = () => {
+  store.dispatch(set.farm('My farm'));
+  store.dispatch(set.field('My field'));
+  store.dispatch(set.acres(150));
+  store.dispatch(set.erosion.q1('Yes'));
+  store.dispatch(set.erosion.q2('Trackhoe'));
+  store.dispatch(set.erosion.q4(20));
+} // exampleErosion
+
 const reducers = {
   resize: (state) => {
     // Cannot perform 'set' on a proxy that has been revoked

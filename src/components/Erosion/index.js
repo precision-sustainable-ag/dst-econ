@@ -1,7 +1,7 @@
 import Logic from '../Logic';
 import {Help} from '../../shared/Help';
 
-import {get, set, dollars} from '../../store/Store';
+import {get, set, dollars, exampleErosion} from '../../store/Store';
 import {useSelector, useDispatch} from 'react-redux';
 
 const Erosion = () => {
@@ -72,18 +72,7 @@ const Erosion = () => {
       {
         dev && (
           <>
-            <button
-              onClick={() => {
-                dispatch(set.farm('My farm'));
-                dispatch(set.field('My field'));
-                dispatch(set.acres(150));
-                dispatch(set.erosion.q1('Yes'));
-                dispatch(set.erosion.q2('Trackhoe'));
-                dispatch(set.erosion.q4(20));
-              }}
-            >
-              Test data
-            </button>
+            <button onClick={exampleErosion}>Test data</button>
           </>
         )
       }

@@ -18,6 +18,7 @@ import {
   exampleTillage5,
   exampleFertilityBenefit,
   exampleFertilityCost,
+  exampleErosion,
   dollars,
 } from "../../store/Store";
 
@@ -432,6 +433,45 @@ const HerbicideSummary = () => {
   )
 } // HerbicideSummary
 
+const ErosionSummary = () => {
+  const dispatch = useDispatch();
+  const total = useSelector(get.erosion.total);
+  const tool = useSelector(get.erosion.q2);
+  
+  return (
+    <>
+      <tr>
+        <td
+          colSpan={2}
+          onClick={() => dispatch(set.screen('Erosion'))}
+        >
+          Erosion control
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td />
+        <td />
+        <td>{dollars(total)}</td>
+      </tr>
+
+      {
+        total > 0 && (
+          <tr>
+            <td />
+            <td>Reduced hours of repairing fields with {tool.toLowerCase()}</td>
+            <td />
+            <td />
+            <td />
+            <td />
+            <td />
+          </tr>
+        )
+      }
+    </>
+  )
+} // ErosionSummary
+
 const Practices = () => {
   const dispatch = useDispatch();
   const dev = useSelector(get.dev);
@@ -471,6 +511,7 @@ const Practices = () => {
           <TillageSummary />
           <FertilitySummary />
           <HerbicideSummary />
+          <ErosionSummary />
         </tbody>
       </table>
 
@@ -492,6 +533,7 @@ const Practices = () => {
                 exampleTillage1();
                 exampleHerbicides();
                 exampleFertilityBenefit();
+                exampleErosion();
               }}
             >
               Test <u>1</u>
@@ -511,6 +553,7 @@ const Practices = () => {
                 exampleTillage2();
                 exampleHerbicides();
                 exampleFertilityCost();
+                exampleErosion();
               }}
             >
               Test <u>2</u>
@@ -530,6 +573,7 @@ const Practices = () => {
                 exampleTillage3();
                 exampleHerbicides();
                 exampleFertilityBenefit();
+                exampleErosion();
               }}
             >
               Test <u>3</u>
@@ -549,6 +593,7 @@ const Practices = () => {
                 exampleTillage4();
                 exampleHerbicides();
                 exampleFertilityCost();
+                exampleErosion();
               }}
             >
               Test <u>4</u>
@@ -568,6 +613,7 @@ const Practices = () => {
                 exampleTillage5();
                 exampleHerbicides();
                 exampleFertilityBenefit();
+                exampleErosion();
               }}
             >
               Test <u>5</u>
