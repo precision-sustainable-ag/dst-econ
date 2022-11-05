@@ -18,6 +18,9 @@ import {
   exampleTillage5,
   exampleFertilityBenefit,
   exampleFertilityCost,
+  exampleErosion,
+  exampleYield1,
+  exampleYield2,
   dollars,
 } from "../../store/Store";
 
@@ -307,9 +310,9 @@ const FertilitySummary = () => {
         <td className="hidden" />
         <td />
         <td />
-        <td>{cost(total)}</td>
+        <td>{cost(-total)}</td>
         <td />
-        <td>{benefit(total)}</td>
+        <td>{benefit(-total)}</td>
       </tr>
       <tr>
         <td />
@@ -432,6 +435,83 @@ const HerbicideSummary = () => {
   )
 } // HerbicideSummary
 
+const ErosionSummary = () => {
+  const dispatch = useDispatch();
+  const total = useSelector(get.erosion.total);
+  const tool = useSelector(get.erosion.q2);
+  
+  return (
+    <>
+      <tr>
+        <td
+          colSpan={2}
+          onClick={() => dispatch(set.screen('Erosion'))}
+        >
+          Erosion control
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td />
+        <td />
+        <td>{dollars(total)}</td>
+      </tr>
+
+      {
+        total > 0 && (
+          <tr>
+            <td />
+            <td>Reduced hours of repairing fields with {tool.toLowerCase()}</td>
+            <td />
+            <td />
+            <td />
+            <td />
+            <td />
+          </tr>
+        )
+      }
+    </>
+  )
+} // ErosionSummary
+
+const YieldSummary = () => {
+  const dispatch = useDispatch();
+  const total = useSelector(get.yield.total);
+  const year = {
+    1: 'first',
+    3: 'third',
+    5: 'fifth'
+  }[useSelector(get.yield.q4)];
+
+  return (
+    <>
+      <tr>
+        <td
+          colSpan={2}
+          onClick={() => dispatch(set.screen('Yield'))}
+        >
+          Yield impact
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td />
+        <td />
+        <td>{dollars(total)}</td>
+      </tr>
+      <tr>
+        <td />
+        <td>Improved yield estimate in {year} year of cover crops</td>
+        <td />
+        <td />
+        <td />
+        <td />
+        <td />
+      </tr>
+    </>
+  )
+} // YieldSummary
+
 const Practices = () => {
   const dispatch = useDispatch();
   const dev = useSelector(get.dev);
@@ -441,6 +521,21 @@ const Practices = () => {
   const cashCrop = useSelector(get.cashCrop);
   const lat = useSelector(get.lat);
   const lon = useSelector(get.lon);
+
+  const totals = [
+    useSelector(get.coverCropTotal)     || 0,
+    useSelector(get.seedbed.total)      || 0,
+    useSelector(get.planting.total)     || 0,
+    useSelector(get.termination.total)  || 0,
+    useSelector(get.tillageAll.total)   || 0,
+    -useSelector(get.fertility.total)   || 0,
+    useSelector(get.herbicide.total)    || 0,
+    -useSelector(get.erosion.total)      || 0,
+    -useSelector(get.yield.total)        || 0
+  ];
+
+  const totalCosts = totals.reduce((previous, value) => previous + Math.max(value, 0), 0);
+  const totalBenefits = -totals.reduce((previous, value) => previous + Math.min(value, 0), 0);
 
   return (
     <div className="Practices">
@@ -471,6 +566,26 @@ const Practices = () => {
           <TillageSummary />
           <FertilitySummary />
           <HerbicideSummary />
+          <ErosionSummary />
+          <YieldSummary />
+          <tr className="total">
+            <td colSpan={2}>Total</td>
+            <td className="hidden" />
+            <td />
+            <td />
+            <td>{dollars(totalCosts)}</td>
+            <td />
+            <td>{dollars(totalBenefits)}</td>
+          </tr>
+          <tr className="total">
+            <td colSpan={2}>Net cost of cover crops</td>
+            <td className="hidden" />
+            <td style={{textAlign: 'right'}}>{dollars(totalBenefits - totalCosts)}</td>
+            <td />
+            <td />
+            <td />
+            <td />
+          </tr>
         </tbody>
       </table>
 
@@ -492,6 +607,8 @@ const Practices = () => {
                 exampleTillage1();
                 exampleHerbicides();
                 exampleFertilityBenefit();
+                exampleErosion();
+                exampleYield1();
               }}
             >
               Test <u>1</u>
@@ -511,6 +628,8 @@ const Practices = () => {
                 exampleTillage2();
                 exampleHerbicides();
                 exampleFertilityCost();
+                exampleErosion();
+                exampleYield2();
               }}
             >
               Test <u>2</u>
@@ -530,6 +649,8 @@ const Practices = () => {
                 exampleTillage3();
                 exampleHerbicides();
                 exampleFertilityBenefit();
+                exampleErosion();
+                exampleYield1();
               }}
             >
               Test <u>3</u>
@@ -549,6 +670,8 @@ const Practices = () => {
                 exampleTillage4();
                 exampleHerbicides();
                 exampleFertilityCost();
+                exampleErosion();
+                exampleYield2();
               }}
             >
               Test <u>4</u>
@@ -568,6 +691,8 @@ const Practices = () => {
                 exampleTillage5();
                 exampleHerbicides();
                 exampleFertilityBenefit();
+                exampleErosion();
+                exampleYield1();
               }}
             >
               Test <u>5</u>
