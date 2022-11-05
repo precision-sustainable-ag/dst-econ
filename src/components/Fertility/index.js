@@ -1,14 +1,13 @@
 import {Input} from '../../shared/Inputs';
 
 import {ClearInputs} from '../ClearInputs';
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, getDefaults, test, db} from '../../store/Store';
+import {useSelector} from 'react-redux';
+import {get, dollars, getDefaults, db, exampleFertilityBenefit, exampleFertilityCost} from '../../store/Store';
 
 const defaults = getDefaults('fertN|fertP|fertK|$fertN|$fertP|$fertK|useFertilizer|fertNAdded|fertPAdded|fertKAdded|$fertApplication|$fertCredit|$fertCost|fertility.total');
 
 const Fertility = () => {
-  const dispatch = useDispatch();
-  const dev         = useSelector(get.dev);
+  const dev = useSelector(get.dev);
 
   const useFertilizer     = useSelector(get.useFertilizer) === 'Yes';
   const $fertN            = useSelector(get.$fertN);
@@ -57,7 +56,7 @@ const Fertility = () => {
 
             <tr>
               <td>Will you add fertilizer specifically for cover crop production?</td>
-              <td>
+              <td colSpan={3}>
                 <Input
                   id="useFertilizer"
                   options={['Yes', 'No']}
@@ -80,19 +79,19 @@ const Fertility = () => {
 
             <tr>
               <td>Cost of fertilizer application</td>
-              <td><Input id="$fertApplication" value={$fertApplication ?? dFertApplication}/></td>
+              <td colSpan={3}><Input id="$fertApplication" value={$fertApplication ?? dFertApplication}/></td>
             </tr>
             <tr>
               <td>Value of fertilizer credit from cover crops ($/acre)</td>
-              <td>{dollars($fertCredit)}</td>
+              <td colSpan={3}>{dollars($fertCredit)}</td>
             </tr>
             <tr>
               <td>Total cost of fertilizer for cover crop production ($/acre)</td>
-              <td>{dollars($fertCost)}</td>
+              <td colSpan={3}>{dollars($fertCost)}</td>
             </tr>
             <tr>
               <td>Net fertility impact of cover crops ($/acre)</td>
-              <td>{dollars(total)}</td>
+              <td colSpan={3}>{dollars(total)}</td>
             </tr>
           </tbody>
         </table>
@@ -100,44 +99,10 @@ const Fertility = () => {
       {
         dev && (
           <>
-            <button
-              onClick={() => {
-                dispatch(set.fertN(30));
-                dispatch(set.fertP(0));
-                dispatch(set.fertK(0));
-                dispatch(set.$fertN(.75));
-                dispatch(set.$fertP(.60));
-                dispatch(set.$fertK(.50));
-                dispatch(set.fertNAdded(0));
-                dispatch(set.fertPAdded(15));
-                dispatch(set.fertKAdded(10));
-                dispatch(set.$fertApplication(8));
-                dispatch(set.useFertilizer('Yes'));
-                test('fertility.total', 0.5);
-              }}
-            >
-              Test data: Benefit
-            </button>
-            <button
-            onClick={() => {
-              dispatch(set.fertN(30));
-              dispatch(set.fertP(0));
-              dispatch(set.fertK(0));
-              dispatch(set.$fertN(.75));
-              dispatch(set.$fertP(.60));
-              dispatch(set.$fertK(.50));
-              dispatch(set.fertNAdded(30));
-              dispatch(set.fertPAdded(15));
-              dispatch(set.fertKAdded(10));
-              dispatch(set.$fertApplication(8));
-              dispatch(set.useFertilizer('Yes'));
-              test('fertility.total', 0.5);
-            }}
-          >
-            Test data: Cost
-          </button>
-        </>
-      )
+            <button onClick={exampleFertilityBenefit}>Test data: Benefit</button>
+            <button onClick={exampleFertilityCost}>Test data: Cost</button>
+          </>
+        )
       }
     </div>
   )

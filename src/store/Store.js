@@ -915,6 +915,34 @@ const clearTillage = () => {
   clearInputs(defaults);
 } // clearTillage
 
+export const exampleFertilityBenefit = () => {
+  store.dispatch(set.fertN(30));
+  store.dispatch(set.fertP(0));
+  store.dispatch(set.fertK(0));
+  store.dispatch(set.$fertN(.75));
+  store.dispatch(set.$fertP(.60));
+  store.dispatch(set.$fertK(.50));
+  store.dispatch(set.fertNAdded(0));
+  store.dispatch(set.fertPAdded(15));
+  store.dispatch(set.fertKAdded(10));
+  store.dispatch(set.$fertApplication(8));
+  store.dispatch(set.useFertilizer('Yes'));
+} // exampleFertilityBenefit
+
+export const exampleFertilityCost = () => {
+  store.dispatch(set.fertN(5));
+  store.dispatch(set.fertP(25));
+  store.dispatch(set.fertK(10));
+  store.dispatch(set.$fertN(.75));
+  store.dispatch(set.$fertP(.60));
+  store.dispatch(set.$fertK(.50));
+  store.dispatch(set.fertNAdded(30));
+  store.dispatch(set.fertPAdded(15));
+  store.dispatch(set.fertKAdded(10));
+  store.dispatch(set.$fertApplication(8));
+  store.dispatch(set.useFertilizer('Yes'));
+} // exampleFertilityCost
+
 const reducers = {
   resize: (state) => {
     // Cannot perform 'set' on a proxy that has been revoked

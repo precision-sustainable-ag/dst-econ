@@ -16,7 +16,9 @@ import {
   exampleTillage3,
   exampleTillage4,
   exampleTillage5,
-  dollars
+  exampleFertilityBenefit,
+  exampleFertilityCost,
+  dollars,
 } from "../../store/Store";
 
 import './styles.scss';
@@ -277,8 +279,76 @@ const TillageSummary = () => {
       <Implement desc="Tillage Elimination" type="tillageElimination" benefit />
       <Implement desc="Other Tillage" type="tillageOther" />
     </>    
-  )
+  );
 } // TillageSummary
+
+const FertilitySummary = () => {
+  const dispatch = useDispatch();
+  const total = useSelector(get.fertility.total);
+  const fertN = useSelector(get.fertN);
+  const fertP = useSelector(get.fertP);
+  const fertK = useSelector(get.fertK);
+  const fertNAdded = useSelector(get.fertNAdded);
+  const fertPAdded = useSelector(get.fertPAdded);
+  const fertKAdded = useSelector(get.fertKAdded);
+  const $fertCredit = useSelector(get.$fertCredit);
+  const $fertCost = useSelector(get.$fertCost);
+  const $fertApplication = useSelector(get.$fertApplication);
+
+  return (
+    <>
+      <tr>
+        <td
+          colSpan={2}
+          onClick={() => dispatch(set.screen('Fertility'))}
+        >
+          Fertility
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td>{cost(total)}</td>
+        <td />
+        <td>{benefit(total)}</td>
+      </tr>
+      <tr>
+        <td />
+        <td>Fertilizer credit</td>
+        <td>
+          {fertN > 0 && <>{fertN} pound N/acre<br /></>}
+          {fertP > 0 && <>{fertP} pound P<sub>2</sub>O<sub>5</sub>/acre<br /></>}
+          {fertK > 0 && <>{fertK} pound K<sub>2</sub>O/acre</>}
+        </td>
+        <td />
+        <td />
+        <td>{dollars($fertCredit)}</td>
+        <td />
+      </tr>
+      <tr>
+        <td />
+        <td>Additional fertilizer expense</td>
+        <td>
+          {fertNAdded > 0 && <>{fertNAdded} pound N/acre<br /></>}
+          {fertPAdded > 0 && <>{fertPAdded} pound P<sub>2</sub>O<sub>5</sub>/acre<br /></>}
+          {fertKAdded > 0 && <>{fertKAdded} pound K<sub>2</sub>O/acre</>}
+        </td>
+        <td>{dollars(-$fertCost - $fertApplication)}</td>
+        <td />
+        <td />
+        <td />
+      </tr>
+      <tr>
+        <td />
+        <td>Additional fertilizer application cost</td>
+        <td />
+        <td>{dollars($fertApplication)}</td>
+        <td />
+        <td />
+        <td />
+      </tr>
+    </>    
+  );
+} // FertilitySummary
 
 const Practices = () => {
   const dispatch = useDispatch();
@@ -317,6 +387,7 @@ const Practices = () => {
           <PlantingSummary />
           <TerminationSummary />
           <TillageSummary />
+          <FertilitySummary />
         </tbody>
       </table>
 
@@ -337,6 +408,7 @@ const Practices = () => {
                 exampleTermination1();
                 exampleTillage1();
                 exampleHerbicides();
+                exampleFertilityBenefit();
               }}
             >
               Test <u>1</u>
@@ -355,6 +427,7 @@ const Practices = () => {
                 exampleTermination2();
                 exampleTillage2();
                 exampleHerbicides();
+                exampleFertilityCost();
               }}
             >
               Test <u>2</u>
@@ -373,6 +446,7 @@ const Practices = () => {
                 exampleTermination3();
                 exampleTillage3();
                 exampleHerbicides();
+                exampleFertilityBenefit();
               }}
             >
               Test <u>3</u>
@@ -391,6 +465,7 @@ const Practices = () => {
                 exampleTermination4();
                 exampleTillage4();
                 exampleHerbicides();
+                exampleFertilityCost();
               }}
             >
               Test <u>4</u>
@@ -409,6 +484,7 @@ const Practices = () => {
                 exampleTermination5();
                 exampleTillage5();
                 exampleHerbicides();
+                exampleFertilityBenefit();
               }}
             >
               Test <u>5</u>
