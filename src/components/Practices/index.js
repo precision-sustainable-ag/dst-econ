@@ -177,7 +177,7 @@ const TerminationSummary = () => {
         <td>{benefit(total)}</td>
       </tr>
       {
-        productCost ? (
+        productCost > 0 && (
           <tr>
             <td />
             <td>Product: {product}</td>
@@ -187,7 +187,7 @@ const TerminationSummary = () => {
             <td />
             <td />
           </tr>
-        ) : null
+        )
       }
 
       <Implement desc="Chemical spray equipment" type="chemical" />
@@ -350,6 +350,88 @@ const FertilitySummary = () => {
   );
 } // FertilitySummary
 
+const HerbicideSummary = () => {
+  const dispatch = useDispatch();
+  const total = useSelector(get.herbicide.total);
+  
+  const additionalProduct = useSelector(get.herbicideAdditional.product);
+  const additionalRate = useSelector(get.herbicideAdditional.rate);
+  const additionalUnitCost = useSelector(get.herbicideAdditional.unitCost);
+  const additionalProductCost = useSelector(get.herbicideAdditional.cost);
+
+  const reducedProduct = useSelector(get.herbicideReduced.product);
+  const reducedRate = useSelector(get.herbicideReduced.rate);
+  const reducedUnitCost = useSelector(get.herbicideReduced.unitCost);
+  const reducedProductCost = useSelector(get.herbicideReduced.cost);
+  
+  const fallSavings = useSelector(get.herbicideFall.savings);
+
+  return (
+    <>
+      <tr>
+        <td
+          colSpan={2}
+          onClick={() => dispatch(set.screen('Herbicide'))}
+        >
+          Herbicide modifications<br />
+          to normal cropping system
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td>{cost(total)}</td>
+        <td />
+        <td>{benefit(total)}</td>
+      </tr>
+
+      <Implement desc="Additional herbicides" type="herbicideAdditional" />
+      {
+        additionalProductCost > 0 && (
+          <tr>
+            <td />
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;Product: {additionalProduct}</td>
+            <td>{additionalRate} pounds/acre @ {dollars(additionalUnitCost)}</td>
+            <td>{dollars(additionalProductCost)}</td>
+            <td />
+            <td />
+            <td />
+          </tr>
+        )
+      }
+
+      <Implement desc="Fall herbicides" type="herbicideFall" />
+      {
+        fallSavings > 0 && (
+          <tr>
+            <td />
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;Savings</td>
+            <td />
+            <td />
+            <td />
+            <td>{dollars(fallSavings)}</td>
+            <td />
+          </tr>
+        )
+      }
+
+      <Implement desc="Reduced herbicides" type="herbicideReduced" benefit />
+      {
+        reducedProductCost > 0 && (
+          <tr>
+            <td />
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;Product: {reducedProduct}</td>
+            <td>{reducedRate} pounds/acre @ {dollars(reducedUnitCost)}</td>
+            <td />
+            <td />
+            <td>{dollars(reducedProductCost)}</td>
+            <td />
+          </tr>
+        )
+      }
+    </>
+  )
+} // HerbicideSummary
+
 const Practices = () => {
   const dispatch = useDispatch();
   const dev = useSelector(get.dev);
@@ -388,6 +470,7 @@ const Practices = () => {
           <TerminationSummary />
           <TillageSummary />
           <FertilitySummary />
+          <HerbicideSummary />
         </tbody>
       </table>
 
