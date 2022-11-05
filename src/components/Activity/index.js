@@ -42,9 +42,9 @@ const Activity = () => {
     roller:       'Roller',
     tillage:      'Tillage',
     termination:  'Termination total',
-    tillage1:     'Fall tillage',
-    tillage2:     'Other tillage',
-    tillage3:     'Cover crop tillage',
+    tillageFall:  'Fall tillage',
+    tillageElimination: 'Other tillage elimination',
+    tillageOther:     'Cover crop tillage',
   }[type];
   
   const Costs = ({desc}) => {

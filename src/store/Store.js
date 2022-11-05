@@ -191,18 +191,20 @@ let initialState = {
   chemical: {...shared},
   roller:   {...shared},
   tillage:  {...shared},
+
   tillage1: {
     ...shared,
     costReductions: (state) => {
-      return (state.tillage1.q5 === 'Yes' ? -state.tillage1.total : 0) - state.tillage2.total
+      return (state.tillage1.q5 === 'Yes' ? -state.tillageFall.total : 0) - (state.tillageElimination.total || 0);
     }
   },
-  tillage2: {...shared},
-  tillage3: {...shared},
+  tillageFall: {...shared},
+  tillageElimination: {...shared},
+  tillageOther: {...shared},
   tillageAll: {
     ...shared,
     total: (state) => {
-      return state.tillage1.costReductions + state.tillage3.total;
+      return state.tillage1.costReductions + state.tillageOther.total;
     }
   },
   termination: {
@@ -291,8 +293,9 @@ let initialState = {
     roller:               {...shared},
     tillage:              {...shared},
     tillage1:             {...shared},
-    tillage2:             {...shared},
-    tillage3:             {...shared},
+    tillageFall:          {...shared},
+    tillageElimination:   {...shared},
+    tillageOther:         {...shared},
   },
 };
 
@@ -413,34 +416,25 @@ const afterChange = {
     }
   },
 // Tillage ___________________________________________________________________________
-  'tillage1.q2': (state, {payload}) => {
-    state.tillage1.estimated = 0;
-    state.tillage1.total = 0;
-    state.tillage1.implement = '';
+  'tillageFall.q2': (state, {payload}) => {
     if (payload === 'Yes') {
-      state.focus = 'tillage1.implement';
+      state.focus = 'tillageFall.implement';
     }
   },
-  'tillage2.q2': (state, {payload}) => {
-    state.tillage2.estimated = 0;
-    state.tillage2.total = 0;
-    state.tillage2.implement = '';
+  'tillageElimination.q2': (state, {payload}) => {
     if (payload === 'Yes') {
-      state.focus = 'tillage2.implement';
+      state.focus = 'tillageElimination.implement';
     }
   },
-  'tillage3.q2': (state, {payload}) => {
-    state.tillage3.estimated = 0;
-    state.tillage3.total = 0;
-    state.tillage3.implement = '';
+  'tillageOther.q2': (state, {payload}) => {
     if (payload === 'Yes') {
-      state.focus = 'tillage3.implement';
+      state.focus = 'tillageOther.implement';
     } else if (state.tillage1.q1 === 'Yes') {
       state.screen = 'Fertility';
     }
   },
   'tillage1.q1': (state, {payload}) => {
-    if (payload === 'Yes' && state.tillage3.q2 === 'No') {
+    if (payload === 'Yes' && state.tillageOther.q2 === 'No') {
       state.screen = 'Fertility';
     }
   },
@@ -498,7 +492,7 @@ const afterChange = {
   },
 };
 
-['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillage1', 'tillage2', 'tillage3', 'herbicideAdditional', 'herbicideReduced', 'herbicideFall'].forEach(section => {
+['seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillageFall', 'tillageElimination', 'tillageOther', 'herbicideAdditional', 'herbicideReduced', 'herbicideFall'].forEach(section => {
   afterChange[section + '.implementsCost'] = (state) => getCosts(state, section);
   afterChange[section + '.powerCost'] =      (state) => getCosts(state, section);
   afterChange[section + '.Labor'] =          (state) => getCosts(state, section);
@@ -517,14 +511,14 @@ const afterChange = {
 
     if (payload === 'Hire custom operator') {
       const def = {
-        seedbed  : 'Seedbed preparation',
-        planting : 'Planting',
-        tillage  : 'Seedbed preparation',
-        tillage1 : 'Seedbed preparation',
-        tillage2 : 'Seedbed preparation',
-        tillage3 : 'Seedbed preparation',
-        chemical : 'Herbicide application',
-        roller   : 'Roller',
+        seedbed     : 'Seedbed preparation',
+        planting    : 'Planting',
+        tillage     : 'Seedbed preparation',
+        tillageFall : 'Seedbed preparation',
+        tillageElimination    : 'Seedbed preparation',
+        tillageOther    : 'Seedbed preparation',
+        chemical    : 'Herbicide application',
+        roller      : 'Roller',
         herbicideAdditional: 'Herbicide application',
         herbicideReduced: 'Herbicide application',
         herbicideFall: 'Herbicide application',
@@ -759,7 +753,6 @@ export const clearInputs = (defaults, exclude=[]) => {
       for (const k of key.split('.')) {
         s = s[k];
       }
-      // console.log(key, typeof defaults[key], defaults[key]);
       store.dispatch(s(defaults[key]));
     } catch(error) {
       console.log(key, error);
@@ -863,6 +856,64 @@ const clearTermination = () => {
   const defaults = getDefaults('termination.additionalHerbicides|termination.additionalPrices|termination.additionalRates|termination.reducedHerbicides|termination.reducedPrices|termination.reducedRates|termination.q2|chemical.implement|chemical.power|chemical.implementsCost|chemical.powerCost|chemical.Labor|chemical.Fuel|chemical.Depreciation|chemical.Interest|chemical.Repairs|chemical.Taxes|chemical.Insurance|chemical.Storage|roller.implement|roller.power|roller.implementsCost|roller.powerCost|roller.Labor|roller.Fuel|roller.Depreciation|roller.Interest|roller.Repairs|roller.Taxes|roller.Insurance|roller.Storage|tillage.implement|tillage.power|tillage.implementsCost|tillage.powerCost|tillage.Labor|tillage.Fuel|tillage.Depreciation|tillage.Interest|tillage.Repairs|tillage.Taxes|tillage.Insurance|tillage.Storage|termination.method|termination.customCost|termination.product');
   clearInputs(defaults);
 } // clearTermination
+
+export const exampleTillage1 = () => {
+  clearTillage();
+  store.dispatch(set.tillage1.q1('No'));
+  store.dispatch(set.tillageFall.q2('Yes'));
+  store.dispatch(set.tillageFall.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage1.q5('Yes'));
+  store.dispatch(set.tillageElimination.q2('No'));
+  store.dispatch(set.tillageOther.q2('Yes'));
+  store.dispatch(set.tillageOther.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
+} // exampleTillage1
+
+export const exampleTillage2 = () => {
+  clearTillage();
+  store.dispatch(set.tillage1.q1('No'));
+  store.dispatch(set.tillageFall.q2('No'));
+  store.dispatch(set.tillageElimination.q2('No'));
+  store.dispatch(set.tillageOther.q2('No'));
+} // exampleTillage2
+
+export const exampleTillage3 = () => {
+  clearTillage();
+  store.dispatch(set.tillage1.q1('No'));
+  store.dispatch(set.tillageFall.q2('Yes'));
+  store.dispatch(set.tillageFall.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage1.q5('Yes'));
+  store.dispatch(set.tillageElimination.q2('No'));
+  store.dispatch(set.tillageOther.q2('No'));
+} // exampleTillage3
+
+export const exampleTillage4 = () => {
+  clearTillage();
+  store.dispatch(set.tillage1.q1('No'));
+  store.dispatch(set.tillageFall.q2('Yes'));
+  store.dispatch(set.tillageFall.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage1.q5('Yes'));
+  store.dispatch(set.tillageElimination.q2('Yes'));
+  store.dispatch(set.tillageElimination.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillageOther.q2('No'));
+} // exampleTillage4
+
+export const exampleTillage5 = () => {
+  clearTillage();
+  store.dispatch(set.tillage1.q1('No'));
+  store.dispatch(set.tillageFall.q2('No'));
+  store.dispatch(set.tillageElimination.q2('No'));
+  store.dispatch(set.tillageOther.q2('Yes'));
+  store.dispatch(set.tillageOther.implement('Chisel Plow; 23 Ft'));
+} // exampleTillage5
+
+const clearTillage = () => {
+  const tillageDefaults     = getDefaults(Object.keys(get.tillage1).map(parm => 'tillage1.' + parm));
+  const fallDefaults        = getDefaults(Object.keys(get.tillageFall).map(parm => 'tillageFall.' + parm));
+  const eliminationDefaults = getDefaults(Object.keys(get.tillageElimination).map(parm => 'tillageElimination.' + parm));
+  const otherDefaults       = getDefaults(Object.keys(get.tillageOther).map(parm => 'tillageOther.' + parm));
+  const defaults = {...tillageDefaults, ...fallDefaults, ...eliminationDefaults, ...otherDefaults};  
+  clearInputs(defaults);
+} // clearTillage
 
 const reducers = {
   resize: (state) => {

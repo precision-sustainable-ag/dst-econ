@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-access-key */
 import {useSelector, useDispatch} from "react-redux";
 import {get, set} from "../../store/redux-autosetters";
 import {
@@ -10,6 +11,11 @@ import {
   exampleTermination3,
   exampleTermination4,
   exampleTermination5,
+  exampleTillage1,
+  exampleTillage2,
+  exampleTillage3,
+  exampleTillage4,
+  exampleTillage5,
   dollars
 } from "../../store/Store";
 
@@ -17,6 +23,27 @@ import './styles.scss';
 
 const cost = (n) => n >= 0 ? dollars(n) : '';
 const benefit = (n) => n < 0 ? dollars(-n) : '';
+
+const Implement = ({desc, type, benefit}) => {
+  const total = useSelector(get[type].total);
+  const implement = useSelector(get[type].implement);
+  const power = useSelector(get[type].power);
+  return total > 0 && (
+    <tr>
+      <td />
+      <td>{desc}</td>
+      <td>
+        {implement}
+        <br />
+        {power}
+      </td>
+      <td>{benefit ? '' : dollars(total)}</td>
+      <td />
+      <td>{benefit ? dollars(total) : ''}</td>
+      <td />
+    </tr>
+  )
+} // Implement
 
 const CropSummary = () => {
   const dispatch = useDispatch();
@@ -121,18 +148,6 @@ const TerminationSummary = () => {
   const rate = useSelector(get.termination.rate);
   const unitCost = useSelector(get.termination.unitCost);
   
-  const chemicalTotal = useSelector(get.chemical.total);
-  const chemicalImplement = useSelector(get.chemical.implement);
-  const chemicalPower = useSelector(get.chemical.power);
-
-  const rollerTotal = useSelector(get.roller.total);
-  const rollerImplement = useSelector(get.roller.implement);
-  const rollerPower = useSelector(get.roller.power);
-
-  const tillageTotal = useSelector(get.tillage.total);
-  const tillageImplement = useSelector(get.tillage.implement);
-  const tillagePower = useSelector(get.tillage.power);
-
   const additionalTotal = useSelector(get.termination.additionalTotal);
   const additionalHerbicides = useSelector(get.termination.additionalHerbicides);
   const additionalRates = useSelector(get.termination.additionalRates);
@@ -172,57 +187,11 @@ const TerminationSummary = () => {
           </tr>
         ) : null
       }
-      {
-        chemicalTotal ? (
-          <tr>
-            <td />
-            <td>Chemical spray equipment</td>
-            <td>
-              {chemicalImplement}
-              <br />
-              {chemicalPower}
-            </td>
-            <td>{cost(chemicalTotal)}</td>
-            <td />
-            <td>{benefit(chemicalTotal)}</td>
-            <td />
-          </tr>
-        ) : null
-      }
-      {
-        rollerTotal ? (
-          <tr>
-            <td />
-            <td>Roller equipment</td>
-            <td>
-              {rollerImplement}
-              <br />
-              {rollerPower}
-            </td>
-            <td>{cost(rollerTotal)}</td>
-            <td />
-            <td>{benefit(rollerTotal)}</td>
-            <td />
-          </tr>
-        ) : null
-      }
-      {
-        tillageTotal ? (
-          <tr>
-            <td />
-            <td>Tillage equipment</td>
-            <td>
-              {tillageImplement}
-              <br />
-              {tillagePower}
-            </td>
-            <td>{cost(tillageTotal)}</td>
-            <td />
-            <td>{benefit(tillageTotal)}</td>
-            <td />
-          </tr>
-        ) : null
-      }
+
+      <Implement desc="Chemical spray equipment" type="chemical" />
+      <Implement desc="Roller equipment" type="roller" />
+      <Implement desc="Tillage equiment" type="tillage" />
+
       {
         additionalTotal ? (
           <>
@@ -283,6 +252,34 @@ const TerminationSummary = () => {
   )
 } // TerminationSummary
 
+const TillageSummary = () => {
+  const dispatch = useDispatch();
+  const total = useSelector(get.tillageAll.total);
+
+  return (
+    <>
+      <tr>
+        <td
+          colSpan={2}
+          onClick={() => dispatch(set.screen('Tillage'))}
+        >
+          Tillage modifications<br />to normal cropping system
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td>{cost(total)}</td>
+        <td />
+        <td>{benefit(total)}</td>
+      </tr>
+
+      <Implement desc="Fall Tillage" type="tillageFall" benefit />
+      <Implement desc="Tillage Elimination" type="tillageElimination" benefit />
+      <Implement desc="Other Tillage" type="tillageOther" />
+    </>    
+  )
+} // TillageSummary
+
 const Practices = () => {
   const dispatch = useDispatch();
   const dev = useSelector(get.dev);
@@ -319,6 +316,7 @@ const Practices = () => {
           <SeedbedSummary />
           <PlantingSummary />
           <TerminationSummary />
+          <TillageSummary />
         </tbody>
       </table>
 
@@ -326,6 +324,7 @@ const Practices = () => {
         dev && (
           <>
             <button
+              accessKey="1"
               onClick={() => {
                 dispatch(set.farm('My farm'));
                 dispatch(set.field('NW40 of home place'));
@@ -336,12 +335,14 @@ const Practices = () => {
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination1();
+                exampleTillage1();
                 exampleHerbicides();
               }}
             >
-              Test 1
+              Test <u>1</u>
             </button>
             <button
+              accessKey="2"
               onClick={() => {
                 dispatch(set.farm('My farm'));
                 dispatch(set.field('NW40 of home place'));
@@ -352,12 +353,14 @@ const Practices = () => {
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination2();
+                exampleTillage2();
                 exampleHerbicides();
               }}
             >
-              Test 2
+              Test <u>2</u>
             </button>
             <button
+              accessKey="3"
               onClick={() => {
                 dispatch(set.farm('My farm'));
                 dispatch(set.field('NW40 of home place'));
@@ -368,12 +371,14 @@ const Practices = () => {
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination3();
+                exampleTillage3();
                 exampleHerbicides();
               }}
             >
-              Test 3
+              Test <u>3</u>
             </button>
             <button
+              accessKey="4"
               onClick={() => {
                 dispatch(set.farm('My farm'));
                 dispatch(set.field('NW40 of home place'));
@@ -384,12 +389,14 @@ const Practices = () => {
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination4();
+                exampleTillage4();
                 exampleHerbicides();
               }}
             >
-              Test 4
+              Test <u>4</u>
             </button>
             <button
+              accessKey="5"
               onClick={() => {
                 dispatch(set.farm('My farm'));
                 dispatch(set.field('NW40 of home place'));
@@ -400,10 +407,11 @@ const Practices = () => {
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination5();
+                exampleTillage5();
                 exampleHerbicides();
               }}
             >
-              Test 5
+              Test <u>5</u>
             </button>
           </>
         )
