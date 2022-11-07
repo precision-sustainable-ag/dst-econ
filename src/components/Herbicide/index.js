@@ -58,9 +58,7 @@ const Herbicide = () => {
                     property="q2"
                     q="Do you plan on adding additional herbicides or making additional spray applications when adding cover crops to your rotation?"
                     a={['Yes', 'No']}
-                    onChange={() => {
-                      clearInputs(additionalDefaults);
-                    }}
+                    onChange={() => clearInputs(additionalDefaults)}
                   />
                 </>
               )
@@ -105,7 +103,6 @@ const Herbicide = () => {
                     property="implement"
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
-                    shown={state.q1}
                     custom={['I will not be making an additional application', 'Hire custom operator']}
                   />
       
@@ -134,9 +131,7 @@ const Herbicide = () => {
                     property="q5"
                     q="Do you plan on reducing the amount of herbicides used or eliminating a post-emerge spray application with the use of cover crops?"
                     a={['Yes', 'No']}
-                    onChange={() => {
-                      clearInputs(reducedDefaults);
-                    }}
+                    onChange={() => clearInputs(reducedDefaults)}
                   />
                 </>
               )
@@ -182,7 +177,6 @@ const Herbicide = () => {
                     property="implement"
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
-                    shown={state.q1}
                     custom={['I will not be making an additional application', 'Hire custom operator']}
                   />
 
@@ -225,7 +219,6 @@ const Herbicide = () => {
                     property="savings"
                     q="Implementing cover crops will allow you to forgo a fall herbicide application. What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
                     a="dollar"
-                    shown={state.q1}
                   />
       
                   <Logic
@@ -233,7 +226,6 @@ const Herbicide = () => {
                     property="implement"
                     q="How would you have conducted your fall herbicide program?"
                     type="Chemical"
-                    shown={state.q1}
                   />
       
                   <Logic current="herbicideFall" question="power" />
