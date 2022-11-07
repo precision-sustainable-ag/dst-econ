@@ -1,13 +1,10 @@
 import {Input} from '../../shared/Inputs';
-import {useEffect} from 'react';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set, dollars, db} from '../../store/Store';
+import {useSelector} from 'react-redux';
+import {get, dollars, db} from '../../store/Store';
 
-const Logic = ({current, intro, question, q, a, property, type, shown=true, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
+const Logic = ({current, intro, question, q, a, property, type, suffix='', initial='', onChange, onInput, value, estimated, total, warning, style, custom=['Hire custom operator']}) => {
   // console.log('Render: Logic ' + property);
-  const dispatch = useDispatch();
-  const holdShown         = useSelector(get.shown);
   const context           = useSelector(get[current]);
   const currentImplement  = useSelector(get[current].implement);
   const acresHour         = useSelector(get[current].acresHour).toString();
@@ -15,12 +12,10 @@ const Logic = ({current, intro, question, q, a, property, type, shown=true, suff
   const iscustom = ['Hire custom operator', 'I will not be making an additional application'].includes(currentImplement);
 
   let info = '';
+  let shown = true;
 
   if (property === 'implement') {
     a = [...custom, ...Object.keys(db.implements).filter(key => db.implements[key].type === type).sort()]
-    if (shown !== false) {
-      shown = true;
-    }
   }
 
   switch (question) {
@@ -100,22 +95,6 @@ const Logic = ({current, intro, question, q, a, property, type, shown=true, suff
       break;
     default:
   }
-
-  useEffect(() => {
-    if (!current || !property || !set.shown[current][property]) return;
-
-    // if (holdShown[current][property] !== !!shown) { // prevent infinite loop
-      dispatch(set.shown[current][property](shown || false));
-    // }
-
-    if (!shown) { // TODO
-      // console.log(current);
-      // console.log(property);
-      dispatch(set[current][property](initial));
-    } else if (value !== undefined) {
-      dispatch(set[current][property](value));
-    }
-  }, [dispatch, holdShown, current, value, property, shown, initial]);
 
   return (
     current && shown ?

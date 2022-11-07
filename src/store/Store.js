@@ -199,7 +199,7 @@ let initialState = {
     ...shared,
     costReductions: (state) => {
       return (state.tillage1.q5 === 'Yes' ? -state.tillageFall.total : 0) - (state.tillageElimination.total || 0);
-    }
+    },
   },
   tillageFall: {...shared},
   tillageElimination: {...shared},
@@ -207,7 +207,7 @@ let initialState = {
   tillageAll: {
     ...shared,
     total: (state) => {
-      return state.tillage1.costReductions + state.tillageOther.total;
+      return (state.tillage1.costReductions || 0) + (state.tillageOther.total || 0);
     }
   },
   termination: {
@@ -280,25 +280,6 @@ let initialState = {
     lbsNotFed: (state) => {
       return (+((((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted)).toFixed(0)) || '';
     },
-  },
-  shown: {
-    seedbed:              {...shared},
-    planting:             {...shared},
-    herbicide:            {...shared},
-    herbicideAdditional:  {...shared},
-    herbicideReduced:     {...shared},
-    herbicideFall:        {...shared},
-    yield:                {...shared},
-    erosion:              {...shared},
-    termination:          {...shared},
-    fertility:            {...shared},
-    chemical:             {...shared},
-    roller:               {...shared},
-    tillage:              {...shared},
-    tillage1:             {...shared},
-    tillageFall:          {...shared},
-    tillageElimination:   {...shared},
-    tillageOther:         {...shared},
   },
 };
 
@@ -597,9 +578,7 @@ const getCosts = (state, current) => {
       const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];  
       
-      if (false) {
-        console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
-      }
+      // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
     
       let value;
 

@@ -24,6 +24,7 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
   } // getAllkeys
 
   getAllkeys(initialState);
+  // console.log(Object.keys(allkeys));
 
   const processMethods = ((state, key) => {
     if (methods[key]) {
