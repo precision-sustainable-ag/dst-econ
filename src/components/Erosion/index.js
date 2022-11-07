@@ -6,8 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 const Erosion = () => {
   const dispatch = useDispatch();
-  const current = 'erosion';
-  const state = useSelector(get[current]);
+  const state = useSelector(get.erosion);
   const dev = useSelector(get.dev);
 
   return (
@@ -23,7 +22,7 @@ const Erosion = () => {
       <table>
         <tbody>
           <Logic
-            current={current}
+            current="erosion"
             property="q1"
             q="Are there typically soil erosion issues associated with this field that require time and expense to repair?"
             a={['Yes', 'No']}
@@ -33,21 +32,21 @@ const Erosion = () => {
             state.q1 === 'Yes' && (
               <>
                 <Logic
-                  current={current}
+                  current="erosion"
                   property="q2"
                   q="How will soil repair activities be conducted on this field?"
                   a={['Skid steer', 'Trackhoe', 'Dozer']}
                 />
       
                 <Logic
-                  current={current}
+                  current="erosion"
                   property="q3"
                   q="Cost ($) per hour"
                   a="dollar"
                 />
 
                 <Logic
-                  current={current}
+                  current="erosion"
                   property="q4"
                   q="On average, estimate the reduced annualized number of hours to repair tile outlets, fix erosion issues, repair terrace breakovers or other issues for this particular field."
                   a="number"

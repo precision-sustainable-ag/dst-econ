@@ -1,7 +1,6 @@
-import {useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
-import {get, set, getDefaults, exampleSeedbed, clearInputs} from '../../store/Store';
+import {get, getDefaults, exampleSeedbed, clearInputs} from '../../store/Store';
 import Logic from '../Logic';
 import {ClearInputs} from '../ClearInputs';
 
@@ -9,17 +8,10 @@ const defaults = getDefaults(Object.keys(get.seedbed).map(parm => 'seedbed.' + p
 
 const Seedbed = () => {
   // console.log('Render: Seedbed');
-  const dispatch = useDispatch();
-  const current = 'seedbed';
   const dev = useSelector(get.dev);
-  const estimated = useSelector(get[current].estimated);
+  const estimated = useSelector(get.seedbed.estimated);
 
-  useSelector(get.current);
-  const state = useSelector(get[current]);
-
-  useEffect(() => {
-    dispatch(set.current(current));
-  }, [dispatch, current]);
+  const state = useSelector(get.seedbed);
 
   return (
     <>
@@ -43,7 +35,7 @@ const Seedbed = () => {
 
       <strong>Cover Crop Establishment</strong>
       <form>
-        <table className={current + ' inputs'}>
+        <table className={'seedbed inputs'}>
           <tbody>
             <tr>
               <th colSpan="2">
@@ -53,7 +45,7 @@ const Seedbed = () => {
             </tr>
             
             <Logic
-              current={current}
+              current="seedbed"
               property="q1"
               q="Will you do a field activity to prepare for cover crop planting, which would not normally be done on this field without cover crops?"
               a={['Yes', 'No']}
@@ -63,18 +55,18 @@ const Seedbed = () => {
             {state.q1 === 'Yes' && (
               <>
                 <Logic
-                  current={current}
+                  current="seedbed"
                   property="implement"
                   q="How will seedbed preparation be done?"
                   type="Tillage"
                 />
 
-                <Logic current={current} question="power" />
-                <Logic current={current} question="Annual Use (acres on implement)" />
-                <Logic current={current} question="Annual Use (hours on power)" />
-                <Logic current={current} question="Acres/hour" />
+                <Logic current="seedbed" question="power" />
+                <Logic current="seedbed" question="Annual Use (acres on implement)" />
+                <Logic current="seedbed" question="Annual Use (hours on power)" />
+                <Logic current="seedbed" question="Acres/hour" />
                 <Logic 
-                  current={current}
+                  current="seedbed"
                   question="Estimated"
                   total={Number.isFinite(state.total) ? state.total : estimated}
                   estimated={estimated} 

@@ -62,7 +62,7 @@ const SpeciesRow = ({n}) => {
 } // SpeciesRow
 
 const Species = () => {
-  console.log('Render: Species');
+  // console.log('Render: Species');
 
   const dev      = useSelector(get.dev);
   const species  = useSelector(get.species);
