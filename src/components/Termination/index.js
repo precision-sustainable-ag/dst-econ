@@ -15,7 +15,6 @@ import {
 } from '../../store/Store';
 
 import Logic from '../Logic';
-import {useEffect} from 'react';
 import {ClearInputs} from '../ClearInputs';
 import {Input} from '../../shared/Inputs';
 
@@ -86,21 +85,20 @@ const OtherHerbicides = ({state, prop, description}) => {
 } // OtherHerbicides
 
 const Herbicide = () => {
-  const current = 'termination';
-  const state = useSelector(get[current]);
+  const state = useSelector(get.termination);
   
   return (
     <>
       <tr><th colSpan="100">Product</th></tr>
       <Logic
-        current={current}
+        current="termination"
         property="product"
         q="Product"
         a={['', ...Object.keys(db.herbicides).sort()]}
       />
 
       <Logic
-        current={current}
+        current="termination"
         property="unitCost"
         q="Cost per unit of product"
         a={'dollar'}
@@ -108,7 +106,7 @@ const Herbicide = () => {
       />
 
       <Logic
-        current={current}
+        current="termination"
         property="rate"
         q="Application rate"
         a={'number'}
@@ -116,7 +114,7 @@ const Herbicide = () => {
       />
 
       <Logic
-        current={current}
+        current="termination"
         property="productCost"
         q="Product cost"
         a={state.productCost}
@@ -200,18 +198,9 @@ const Termination = () => {
   console.log('Render: Termination');
   const dispatch = useDispatch();
   const current = 'termination';
-
   const dev = useSelector(get.dev);
-
-  useSelector(get.current);
-
   const method = useSelector(get.termination.method);
-
   const state = useSelector(get[current]);
-
-  useEffect(() => {
-    dispatch(set.current(current));
-  }, [dispatch, current]);
 
   return (
     <>

@@ -13,8 +13,7 @@ import {ClearInputs} from '../ClearInputs';
 const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 
 const Yield = () => {
-  const current = 'yield';
-  const state = useSelector(get[current]);
+  const state = useSelector(get.yield);
   const typical  = state.typical;
   const adjusted = state.adjusted;
   const impact   = state.impact;
@@ -140,7 +139,7 @@ const Yield = () => {
           </tr>
 
           <Logic
-            current={current}
+            current="yield"
             property="yield"
             q={
               <>
@@ -154,21 +153,21 @@ const Yield = () => {
           />
 
           <Logic
-            current={current}
+            current="yield"
             property="q2"
             q="Do you want your financial analysis to use the typical yield estimates or the cover crop adjusted yield estimates?"
             a={['Use typical yield estimates', 'Use cover crop adjusted yield estimates']}
           />
 
           <Logic
-            current={current}
+            current="yield"
             property="price"
             q="Commodity price"
             a="dollar"
           />
 
           <Logic
-            current={current}
+            current="yield"
             property="q4"
             type="radio"
             q="Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?"
