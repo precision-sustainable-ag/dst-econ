@@ -5,18 +5,15 @@ import {ClearInputs} from '../ClearInputs';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, set, getDefaults, examplePlanting} from '../../store/Store';
 
-const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
+const defaults = getDefaults(Object.keys(get.planting).map(parm => 'planting.' + parm));
 
 const Planting = () => {
-  // console.log('Render: Planting');
   const dispatch = useDispatch();
   const current = 'planting';
   const dev = useSelector(get.dev);
-  const estimated = useSelector(get[current].estimated);
+  const estimated = useSelector(get.planting.estimated);
 
-  useSelector(get.current);
-  useSelector(get.shown[current]);
-  const state = useSelector(get[current]);
+  const state = useSelector(get.planting);
 
   useEffect(() => {
     dispatch(set.current(current));

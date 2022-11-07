@@ -179,7 +179,6 @@ const Tillage = () => (
       property="implement"
       q="How will this tillage be done?"
       type="Tillage"
-      zshown={false}
     />
 
     <Logic current="tillage" question="power" />
@@ -205,7 +204,6 @@ const Termination = () => {
   const dev = useSelector(get.dev);
 
   useSelector(get.current);
-  useSelector(get.shown[current]);
 
   const method = useSelector(get.termination.method);
 
@@ -251,37 +249,41 @@ const Termination = () => {
                 }}
               />
 
-              <Logic
-                current={current}
-                property="q2"
-                q="Would you do this field activity if you did not have a cover crop?"
-                a={['Yes', 'No']}
-                shown={state.method}
-                onChange={(_, value) => {
-                  clearInputs(defaults, ['termination.method', 'termination.q2']);
-                  if (value === 'Yes' && state.method !== 'Herbicide application') {
-                    dispatch(set.screen('Tillage'));
-                  }
-                }}
-              />
+              {state.method && (
+                <Logic
+                  current={current}
+                  property="q2"
+                  q="Would you do this field activity if you did not have a cover crop?"
+                  a={['Yes', 'No']}
+                  onChange={(_, value) => {
+                    clearInputs(defaults, ['termination.method', 'termination.q2']);
+                    if (value === 'Yes' && state.method !== 'Herbicide application') {
+                      dispatch(set.screen('Tillage'));
+                    }
+                  }}
+                />
+              )}
 
-              <Logic
-                current={current}
-                intro="Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
-                       For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
-                       Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
-                      "
-                property="q3"
-                q="Will you change the herbicides use in your tank mix?"
-                a={['Yes', 'No']}
-                shown={state.method === 'Herbicide application' && state.q2 === 'Yes'}
-                onChange={(_, value) => {
-                  clearInputs(defaults);
-                  if (value === 'No') {
-                    dispatch(set.screen('Tillage'));
-                  }
-                }}
-              />
+              {state.method === 'Herbicide application' && state.q2 === 'Yes' && (
+                <Logic
+                  current={current}
+                  intro="
+                    Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
+                    For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
+                    Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
+                  "
+                  property="q3"
+                  q="Will you change the herbicides use in your tank mix?"
+                  a={['Yes', 'No']}
+                  onChange={(_, value) => {
+                    clearInputs(defaults);
+                    if (value === 'No') {
+                      dispatch(set.screen('Tillage'));
+                    }
+                  }}
+                />
+              )}
+
               {
                 state.q3 === 'Yes' && (
                   <tr>

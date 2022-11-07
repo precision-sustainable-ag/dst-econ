@@ -134,7 +134,10 @@ let initialState = {
   planting: {...shared},
   herbicide: {
     ...shared,
-    total: (state) => (state.herbicideAdditional.cost + state.herbicideAdditional.total + state.herbicideFall.total) - (state.herbicideReduced.cost + state.herbicideReduced.total + state.herbicideFall.savings),
+    total: (state) => {
+      return ((state.herbicideAdditional.cost || 0) + (state.herbicideAdditional.total || 0) + (state.herbicideFall.total   || 0)) -
+             ((state.herbicideReduced.cost    || 0) + (state.herbicideReduced.total    || 0) + (state.herbicideFall.savings || 0))
+    },
   },
   herbicideAdditional: {
     ...shared,
@@ -196,7 +199,7 @@ let initialState = {
     ...shared,
     costReductions: (state) => {
       return (state.tillage1.q5 === 'Yes' ? -state.tillageFall.total : 0) - (state.tillageElimination.total || 0);
-    }
+    },
   },
   tillageFall: {...shared},
   tillageElimination: {...shared},
@@ -204,7 +207,7 @@ let initialState = {
   tillageAll: {
     ...shared,
     total: (state) => {
-      return state.tillage1.costReductions + state.tillageOther.total;
+      return (state.tillage1.costReductions || 0) + (state.tillageOther.total || 0);
     }
   },
   termination: {
@@ -277,25 +280,6 @@ let initialState = {
     lbsNotFed: (state) => {
       return (+((((state.additional.fallDryMatter * state.additional.fallWaste) + (state.additional.springDryMatter * state.additional.springWaste)) / state.additional.dryMatter)/(1 - state.additional.wasted)).toFixed(0)) || '';
     },
-  },
-  shown: {
-    seedbed:              {...shared},
-    planting:             {...shared},
-    herbicide:            {...shared},
-    herbicideAdditional:  {...shared},
-    herbicideReduced:     {...shared},
-    herbicideFall:        {...shared},
-    yield:                {...shared},
-    erosion:              {...shared},
-    termination:          {...shared},
-    fertility:            {...shared},
-    chemical:             {...shared},
-    roller:               {...shared},
-    tillage:              {...shared},
-    tillage1:             {...shared},
-    tillageFall:          {...shared},
-    tillageElimination:   {...shared},
-    tillageOther:         {...shared},
   },
 };
 
@@ -594,9 +578,7 @@ const getCosts = (state, current) => {
       const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];  
       
-      if (false) {
-        console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
-      }
+      // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
     
       let value;
 
