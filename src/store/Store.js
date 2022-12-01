@@ -1,6 +1,7 @@
 // import {current} from '@reduxjs/toolkit';
 
 import {createStore, set, get} from './redux-autosetters';
+export {set, get} from './redux-autosetters';
 
 const shared = {
   q1: '',
@@ -964,5 +965,3 @@ const reducers = {
 }
 
 export const store = createStore(initialState, {afterChange, reducers});
-
-export {set, get} from './redux-autosetters';
