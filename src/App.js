@@ -98,12 +98,18 @@ function App() {
   const MyMenu = (s) => {
     return (
       Object.keys(s).map(scr => {
+        let cname = scr === screen ? 'selected' : '';
+        
+        if (/Practices|Revenue|Resources/.test(scr)) {
+          cname += ' summary';
+        }
+
         if (scr === 'Airtables') {
           if (!dev) {
             return null;
           } else {
             return (
-              <details key={scr}>
+              <details key={scr} style={{float: 'right'}}>
                 <summary>{scr}</summary>
                 {MyMenu(s[scr])}
               </details>
@@ -118,13 +124,17 @@ function App() {
           )
         } else {
           return (
-            <MyButton
-              data-scr={scr}
-              key={scr}
-              className={scr === screen ? 'selected' : ''}
-            >
-              {s[scr].menu || scr}
-            </MyButton>
+            <span key={scr}>
+              {scr === 'Practices' && <hr/>}
+              <MyButton
+                data-scr={scr}
+                key={scr}
+                className={cname}
+              >
+                {/* scr === 'Revenue' && <img src="revenue.png" alt="Revenue" /> */}
+                {s[scr].menu || scr}
+              </MyButton>
+            </span>
           )
         }
       })

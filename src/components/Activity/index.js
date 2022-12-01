@@ -202,6 +202,7 @@ export const Summary = () => {
   const herbicideTotal    = useSelector(get.herbicide.total) || 0;
 
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal + +herbicideTotal;
+  console.log(total);
 
   const SummaryRow = ({parm, desc, type}) => {
     const style = type === 'Costs' ? {color: 'red'} : {color: 'black'};
