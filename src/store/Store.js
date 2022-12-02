@@ -246,8 +246,8 @@ let initialState = {
       return total;
     },
     total: (state) => {
-      return (state.termination.productCost || 0) + (state.chemical.total || 0) + (state.roller.total || 0) +
-             (state.tillage.total || 0) + ((state.termination.additionalTotal || 0) - (state.termination.reducedTotal || 0))
+      return (+state.termination.productCost || 0) + (+state.chemical.total || 0) + (+state.roller.total || 0) +
+             (+state.tillage.total || 0) + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
     },
   },
   fertility: {
