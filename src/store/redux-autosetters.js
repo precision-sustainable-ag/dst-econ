@@ -9,6 +9,22 @@ export const createStore = (initialState, {afterChange={}, reducers={}}) => {
   const methods = {};
   const allkeys = {};
 
+  const getAllkeys = (obj, parents = []) => {
+    Object.keys(obj).forEach(key => {
+      const isArray = Array.isArray(obj[key]);
+      const isObject = !isArray && obj[key] instanceof Object && typeof obj[key] !== 'function';
+      const fullkey = parents.length ? parents.join('.') + '.' + key : key;
+  
+      allkeys[fullkey] = true;
+  
+      if (isObject) {
+        getAllkeys(obj[key], [...parents, key]);
+      };
+    });
+  } // getAllkeys
+
+  getAllkeys(initialState);
+
   const processMethods = ((state, key) => {
     if (methods[key]) {
       for (let k in methods[key]) {
