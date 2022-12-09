@@ -26,7 +26,7 @@ import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
 import Activity, {Summary}    from './components/Activity';
 
-import Map          from './shared/GoogleMaps';
+import Map from "./shared/Map"
 
 const holdError = console.error;
 console.error = (msg, ...subst) => {
@@ -330,38 +330,8 @@ function App() {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <>
-      {
-        mapVisible && (
-          <Map
-            id="AppMap"
-            inputs={false}
-            mapOptions={{
-              mapTypeControl: false,
-              disableDefaultUI: true,
-              zoom: maxZoom,
-            }}
-          />
-        )
-      }
-
-      {
-        screenWidth >= 1200 && screenHeight > 650 && (
-          <Button
-            id="ToggleMap"
-            onClick={() => 
-              dispatch(set.showMap(!showMap))
-            }
-          >
-            {showMap ? 'Hide map' : 'Show map'}
-          </Button>
-        )
-      }
-
       <div
         id="Container"
-        style={{
-          margin: mapVisible ? '1rem 2%' : '1rem 2%'  // 'auto',
-        }}
       >
         <nav onClick={changeScreen} className="{cl}">
           <div
