@@ -19,7 +19,7 @@ const MapComp = ({initWidth, initHeight, zScore}) => {
     dispatch(set.mapType("satellite"));
     if (address.latitude) dispatch(set.lat(address.latitude));
     if (address.longitude) dispatch(set.lon(address.longitude));
-  }, [address, geometry]);
+  }, [address, geometry, dispatch]);
 
   return (
     <div className="map" style={{zScore: zScore}}>

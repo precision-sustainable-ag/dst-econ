@@ -26,7 +26,7 @@ import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
 import Activity, {Summary}    from './components/Activity';
 
-import Map from "./shared/Map"
+// import Map from "./shared/Map"
 
 const holdError = console.error;
 console.error = (msg, ...subst) => {
@@ -260,10 +260,10 @@ function App() {
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
   const dev = useSelector(get.dev);
-  const screenWidth = useSelector(get.screenWidth);
-  const screenHeight = useSelector(get.screenHeight);
-  const showMap = useSelector(get.showMap);
-  const maxZoom = useSelector(get.maxZoom);
+  // const screenWidth = useSelector(get.screenWidth);
+  // const screenHeight = useSelector(get.screenHeight);
+  // const showMap = useSelector(get.showMap);
+  // const maxZoom = useSelector(get.maxZoom);
 
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
@@ -272,7 +272,7 @@ function App() {
   useEffect(() => {
     if (!hotkeys) {
       const u = document.querySelectorAll('u');
-      console.log(u);
+      // console.log(u);
       if (u.length) {
         setHotKeys(true);
         const hk = {
@@ -324,7 +324,7 @@ function App() {
     }, true);
   }, [dispatch]);
 
-  const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
+  // const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
