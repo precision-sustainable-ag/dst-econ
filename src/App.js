@@ -324,7 +324,7 @@ function App() {
     }, true);
   }, [dispatch]);
 
-  const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
+  // const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
@@ -332,6 +332,9 @@ function App() {
     <>
       <div
         id="Container"
+        style={{
+          margin: '1rem 2%',
+        }}
       >
         <nav onClick={changeScreen} className="{cl}">
           <div
