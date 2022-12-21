@@ -1,26 +1,16 @@
 import Logic from '../Logic';
-import {useEffect} from 'react';
 import {ClearInputs} from '../ClearInputs';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {get, set, getDefaults, examplePlanting} from '../../store/Store';
+import {useSelector} from 'react-redux';
+import {get, getDefaults, examplePlanting} from '../../store/Store';
 
-const defaults = getDefaults('planting.total|planting.q1|planting.q2|planting.implement|planting.power|planting.implementsCost|planting.powerCost|planting.Labor|planting.Fuel|planting.Depreciation|planting.Interest|planting.Repairs|planting.Taxes|planting.Insurance|planting.Storage');
+const defaults = getDefaults(Object.keys(get.planting).map(parm => 'planting.' + parm));
 
 const Planting = () => {
-  // console.log('Render: Planting');
-  const dispatch = useDispatch();
-  const current = 'planting';
   const dev = useSelector(get.dev);
-  const estimated = useSelector(get[current].estimated);
+  const estimated = useSelector(get.planting.estimated);
 
-  useSelector(get.current);
-  useSelector(get.shown[current]);
-  const state = useSelector(get[current]);
-
-  useEffect(() => {
-    dispatch(set.current(current));
-  }, [dispatch, current]);
+  const state = useSelector(get.planting);
 
   return (
     <>
@@ -43,7 +33,7 @@ const Planting = () => {
 
       <strong>Cover Crop Establishment</strong>
       <form>
-        <table className={current + ' inputs'}>
+        <table className={'planting inputs'}>
           <tbody>
             <tr>
               <th colSpan="2">
@@ -53,17 +43,17 @@ const Planting = () => {
             </tr>
 
             <Logic
-              current={current}
+              current="planting"
               property="implement"
               q="How will planting be done?"
               type="Planting"
             />
 
-            <Logic current={current} question="power" />
-            <Logic current={current} question="Annual Use (acres on implement)" />
-            <Logic current={current} question="Annual Use (hours on power)" />
-            <Logic current={current} question="Acres/hour" />
-            <Logic current={current} question="Estimated" total={state.total} estimated={estimated} />
+            <Logic current="planting" question="power" />
+            <Logic current="planting" question="Annual Use (acres on implement)" />
+            <Logic current="planting" question="Annual Use (hours on power)" />
+            <Logic current="planting" question="Acres/hour" />
+            <Logic current="planting" question="Estimated" total={state.total} estimated={estimated} />
           </tbody>
         </table>
       </form>

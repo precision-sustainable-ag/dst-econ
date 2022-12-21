@@ -14,6 +14,7 @@ import {
 import {get, set} from '../../store/Store';
 
 import './styles.scss';
+import { Help } from '../Help';
 
 const keyPress = (event) => {
   if (event.key === 'Enter') {  // focus next field
@@ -45,6 +46,9 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
 
   const focus = useSelector(get.focus) === obj;
   const focusRef = useRef(null);
+  const helpRef = useRef(null);
+
+  const [help, setHelp] = useState(false);
 
   let sel = get;
   id.split('.').forEach(k => sel = sel[k]);
@@ -84,6 +88,20 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
   let [v, setValue] = useState(val);
 
   useEffect(() => {
+    const click = (e) => {
+      if (e.target !== helpRef.current) {
+        setHelp(false);
+      }
+    }
+
+    document.addEventListener('click', click);
+
+    return () => {
+      document.removeEventListener('click', click);
+    }
+  }, []);
+
+  useEffect(() => {
     if (v2 !== sel2 || v2 !== value) {
       setChanged(true);
     }
@@ -100,7 +118,6 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
         const input = focusRef.current.querySelector('input');
         input.focus();
         setTimeout(() => {
-          input.focus();
           dispatch(set.focus(null));
         }, 1000);  // wait for all Inputs to load
       }
@@ -331,24 +348,31 @@ const Input = ({type, id, options, isOptionEqualToValue, renderInput, index='', 
               }
             }}
           />
+          
           {props.info && (
             <>
               <Icon
                 style={{marginTop: 6, marginLeft: 2}}
                 onClick={() => {
+                  setHelp(!help);
                   dispatch(set.focus(id));
                 }}
                 className="help"
+                ref={helpRef}
               >
                 help
               </Icon>
               <div
+                style={{display: help ? 'block' : 'none'}}
                 className="info"
               >
                 {props.info}
               </div>
             </>
           )}
+
+          {/* props.info && <Help>{props.info}</Help> */}
+
           {props.warning}
         </span>
     )

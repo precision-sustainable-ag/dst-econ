@@ -12,8 +12,7 @@ const reducedDefaults     = getDefaults(Object.keys(get.herbicideReduced).map(pa
 const defaults = {...herbicideDefaults, ...fallDefaults, ...additionalDefaults, ...reducedDefaults};
 
 const Herbicide = () => {
-  const current = 'herbicide';
-  const state = useSelector(get[current]);
+  const state = useSelector(get.herbicide);
   const additionalProduct = useSelector(get.herbicideAdditional.product);
   const additionalCost = useSelector(get.herbicideAdditional.cost);
   const reducedProject = useSelector(get.herbicideReduced.product);
@@ -34,7 +33,7 @@ const Herbicide = () => {
       </p>
 
       <form>
-        <table className={current + ' inputs'}>
+        <table className={'herbicide inputs'}>
           <tbody>
             <tr>
               <th colSpan="2">
@@ -43,7 +42,7 @@ const Herbicide = () => {
               </th>
             </tr>
             <Logic
-              current={current}
+              current="herbicide"
               property="q1"
               q="Will you modify your post emerge spray program when using cover crops (either the herbicides used or the number of applications)?"
               a={['Yes', 'No']}
@@ -54,13 +53,11 @@ const Herbicide = () => {
                 <>
                   <tr><th colSpan="100">Additional Herbicides</th></tr>
                   <Logic
-                    current={current}
+                    current="herbicide"
                     property="q2"
                     q="Do you plan on adding additional herbicides or making additional spray applications when adding cover crops to your rotation?"
                     a={['Yes', 'No']}
-                    onChange={() => {
-                      clearInputs(additionalDefaults);
-                    }}
+                    onChange={() => clearInputs(additionalDefaults)}
                   />
                 </>
               )
@@ -105,7 +102,6 @@ const Herbicide = () => {
                     property="implement"
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
-                    shown={state.q1}
                     custom={['I will not be making an additional application', 'Hire custom operator']}
                   />
       
@@ -130,13 +126,11 @@ const Herbicide = () => {
                 <>
                   <tr><th colSpan="100">Reduced Herbicides</th></tr>
                   <Logic
-                    current={current}
+                    current="herbicide"
                     property="q5"
                     q="Do you plan on reducing the amount of herbicides used or eliminating a post-emerge spray application with the use of cover crops?"
                     a={['Yes', 'No']}
-                    onChange={() => {
-                      clearInputs(reducedDefaults);
-                    }}
+                    onChange={() => clearInputs(reducedDefaults)}
                   />
                 </>
               )
@@ -182,7 +176,6 @@ const Herbicide = () => {
                     property="implement"
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
-                    shown={state.q1}
                     custom={['I will not be making an additional application', 'Hire custom operator']}
                   />
 
@@ -207,7 +200,7 @@ const Herbicide = () => {
                 <>
                   <tr><th colSpan="100">Fall Herbicides</th></tr>
                   <Logic
-                    current={current}
+                    current="herbicide"
                     property="q8"
                     q="Historically, have you implemented a fall herbicide program on this field?"
                     a={['Yes', 'No']}
@@ -225,7 +218,6 @@ const Herbicide = () => {
                     property="savings"
                     q="Implementing cover crops will allow you to forgo a fall herbicide application. What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
                     a="dollar"
-                    shown={state.q1}
                   />
       
                   <Logic
@@ -233,7 +225,6 @@ const Herbicide = () => {
                     property="implement"
                     q="How would you have conducted your fall herbicide program?"
                     type="Chemical"
-                    shown={state.q1}
                   />
       
                   <Logic current="herbicideFall" question="power" />

@@ -65,7 +65,7 @@
 }
 
 *:focus-within ~ .help {
-  display: none;
+  zdisplay: none;
 }
 
 body.debug .input[id]::before {

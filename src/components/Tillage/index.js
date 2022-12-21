@@ -25,10 +25,9 @@ const defaults = {...tillageDefaults, ...fallDefaults, ...eliminationDefaults, .
 
 const Tillage = () => {
   const dispatch  = useDispatch();
-  const current = 'tillage1';
   const dev = useSelector(get.dev);
 
-  const state = useSelector(get[current]);
+  const state = useSelector(get.tillage1);
   const tillage1 = useSelector(get.tillage1);
   const tillageFall = useSelector(get.tillageFall);
   const tillageOther = useSelector(get.tillageOther);
@@ -89,7 +88,7 @@ const Tillage = () => {
         </p>
 
         <form>
-          <table className={current + ' inputs'}>
+          <table className={'tillage1 inputs'}>
             <tbody>
               <tr>
                 <th colSpan="2">
@@ -99,7 +98,7 @@ const Tillage = () => {
               </tr>
               
               <Logic
-                current={current}
+                current="tillage1"
                 property="q1"
                 q="Do you typically use no-till on this field?"
                 a={['Yes', 'No']}
@@ -150,21 +149,21 @@ const Tillage = () => {
               />
 
               <Logic
-                current={current}
+                current="tillage1"
                 q="Tillage cost reductions due to adopting cover crop"
                 a={dollars(tillage1.costReductions)}
                 style={{background: 'lightyellow', borderTop: '2px solid #444'}}
               />              
 
               <Logic
-                current={current}
+                current="tillage1"
                 q="Tillage cost increases due to adopting cover crop"
                 a={dollars(tillageOther.total)}
                 style={{background: 'lightyellow'}}
               />              
 
               <Logic
-                current={current}
+                current="tillage1"
                 q="Net impact of adopting cover crop on tillage costs"
                 a={dollars(tillageAll.total)}
                 style={{background: 'lightyellow'}}

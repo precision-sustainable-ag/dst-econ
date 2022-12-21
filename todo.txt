@@ -1,6 +1,7 @@
 x fit nav
 x scroll top when switching tabs
 x tab after entering data
+x example data
+x focus
 
-example data
 custom cost

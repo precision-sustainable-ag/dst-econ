@@ -15,7 +15,6 @@ import {
 } from '../../store/Store';
 
 import Logic from '../Logic';
-import {useEffect} from 'react';
 import {ClearInputs} from '../ClearInputs';
 import {Input} from '../../shared/Inputs';
 
@@ -86,21 +85,20 @@ const OtherHerbicides = ({state, prop, description}) => {
 } // OtherHerbicides
 
 const Herbicide = () => {
-  const current = 'termination';
-  const state = useSelector(get[current]);
+  const state = useSelector(get.termination);
   
   return (
     <>
       <tr><th colSpan="100">Product</th></tr>
       <Logic
-        current={current}
+        current="termination"
         property="product"
         q="Product"
         a={['', ...Object.keys(db.herbicides).sort()]}
       />
 
       <Logic
-        current={current}
+        current="termination"
         property="unitCost"
         q="Cost per unit of product"
         a={'dollar'}
@@ -108,7 +106,7 @@ const Herbicide = () => {
       />
 
       <Logic
-        current={current}
+        current="termination"
         property="rate"
         q="Application rate"
         a={'number'}
@@ -116,7 +114,7 @@ const Herbicide = () => {
       />
 
       <Logic
-        current={current}
+        current="termination"
         property="productCost"
         q="Product cost"
         a={state.productCost}
@@ -179,7 +177,6 @@ const Tillage = () => (
       property="implement"
       q="How will this tillage be done?"
       type="Tillage"
-      zshown={false}
     />
 
     <Logic current="tillage" question="power" />
@@ -201,19 +198,9 @@ const Termination = () => {
   console.log('Render: Termination');
   const dispatch = useDispatch();
   const current = 'termination';
-
   const dev = useSelector(get.dev);
-
-  useSelector(get.current);
-  useSelector(get.shown[current]);
-
   const method = useSelector(get.termination.method);
-
   const state = useSelector(get[current]);
-
-  useEffect(() => {
-    dispatch(set.current(current));
-  }, [dispatch, current]);
 
   return (
     <>
@@ -251,37 +238,41 @@ const Termination = () => {
                 }}
               />
 
-              <Logic
-                current={current}
-                property="q2"
-                q="Would you do this field activity if you did not have a cover crop?"
-                a={['Yes', 'No']}
-                shown={state.method}
-                onChange={(_, value) => {
-                  clearInputs(defaults, ['termination.method', 'termination.q2']);
-                  if (value === 'Yes' && state.method !== 'Herbicide application') {
-                    dispatch(set.screen('Tillage'));
-                  }
-                }}
-              />
+              {state.method && (
+                <Logic
+                  current={current}
+                  property="q2"
+                  q="Would you do this field activity if you did not have a cover crop?"
+                  a={['Yes', 'No']}
+                  onChange={(_, value) => {
+                    clearInputs(defaults, ['termination.method', 'termination.q2']);
+                    if (value === 'Yes' && state.method !== 'Herbicide application') {
+                      dispatch(set.screen('Tillage'));
+                    }
+                  }}
+                />
+              )}
 
-              <Logic
-                current={current}
-                intro="Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
-                       For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
-                       Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
-                      "
-                property="q3"
-                q="Will you change the herbicides use in your tank mix?"
-                a={['Yes', 'No']}
-                shown={state.method === 'Herbicide application' && state.q2 === 'Yes'}
-                onChange={(_, value) => {
-                  clearInputs(defaults);
-                  if (value === 'No') {
-                    dispatch(set.screen('Tillage'));
-                  }
-                }}
-              />
+              {state.method === 'Herbicide application' && state.q2 === 'Yes' && (
+                <Logic
+                  current={current}
+                  intro="
+                    Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
+                    For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
+                    Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect) allows them to reduce herbicides used in their tank mix.
+                  "
+                  property="q3"
+                  q="Will you change the herbicides use in your tank mix?"
+                  a={['Yes', 'No']}
+                  onChange={(_, value) => {
+                    clearInputs(defaults);
+                    if (value === 'No') {
+                      dispatch(set.screen('Tillage'));
+                    }
+                  }}
+                />
+              )}
+
               {
                 state.q3 === 'Yes' && (
                   <tr>
