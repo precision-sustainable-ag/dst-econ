@@ -19,6 +19,7 @@ const MapComp = ({initWidth, initHeight, zScore}) => {
     dispatch(set.mapType("satellite"));
     if (address.latitude) dispatch(set.lat(address.latitude));
     if (address.longitude) dispatch(set.lon(address.longitude));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, geometry]);
 
   return (
