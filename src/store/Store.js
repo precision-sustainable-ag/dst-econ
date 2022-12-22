@@ -294,13 +294,13 @@ const afterChange = {
       main.scrollTop = 0;
     }
   },
-  lat: (state) => {
-    const mz = new window.google.maps.MaxZoomService();
-
-    mz.getMaxZoomAtLatLng({lat: +state.lat, lng: +state.lon}, (result) => {
-      store.dispatch(set.maxZoom(result.zoom))
-    });
-  },
+  // lat: (state) => {
+  //   const mz = 4;
+  //   store.dispatch(set.maxZoom(mz))
+  //   // mz.getMaxZoomAtLatLng({lat: +state.lat, lng: +state.lon}, (result) => {
+  //   //   store.dispatch(set.maxZoom(result.zoom))
+  //   // });
+  // },
   priorCrop: (state, {payload}) => {
     if (payload === 'Other') {
       state.focus = 'otherPriorCrop';

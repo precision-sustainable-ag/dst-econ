@@ -26,7 +26,7 @@ import Resources    from './components/Resources';
 import Airtable     from './components/Airtables';
 import Activity, {Summary}    from './components/Activity';
 
-import Map          from './shared/GoogleMaps';
+// import Map from "./shared/Map"
 
 const holdError = console.error;
 console.error = (msg, ...subst) => {
@@ -270,10 +270,10 @@ function App() {
   const status = useSelector(get.status);
   const previousScreen = useSelector(get.previousScreen);
   const dev = useSelector(get.dev);
-  const screenWidth = useSelector(get.screenWidth);
-  const screenHeight = useSelector(get.screenHeight);
-  const showMap = useSelector(get.showMap);
-  const maxZoom = useSelector(get.maxZoom);
+  // const screenWidth = useSelector(get.screenWidth);
+  // const screenHeight = useSelector(get.screenHeight);
+  // const showMap = useSelector(get.showMap);
+  // const maxZoom = useSelector(get.maxZoom);
 
   const [hotkeys, setHotKeys] = useState(false);
   // console.log('Render App');
@@ -334,43 +334,16 @@ function App() {
     }, true);
   }, [dispatch]);
 
-  const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
+  // const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
 
   if (screen === 'Loading') {
     return <div className="loading">Loading: {status}</div>;
   } else return (
     <>
-      {
-        mapVisible && (
-          <Map
-            id="AppMap"
-            inputs={false}
-            mapOptions={{
-              mapTypeControl: false,
-              disableDefaultUI: true,
-              zoom: maxZoom,
-            }}
-          />
-        )
-      }
-
-      {
-        screenWidth >= 1200 && screenHeight > 650 && (
-          <Button
-            id="ToggleMap"
-            onClick={() => 
-              dispatch(set.showMap(!showMap))
-            }
-          >
-            {showMap ? 'Hide map' : 'Show map'}
-          </Button>
-        )
-      }
-
       <div
         id="Container"
         style={{
-          margin: mapVisible ? '1rem 2%' : '1rem 2%'  // 'auto',
+          margin: '1rem 2%',
         }}
       >
         <nav onClick={changeScreen} className="{cl}">
