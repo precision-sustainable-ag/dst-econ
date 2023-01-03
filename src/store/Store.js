@@ -1,6 +1,7 @@
 // import {current} from '@reduxjs/toolkit';
 
 import {createStore, set, get} from './redux-autosetters';
+export {set, get} from './redux-autosetters';
 
 const shared = {
   q1: '',
@@ -245,8 +246,8 @@ let initialState = {
       return total;
     },
     total: (state) => {
-      return (state.termination.productCost || 0) + (state.chemical.total || 0) + (state.roller.total || 0) +
-             (state.tillage.total || 0) + ((state.termination.additionalTotal || 0) - (state.termination.reducedTotal || 0))
+      return (+state.termination.productCost || 0) + (+state.chemical.total || 0) + (+state.roller.total || 0) +
+             (+state.tillage.total || 0) + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
     },
   },
   fertility: {
@@ -293,13 +294,13 @@ const afterChange = {
       main.scrollTop = 0;
     }
   },
-  lat: (state) => {
-    const mz = new window.google.maps.MaxZoomService();
-
-    mz.getMaxZoomAtLatLng({lat: +state.lat, lng: +state.lon}, (result) => {
-      store.dispatch(set.maxZoom(result.zoom))
-    });
-  },
+  // lat: (state) => {
+  //   const mz = 4;
+  //   store.dispatch(set.maxZoom(mz))
+  //   // mz.getMaxZoomAtLatLng({lat: +state.lat, lng: +state.lon}, (result) => {
+  //   //   store.dispatch(set.maxZoom(result.zoom))
+  //   // });
+  // },
   priorCrop: (state, {payload}) => {
     if (payload === 'Other') {
       state.focus = 'otherPriorCrop';
@@ -964,5 +965,3 @@ const reducers = {
 }
 
 export const store = createStore(initialState, {afterChange, reducers});
-
-export {set, get} from './redux-autosetters';

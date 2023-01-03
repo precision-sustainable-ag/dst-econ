@@ -4,15 +4,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import {set, get, dollars} from '../../store/Store';
 
 import {CardContent, Card} from '@mui/material';
-import {makeStyles} from '@mui/styles';
+// import {makeStyles} from '@mui/styles';
 import Draggable from 'react-draggable';
 import './styles.scss';
 
-const useStyles = makeStyles({
-  root: {
-    boxShadow: '2px 3px rgba(20, 20, 20, 0.7)',
-  }
-});
+// const useStyles = makeStyles({
+//   root: {
+//     boxShadow: '2px 3px rgba(20, 20, 20, 0.7)',
+//   }
+// });
 
 const Activity = () => {
   const dispatch = useDispatch();
@@ -202,6 +202,17 @@ export const Summary = () => {
   const herbicideTotal    = useSelector(get.herbicide.total) || 0;
 
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal + +yieldTotal + +herbicideTotal;
+  console.log({
+    coverCropTotal,
+    seedbedTotal,
+    plantingTotal,
+    terminationTotal,
+    tillageAllTotal,
+    fertilityTotal,
+    erosionTotal,
+    yieldTotal,
+    herbicideTotal    
+  });
 
   const SummaryRow = ({parm, desc, type}) => {
     const style = type === 'Costs' ? {color: 'red'} : {color: 'black'};
@@ -254,13 +265,13 @@ export const Summary = () => {
   const cashCrop  = useSelector(get.cashCrop);
 
   const style = total > 0 ? {color: 'red'} : {color: 'black'};
-  const classes = useStyles();
+  // const classes = useStyles();
 
   return (
     (total || farm || field || acres || cashCrop) && (
       <div>
         <Draggable handle="strong">
-          <Card id="Summary" variant="outlined" className={classes.root} style={{backgroundColor: '#eee'}}>
+          <Card id="Summary" variant="outlined" style={{backgroundColor: '#eee'}}>
             <CardContent>
               <strong className="cursor">Summary</strong>
               <table>
