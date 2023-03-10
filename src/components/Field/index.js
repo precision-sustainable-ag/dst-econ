@@ -39,7 +39,7 @@ const Field = () => {
 
         <p>Please answer all of the following:</p>
 
-        <table>
+        <table className="field-table">
           <thead>
             <tr>
               <td colSpan={2} style={{ position: "relative" }}>
@@ -52,10 +52,7 @@ const Field = () => {
             <tr>
               {(width <= 91600 || height <= 650) && (
                 <td rowSpan="6">
-                  <Map
-                  initWidth="100%"
-                  initHeight="400px"
-                  />
+                  <Map initWidth="100%" initHeight="400px" />
                 </td>
               )}
               <td>
@@ -136,6 +133,78 @@ const Field = () => {
             </tr>
           </tbody>
         </table>
+
+        <div className="field-mobile">
+          <div>
+            <ClearInputs defaults={defaults} />
+          </div>
+          <Map initWidth="100%" initHeight="400px" />
+          <h2>What is the name of your Farm?</h2>
+          <Input id="farm" fullWidth />
+
+          <h2>What is the name of your Field?</h2>
+          <Input id="field" fullWidth />
+
+          <h2>How many acres are in your Field?</h2>
+          <Input id="acres" />
+
+          <h2>Which of the following options best describes your Field?</h2>
+
+          <Input
+            id="description"
+            options={[
+              { label: "Hill ground; well-drained", value: "hw" },
+              { label: "Hill ground; poorly-drained", value: "hp" },
+              { label: "Bottom land; well-drained", value: "bw" },
+              { label: "Bottom land; poorly-drained", value: "bp" },
+            ]}
+          />
+
+          <h2>What was the Prior Crop planted on this Field?</h2>
+          <Input
+            id="priorCrop"
+            options={[
+              "Corn",
+              "Soybeans",
+              "Wheat",
+              "Grain Sorghum (milo)",
+              "Cotton",
+              "Rice",
+              "Sunflowers",
+              "Canola",
+              "Fallow",
+              "Prevent Plant Acres",
+              "Other",
+            ]}
+          />
+          {priorCrop === "Other" && (
+            <>
+              <Input id="otherPriorCrop" placeholder="Enter prior crop here" />
+            </>
+          )}
+
+          <h2>What is your intended Cash Crop for this Field?</h2>
+          <Input
+            id="cashCrop"
+            options={[
+              "Corn",
+              "Soybeans",
+              "Wheat",
+              "Grain Sorghum (milo)",
+              "Cotton",
+              "Rice",
+              "Sunflowers",
+              "Canola",
+              "Other",
+            ]}
+          />
+          {cashCrop === "Other" && (
+            <Input id="otherCashCrop" placeholder="Enter cash crop here" />
+          )}
+
+          <h2>What is your Labor Value for Analysis? ($/hour)</h2>
+          <Input id="$labor" />
+        </div>
       </form>
       {dev && (
         <button
