@@ -1,3 +1,4 @@
+/* eslint-disable */
 const Resources = () => (
   <div className="Resources">
     <h1>Resources</h1>

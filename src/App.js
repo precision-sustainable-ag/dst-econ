@@ -1,586 +1,278 @@
-import "./App.scss";
+/* eslint-disable jsx-a11y/no-access-key */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-console */
+import './App.scss';
 
-import React from "react";
-import { Button } from "@mui/material";
+import { Button } from '@mui/material';
 
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
+import { Route, Routes, NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { renderToString } from 'react-dom/server';
 
-import { get, set, db } from "./store/Store";
+import { get, set, db } from './store/Store';
 
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-
-import Home from "./components/Home";
-import Field from "./components/Field";
-import Species from "./components/Species";
-import Seedbed from "./components/Seedbed";
-import Planting from "./components/Planting";
-import Termination from "./components/Termination";
-import Tillage from "./components/Tillage";
-import Fertility from "./components/Fertility";
-import Herbicide from "./components/Herbicide";
-import Erosion from "./components/Erosion";
-import Additional from "./components/Additional";
-import Yield from "./components/Yield";
-import Practices from "./components/Practices";
-import Revenue from "./components/Revenue";
-import Resources from "./components/Resources";
-import Airtable from "./components/Airtables";
-import Activity, { Summary } from "./components/Activity";
-
-// import Map from "./shared/Map"
-
-const holdError = console.error;
-console.error = (msg, ...subst) => {
-  // Draggable: can't get this to work https://stackoverflow.com/a/63603903/3903374
-
-  if (!/Draggable/.test(msg + subst)) {
-    holdError(msg, ...subst);
-  }
-};
-
-const holdWarn = console.warn;
-console.warn = (msg, ...subst) => {
-  // Deprecation: moment
-  // Autocomplete: useless warning, which has an overcomplicated isOptionEqualTo solution
-  //               https://github.com/mui/material-ui/issues/29727
-
-  if (!/Deprecation|Autocomplete/.test(msg + subst)) {
-    holdWarn(msg, ...subst);
-  }
-};
+// import Home from './components/Home';
+import Field from './components/Field';
+import Species from './components/Species';
+import Seedbed from './components/Seedbed';
+import Planting from './components/Planting';
+import Termination from './components/Termination';
+import Tillage from './components/Tillage';
+import Fertility from './components/Fertility';
+import Herbicide from './components/Herbicide';
+import Erosion from './components/Erosion';
+import Additional from './components/Additional';
+import Yield from './components/Yield';
+import Practices from './components/Practices';
+import Revenue from './components/Revenue';
+import Resources from './components/Resources';
+// import Airtable from './components/Airtables';
+import Activity, { Summary } from './components/Activity';
 
 const MyButton = (props) => {
   const cashCrop = useSelector(get.cashCrop);
 
   if (
-    props["data-scr"] === "Yield" &&
-    !db.commodities[cashCrop]?.["one year"]
+    props['data-scr'] === 'Yield' && !db.commodities[cashCrop]?.['one year']
   ) {
     return null;
-  } else {
-    return <Button {...props} />;
   }
+
+  return <Button {...props} />;
 }; // MyButton
 
-function App() {
-  const screens = {
-    // Home,
-    Modules: {
-      Field,
-      Species,
-      Seedbed,
-      Planting,
-      Termination,
-      Tillage,
-      Fertility,
-      Herbicide,
-      Erosion,
-      Additional,
-      Yield,
-    },
-    "Economic Impact": {
-      Practices,
-      Revenue,
-    },
-    Resources,
-    Airtables: {
-      coefficients: "",
-      commodities: "",
-      eqip: "",
-      costDefaults: "",
-      herbicides: "",
-      implements: "",
-      power: "",
-      rates: "",
-      seedList: "",
-      stateRegions: "",
-    },
-  };
+const paths = {
+  Field,
+  Species,
+  Seedbed,
+  Planting,
+  Termination,
+  Tillage,
+  Fertility,
+  Herbicide,
+  Erosion,
+  Additional,
+  Yield,
+  Practices,
+  Revenue,
+  Resources,
+};
 
-  const Screen = () => {
-    switch (screen) {
-      case "Home":
-        return (
-          <React.StrictMode>
-            <Home />
-          </React.StrictMode>
-        );
-      case "Field":
-        return <Field />;
-      case "Species":
-        return (
-          <React.StrictMode>
-            <Species />
-          </React.StrictMode>
-        );
-      case "Seedbed":
-        return (
-          <React.StrictMode>
-            <Seedbed />
-          </React.StrictMode>
-        );
-      case "Planting":
-        return (
-          <React.StrictMode>
-            <Planting />
-          </React.StrictMode>
-        );
-      case "Termination":
-        return (
-          <React.StrictMode>
-            <Termination />
-          </React.StrictMode>
-        );
-      case "Tillage":
-        return (
-          <React.StrictMode>
-            <Tillage />
-          </React.StrictMode>
-        );
-      case "Fertility":
-        return (
-          <React.StrictMode>
-            <Fertility />
-          </React.StrictMode>
-        );
-      case "Herbicide":
-        return (
-          <React.StrictMode>
-            <Herbicide />
-          </React.StrictMode>
-        );
-      case "Erosion":
-        return (
-          <React.StrictMode>
-            <Erosion />
-          </React.StrictMode>
-        );
-      case "Additional":
-        return (
-          <React.StrictMode>
-            <Additional />
-          </React.StrictMode>
-        );
-      case "Yield":
-        return (
-          <React.StrictMode>
-            <Yield />
-          </React.StrictMode>
-        );
-      case "Practices":
-        return (
-          <React.StrictMode>
-            <Practices />
-          </React.StrictMode>
-        );
-      case "Revenue":
-        return (
-          <React.StrictMode>
-            <Revenue />
-          </React.StrictMode>
-        );
-      case "Resources":
-        return (
-          <React.StrictMode>
-            <Resources />
-          </React.StrictMode>
-        );
-      case "coefficients":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA"
-            />
-          </React.StrictMode>
-        );
-      case "commodities":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx"
-            />
-          </React.StrictMode>
-        );
-      case "costDefaults":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8"
-            />
-          </React.StrictMode>
-        );
-      case "eqip":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT"
-            />
-          </React.StrictMode>
-        );
-      case "herbicides":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8"
-            />
-          </React.StrictMode>
-        );
-      case "implements":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf"
-            />
-          </React.StrictMode>
-        );
-      case "power":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2"
-            />
-          </React.StrictMode>
-        );
-      case "rates":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A"
-            />
-          </React.StrictMode>
-        );
-      case "seedList":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4"
-            />
-          </React.StrictMode>
-        );
-      case "stateRegions":
-        return (
-          <React.StrictMode>
-            <Airtable
-              name={screen}
-              url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX"
-            />
-          </React.StrictMode>
-        );
-      default:
-    }
-  }; // Screen
+const keys = Object.keys(paths);
 
-  const changeScreen = (e) => {
-    const menu = e.target.closest("button");
+const Navigation = ({ current }) => {
+  const dispatch = useDispatch();
+  const previousScreen = useSelector(get.previousScreen);
 
-    if (menu?.tagName === "BUTTON") {
-      const scr = menu.dataset.scr;
+  const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
+  const next = keys[keys.indexOf(current) + 1];
 
-      if (scr !== "Resources") {
-        dispatch(set.previousScreen(scr));
-      }
-
-      dispatch(set.screen(scr));
-    }
-  }; // changeScreen
-
-  const getNodeText = (node) => {
-    if (["string", "number"].includes(typeof node)) return node;
-    if (node instanceof Array) return node.map(getNodeText).join("");
-    if (typeof node === "object" && node)
-      return getNodeText(node.props.children);
-  }; // getNodeText
-
-  const Navigation = ({ current }) => {
-    let back;
-    let backDesc;
-    let next;
-    let nextDesc;
-
-    const mods = {
-      Home,
-      ...screens.Modules,
-      ...screens["Economic Impact"],
-      Resources,
-    };
-
-    const s = [
-      "Field",
-      "Species",
-      "Seedbed",
-      "Planting",
-      "Termination",
-      "Tillage",
-      "Fertility",
-      "Herbicide",
-      "Erosion",
-      "Additional",
-      "Yield",
-      "Practices",
-      "Revenue",
-      "Resources",
-    ];
-
-    if (current === "Resources") {
-      back = previousScreen;
-    } else {
-      back = s[s.indexOf(screen) - 1];
-      next = s[s.indexOf(screen) + 1];
-    }
-
-    if (back) {
-      backDesc = getNodeText(mods[back].menu) || back;
-    }
-
-    if (next) {
-      nextDesc = getNodeText(mods[next].menu) || next;
-    }
-
-    return (
-      <div id="Navigation">
-        {back && (
+  return (
+    <div id="Navigation">
+      {back && (
+        <NavLink
+          onClick={() => dispatch(set.screen(back))}
+          to={`/${back.replace('Field', '')}`}
+        >
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              dispatch(set.screen(back));
-              dispatch(set.previousScreen(back));
-            }}
             tabIndex={-1}
           >
-            BACK: {backDesc}
+            BACK:
+            &nbsp;
+            {back}
           </Button>
-        )}
-        {next && (
+        </NavLink>
+      )}
+      {next && (
+        <NavLink
+          onClick={() => dispatch(set.screen(next))}
+          to={`/${next}`}
+        >
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              dispatch(set.screen(next));
-              if (next !== "Resources") {
-                dispatch(set.previousScreen(next));
-              }
-            }}
           >
-            NEXT: {nextDesc}
+            NEXT:
+            &nbsp;
+            {next}
           </Button>
-        )}
+        </NavLink>
+      )}
 
-        {current !== "Resources" && next !== "Resources" && (
+      {current !== 'Resources' && next !== 'Resources' && (
+        <NavLink
+          onClick={() => dispatch(set.screen('Resources'))}
+          to="/Resources"
+        >
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              dispatch(set.screen("Resources"));
-            }}
           >
             Resources
           </Button>
-        )}
-      </div>
-    );
-  }; // Navigation
+        </NavLink>
+      )}
+    </div>
+  );
+}; // Navigation
 
+const App = () => {
   const dispatch = useDispatch();
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
-  const previousScreen = useSelector(get.previousScreen);
-  const dev = useSelector(get.dev);
-  const [windowSize, setWindowSize] = useState();
-  // const screenWidth = useSelector(get.screenWidth);
-  // const screenHeight = useSelector(get.screenHeight);
-  // const showMap = useSelector(get.showMap);
-  // const maxZoom = useSelector(get.maxZoom);
+  // const [windowSize, setWindowSize] = useState();
 
-  const [hotkeys, setHotKeys] = useState(false);
-  // console.log('Render App');
+  //  useEffect(() => {
+  //    function handleResize() {
+  //      setWindowSize({
+  //        width: window.innerWidth,
+  //        height: window.innerHeight,
+  //      });
+  //    }
+  //
+  //    window.addEventListener('resize', handleResize);
+  //    handleResize();
+  //    return () => window.removeEventListener('resize', handleResize);
+  //  }, []);
 
   useEffect(() => {
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Maybe not:
-  useEffect(() => {
-    if (!hotkeys) {
-      const u = document.querySelectorAll("u");
-      console.log(u);
-      if (u.length) {
-        setHotKeys(true);
-        const hk = {
-          y: "Yield",
-        };
-
-        u.forEach((el) => {
-          if (el.closest("span").parentNode.dataset.scr) {
-            hk[el.textContent.toLowerCase()] =
-              el.closest("span").parentNode.dataset.scr;
-          }
-        });
-
-        document.addEventListener("keydown", (e) => {
-          if (e.altKey) {
-            document.body.classList.add("hotkeys");
-            const scr = hk[e.key.toLowerCase()];
-            if (scr) {
-              dispatch(set.screen(scr));
-              e.preventDefault();
-            }
-            if (e.key === "Alt") {
-              e.preventDefault();
-            }
-          }
-        });
-
-        document.addEventListener("keyup", (e) => {
-          if (!e.altKey) {
-            document.body.classList.remove("hotkeys");
-          }
-        });
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey) {
+        document.body.classList.add('hotkeys');
       }
-    }
-  }, [dispatch, hotkeys, screen]);
-
-  useEffect(() => {
-    window.addEventListener("resize", () => {
-      dispatch({ type: "resize" });
     });
 
-    document.addEventListener("focusin", ({ target }) => {
-      if (target.type !== "checkbox") {
+    document.addEventListener('keyup', (e) => {
+      if (!e.altKey) {
+        document.body.classList.remove('hotkeys');
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      dispatch({ type: 'resize' });
+    });
+
+    document.addEventListener('focusin', ({ target }) => {
+      if (target.type !== 'checkbox') {
         dispatch(set.focused(target.id)); // TODO
       }
     });
 
     document.addEventListener(
-      "scroll",
+      'scroll',
       (e) => {
         dispatch(set.scrollTop(e.target.scrollTop));
       },
-      true
+      true,
     );
   }, [dispatch]);
 
-  const MyMenu = (s) => {
-    if (windowSize.width >= 1045) {
-      return Object.keys(s).map((scr) => {
-        let cname = scr === screen ? "selected" : "";
-        if (/Practices|Revenue|Resources/.test(scr)) {
-          cname += " summary";
-        }
-        if (scr === "Airtables") {
-          if (!dev) {
-            return null;
-          } else {
-            return (
-              <details
-                key={scr}
-                style={{ float: "right" }}
-                className="menu-items"
-              >
-                <summary>{scr}</summary>
-                {MyMenu(s[scr])}
-              </details>
-            );
-          }
-        } else if (typeof s[scr] === "object") {
-          return (
-            <span key={scr} className="menu-items">
-              <strong>{scr}</strong>
-              {MyMenu(s[scr])}
-            </span>
-          );
-        } else {
-          return (
-            <span key={scr} className="menu-items">
-              {scr === "Practices" && <hr />}
-              <MyButton data-scr={scr} key={scr} className={cname}>
-                {/* scr === 'Revenue' && <img src="revenue.png" alt="Revenue" /> */}
-                {s[scr].menu || scr}
-              </MyButton>
-            </span>
-          );
-        }
-      });
-    } else {
-      return (
-        <div className="dropdown">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Age</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
-            >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-      );
-    }
-  }; // MyMenu
+  // const airTables = {
+  //   coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
+  //   commodities: 'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
+  //   costDefaults: 'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
+  //   eqip: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT',
+  //   herbicides: 'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
+  //   implements: 'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
+  //   power: 'https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2',
+  //   rates: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A',
+  //   seedList: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4',
+  //   stateRegions: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
+  // };
 
-  // const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
-
-  if (screen === "Loading") {
-    return <div className="loading">Loading: {status}</div>;
-  } else
+  if (screen === 'Loading') {
     return (
-      <>
-        <div id="Container">
-          <nav onClick={changeScreen} className="{cl}">
-            <div
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: "120%",
-                marginBottom: "0.25rem",
-              }}
-            >
-              Cover Crop Decision Support Tool
-            </div>
-            <div id="Menu">{MyMenu(screens)}</div>
-            <img alt="logo" src="PSAlogo-text.png" id="PSALogo" />
-          </nav>
-
-          <div id="Main">
-            <Screen />
-          </div>
-
-          <Navigation current={screen} />
-        </div>
-
-        <Activity />
-        <Summary />
-      </>
+      <div className="loading">
+        Loading:
+        &nbsp;
+        {status}
+      </div>
     );
-}
+  }
 
-document.addEventListener("dblclick", () => {
-  document.body.classList.toggle("debug");
+  return (
+    <div id="Container">
+      <nav>
+        <div
+          style={{
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '120%',
+            marginBottom: '0.25rem',
+          }}
+        >
+          Cover Crop Decision Support Tool
+        </div>
+        <img alt="logo" src="PSAlogo-text.png" id="PSALogo" />
+        <div style={{ marginLeft: 130 }}>
+          {
+            keys.map((path) => {
+              let cname = path === screen ? 'selected' : '';
+              if (/Practices|Revenue|Resources/.test(path)) {
+                cname += ' summary';
+              }
+              const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
+              return (
+                <>
+                  {path === 'Practices' && <hr className="break" />}
+                  <NavLink
+                    key={path}
+                    onClick={() => dispatch(set.screen(path))}
+                    style={({ isActive }) => ({
+                      color: isActive ? '#eee' : '#aaa',
+                    })}
+                    to={`/${path.replace('Field', '')}`}
+                    accessKey={accessKey}
+                  >
+                    <MyButton
+                      key={path}
+                      data-scr={path}
+                      className={cname}
+                    >
+                      {paths[path].menu}
+                    </MyButton>
+                  </NavLink>
+                </>
+              );
+            })
+          }
+        </div>
+      </nav>
+
+      <Activity />
+      <Summary />
+
+      <div id="Main">
+        <Routes>
+          <Route path="" element={<Field />} />
+          <Route path="Species" element={<Species />} />
+          <Route path="Seedbed" element={<Seedbed />} />
+          <Route path="Planting" element={<Planting />} />
+          <Route path="Termination" element={<Termination />} />
+          <Route path="Tillage" element={<Tillage />} />
+          <Route path="Fertility" element={<Fertility />} />
+          <Route path="Herbicide" element={<Herbicide />} />
+          <Route path="Erosion" element={<Erosion />} />
+          <Route path="Additional" element={<Additional />} />
+          <Route path="Yield" element={<Yield />} />
+          <Route path="Practices" element={<Practices />} />
+          <Route path="Revenue" element={<Revenue />} />
+          <Route path="Resources" element={<Resources />} />
+        </Routes>
+      </div>
+
+      <Navigation current={screen} />
+    </div>
+  );
+}; // App
+
+document.addEventListener('dblclick', () => {
+  document.body.classList.toggle('debug');
 });
 
 export default App;

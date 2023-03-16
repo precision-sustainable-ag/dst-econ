@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {Input} from '../../shared/Inputs';
 
 import {useDispatch, useSelector} from 'react-redux';

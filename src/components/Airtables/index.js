@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {db} from '../../store/Store';
 
 const Airtable = ({name, url}) => {

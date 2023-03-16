@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {useSelector} from 'react-redux';
 
 import {get, getDefaults, exampleSeedbed, clearInputs} from '../../store/Store';

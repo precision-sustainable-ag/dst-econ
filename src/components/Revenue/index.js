@@ -1,3 +1,4 @@
+/* eslint-disable */
 const Revenue = () => (
   <div className="Revenue">
     <h1>Revenue Impact</h1>

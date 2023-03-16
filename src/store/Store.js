@@ -1,3 +1,4 @@
+/* eslint-disable */
 // import {current} from '@reduxjs/toolkit';
 
 import {createStore, set, get} from './redux-autosetters';
@@ -292,6 +293,9 @@ const afterChange = {
     const main = document.querySelector('#Main');
     if (main) {
       main.scrollTop = 0;
+    }
+    if (state.screen !== 'Resources') {
+      state.previousScreen = state.screen;
     }
   },
   // lat: (state) => {

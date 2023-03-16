@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {clearInputs} from '../store/Store';
 import {Button} from '@mui/material';
 

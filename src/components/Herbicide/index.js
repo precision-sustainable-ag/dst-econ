@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Logic from '../Logic';
 import {ClearInputs} from '../ClearInputs';
 

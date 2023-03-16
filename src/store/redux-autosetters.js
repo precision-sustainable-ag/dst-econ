@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {configureStore, createAction, createReducer} from '@reduxjs/toolkit';
 import axios from 'axios';
 

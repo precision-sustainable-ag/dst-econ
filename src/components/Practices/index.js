@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable jsx-a11y/no-access-key */
 import {useSelector, useDispatch} from "react-redux";
 import {get, set} from "../../store/redux-autosetters";

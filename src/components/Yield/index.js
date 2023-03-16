@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import Draggable from 'react-draggable';

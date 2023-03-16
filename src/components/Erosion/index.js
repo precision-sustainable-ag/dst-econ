@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Logic from '../Logic';
 import {Help} from '../../shared/Help';
 
@@ -79,6 +80,6 @@ const Erosion = () => {
   );
 } // Erosion
 
-Erosion.menu = <span><u>E</u>rosion Control</span>;
+Erosion.menu = <span>Erosio<u>n</u> Control</span>;
 
 export default Erosion;
