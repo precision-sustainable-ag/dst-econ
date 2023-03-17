@@ -1,21 +1,33 @@
-/* eslint-disable */
-import {useSelector} from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import {get, dollars, db, getDefaults, exampleSpecies} from '../../store/Store';
-import {Input} from '../../shared/Inputs';
-import {ClearInputs} from '../ClearInputs';
+import {
+  get, dollars, db, getDefaults, exampleSpecies,
+} from '../../store/Store';
+import { Input } from '../../shared/Inputs';
+import { ClearInputs } from '../ClearInputs';
 
 const defaults = getDefaults('rates|species|prices');
 
-const SpeciesRow = ({n}) => {
+const SpeciesRow = ({ n }) => {
   const species = useSelector(get.species);
 
   const speciesList = {
-    Other:      ['Commercial mix'],
-    Brassica:   ['Brassica, Forage', 'Mustard', 'Radish, Forage', 'Radish, Oilseed', 'Rape, Oilseed, Spring', 'Rape, Oilseed, Winter', 'Rapeseed, Forage', 'Turnip, Forage', 'Turnip, Purple Top'],
-    Broadleaf:  ['Buckwheat', 'Phacelia', 'Sunflower'],
-    Grass:      ['Barley, Spring', 'Barley, Winter', 'Cereal Rye, Spring', 'Cereal Rye, Winter', 'Millet, Japanese', 'Millet, Pearl', 'Oats', 'Oats, Black', 'Oats, Spring', 'Ryegrass, Annual', 'Ryegrass, Perennial', 'Sorghum', 'Sorghum-sudangrass', 'Sudangrass', 'Teff', 'Triticale, Spring', 'Triticale, Winter', 'Wheat, Spring', 'Wheat, Winter'],
-    Legume:     ['Alfalfa, Dormant', 'Clover, Alsike', 'Clover, Balansa', 'Clover, Berseem', 'Clover, Crimson', 'Clover, Red', 'Clover, White', 'Cowpea', 'Pea, Spring', 'Pea, Winter', 'Soybeans', 'Sunn Hemp', 'Sweetclover, Yellow', 'Vetch, Hairy']
+    Other: ['Commercial mix'],
+    Brassica: [
+      'Brassica, Forage', 'Mustard', 'Radish, Forage', 'Radish, Oilseed', 'Rape, Oilseed, Spring', 'Rape, Oilseed, Winter',
+      'Rapeseed, Forage', 'Turnip, Forage', 'Turnip, Purple Top',
+    ],
+    Broadleaf: ['Buckwheat', 'Phacelia', 'Sunflower'],
+    Grass: [
+      'Barley, Spring', 'Barley, Winter', 'Cereal Rye, Spring', 'Cereal Rye, Winter', 'Millet, Japanese', 'Millet, Pearl',
+      'Oats', 'Oats, Black', 'Oats, Spring', 'Ryegrass, Annual', 'Ryegrass, Perennial', 'Sorghum', 'Sorghum-sudangrass',
+      'Sudangrass', 'Teff', 'Triticale, Spring', 'Triticale, Winter', 'Wheat, Spring', 'Wheat, Winter',
+    ],
+    Legume: [
+      'Alfalfa, Dormant', 'Clover, Alsike', 'Clover, Balansa', 'Clover, Berseem', 'Clover, Crimson', 'Clover, Red',
+      'Clover, White', 'Cowpea', 'Pea, Spring', 'Pea, Winter', 'Soybeans', 'Sunn Hemp', 'Sweetclover, Yellow', 'Vetch, Hairy',
+    ],
   };
 
   const options = [
@@ -24,7 +36,26 @@ const SpeciesRow = ({n}) => {
     ...speciesList.Legume,
     ...speciesList.Brassica,
     ...speciesList.Broadleaf,
-  ].filter((s, i) => s === species[n] || !species.includes(s));
+  ].filter((s) => s === species[n] || !species.includes(s));
+
+  const groupByOption = (option) => {
+    if (speciesList.Other.includes(option)) {
+      return '-';
+    }
+    if (speciesList.Brassica.includes(option)) {
+      return 'Brassica';
+    }
+    if (speciesList.Broadleaf.includes(option)) {
+      return 'Broadleaf';
+    }
+    if (speciesList.Grass.includes(option)) {
+      return 'Grass';
+    }
+    if (speciesList.Legume.includes(option)) {
+      return 'Legume';
+    }
+    return 'ERROR';
+  }; // groupByOption
 
   return (
     <tr>
@@ -33,14 +64,7 @@ const SpeciesRow = ({n}) => {
           id="species"
           index={n}
           autoFocus={n === 0}
-          groupBy={
-            (option) => speciesList.Other.includes(option)     ? '-' :
-                        speciesList.Brassica.includes(option)  ? 'Brassica' :
-                        speciesList.Broadleaf.includes(option) ? 'Broadleaf' :
-                        speciesList.Grass.includes(option)     ? 'Grass' :
-                        speciesList.Legume.includes(option)    ? 'Legume' :
-                                                                 'ERROR'
-          }
+          groupBy={groupByOption}
           options={options}
         />
       </td>
@@ -59,18 +83,18 @@ const SpeciesRow = ({n}) => {
         />
       </td>
     </tr>
-  )
-} // SpeciesRow
+  );
+}; // SpeciesRow
 
 const Species = () => {
   // console.log('Render: Species');
 
-  const dev      = useSelector(get.dev);
-  const species  = useSelector(get.species);
-  const state    = useSelector(get.state);
-  const total    = useSelector(get.coverCropTotal);
+  const dev = useSelector(get.dev);
+  const species = useSelector(get.species);
+  const state = useSelector(get.state);
+  const total = useSelector(get.coverCropTotal);
 
-  let rec = db.stateRegions[state.toUpperCase()];
+  const rec = db.stateRegions[state.toUpperCase()];
 
   let region = rec ? db.stateRegions[state.toUpperCase()].ccRegion.toLowerCase() : '';
   if (region) {
@@ -78,10 +102,10 @@ const Species = () => {
   }
 
   const link = {
-    Midwest:    'https://mccc.msu.edu/selector-tool/',
-    Northeast:  'http://northeastcovercrops.com/decision-tool/',
-    Southern:   'https://southerncovercrops.org/cover-crop-resource-guide/',
-    Western:    'https://westerncovercrops.org/category/resources/selection/'
+    Midwest: 'https://mccc.msu.edu/selector-tool/',
+    Northeast: 'http://northeastcovercrops.com/decision-tool/',
+    Southern: 'https://southerncovercrops.org/cover-crop-resource-guide/',
+    Western: 'https://westerncovercrops.org/category/resources/selection/',
   }[region];
 
   return (
@@ -94,12 +118,21 @@ const Species = () => {
             <p>In this section, you will select a cover crop and seeding rates as well as an estimated cost of the cover crop seed ($/pound).</p>
 
             <p>
-              A common strategy for selecting a cover crop is to base your decision upon the need for a specific change you wish to make in a field or farm.
-              For example, if you wish to build soil organic matter you may want to select a cover crop with high levels of biomass and a fibrous root structure.
+              A common strategy for selecting a cover crop is to base your decision upon the need
+              for a specific change you wish to make in a field or farm.
+              For example, if you wish to build soil organic matter
+              you may want to select a cover crop with high levels of biomass and a fibrous root structure.
               Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.
               If you already know which cover crop you wish to consider, please select from the drop-down menu.
               If you are new to the use of cover crops or still have questions,
-              please consider using the <a href={link} target="_blank" rel="noreferrer">{region} Cover Crops Council Species Selector</a>.
+              please consider using the
+              {' '}
+              <a href={link} target="_blank" rel="noreferrer">
+                {region}
+                {' '}
+                Cover Crops Council Species Selector
+              </a>
+              .
             </p>
 
             <p>
@@ -109,13 +142,22 @@ const Species = () => {
               For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
               but may plant a higher rate if you seek to maximize grazing potential.
               You may use the common rate listed in the green shaded boxes or input your own rate.
-              If you wish to learn more about possible seeding rates, consider using the "Cover Crop Seeding Rate Calculator".
+              If you wish to learn more about possible seeding rates, consider using the &quot;Cover Crop Seeding Rate Calculator&quot;.
             </p>
 
             <p>
               Prices for cover crops may vary widely based upon your geography and availability from season to season.
               You may utilize the default value or enter specific pricing from your region.
-              Growers planning to plant a cover crop <em>mix</em> can either 'build' their mix by selecting multiple cover crop species and an <em><strong>appropriate</strong></em> seeding rate (i.e. seeding rate may be lower in a mix relative to seeding as a stand-alone) or by selecting commercial mix and entering a seed rate and price for the commercial mix you chose.
+              Growers planning to plant a cover crop
+              {' '}
+              <em>mix</em>
+              {' '}
+              can either &apos;build&apos; their mix by selecting multiple cover crop species and an
+              {' '}
+              <em><strong>appropriate</strong></em>
+              {' '}
+              seeding rate (i.e. seeding rate may be lower in a mix relative to seeding as a stand-alone)
+              or by selecting commercial mix and entering a seed rate and price for the commercial mix you chose.
             </p>
           </div>
 
@@ -126,28 +168,34 @@ const Species = () => {
                   User Input
                   <ClearInputs defaults={defaults} />
                 </th>
-                <td className="hidden"></td>
-                <td className="hidden"></td>
+                <td className="hidden" />
+                <td className="hidden" />
               </tr>
               <tr>
                 <th>Cover Crop Species</th>
-                <th>Seeding Rate<br/>(lb/ac)</th>
-                <th>Price<br/>($/lb)</th>
+                <th>
+                  Seeding Rate
+                  <br />
+                  (lb/ac)
+                </th>
+                <th>
+                  Price
+                  <br />
+                  ($/lb)
+                </th>
               </tr>
             </thead>
             <tbody>
               {
-                species.map((s, n) => {
-                  return (
-                    s &&
-                    <SpeciesRow key={n} n={n}/>
-                  )
-                })
+                species.map((s, n) => (
+                  s
+                    && <SpeciesRow key={n} n={n} />
+                ))
               }
-              <SpeciesRow key={species.length} n={species.length}/>
+              <SpeciesRow key={species.length} n={species.length} />
               <tr>
                 <td colSpan="2"><strong>Cost of Cover crop seed ($/acre)</strong></td>
-                <td className="hidden"></td>
+                <td className="hidden" />
                 <td><strong>{dollars(total)}</strong></td>
               </tr>
             </tbody>
@@ -156,12 +204,17 @@ const Species = () => {
       </form>
 
       {
-        dev && <button onClick={exampleSpecies}>Test data</button>
+        dev && <button type="button" onClick={exampleSpecies}>Test data</button>
       }
     </>
-  )
-} // Species
+  );
+}; // Species
 
-Species.menu = <span><u>C</u>over Crops</span>;
+Species.menu = (
+  <span>
+    <u>C</u>
+    over Crops
+  </span>
+);
 
 export default Species;
