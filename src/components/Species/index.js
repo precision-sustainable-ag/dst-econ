@@ -5,7 +5,7 @@ import {
   get, dollars, db, getDefaults, exampleSpecies,
 } from '../../store/Store';
 import { Input } from '../../shared/Inputs';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
 const defaults = getDefaults('rates|species|prices');
 

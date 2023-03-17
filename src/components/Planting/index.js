@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Logic from '../Logic';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
 import { get, getDefaults, examplePlanting } from '../../store/Store';
 

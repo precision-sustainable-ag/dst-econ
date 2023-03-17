@@ -16,7 +16,7 @@ import {
 } from '../../store/Store';
 
 import Logic from '../Logic';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 import { Input } from '../../shared/Inputs';
 
 const defaults = getDefaults([

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Input } from '../../shared/Inputs';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 import {
   get, dollars, getDefaults, db, exampleFertilityBenefit, exampleFertilityCost,
 } from '../../store/Store';

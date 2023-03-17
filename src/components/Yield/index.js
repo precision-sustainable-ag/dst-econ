@@ -11,7 +11,7 @@ import {
 } from '../../store/Store';
 import Logic from '../Logic';
 import { Help } from '../../shared/Help';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
 const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 

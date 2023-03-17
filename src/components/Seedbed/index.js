@@ -5,7 +5,7 @@ import {
   get, getDefaults, exampleSeedbed, clearInputs,
 } from '../../store/Store';
 import Logic from '../Logic';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
 const defaults = getDefaults(Object.keys(get.seedbed).map((parm) => `seedbed.${parm}`));
 

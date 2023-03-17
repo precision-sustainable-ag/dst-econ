@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Input } from '../../shared/Inputs';
 import { Help } from '../../shared/Help';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 import {
   get, set, test, getDefaults,
 } from '../../store/Store';

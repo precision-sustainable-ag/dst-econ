@@ -16,7 +16,7 @@ import {
 } from '../../store/Store';
 
 import Logic from '../Logic';
-import { ClearInputs } from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
 const tillageDefaults = getDefaults(Object.keys(get.tillage1).map((parm) => `tillage1.${parm}`));
 const fallDefaults = getDefaults(Object.keys(get.tillageFall).map((parm) => `tillageFall.${parm}`));
