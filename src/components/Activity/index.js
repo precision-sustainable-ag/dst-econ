@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { CardContent, Card } from '@mui/material';
 import Draggable from 'react-draggable';
 import { get, dollars } from '../../store/Store';
-import { Input } from '../../shared/Inputs';
+import Input from '../../shared/Inputs';
 import './styles.scss';
 
 const Costs = ({ desc }) => {

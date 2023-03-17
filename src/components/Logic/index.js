@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Input } from '../../shared/Inputs';
+import Input from '../../shared/Inputs';
 
 import { get, dollars, db } from '../../store/Store';
 

@@ -17,7 +17,7 @@ import {
 
 import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
-import { Input } from '../../shared/Inputs';
+import Input from '../../shared/Inputs';
 
 const defaults = getDefaults([
   'termination.additionalHerbicides', 'termination.additionalPrices', 'termination.additionalRates', 'termination.reducedHerbicides',

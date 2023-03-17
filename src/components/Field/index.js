@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Map from '../../shared/Map';
-import { Input } from '../../shared/Inputs';
+import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import {
   get, set, test, getDefaults,
