@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Logic from '../Logic';
-import { Help } from '../../shared/Help';
+import Help from '../../shared/Help';
 import {
   get, set, dollars, exampleErosion,
 } from '../../store/Store';

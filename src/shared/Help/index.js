@@ -1,12 +1,9 @@
-/* eslint-disable */
-
-import {Icon, Modal, Typography} from '@mui/material';
-import {Box} from '@mui/system';
-import {useRef, useState} from 'react';
-
+import React, { useRef, useState } from 'react';
+import { Icon, Modal, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import './styles.scss';
 
-export const Help = (props) => {
+const Help = ({ children, ...otherProps }) => {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -26,11 +23,13 @@ export const Help = (props) => {
         closeAfterTransition
       >
         <Box className="modal">
-          <Typography {...props}>
-            {props.children}
+          <Typography {...otherProps}>
+            {children}
           </Typography>
         </Box>
       </Modal>
     </>
-  )
-} // Help
+  );
+}; // Help
+
+export default Help;
