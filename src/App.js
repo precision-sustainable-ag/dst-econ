@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/no-access-key */
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-console */
 import './App.scss';
 
@@ -30,16 +29,14 @@ import Resources from './components/Resources';
 // import Airtable from './components/Airtables';
 import Activity, { Summary } from './components/Activity';
 
-const MyButton = (props) => {
+const MyButton = ({ screen, ...otherProps }) => {
   const cashCrop = useSelector(get.cashCrop);
 
-  if (
-    props['data-scr'] === 'Yield' && !db.commodities[cashCrop]?.['one year']
-  ) {
+  if (screen === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
     return null;
   }
 
-  return <Button {...props} />;
+  return <Button {...otherProps} />;
 }; // MyButton
 
 const paths = {
@@ -82,7 +79,7 @@ const Navigation = ({ current }) => {
           >
             BACK:
             &nbsp;
-            {back}
+            {paths[back].menu}
           </Button>
         </NavLink>
       )}
@@ -97,7 +94,7 @@ const Navigation = ({ current }) => {
           >
             NEXT:
             &nbsp;
-            {next}
+            {paths[next].menu}
           </Button>
         </NavLink>
       )}
@@ -219,7 +216,7 @@ const App = () => {
               const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
               return (
                 <>
-                  {path === 'Practices' && <hr className="break" />}
+                  {path === 'Practices' && <hr />}
                   <NavLink
                     key={path}
                     onClick={() => dispatch(set.screen(path))}
@@ -230,8 +227,7 @@ const App = () => {
                     accessKey={accessKey}
                   >
                     <MyButton
-                      key={path}
-                      data-scr={path}
+                      screen={path}
                       className={cname}
                     >
                       {paths[path].menu}
@@ -271,8 +267,10 @@ const App = () => {
   );
 }; // App
 
-document.addEventListener('dblclick', () => {
-  document.body.classList.toggle('debug');
+document.addEventListener('dblclick', (e) => {
+  if (e.ctrlKey) {
+    document.body.classList.toggle('debug');
+  }
 });
 
 export default App;
