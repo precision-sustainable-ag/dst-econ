@@ -91,6 +91,7 @@ const initialState = {
   mapType: 'hybrid',
   mapZoom: 13,
   mapPolygon: [],
+  mapAddress: '',
   location: '',
   state: 'New Jersey',
   stateAbbreviation: 'NJ',

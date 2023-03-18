@@ -136,7 +136,7 @@ const App = () => {
 
   useEffect(() => {
     if (screen !== 'Loading') {
-      dispatch(set.screen(location.pathname.slice(1)));
+      dispatch(set.screen(location.pathname.slice(1) || 'Field'));
     }
   }, [dispatch, location.pathname, screen]);
 
@@ -224,9 +224,6 @@ const App = () => {
                   {path === 'Practices' && <hr />}
                   <NavLink
                     key={path}
-                    style={({ isActive }) => ({
-                      color: isActive ? '#eee' : '#aaa',
-                    })}
                     to={path === 'Field' ? '/' : path}
                     accessKey={accessKey}
                   >
