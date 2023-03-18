@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 import React, { useState, useEffect } from 'react';
 import { Map } from '@psa/dst.ui.map';
 import { useDispatch } from 'react-redux';
