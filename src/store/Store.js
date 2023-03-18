@@ -1,11 +1,11 @@
-/* eslint-disable */
-/* eslint-disable no-use-before-define */
+/* eslint-disable no-console */
 // import {current} from '@reduxjs/toolkit';
 
 import React from 'react';
 import { createStore, set, get } from './redux-autosetters';
 
 export { set, get } from './redux-autosetters';
+export const db = {};
 
 const shared = {
   q1: '',
@@ -480,72 +480,22 @@ const afterChange = {
   },
 };
 
-[
-  'seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillageFall', 'tillageElimination', 'tillageOther', 'herbicideAdditional',
-  'herbicideReduced', 'herbicideFall',
-].forEach((section) => {
-  afterChange[`${section}.implementsCost`] = (state) => getCosts(state, section);
-  afterChange[`${section}.powerCost`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Labor`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Fuel`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Depreciation`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Interest`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Repairs`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Taxes`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Storage`] = (state) => getCosts(state, section);
-  afterChange[`${section}.Insurance`] = (state) => getCosts(state, section);
-  afterChange[`${section}.annualUseHours`] = (state, { payload }) => payload && getCosts(state, section);
-  afterChange[`${section}.annualUseAcres`] = (state, { payload }) => payload && getCosts(state, section);
+const reducers = {
+  resize: (state) => {
+    // Cannot perform 'set' on a proxy that has been revoked
+    // clearTimeout(resizeTimer);
+    // resizeTimer = setTimeout(() => {
+    state.screenWidth = window.innerWidth;
+    state.screenHeight = window.innerHeight;
+    // }, 100);
+  },
+  updateLocation: (state, { payload }) => {
+    state = { ...state, ...payload };
+    return state;
+  },
+};
 
-  afterChange[`${section}.implement`] = (state, { payload }) => {
-    const obj = state[section];
-
-    if (payload === 'Hire custom operator') {
-      const def = {
-        seedbed: 'Seedbed preparation',
-        planting: 'Planting',
-        tillage: 'Seedbed preparation',
-        tillageFall: 'Seedbed preparation',
-        tillageElimination: 'Seedbed preparation',
-        tillageOther: 'Seedbed preparation',
-        chemical: 'Herbicide application',
-        roller: 'Roller',
-        herbicideAdditional: 'Herbicide application',
-        herbicideReduced: 'Herbicide application',
-        herbicideFall: 'Herbicide application',
-      }[section];
-
-      state.focus = `${section}.total`;
-      console.log(db.costDefaults);
-      obj.estimated = obj.total = db.costDefaults[def].cost;
-    } else if (payload === 'I will not be making an additional application') {
-
-    } else if (payload) {
-      const p = db.implements[payload];
-
-      obj.power = p['default power unit'];
-      obj.acresHour = +(p.size1 * p['field speed (m/h)'] * p['field efficiency'] / db.rates.conversion.value).toFixed(2);
-      obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
-
-      return [`${section}.power`];
-    }
-  };
-
-  afterChange[`${section}.power`] = (state) => {
-    const obj = state[section];
-
-    if (obj.power) {
-      obj.annualUseHours = db.power[obj.power]['expected use (hr/yr)'];
-      getCosts(state, section);
-
-      if (/tillage[1-3]/.test(section)) {
-        state.focus = `${section}.total`;
-      } else {
-        state.focus = `${section}.annualUseAcres`;
-      }
-    }
-  };
-});
+export const store = createStore(initialState, { afterChange, reducers });
 
 const getCosts = (state, current) => {
   ['implements', 'power'].forEach((type) => {
@@ -582,7 +532,7 @@ const getCosts = (state, current) => {
       const listprice = p['purchase price 2020'] / (1 - p['list discount']);
       const $tradein = tradein * listprice;
       const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
-      const accumulatedrepairs = listprice * (RF1 * (p['expected life (years)'] * p['expected use (hr/yr)'] / 1000) ** RF2);
+      const accumulatedrepairs = listprice * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];
 
       // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
@@ -591,28 +541,28 @@ const getCosts = (state, current) => {
 
       switch (parm) {
         case 'Fuel':
-          value = +((p.HP * p['fuel use (gal/PTO hp/hr)']) * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value / acresHour;
+          value = +(((p.HP * p['fuel use (gal/PTO hp/hr)']) * (1 + +db.rates.lubrication.value)) * db.rates.fuel.value) / acresHour;
           break;
         case 'Depreciation':
           value = annualdepreciation / divisor;
           break;
         case 'Interest':
-          value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * db.rates.interest.value / divisor;
+          value = ((((p['purchase price 2020'] + $tradein + annualdepreciation) / 2) * db.rates.interest.value)) / divisor;
           break;
         case 'Repairs':
           value = annualrepairs / divisor;
           break;
         case 'Taxes':
-          value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * db.rates.property.value / divisor;
+          value = ((((p['purchase price 2020'] + $tradein + annualdepreciation) / 2) * db.rates.property.value)) / divisor;
           break;
         case 'Insurance':
-          value = (p['purchase price 2020'] + $tradein + annualdepreciation) / 2 * db.rates.insurance.value / divisor;
+          value = ((((p['purchase price 2020'] + $tradein + annualdepreciation) / 2) * db.rates.insurance.value)) / divisor;
           break;
         case 'Storage':
-          value = db.rates.storage.value * p['shed (ft^2)'] / divisor;
+          value = (db.rates.storage.value * p['shed (ft^2)']) / divisor;
           break;
         case 'Labor':
-          value = (p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour * db.rates.skilled.value;
+          value = (((p['tractor (hr/impl)'] * p['labor (hr/trac)'])) / acresHour) * db.rates.skilled.value;
           break;
         default:
           value = p[parm];
@@ -629,6 +579,75 @@ const getCosts = (state, current) => {
   });
 }; // getCosts
 
+[
+  'seedbed', 'planting', 'chemical', 'roller', 'tillage', 'tillageFall', 'tillageElimination', 'tillageOther', 'herbicideAdditional',
+  'herbicideReduced', 'herbicideFall',
+].forEach((section) => {
+  afterChange[`${section}.implementsCost`] = (state) => getCosts(state, section);
+  afterChange[`${section}.powerCost`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Labor`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Fuel`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Depreciation`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Interest`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Repairs`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Taxes`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Storage`] = (state) => getCosts(state, section);
+  afterChange[`${section}.Insurance`] = (state) => getCosts(state, section);
+  afterChange[`${section}.annualUseHours`] = (state, { payload }) => payload && getCosts(state, section);
+  afterChange[`${section}.annualUseAcres`] = (state, { payload }) => payload && getCosts(state, section);
+
+  afterChange[`${section}.implement`] = (state, { payload }) => {
+    const obj = state[section];
+
+    if (payload === 'Hire custom operator') {
+      const def = {
+        seedbed: 'Seedbed preparation',
+        planting: 'Planting',
+        tillage: 'Seedbed preparation',
+        tillageFall: 'Seedbed preparation',
+        tillageElimination: 'Seedbed preparation',
+        tillageOther: 'Seedbed preparation',
+        chemical: 'Herbicide application',
+        roller: 'Roller',
+        herbicideAdditional: 'Herbicide application',
+        herbicideReduced: 'Herbicide application',
+        herbicideFall: 'Herbicide application',
+      }[section];
+
+      state.focus = `${section}.total`;
+      obj.estimated = db.costDefaults[def].cost;
+      obj.total = db.costDefaults[def].cost;
+    } else if (payload === 'I will not be making an additional application') {
+      // empty
+    } else if (payload) {
+      const p = db.implements[payload];
+
+      obj.power = p['default power unit'];
+      obj.acresHour = +((p.size1 * p['field speed (m/h)'] * p['field efficiency']) / db.rates.conversion.value).toFixed(2);
+      obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
+
+      return [`${section}.power`];
+    }
+    return null;
+  };
+
+  afterChange[`${section}.power`] = (state) => {
+    const obj = state[section];
+
+    if (obj.power) {
+      obj.annualUseHours = db.power[obj.power]['expected use (hr/yr)'];
+      getCosts(state, section);
+
+      if (/tillage[1-3]/.test(section)) {
+        state.focus = `${section}.total`;
+      } else {
+        state.focus = `${section}.annualUseAcres`;
+      }
+    }
+  };
+});
+
+let status = '';
 const loadData = async (tables) => {
   // 'Typical Seeding Rate (lb/ac) [seedingRate]' becomes 'seedingRate'
   const alias = (col) => (col.includes('[') ? col.split(/[[\]]/)[1] : col);
@@ -643,32 +662,33 @@ const loadData = async (tables) => {
   status += `${table} `;
 
   const data = rec.records.map((r) => r.fields);
-
-  data.forEach((rec) => {
-    const cols = Object.keys(rec);
-    const obj = db[table][rec.key] = {};
+  console.log(tables);
+  data.forEach((rec2) => {
+    const cols = Object.keys(rec2);
+    db[table][rec2.key] = {};
+    const obj = db[table][rec2.key];
     cols.forEach((col) => {
-      obj[alias(col)] = rec[col];
+      obj[alias(col)] = rec2[col];
     });
   });
 
   store.dispatch(set.status(status));
 
   // fill in missing values:
-  for (const key in db) {
+  Object.keys(db).forEach((key) => {
     const d = db[key];
-    const set = new Set();
-    for (const key2 in d) {
-      Object.keys(d[key2]).forEach(set.add, set); // https://stackoverflow.com/a/50882116/3903374
-    }
-    set.forEach((value) => {
-      for (const key2 in d) {
+    const set2 = new Set();
+    Object.keys(d).forEach((key2) => {
+      Object.keys(d[key2]).forEach(set2.add, set2); // https://stackoverflow.com/a/50882116/3903374
+    });
+    set2.forEach((value) => {
+      Object.keys(d).forEach((key2) => {
         if (!(value in d[key2])) {
           d[key2][value] = '';
         }
-      }
+      });
     });
-  }
+  });
 
   if (tables.length) {
     loadData(tables);
@@ -677,19 +697,18 @@ const loadData = async (tables) => {
   }
 }; // loadData
 
-export const db = {};
-
 export const queue = (f, time = 1) => {
-  setTimeout(f, queue.i++ * time);
-  setTimeout(() => queue.i = 0, time + 999);
+  setTimeout(f, (queue.i += 1) * time);
+  setTimeout(() => {
+    queue.i = 0;
+  }, time + 999);
 };
 queue.i = 0;
 
-let status = '';
 loadData(['coefficients', 'rates', 'costDefaults', 'herbicides', 'implements', 'power', 'seedList', 'stateRegions', 'commodities', 'eqip']);
 
 export const dollars = (n) => {
-  if (!isFinite(n)) {
+  if (!Number.isFinite(n)) {
     return '';
   } if (+n < 0) {
     return (
@@ -708,9 +727,9 @@ export const test = (key, result) => {
   if (value !== result.toString()) {
     value = store.getState();
 
-    for (const k of key.split('.')) {
+    key.split('.').forEach((k) => {
       value = value[k];
-    }
+    });
 
     if (value?.toString() !== result.toString()) {
       // I'd prefer console.error, but that requires showing all react_devtools_backend.js
@@ -728,28 +747,29 @@ export const getDefaults = (parms) => {
 
   parms.forEach((parm) => {
     let s = initialState;
-    for (const k of parm.split('.')) {
+    parm.split('.').forEach((k) => {
       s = s[k];
-    }
+    });
     def[parm] = s;
   });
-  // console.log(def);
+
   return def;
 }; // getDefaults
 
 export const clearInputs = (defaults, exclude = []) => {
-  for (const key in defaults) {
-    if (exclude.includes(key)) continue;
-    try {
-      let s = set;
-      for (const k of key.split('.')) {
-        s = s[k];
+  Object.keys(defaults).forEach((key) => {
+    if (!exclude.includes(key)) {
+      try {
+        let s = set;
+        key.split('.').forEach((k) => {
+          s = s[k];
+        });
+        store.dispatch(s(defaults[key]));
+      } catch (error) {
+        console.log(key, error);
       }
-      store.dispatch(s(defaults[key]));
-    } catch (error) {
-      console.log(key, error);
     }
-  }
+  });
 }; // clearInputs
 
 // let resizeTimer;
@@ -794,6 +814,20 @@ export const exampleSeedbed = () => {
 export const examplePlanting = () => {
   store.dispatch(set.planting.implement('Presswheel Drill; 16 Ft'));
 }; // examplePlanting
+
+const clearTermination = () => {
+  const defaults = getDefaults([
+    'termination.additionalHerbicides', 'termination.additionalPrices', 'termination.additionalRates', 'termination.reducedHerbicides',
+    'termination.reducedPrices', 'termination.reducedRates', 'termination.q2', 'chemical.implement', 'chemical.power', 'chemical.implementsCost',
+    'chemical.powerCost', 'chemical.Labor', 'chemical.Fuel', 'chemical.Depreciation', 'chemical.Interest', 'chemical.Repairs', 'chemical.Taxes',
+    'chemical.Insurance', 'chemical.Storage', 'roller.implement', 'roller.power', 'roller.implementsCost', 'roller.powerCost', 'roller.Labor',
+    'roller.Fuel', 'roller.Depreciation', 'roller.Interest', 'roller.Repairs', 'roller.Taxes', 'roller.Insurance', 'roller.Storage',
+    'tillage.implement', 'tillage.power', 'tillage.implementsCost', 'tillage.powerCost', 'tillage.Labor', 'tillage.Fuel', 'tillage.Depreciation',
+    'tillage.Interest', 'tillage.Repairs', 'tillage.Taxes', 'tillage.Insurance', 'tillage.Storage', 'termination.method', 'termination.customCost',
+    'termination.product',
+  ]);
+  clearInputs(defaults);
+}; // clearTermination
 
 export const exampleTermination1 = () => {
   clearTermination();
@@ -846,19 +880,16 @@ export const exampleTermination5 = () => {
   store.dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
 }; // exampleTermination5
 
-const clearTermination = () => {
-  const defaults = getDefaults([
-    'termination.additionalHerbicides', 'termination.additionalPrices', 'termination.additionalRates', 'termination.reducedHerbicides',
-    'termination.reducedPrices', 'termination.reducedRates', 'termination.q2', 'chemical.implement', 'chemical.power', 'chemical.implementsCost',
-    'chemical.powerCost', 'chemical.Labor', 'chemical.Fuel', 'chemical.Depreciation', 'chemical.Interest', 'chemical.Repairs', 'chemical.Taxes',
-    'chemical.Insurance', 'chemical.Storage', 'roller.implement', 'roller.power', 'roller.implementsCost', 'roller.powerCost', 'roller.Labor',
-    'roller.Fuel', 'roller.Depreciation', 'roller.Interest', 'roller.Repairs', 'roller.Taxes', 'roller.Insurance', 'roller.Storage',
-    'tillage.implement', 'tillage.power', 'tillage.implementsCost', 'tillage.powerCost', 'tillage.Labor', 'tillage.Fuel', 'tillage.Depreciation',
-    'tillage.Interest', 'tillage.Repairs', 'tillage.Taxes', 'tillage.Insurance', 'tillage.Storage', 'termination.method', 'termination.customCost',
-    'termination.product',
-  ]);
+const clearTillage = () => {
+  const tillageDefaults = getDefaults(Object.keys(get.tillage1).map((parm) => `tillage1.${parm}`));
+  const fallDefaults = getDefaults(Object.keys(get.tillageFall).map((parm) => `tillageFall.${parm}`));
+  const eliminationDefaults = getDefaults(Object.keys(get.tillageElimination).map((parm) => `tillageElimination.${parm}`));
+  const otherDefaults = getDefaults(Object.keys(get.tillageOther).map((parm) => `tillageOther.${parm}`));
+  const defaults = {
+    ...tillageDefaults, ...fallDefaults, ...eliminationDefaults, ...otherDefaults,
+  };
   clearInputs(defaults);
-}; // clearTermination
+}; // clearTillage
 
 export const exampleTillage1 = () => {
   clearTillage();
@@ -908,17 +939,6 @@ export const exampleTillage5 = () => {
   store.dispatch(set.tillageOther.q2('Yes'));
   store.dispatch(set.tillageOther.implement('Chisel Plow; 23 Ft'));
 }; // exampleTillage5
-
-const clearTillage = () => {
-  const tillageDefaults = getDefaults(Object.keys(get.tillage1).map((parm) => `tillage1.${parm}`));
-  const fallDefaults = getDefaults(Object.keys(get.tillageFall).map((parm) => `tillageFall.${parm}`));
-  const eliminationDefaults = getDefaults(Object.keys(get.tillageElimination).map((parm) => `tillageElimination.${parm}`));
-  const otherDefaults = getDefaults(Object.keys(get.tillageOther).map((parm) => `tillageOther.${parm}`));
-  const defaults = {
-    ...tillageDefaults, ...fallDefaults, ...eliminationDefaults, ...otherDefaults,
-  };
-  clearInputs(defaults);
-}; // clearTillage
 
 export const exampleFertilityBenefit = () => {
   store.dispatch(set.fertN(30));
@@ -970,20 +990,3 @@ export const exampleYield2 = () => {
   store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
   store.dispatch(set.yield.q4('5'));
 }; // exampleYield2
-
-const reducers = {
-  resize: (state) => {
-    // Cannot perform 'set' on a proxy that has been revoked
-    // clearTimeout(resizeTimer);
-    // resizeTimer = setTimeout(() => {
-    state.screenWidth = window.innerWidth;
-    state.screenHeight = window.innerHeight;
-    // }, 100);
-  },
-  updateLocation: (state, { payload }) => {
-    state = { ...state, ...payload };
-    return state;
-  },
-};
-
-export const store = createStore(initialState, { afterChange, reducers });
