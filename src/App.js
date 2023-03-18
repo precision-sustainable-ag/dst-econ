@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 
 import React, { useEffect } from 'react';
 import {
-  Route, Routes, NavLink, useLocation,
+  Route, Routes, NavLink, useLocation, useNavigate,
 } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { renderToString } from 'react-dom/server';
@@ -28,7 +28,7 @@ import Yield from './components/Yield';
 import Practices from './components/Practices';
 import Revenue from './components/Revenue';
 import Resources from './components/Resources';
-// import Airtable from './components/Airtables';
+import Airtable from './components/Airtables';
 import Activity, { Summary } from './components/Activity';
 
 const MyButton = ({ screen, ...otherProps }) => {
@@ -119,6 +119,7 @@ const App = () => {
   const location = useLocation();
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
+  const navigate = useNavigate();
   // const [windowSize, setWindowSize] = useState();
 
   //  useEffect(() => {
@@ -174,18 +175,18 @@ const App = () => {
     );
   }, [dispatch]);
 
-  // const airTables = {
-  //   coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
-  //   commodities: 'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
-  //   costDefaults: 'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
-  //   eqip: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT',
-  //   herbicides: 'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
-  //   implements: 'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
-  //   power: 'https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2',
-  //   rates: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A',
-  //   seedList: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4',
-  //   stateRegions: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
-  // };
+  const airTables = {
+    coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
+    commodities: 'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
+    costDefaults: 'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
+    eqip: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT',
+    herbicides: 'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
+    implements: 'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
+    power: 'https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2',
+    rates: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A',
+    seedList: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4',
+    stateRegions: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
+  };
 
   if (screen === 'Loading') {
     return (
@@ -261,15 +262,41 @@ const App = () => {
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />
           <Route path="Resources" element={<Resources />} />
+          {
+            Object.keys(airTables).map((key) => (
+              <Route
+                path={key}
+                element={(
+                  <Airtable
+                    name={key}
+                    url={airTables[key]}
+                  />
+                )}
+              />
+            ))
+          }
         </Routes>
       </div>
 
       <Navigation current={screen} />
+
+      <div id="AirTables">
+        <select
+          onChange={(e) => navigate(e.target.value)}
+        >
+          <option>&nbsp;</option>
+          {
+            Object.keys(airTables).map((key) => (
+              <option>{key}</option>
+            ))
+          }
+        </select>
+      </div>
     </div>
   );
 }; // App
 
-document.addEventListener('dblclick', (e) => {
+document.addEventListener('click', (e) => {
   if (e.ctrlKey) {
     document.body.classList.toggle('debug');
   }
