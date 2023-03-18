@@ -1,11 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Map from '../../shared/Map';
+// import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import {
   get, set, test, getDefaults,
 } from '../../store/Store';
+
+const Map = () => null;
 
 const defaults = getDefaults(
   'lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description',
