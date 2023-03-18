@@ -5,13 +5,15 @@ import './App.scss';
 import { Button } from '@mui/material';
 
 import React, { useEffect } from 'react';
-import { Route, Routes, NavLink } from 'react-router-dom';
+import {
+  Route, Routes, NavLink, useLocation,
+} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 
 import { get, set, db } from './store/Store';
 
-// import Home from './components/Home';
+import Home from './components/Home';
 import Field from './components/Field';
 import Species from './components/Species';
 import Seedbed from './components/Seedbed';
@@ -59,7 +61,6 @@ const paths = {
 const keys = Object.keys(paths);
 
 const Navigation = ({ current }) => {
-  const dispatch = useDispatch();
   const previousScreen = useSelector(get.previousScreen);
 
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
@@ -69,7 +70,6 @@ const Navigation = ({ current }) => {
     <div id="Navigation">
       {back && (
         <NavLink
-          onClick={() => dispatch(set.screen(back))}
           to={`/${back.replace('Field', '')}`}
         >
           <Button
@@ -85,7 +85,6 @@ const Navigation = ({ current }) => {
       )}
       {next && (
         <NavLink
-          onClick={() => dispatch(set.screen(next))}
           to={`/${next}`}
         >
           <Button
@@ -101,7 +100,6 @@ const Navigation = ({ current }) => {
 
       {current !== 'Resources' && next !== 'Resources' && (
         <NavLink
-          onClick={() => dispatch(set.screen('Resources'))}
           to="/Resources"
         >
           <Button
@@ -118,6 +116,7 @@ const Navigation = ({ current }) => {
 
 const App = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
   // const [windowSize, setWindowSize] = useState();
@@ -134,6 +133,12 @@ const App = () => {
   //    handleResize();
   //    return () => window.removeEventListener('resize', handleResize);
   //  }, []);
+
+  useEffect(() => {
+    if (screen !== 'Loading') {
+      dispatch(set.screen(location.pathname.slice(1)));
+    }
+  }, [dispatch, location.pathname, screen]);
 
   useEffect(() => {
     document.addEventListener('keydown', (e) => {
@@ -219,11 +224,10 @@ const App = () => {
                   {path === 'Practices' && <hr />}
                   <NavLink
                     key={path}
-                    onClick={() => dispatch(set.screen(path))}
                     style={({ isActive }) => ({
                       color: isActive ? '#eee' : '#aaa',
                     })}
-                    to={`/${path.replace('Field', '')}`}
+                    to={path === 'Field' ? '/' : path}
                     accessKey={accessKey}
                   >
                     <MyButton
@@ -246,6 +250,7 @@ const App = () => {
       <div id="Main">
         <Routes>
           <Route path="" element={<Field />} />
+          <Route path="Home" element={<Home />} />
           <Route path="Species" element={<Species />} />
           <Route path="Seedbed" element={<Seedbed />} />
           <Route path="Planting" element={<Planting />} />

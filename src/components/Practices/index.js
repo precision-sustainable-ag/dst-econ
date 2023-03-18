@@ -53,7 +53,6 @@ const Implement = ({ desc, type, benefit }) => {
 }; // Implement
 
 const CropSummary = () => {
-  const dispatch = useDispatch();
   const species = useSelector(get.species);
   const coverCropTotal = useSelector(get.coverCropTotal);
   const rates = useSelector(get.rates);
@@ -64,7 +63,6 @@ const CropSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Species'))}
             to="/Species"
           >
             Cover crops planted
@@ -100,7 +98,6 @@ const CropSummary = () => {
 }; // CropSummary
 
 const SeedbedSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.seedbed.total) || 0;
   const implement = useSelector(get.seedbed.implement);
   const power = useSelector(get.seedbed.power);
@@ -109,7 +106,6 @@ const SeedbedSummary = () => {
     <tr>
       <td colSpan={2}>
         <NavLink
-          onClick={() => dispatch(set.screen('Seedbed'))}
           to="/Seedbed"
         >
           Cover crop seedbed preparation
@@ -130,7 +126,6 @@ const SeedbedSummary = () => {
 }; // SeedbedSummary
 
 const PlantingSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.planting.total) || 0;
   const implement = useSelector(get.planting.implement);
   const power = useSelector(get.planting.power);
@@ -139,7 +134,6 @@ const PlantingSummary = () => {
     <tr>
       <td colSpan={2}>
         <NavLink
-          onClick={() => dispatch(set.screen('Planting'))}
           to="/Planting"
         >
           Cover crop planting activity
@@ -160,7 +154,6 @@ const PlantingSummary = () => {
 }; // PlantingSummary
 
 const TerminationSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.termination.total);
   const method = useSelector(get.termination.method);
   const product = useSelector(get.termination.product);
@@ -183,7 +176,6 @@ const TerminationSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Termination'))}
             to="/Termination"
           >
             Cover crop termination activity
@@ -304,7 +296,6 @@ const TerminationSummary = () => {
 }; // TerminationSummary
 
 const TillageSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.tillageAll.total);
 
   return (
@@ -312,7 +303,6 @@ const TillageSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Tillage'))}
             to="/Tillage"
           >
             Tillage modifications
@@ -336,7 +326,6 @@ const TillageSummary = () => {
 }; // TillageSummary
 
 const FertilitySummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.fertility.total);
   const fertN = useSelector(get.fertN);
   const fertP = useSelector(get.fertP);
@@ -353,7 +342,6 @@ const FertilitySummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Fertility'))}
             to="/Fertility"
           >
             Fertility
@@ -458,7 +446,6 @@ const FertilitySummary = () => {
 }; // FertilitySummary
 
 const HerbicideSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.herbicide.total);
 
   const additionalProduct = useSelector(get.herbicideAdditional.product);
@@ -478,7 +465,6 @@ const HerbicideSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Herbicide'))}
             to="/Herbicide"
           >
             Herbicide modifications
@@ -561,7 +547,6 @@ const HerbicideSummary = () => {
 }; // HerbicideSummary
 
 const ErosionSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.erosion.total);
   const tool = useSelector(get.erosion.q2);
 
@@ -570,7 +555,6 @@ const ErosionSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Erosion'))}
             to="/Erosion"
           >
             Erosion control
@@ -605,7 +589,6 @@ const ErosionSummary = () => {
 }; // ErosionSummary
 
 const YieldSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.yield.total);
   const year = {
     1: 'first',
@@ -618,7 +601,6 @@ const YieldSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            onClick={() => dispatch(set.screen('Yield'))}
             to="/Yield"
           >
             Yield impact

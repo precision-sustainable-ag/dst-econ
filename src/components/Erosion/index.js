@@ -1,14 +1,13 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Logic from '../Logic';
 import Help from '../../shared/Help';
 import {
-  get, set, dollars, exampleErosion,
+  get, dollars, exampleErosion,
 } from '../../store/Store';
 
 const Erosion = () => {
-  const dispatch = useDispatch();
   const state = useSelector(get.erosion);
   const dev = useSelector(get.dev);
 
@@ -21,7 +20,6 @@ const Erosion = () => {
         {' '}
         <NavLink
           className="link"
-          onClick={() => dispatch(set.screen('Resources'))}
           to="/Resources"
         >
           Resources page

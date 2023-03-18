@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { store } from './store/Store';
 import App from './App';
 import './index.css';
@@ -11,7 +11,7 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Router>
+    <Router basename="/">
       <Provider store={store}>
         <App />
       </Provider>

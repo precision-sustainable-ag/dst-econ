@@ -1,10 +1,9 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import {
   get,
-  set,
   getDefaults,
   dollars,
   clearInputs,
@@ -72,7 +71,6 @@ const Costs = ({
 }; // Costs
 
 const Tillage = () => {
-  const dispatch = useDispatch();
   const dev = useSelector(get.dev);
 
   const state = useSelector(get.tillage1);
@@ -98,7 +96,6 @@ const Tillage = () => {
           {' '}
           <NavLink
             className="link"
-            onClick={() => dispatch(set.screen('Resources'))}
             to="/Resources"
           >
             Resources page

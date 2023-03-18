@@ -1,9 +1,8 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   get,
-  set,
   getDefaults,
   db,
   clearInputs,
@@ -207,12 +206,11 @@ const Tillage = () => (
 ); // Tillage
 
 const Termination = () => {
-  // console.log('Render: Termination');
-  const dispatch = useDispatch();
   const current = 'termination';
   const dev = useSelector(get.dev);
   const method = useSelector(get.termination.method);
   const state = useSelector(get[current]);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -263,7 +261,7 @@ const Termination = () => {
                   onChange={(_, value) => {
                     clearInputs(defaults, ['termination.method', 'termination.q2']);
                     if (value === 'Yes' && state.method !== 'Herbicide application') {
-                      dispatch(set.screen('Tillage'));
+                      navigate('/Tillage');
                     }
                   }}
                 />
@@ -284,7 +282,7 @@ const Termination = () => {
                   onChange={(_, value) => {
                     clearInputs(defaults);
                     if (value === 'No') {
-                      dispatch(set.screen('Tillage'));
+                      navigate('/Tillage');
                     }
                   }}
                 />

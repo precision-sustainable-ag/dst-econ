@@ -252,7 +252,6 @@ const Additional = () => {
         {' '}
         <NavLink
           className="link"
-          onClick={() => dispatch(set.screen('Resources'))}
           to="/Resources"
         >
           Resources page
