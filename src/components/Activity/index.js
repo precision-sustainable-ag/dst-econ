@@ -8,8 +8,7 @@ import './styles.scss';
 
 const Costs = ({ desc }) => {
   const focused = useSelector(get.focused) || '';
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
-  const type = focused.split('.')[0] || 'planting';
+  const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
   const state = useSelector(get[type]);
 
   const d = desc.replace('Storage shed', 'Storage');
@@ -47,10 +46,7 @@ const Activity = () => {
   const screenHeight = useSelector(get.screenHeight);
   const focused = useSelector(get.focused) || '';
 
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
-  const type = focused.split('.')[0] || 'planting';
-
-  // console.log(type);
+  const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
 
   const state = useSelector(get[type]);
   const { estimated } = state;
@@ -61,9 +57,9 @@ const Activity = () => {
   const PowerCost = state.powerCost;
   const state3 = useSelector(get[type]).q3;
 
-  // if (!focused.includes('.total')) {
-  //   return null;
-  // }
+  if (!focused.includes('.total')) {
+    return null;
+  }
 
   const heading = {
     seedbed: 'Seedbed Preparation',
@@ -102,7 +98,7 @@ const Activity = () => {
       position: 'fixed',
       left: onMap ? 'calc(920px + 4vw)' : rect.x + rect.width + 20,
       top,
-      zIndex: 2,
+      zIndex: 1,
     };
   }
 
