@@ -241,6 +241,7 @@ const Input = ({
       renderInput = (params) => (
         <TextField
           autoFocus={props.autoFocus}
+          autoComplete="off"
           variant={props.variant || 'outlined'}
           sx={{ background: 'white', width: max, padding: 0 }}
           {...params}
@@ -252,6 +253,7 @@ const Input = ({
       <div className="input" id={id}>
         <MUIAutocomplete
           {...props}
+          autoComplete="off"
           id={id}
           onKeyPress={keyPress}
           ref={focusRef}

@@ -57,9 +57,9 @@ const Activity = () => {
   const PowerCost = state.powerCost;
   const state3 = useSelector(get[type]).q3;
 
-  if (!focused.includes('.total')) {
-    return null;
-  }
+  // if (!focused.includes('.total')) {
+  //   return null;
+  // }
 
   const heading = {
     seedbed: 'Seedbed Preparation',
@@ -98,7 +98,7 @@ const Activity = () => {
       position: 'fixed',
       left: onMap ? 'calc(920px + 4vw)' : rect.x + rect.width + 20,
       top,
-      zIndex: 1,
+      zIndex: 2,
     };
   }
 
