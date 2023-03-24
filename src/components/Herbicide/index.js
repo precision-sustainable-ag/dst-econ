@@ -113,7 +113,7 @@ const Herbicide = () => {
                     property="implement"
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
-                    custom={['I will not be making an additional application', 'Hire custom operator']}
+                    custom={['I will not reduce my post emerge spray applications', 'Hire custom operator']}
                   />
 
                   <Logic current="herbicideAdditional" question="power" />
@@ -188,7 +188,7 @@ const Herbicide = () => {
                     property="implement"
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
-                    custom={['I will not be making an additional application', 'Hire custom operator']}
+                    custom={['I will not reduce my post emerge spray applications', 'Hire custom operator']}
                   />
 
                   <Logic current="herbicideReduced" question="power" />

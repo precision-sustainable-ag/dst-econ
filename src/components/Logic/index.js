@@ -13,7 +13,9 @@ const Logic = ({
   const currentImplement = useSelector(get[current].implement);
   const acresHour = useSelector(get[current].acresHour).toString();
 
-  const iscustom = ['Hire custom operator', 'I will not be making an additional application'].includes(currentImplement);
+  const iscustom = [
+    'Hire custom operator', 'I will not reduce my post emerge spray applications',
+  ].includes(currentImplement);
 
   let info = '';
   let shown = true;
@@ -76,7 +78,9 @@ const Logic = ({
       ) || question;
       a = 'dollar';
       value = total || estimated;
-      shown = context.q3 || (currentImplement && currentImplement !== 'I will not be making an additional application');
+      shown = context.q3 || (
+        currentImplement && currentImplement !== 'I will not reduce my post emerge spray applications'
+      );
       warning = (
         (iscustom || context.q3 === 'Custom Operator') && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
           ? (
@@ -145,7 +149,12 @@ const Logic = ({
     );
   } else if (Number.isFinite(a)) {
     result = (
-      <span className="input" id={property ? `${current}.${property}` : ''}>{`$${(+a).toFixed(2)}`}</span>
+      <span
+        className="input"
+        id={property ? `${current}.${property}` : ''}
+      >
+        {`$${(+a).toFixed(2)}`}
+      </span>
     );
   } else {
     result = a;

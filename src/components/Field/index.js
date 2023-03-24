@@ -35,12 +35,10 @@ const Field = () => {
           {' '}
           is to provide basic information on the field you wish to examine.
         </p>
-        <p>
-          If you are a registered user, this information will be saved to your
-          account but not utilized for any other purpose.
+        <p style={{ display: 'none' }}>
+          If you are a registered user, this information will be saved to your account but not utilized for any other purpose.
           <br />
-          If you are a guest user, the information will not be saved and cannot
-          be accessed by you again if you close out of the DST.
+          If you are a guest user, the information will not be saved and cannot be accessed by you again if you close out of the DST.
         </p>
 
         <p>Please answer all of the following:</p>

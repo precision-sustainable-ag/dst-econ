@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/no-access-key */
 /* eslint-disable no-console */
 import './App.scss';
@@ -227,10 +228,13 @@ const App = () => {
                     key={path}
                     to={path === 'Field' ? '/' : path}
                     accessKey={accessKey}
+                    tabIndex={-1}
+                    onFocus={(e) => e.target.blur()}
                   >
                     <MyButton
                       screen={path}
                       className={cname}
+                      tabIndex={-1}
                     >
                       {paths[path].menu}
                     </MyButton>
@@ -296,7 +300,7 @@ const App = () => {
   );
 }; // App
 
-document.addEventListener('click', (e) => {
+document.addEventListener('dblclick', (e) => {
   if (e.ctrlKey) {
     document.body.classList.toggle('debug');
   }

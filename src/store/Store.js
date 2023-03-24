@@ -285,6 +285,8 @@ const initialState = {
   },
 };
 
+export const formulas = { ...initialState };
+
 const afterChange = {
   screen: (state) => {
     if (state.screen === 'Field') {
@@ -618,7 +620,7 @@ const getCosts = (state, current) => {
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[def].cost;
       obj.total = db.costDefaults[def].cost;
-    } else if (payload === 'I will not be making an additional application') {
+    } else if (payload === 'I will not reduce my post emerge spray applications') {
       // empty
     } else if (payload) {
       const p = db.implements[payload];
@@ -663,7 +665,7 @@ const loadData = async (tables) => {
   status += `${table} `;
 
   const data = rec.records.map((r) => r.fields);
-  console.log(tables);
+
   data.forEach((rec2) => {
     const cols = Object.keys(rec2);
     db[table][rec2.key] = {};

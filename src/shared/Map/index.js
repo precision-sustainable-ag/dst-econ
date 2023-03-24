@@ -49,10 +49,9 @@ const MapComp = ({ initWidth, initHeight, zScore }) => {
       <div className="mapHeaderText">
         <h1>Where is your Field located?</h1>
         <p>
-          Enter your address or zip code to determine your field&apos;s location.
-          You can then zoom in and click to pinpoint it on the map. If you
-          know your exact coordinates, you can enter them in search bar separated by comma
-          (ex. 37.7, -80.2 ).
+          Enter your address or Zip code in the search bar below.
+          You can then zoom in and move the marker to your precise location by dragging it or by double-clicking the map.
+          If you already know your coordinates, you can enter them in the search bar separated by a comma (for example, 37.7, -80.2).
         </p>
       </div>
       <Map

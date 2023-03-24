@@ -290,6 +290,7 @@ const Input = ({
         <span className="input" id={id}>
           <TextField
             {...props}
+            autoComplete="off"
             id={id}
             value={v === undefined ? '' : v} // https://github.com/facebook/react/issues/6222
             onFocus={(e) => {
