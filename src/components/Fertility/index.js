@@ -49,23 +49,17 @@ const Fertility = () => {
               <td />
               <th>
                 N
-                <br />
-                (pounds/acre)
               </th>
               <th>
                 P
                 <sub>2</sub>
                 O
                 <sub>5</sub>
-                <br />
-                (pounds/acre)
               </th>
               <th>
                 K
                 <sub>2</sub>
                 O
-                <br />
-                (pounds/acre)
               </th>
             </tr>
             <tr>
@@ -105,7 +99,7 @@ const Fertility = () => {
             }
 
             <tr>
-              <td>Cost of fertilizer application</td>
+              <td>Cost of fertilizer application ($/acre)</td>
               <td colSpan={3}><Input id="$fertApplication" value={$fertApplication ?? dFertApplication} /></td>
             </tr>
             <tr>
