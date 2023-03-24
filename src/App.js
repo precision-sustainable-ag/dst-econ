@@ -1,383 +1,309 @@
+/* eslint-disable no-alert */
+/* eslint-disable jsx-a11y/no-access-key */
+/* eslint-disable no-console */
 import './App.scss';
 
-import React from 'react';
-import {Button} from '@mui/material';
+import { Button } from '@mui/material';
 
-import {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useEffect } from 'react';
+import {
+  Route, Routes, NavLink, useLocation, useNavigate,
+} from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { renderToString } from 'react-dom/server';
 
-import {get, set, db} from './store/Store';
+import { get, set, db } from './store/Store';
 
-import Home         from './components/Home';
-import Field        from './components/Field';
-import Species      from './components/Species';
-import Seedbed      from './components/Seedbed';
-import Planting     from './components/Planting';
-import Termination  from './components/Termination';
-import Tillage      from './components/Tillage';
-import Fertility    from './components/Fertility';
-import Herbicide    from './components/Herbicide';
-import Erosion      from './components/Erosion';
-import Additional   from './components/Additional';
-import Yield        from './components/Yield';
-import Practices    from './components/Practices';
-import Revenue      from './components/Revenue';
-import Resources    from './components/Resources';
-import Airtable     from './components/Airtables';
-import Activity, {Summary}    from './components/Activity';
+import Home from './components/Home';
+import Field from './components/Field';
+import Species from './components/Species';
+import Seedbed from './components/Seedbed';
+import Planting from './components/Planting';
+import Termination from './components/Termination';
+import Tillage from './components/Tillage';
+import Fertility from './components/Fertility';
+import Herbicide from './components/Herbicide';
+import Erosion from './components/Erosion';
+import Additional from './components/Additional';
+import Yield from './components/Yield';
+import Practices from './components/Practices';
+import Revenue from './components/Revenue';
+import Resources from './components/Resources';
+import Airtable from './components/Airtables';
+import Activity, { Summary } from './components/Activity';
 
-// import Map from "./shared/Map"
-
-const holdError = console.error;
-console.error = (msg, ...subst) => {
-  // Draggable: can't get this to work https://stackoverflow.com/a/63603903/3903374
-
-  if (!/Draggable/.test(msg + subst)) {
-    holdError(msg, ...subst);
-  }
-}
-
-const holdWarn = console.warn;
-console.warn = (msg, ...subst) => {
-  // Deprecation: moment
-  // Autocomplete: useless warning, which has an overcomplicated isOptionEqualTo solution
-  //               https://github.com/mui/material-ui/issues/29727
-
-  if (!/Deprecation|Autocomplete/.test(msg + subst)) {
-    holdWarn(msg, ...subst);
-  }
-}
-
-const MyButton = (props) => {
+const MyButton = ({ screen, ...otherProps }) => {
   const cashCrop = useSelector(get.cashCrop);
 
-  if (props['data-scr'] === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
+  if (screen === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
     return null;
-  } else {
-    return (
-      <Button {...props}/>
-    )
   }
-} // MyButton
 
-function App() {
-  const screens = {
-    // Home,
-    Modules: {
-      Field,
-      Species,
-      Seedbed,
-      Planting,
-      Termination,
-      Tillage,
-      Fertility,
-      Herbicide,
-      Erosion,
-      Additional,
-      Yield,
-    },
-    'Economic Impact': {
-      Practices,
-      Revenue
-    },
-    Resources,
-    'Airtables': {
-      coefficients: '',
-      commodities: '',
-      eqip: '',
-      costDefaults: '',
-      herbicides: '',
-      implements: '',
-      power: '',
-      rates: '',
-      seedList: '',
-      stateRegions: '',
-    },
-  };
+  return <Button {...otherProps} />;
+}; // MyButton
 
-  const MyMenu = (s) => {
-    return (
-      Object.keys(s).map(scr => {
-        let cname = scr === screen ? 'selected' : '';
-        
-        if (/Practices|Revenue|Resources/.test(scr)) {
-          cname += ' summary';
-        }
+const paths = {
+  Field,
+  Species,
+  Seedbed,
+  Planting,
+  Termination,
+  Tillage,
+  Fertility,
+  Herbicide,
+  Erosion,
+  Additional,
+  Yield,
+  Practices,
+  Revenue,
+  Resources,
+};
 
-        if (scr === 'Airtables') {
-          if (!dev) {
-            return null;
-          } else {
-            return (
-              <details key={scr} style={{float: 'right'}}>
-                <summary>{scr}</summary>
-                {MyMenu(s[scr])}
-              </details>
-            );
-          }
-        } else if (typeof s[scr] === 'object') {
-          return (
-            <span key={scr}>
-              <strong>{scr}</strong>
-              {MyMenu(s[scr])}
-            </span>
-          )
-        } else {
-          return (
-            <span key={scr}>
-              {scr === 'Practices' && <hr/>}
-              <MyButton
-                data-scr={scr}
-                key={scr}
-                className={cname}
-              >
-                {/* scr === 'Revenue' && <img src="revenue.png" alt="Revenue" /> */}
-                {s[scr].menu || scr}
-              </MyButton>
-            </span>
-          )
-        }
-      })
-    );
-  } // MyMenu
+const keys = Object.keys(paths);
 
-  const Screen = () => {
-    switch (screen) {
-      case 'Home'         : return <React.StrictMode><Home /></React.StrictMode>;
-      case 'Field'        : return <Field />;
-      case 'Species'      : return <React.StrictMode><Species /></React.StrictMode>;
-      case 'Seedbed'      : return <React.StrictMode><Seedbed /></React.StrictMode>;
-      case 'Planting'     : return <React.StrictMode><Planting /></React.StrictMode>;
-      case 'Termination'  : return <React.StrictMode><Termination /></React.StrictMode>;
-      case 'Tillage'      : return <React.StrictMode><Tillage /></React.StrictMode>;
-      case 'Fertility'    : return <React.StrictMode><Fertility /></React.StrictMode>;
-      case 'Herbicide'    : return <React.StrictMode><Herbicide /></React.StrictMode>;
-      case 'Erosion'      : return <React.StrictMode><Erosion /></React.StrictMode>;
-      case 'Additional'   : return <React.StrictMode><Additional /></React.StrictMode>;
-      case 'Yield'        : return <React.StrictMode><Yield /></React.StrictMode>;
-      case 'Practices'    : return <React.StrictMode><Practices /></React.StrictMode>;
-      case 'Revenue'      : return <React.StrictMode><Revenue /></React.StrictMode>;
-      case 'Resources'    : return <React.StrictMode><Resources/></React.StrictMode>;
-      case 'coefficients' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA" /></React.StrictMode>;
-      case 'commodities'  : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx" /></React.StrictMode>;
-      case 'costDefaults' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8" /></React.StrictMode>;
-      case 'eqip'         : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT" /></React.StrictMode>;
-      case 'herbicides'   : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8" /></React.StrictMode>;
-      case 'implements'   : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf" /></React.StrictMode>;
-      case 'power'        : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2" /></React.StrictMode>;
-      case 'rates'        : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A" /></React.StrictMode>;
-      case 'seedList'     : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4" /></React.StrictMode>;
-      case 'stateRegions' : return <React.StrictMode><Airtable name={screen} url="https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX" /></React.StrictMode>;
-      default: 
-    }
-  } // Screen
+const Navigation = ({ current }) => {
+  const previousScreen = useSelector(get.previousScreen);
 
-  const changeScreen = (e) => {
-    const menu = e.target.closest('button');
+  const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
+  const next = keys[keys.indexOf(current) + 1];
 
-    if (menu?.tagName === 'BUTTON') {
-      const scr = menu.dataset.scr;
-
-      if (scr !== 'Resources') {
-        dispatch(set.previousScreen(scr));
-      }
-
-      dispatch(set.screen(scr));
-    }
-  } // changeScreen
-
-  const getNodeText = node => {
-    if (['string', 'number'].includes(typeof node)) return node
-    if (node instanceof Array) return node.map(getNodeText).join('')
-    if (typeof node === 'object' && node) return getNodeText(node.props.children)
-  } // getNodeText
-
-  const Navigation = ({current}) => {
-    let back;
-    let backDesc;
-    let next;
-    let nextDesc;
-  
-    const mods = {Home, ...screens.Modules, ...screens['Economic Impact'], Resources};
-
-    const s = ['Field','Species','Seedbed','Planting','Termination','Tillage','Fertility','Herbicide','Erosion','Additional','Yield','Practices','Revenue','Resources'];
-  
-    if (current === 'Resources') {
-      back = previousScreen;
-    } else {
-      back = s[s.indexOf(screen) - 1];
-      next = s[s.indexOf(screen) + 1];
-    }
-
-    if (back) {
-      backDesc = getNodeText(mods[back].menu) || back;
-    }
-
-    if (next) {
-      nextDesc = getNodeText(mods[next].menu) || next;
-    }
-
-    return (
-      <div id="Navigation">
-        {
-          back &&
+  return (
+    <div id="Navigation">
+      {back && (
+        <NavLink
+          to={`/${back.replace('Field', '')}`}
+        >
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              dispatch(set.screen(back));
-              dispatch(set.previousScreen(back));
-            }}
             tabIndex={-1}
           >
-            BACK: {backDesc}
+            BACK:
+            &nbsp;
+            {paths[back].menu}
           </Button>
-        }
-        {
-          next &&
-          <Button
-            variant="contained"
-            color="primary" 
-            onClick={() => {
-              dispatch(set.screen(next));
-              if (next !== 'Resources') {
-                dispatch(set.previousScreen(next));
-              }
-            }}
-          >
-            NEXT: {nextDesc}
-          </Button>
-        }
-  
-        {
-          current !== 'Resources' && next !== 'Resources' &&
+        </NavLink>
+      )}
+      {next && (
+        <NavLink
+          to={`/${next}`}
+        >
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              dispatch(set.screen('Resources'));
-            }}
+          >
+            NEXT:
+            &nbsp;
+            {paths[next].menu}
+          </Button>
+        </NavLink>
+      )}
+
+      {current !== 'Resources' && next !== 'Resources' && (
+        <NavLink
+          to="/Resources"
+        >
+          <Button
+            variant="contained"
+            color="primary"
           >
             Resources
           </Button>
-        }
-      </div>
-    )
-  } // Navigation
+        </NavLink>
+      )}
+    </div>
+  );
+}; // Navigation
 
+const App = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const screen = useSelector(get.screen);
   const status = useSelector(get.status);
-  const previousScreen = useSelector(get.previousScreen);
-  const dev = useSelector(get.dev);
-  // const screenWidth = useSelector(get.screenWidth);
-  // const screenHeight = useSelector(get.screenHeight);
-  // const showMap = useSelector(get.showMap);
-  // const maxZoom = useSelector(get.maxZoom);
+  const navigate = useNavigate();
+  // const [windowSize, setWindowSize] = useState();
 
-  const [hotkeys, setHotKeys] = useState(false);
-  // console.log('Render App');
+  //  useEffect(() => {
+  //    function handleResize() {
+  //      setWindowSize({
+  //        width: window.innerWidth,
+  //        height: window.innerHeight,
+  //      });
+  //    }
+  //
+  //    window.addEventListener('resize', handleResize);
+  //    handleResize();
+  //    return () => window.removeEventListener('resize', handleResize);
+  //  }, []);
 
-  // Maybe not:
   useEffect(() => {
-    if (!hotkeys) {
-      const u = document.querySelectorAll('u');
-      console.log(u);
-      if (u.length) {
-        setHotKeys(true);
-        const hk = {
-          y: 'Yield'
-        };
-
-        u.forEach(el => {
-          if (el.closest('span').parentNode.dataset.scr) {
-            hk[el.textContent.toLowerCase()] = el.closest('span').parentNode.dataset.scr;
-          }
-        });
-
-        document.addEventListener('keydown', e => {
-          if (e.altKey) {
-            document.body.classList.add('hotkeys');
-            const scr = hk[e.key.toLowerCase()];
-            if (scr) {
-              dispatch(set.screen(scr));
-              e.preventDefault();
-            }
-            if (e.key === 'Alt') {
-              e.preventDefault();
-            }
-          }
-        });
-
-        document.addEventListener('keyup', e => {
-          if (!e.altKey) {
-            document.body.classList.remove('hotkeys');
-          }
-        });
-      }
+    if (screen !== 'Loading') {
+      dispatch(set.screen(location.pathname.slice(1) || 'Field'));
     }
-  }, [dispatch, hotkeys, screen]);
+  }, [dispatch, location.pathname, screen]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey) {
+        document.body.classList.add('hotkeys');
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (!e.altKey) {
+        document.body.classList.remove('hotkeys');
+      }
+    });
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      dispatch({type: 'resize'});
+      dispatch({ type: 'resize' });
     });
 
-    document.addEventListener('focusin', ({target}) => {
+    document.addEventListener('focusin', ({ target }) => {
       if (target.type !== 'checkbox') {
-        dispatch(set.focused(target.id));  // TODO
+        dispatch(set.focused(target.id)); // TODO
       }
     });
 
-    document.addEventListener('scroll', (e) => {
-      dispatch(set.scrollTop(e.target.scrollTop));
-    }, true);
+    document.addEventListener(
+      'scroll',
+      (e) => {
+        dispatch(set.scrollTop(e.target.scrollTop));
+      },
+      true,
+    );
   }, [dispatch]);
 
-  // const mapVisible = showMap && screenWidth >= 1200 && screenHeight > 650;
+  const airTables = {
+    coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
+    commodities: 'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
+    costDefaults: 'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
+    eqip: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT',
+    herbicides: 'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
+    implements: 'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
+    power: 'https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2',
+    rates: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A',
+    seedList: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4',
+    stateRegions: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
+  };
 
   if (screen === 'Loading') {
-    return <div className="loading">Loading: {status}</div>;
-  } else return (
-    <>
-      <div
-        id="Container"
-        style={{
-          margin: '1rem 2%',
-        }}
-      >
-        <nav onClick={changeScreen} className="{cl}">
-          <div
-            style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: '120%',
-              marginBottom: '0.25rem',
-            }}
-          >
-            Cover Crop Decision Support Tool
-          </div>
-          <div id="Menu">
-            {MyMenu(screens)}
-          </div>
-          <img alt="logo" src="PSAlogo-text.png" id="PSALogo"/>
-        </nav>
-
-        <div id="Main">
-          <Screen />
-        </div>
-          
-        <Navigation current={screen} />
+    return (
+      <div className="loading">
+        Loading:
+        &nbsp;
+        {status}
       </div>
-      
+    );
+  }
+
+  return (
+    <div id="Container">
+      <nav>
+        <div
+          style={{
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '120%',
+            marginBottom: '0.25rem',
+          }}
+        >
+          Cover Crop Decision Support Tool
+        </div>
+        <img alt="logo" src="PSAlogo-text.png" id="PSALogo" />
+        <div style={{ marginLeft: 130 }}>
+          {
+            keys.map((path) => {
+              let cname = path === screen ? 'selected' : '';
+              if (/Practices|Revenue|Resources/.test(path)) {
+                cname += ' summary';
+              }
+              const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
+              return (
+                <>
+                  {path === 'Practices' && <hr />}
+                  <NavLink
+                    key={path}
+                    to={path === 'Field' ? '/' : path}
+                    accessKey={accessKey}
+                    tabIndex={-1}
+                    onFocus={(e) => e.target.blur()}
+                  >
+                    <MyButton
+                      screen={path}
+                      className={cname}
+                      tabIndex={-1}
+                    >
+                      {paths[path].menu}
+                    </MyButton>
+                  </NavLink>
+                </>
+              );
+            })
+          }
+        </div>
+      </nav>
+
       <Activity />
       <Summary />
-    </>
-  );
-}
 
-document.addEventListener('dblclick', () => {
-  document.body.classList.toggle('debug');
+      <div id="Main">
+        <Routes>
+          <Route path="" element={<Field />} />
+          <Route path="Home" element={<Home />} />
+          <Route path="Species" element={<Species />} />
+          <Route path="Seedbed" element={<Seedbed />} />
+          <Route path="Planting" element={<Planting />} />
+          <Route path="Termination" element={<Termination />} />
+          <Route path="Tillage" element={<Tillage />} />
+          <Route path="Fertility" element={<Fertility />} />
+          <Route path="Herbicide" element={<Herbicide />} />
+          <Route path="Erosion" element={<Erosion />} />
+          <Route path="Additional" element={<Additional />} />
+          <Route path="Yield" element={<Yield />} />
+          <Route path="Practices" element={<Practices />} />
+          <Route path="Revenue" element={<Revenue />} />
+          <Route path="Resources" element={<Resources />} />
+          {
+            Object.keys(airTables).map((key) => (
+              <Route
+                path={key}
+                element={(
+                  <Airtable
+                    name={key}
+                    url={airTables[key]}
+                  />
+                )}
+              />
+            ))
+          }
+        </Routes>
+      </div>
+
+      <Navigation current={screen} />
+
+      <div id="AirTables">
+        <select
+          onChange={(e) => navigate(e.target.value)}
+        >
+          <option>&nbsp;</option>
+          {
+            Object.keys(airTables).map((key) => (
+              <option>{key}</option>
+            ))
+          }
+        </select>
+      </div>
+    </div>
+  );
+}; // App
+
+document.addEventListener('dblclick', (e) => {
+  if (e.ctrlKey) {
+    document.body.classList.toggle('debug');
+  }
 });
 
 export default App;

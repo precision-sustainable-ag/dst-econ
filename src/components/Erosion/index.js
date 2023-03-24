@@ -1,11 +1,13 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import Logic from '../Logic';
-import {Help} from '../../shared/Help';
-
-import {get, set, dollars, exampleErosion} from '../../store/Store';
-import {useSelector, useDispatch} from 'react-redux';
+import Help from '../../shared/Help';
+import {
+  get, dollars, exampleErosion,
+} from '../../store/Store';
 
 const Erosion = () => {
-  const dispatch = useDispatch();
   const state = useSelector(get.erosion);
   const dev = useSelector(get.dev);
 
@@ -14,7 +16,16 @@ const Erosion = () => {
       <h1>Soil Erosion Control</h1>
       <p>
         Using cover crops has been documented to provide benefits with controlling soil erosion.
-        Select the <span className="link" onClick={() => dispatch(set.screen('Resources'))}>Resources page</span> button at the bottom of this page if you would like to read more about which cover crops can provide strong erosion control benefits.
+        Select the
+        {' '}
+        <NavLink
+          className="link"
+          to="/Resources"
+        >
+          Resources page
+        </NavLink>
+        {' '}
+        button at the bottom of this page if you would like to read more about which cover crops can provide strong erosion control benefits.
         This portion of the Cover Crop Economic DST (Decision Support Tool) will help quantify potential cost savings.
         Please answer the following questions:
       </p>
@@ -37,7 +48,7 @@ const Erosion = () => {
                   q="How will soil repair activities be conducted on this field?"
                   a={['Skid steer', 'Trackhoe', 'Dozer']}
                 />
-      
+
                 <Logic
                   current="erosion"
                   property="q3"
@@ -48,15 +59,19 @@ const Erosion = () => {
                 <Logic
                   current="erosion"
                   property="q4"
-                  q="On average, estimate the reduced annualized number of hours to repair tile outlets, fix erosion issues, repair terrace breakovers or other issues for this particular field."
+                  q="On average, estimate the reduced annualized number of hours to repair tile outlets, fix erosion issues,
+                     repair terrace breakovers or other issues for this particular field."
                   a="number"
                 />
 
-                <tr style={{background: 'yellow'}}>
+                <tr style={{ background: 'yellow' }}>
                   <td>
                     Calculation of cost savings
                     <Help>
-                      <p>If erosion repair occurs less than once/year, estimate the time it takes when done and divide by the number of years between repair activities</p>
+                      <p>
+                        If erosion repair occurs less than once/year,
+                        estimate the time it takes when done and divide by the number of years between repair activities.
+                      </p>
                     </Help>
                   </td>
                   <td>
@@ -70,15 +85,20 @@ const Erosion = () => {
       </table>
       {
         dev && (
-          <>
-            <button onClick={exampleErosion}>Test data</button>
-          </>
+          <button type="button" onClick={exampleErosion}>Test data</button>
         )
       }
     </div>
   );
-} // Erosion
+}; // Erosion
 
-Erosion.menu = <span><u>E</u>rosion Control</span>;
+Erosion.menu = (
+  <span>
+    Erosio
+    <u>n</u>
+    {' '}
+    Control
+  </span>
+);
 
 export default Erosion;

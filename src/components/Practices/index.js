@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/no-access-key */
-import {useSelector, useDispatch} from "react-redux";
-import {get, set} from "../../store/redux-autosetters";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { get, set } from '../../store/redux-autosetters';
 import {
   exampleSpecies,
   exampleHerbicides,
@@ -22,14 +24,14 @@ import {
   exampleYield1,
   exampleYield2,
   dollars,
-} from "../../store/Store";
+} from '../../store/Store';
 
 import './styles.scss';
 
-const cost = (n) => n >= 0 ? dollars(n) : '';
-const benefit = (n) => n < 0 ? dollars(-n) : '';
+const costs = (n) => (n >= 0 ? dollars(n) : '');
+const benefits = (n) => (n < 0 ? dollars(-n) : '');
 
-const Implement = ({desc, type, benefit}) => {
+const Implement = ({ desc, type, benefit }) => {
   const total = useSelector(get[type].total);
   const implement = useSelector(get[type].implement);
   const power = useSelector(get[type].power);
@@ -47,11 +49,10 @@ const Implement = ({desc, type, benefit}) => {
       <td>{benefit ? dollars(total) : ''}</td>
       <td />
     </tr>
-  )
-} // Implement
+  );
+}; // Implement
 
 const CropSummary = () => {
-  const dispatch = useDispatch();
   const species = useSelector(get.species);
   const coverCropTotal = useSelector(get.coverCropTotal);
   const rates = useSelector(get.rates);
@@ -60,47 +61,55 @@ const CropSummary = () => {
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Species'))}
-        >
-          Cover crops planted
+        <td colSpan={2}>
+          <NavLink
+            to="/Species"
+          >
+            Cover crops planted
+          </NavLink>
         </td>
         <td className="hidden" />
         <td />
         <td />
-        <td>{cost(coverCropTotal)}</td>
+        <td>{costs(coverCropTotal)}</td>
         <td />
-        <td>{benefit(coverCropTotal)}</td>
+        <td>{benefits(coverCropTotal)}</td>
       </tr>
       {species.map((crop, i) => (
         <tr key={crop}>
           <td />
           <td>{crop}</td>
-          <td>{rates[i]} pounds @ {dollars(prices[i])}/acre</td>
-          <td>{cost(rates[i] * prices[i])}</td>
+          <td>
+            {rates[i]}
+            {' '}
+            pounds @
+            {' '}
+            {dollars(prices[i])}
+            /acre
+          </td>
+          <td>{costs(rates[i] * prices[i])}</td>
           <td />
-          <td>{benefit(rates[i] * prices[i])}</td>
+          <td>{benefits(rates[i] * prices[i])}</td>
           <td />
         </tr>
       ))}
     </>
   );
-} // CropSummary
+}; // CropSummary
 
 const SeedbedSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.seedbed.total) || 0;
   const implement = useSelector(get.seedbed.implement);
   const power = useSelector(get.seedbed.power);
 
   return (
     <tr>
-      <td
-        colSpan={2}
-        onClick={() => dispatch(set.screen('Seedbed'))}
-      >
-        Cover crop seedbed preparation
+      <td colSpan={2}>
+        <NavLink
+          to="/Seedbed"
+        >
+          Cover crop seedbed preparation
+        </NavLink>
       </td>
       <td className="hidden" />
       <td>
@@ -109,26 +118,26 @@ const SeedbedSummary = () => {
         {power}
       </td>
       <td />
-      <td>{cost(total)}</td>
+      <td>{costs(total)}</td>
       <td />
-      <td>{benefit(total)}</td>
+      <td>{benefits(total)}</td>
     </tr>
-  )
-} // SeedbedSummary
+  );
+}; // SeedbedSummary
 
 const PlantingSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.planting.total) || 0;
   const implement = useSelector(get.planting.implement);
   const power = useSelector(get.planting.power);
 
   return (
     <tr>
-      <td
-        colSpan={2}
-        onClick={() => dispatch(set.screen('Planting'))}
-      >
-        Cover crop planting activity
+      <td colSpan={2}>
+        <NavLink
+          to="/Planting"
+        >
+          Cover crop planting activity
+        </NavLink>
       </td>
       <td className="hidden" />
       <td>
@@ -137,22 +146,21 @@ const PlantingSummary = () => {
         {power}
       </td>
       <td />
-      <td>{cost(total)}</td>
+      <td>{costs(total)}</td>
       <td />
-      <td>{benefit(total)}</td>
+      <td>{benefits(total)}</td>
     </tr>
-  )
-} // PlantingSummary
+  );
+}; // PlantingSummary
 
 const TerminationSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.termination.total);
   const method = useSelector(get.termination.method);
   const product = useSelector(get.termination.product);
   const productCost = useSelector(get.termination.productCost);
   const rate = useSelector(get.termination.rate);
   const unitCost = useSelector(get.termination.unitCost);
-  
+
   const additionalTotal = useSelector(get.termination.additionalTotal);
   const additionalHerbicides = useSelector(get.termination.additionalHerbicides);
   const additionalRates = useSelector(get.termination.additionalRates);
@@ -166,25 +174,35 @@ const TerminationSummary = () => {
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Termination'))}
-        >
-          Cover crop termination activity
+        <td colSpan={2}>
+          <NavLink
+            to="/Termination"
+          >
+            Cover crop termination activity
+          </NavLink>
         </td>
         <td className="hidden" />
         <td>{method}</td>
         <td />
-        <td>{cost(total)}</td>
+        <td>{costs(total)}</td>
         <td />
-        <td>{benefit(total)}</td>
+        <td>{benefits(total)}</td>
       </tr>
       {
         productCost > 0 && (
           <tr>
             <td />
-            <td>Product: {product}</td>
-            <td>{rate} pounds/acre @ {dollars(unitCost)}</td>
+            <td>
+              Product:
+              {product}
+            </td>
+            <td>
+              {rate}
+              {' '}
+              pounds/acre @
+              {' '}
+              {dollars(unitCost)}
+            </td>
             <td>{dollars(productCost)}</td>
             <td />
             <td />
@@ -204,17 +222,27 @@ const TerminationSummary = () => {
               <td />
               <td>Additional herbicides</td>
               <td />
-              <td>{cost(additionalTotal)}</td>
+              <td>{costs(additionalTotal)}</td>
               <td />
-              <td>{benefit(additionalTotal)}</td>
+              <td>{benefits(additionalTotal)}</td>
               <td />
             </tr>
             {
               additionalHerbicides.map((herb, i) => (
                 <tr key={herb}>
                   <td />
-                  <td>&nbsp;&nbsp;&nbsp;&nbsp;Product: {herb}</td>
-                  <td>{additionalRates[i]} pounds @ {dollars(additionalPrices[i])}/acre</td>
+                  <td>
+&nbsp;&nbsp;&nbsp;&nbsp;Product:
+                    {herb}
+                  </td>
+                  <td>
+                    {additionalRates[i]}
+                    {' '}
+                    pounds @
+                    {' '}
+                    {dollars(additionalPrices[i])}
+                    /acre
+                  </td>
                   <td>{dollars(additionalRates[i] * additionalPrices[i])}</td>
                   <td />
                   <td />
@@ -241,8 +269,18 @@ const TerminationSummary = () => {
               reducedHerbicides.map((herb, i) => (
                 <tr key={herb}>
                   <td />
-                  <td>&nbsp;&nbsp;&nbsp;&nbsp;Product: {herb}</td>
-                  <td>{reducedRates[i]} pounds @ {dollars(reducedPrices[i])}/acre</td>
+                  <td>
+&nbsp;&nbsp;&nbsp;&nbsp;Product:
+                    {herb}
+                  </td>
+                  <td>
+                    {reducedRates[i]}
+                    {' '}
+                    pounds @
+                    {' '}
+                    {dollars(reducedPrices[i])}
+                    /acre
+                  </td>
                   <td />
                   <td />
                   <td>{dollars(reducedRates[i] * reducedPrices[i])}</td>
@@ -254,39 +292,40 @@ const TerminationSummary = () => {
         ) : null
       }
     </>
-  )
-} // TerminationSummary
+  );
+}; // TerminationSummary
 
 const TillageSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.tillageAll.total);
 
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Tillage'))}
-        >
-          Tillage modifications<br />to normal cropping system
+        <td colSpan={2}>
+          <NavLink
+            to="/Tillage"
+          >
+            Tillage modifications
+            <br />
+            to normal cropping system
+          </NavLink>
         </td>
         <td className="hidden" />
         <td />
         <td />
-        <td>{cost(total)}</td>
+        <td>{costs(total)}</td>
         <td />
-        <td>{benefit(total)}</td>
+        <td>{benefits(total)}</td>
       </tr>
 
       <Implement desc="Fall Tillage" type="tillageFall" benefit />
       <Implement desc="Tillage Elimination" type="tillageElimination" benefit />
       <Implement desc="Other Tillage" type="tillageOther" />
-    </>    
+    </>
   );
-} // TillageSummary
+}; // TillageSummary
 
 const FertilitySummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.fertility.total);
   const fertN = useSelector(get.fertN);
   const fertP = useSelector(get.fertP);
@@ -301,26 +340,53 @@ const FertilitySummary = () => {
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Fertility'))}
-        >
-          Fertility
+        <td colSpan={2}>
+          <NavLink
+            to="/Fertility"
+          >
+            Fertility
+          </NavLink>
         </td>
         <td className="hidden" />
         <td />
         <td />
-        <td>{cost(-total)}</td>
+        <td>{costs(-total)}</td>
         <td />
-        <td>{benefit(-total)}</td>
+        <td>{benefits(-total)}</td>
       </tr>
       <tr>
         <td />
         <td>Fertilizer credit</td>
         <td>
-          {fertN > 0 && <>{fertN} pound N/acre<br /></>}
-          {fertP > 0 && <>{fertP} pound P<sub>2</sub>O<sub>5</sub>/acre<br /></>}
-          {fertK > 0 && <>{fertK} pound K<sub>2</sub>O/acre</>}
+          {fertN > 0 && (
+          <>
+            {fertN}
+            {' '}
+            pound N/acre
+            <br />
+          </>
+          )}
+          {fertP > 0 && (
+          <>
+            {fertP}
+            {' '}
+            pound P
+            <sub>2</sub>
+            O
+            <sub>5</sub>
+            /acre
+            <br />
+          </>
+          )}
+          {fertK > 0 && (
+          <>
+            {fertK}
+            {' '}
+            pound K
+            <sub>2</sub>
+            O/acre
+          </>
+          )}
         </td>
         <td />
         <td />
@@ -331,9 +397,35 @@ const FertilitySummary = () => {
         <td />
         <td>Additional fertilizer expense</td>
         <td>
-          {fertNAdded > 0 && <>{fertNAdded} pound N/acre<br /></>}
-          {fertPAdded > 0 && <>{fertPAdded} pound P<sub>2</sub>O<sub>5</sub>/acre<br /></>}
-          {fertKAdded > 0 && <>{fertKAdded} pound K<sub>2</sub>O/acre</>}
+          {fertNAdded > 0 && (
+          <>
+            {fertNAdded}
+            {' '}
+            pound N/acre
+            <br />
+          </>
+          )}
+          {fertPAdded > 0 && (
+          <>
+            {fertPAdded}
+            {' '}
+            pound P
+            <sub>2</sub>
+            O
+            <sub>5</sub>
+            /acre
+            <br />
+          </>
+          )}
+          {fertKAdded > 0 && (
+          <>
+            {fertKAdded}
+            {' '}
+            pound K
+            <sub>2</sub>
+            O/acre
+          </>
+          )}
         </td>
         <td>{dollars(-$fertCost - $fertApplication)}</td>
         <td />
@@ -349,14 +441,13 @@ const FertilitySummary = () => {
         <td />
         <td />
       </tr>
-    </>    
+    </>
   );
-} // FertilitySummary
+}; // FertilitySummary
 
 const HerbicideSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.herbicide.total);
-  
+
   const additionalProduct = useSelector(get.herbicideAdditional.product);
   const additionalRate = useSelector(get.herbicideAdditional.rate);
   const additionalUnitCost = useSelector(get.herbicideAdditional.unitCost);
@@ -366,25 +457,27 @@ const HerbicideSummary = () => {
   const reducedRate = useSelector(get.herbicideReduced.rate);
   const reducedUnitCost = useSelector(get.herbicideReduced.unitCost);
   const reducedProductCost = useSelector(get.herbicideReduced.cost);
-  
+
   const fallSavings = useSelector(get.herbicideFall.savings);
 
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Herbicide'))}
-        >
-          Herbicide modifications<br />
-          to normal cropping system
+        <td colSpan={2}>
+          <NavLink
+            to="/Herbicide"
+          >
+            Herbicide modifications
+            <br />
+            to normal cropping system
+          </NavLink>
         </td>
         <td className="hidden" />
         <td />
         <td />
-        <td>{cost(total)}</td>
+        <td>{costs(total)}</td>
         <td />
-        <td>{benefit(total)}</td>
+        <td>{benefits(total)}</td>
       </tr>
 
       <Implement desc="Additional herbicides" type="herbicideAdditional" />
@@ -392,8 +485,17 @@ const HerbicideSummary = () => {
         additionalProductCost > 0 && (
           <tr>
             <td />
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;Product: {additionalProduct}</td>
-            <td>{additionalRate} pounds/acre @ {dollars(additionalUnitCost)}</td>
+            <td>
+&nbsp;&nbsp;&nbsp;&nbsp;Product:
+              {additionalProduct}
+            </td>
+            <td>
+              {additionalRate}
+              {' '}
+              pounds/acre @
+              {' '}
+              {dollars(additionalUnitCost)}
+            </td>
             <td>{dollars(additionalProductCost)}</td>
             <td />
             <td />
@@ -422,8 +524,17 @@ const HerbicideSummary = () => {
         reducedProductCost > 0 && (
           <tr>
             <td />
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;Product: {reducedProduct}</td>
-            <td>{reducedRate} pounds/acre @ {dollars(reducedUnitCost)}</td>
+            <td>
+&nbsp;&nbsp;&nbsp;&nbsp;Product:
+              {reducedProduct}
+            </td>
+            <td>
+              {reducedRate}
+              {' '}
+              pounds/acre @
+              {' '}
+              {dollars(reducedUnitCost)}
+            </td>
             <td />
             <td />
             <td>{dollars(reducedProductCost)}</td>
@@ -432,22 +543,22 @@ const HerbicideSummary = () => {
         )
       }
     </>
-  )
-} // HerbicideSummary
+  );
+}; // HerbicideSummary
 
 const ErosionSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.erosion.total);
   const tool = useSelector(get.erosion.q2);
-  
+
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Erosion'))}
-        >
-          Erosion control
+        <td colSpan={2}>
+          <NavLink
+            to="/Erosion"
+          >
+            Erosion control
+          </NavLink>
         </td>
         <td className="hidden" />
         <td />
@@ -461,7 +572,10 @@ const ErosionSummary = () => {
         total > 0 && (
           <tr>
             <td />
-            <td>Reduced hours of repairing fields with {tool.toLowerCase()}</td>
+            <td>
+              Reduced hours of repairing fields with
+              {tool.toLowerCase()}
+            </td>
             <td />
             <td />
             <td />
@@ -471,26 +585,26 @@ const ErosionSummary = () => {
         )
       }
     </>
-  )
-} // ErosionSummary
+  );
+}; // ErosionSummary
 
 const YieldSummary = () => {
-  const dispatch = useDispatch();
   const total = useSelector(get.yield.total);
   const year = {
     1: 'first',
     3: 'third',
-    5: 'fifth'
+    5: 'fifth',
   }[useSelector(get.yield.q4)];
 
   return (
     <>
       <tr>
-        <td
-          colSpan={2}
-          onClick={() => dispatch(set.screen('Yield'))}
-        >
-          Yield impact
+        <td colSpan={2}>
+          <NavLink
+            to="/Yield"
+          >
+            Yield impact
+          </NavLink>
         </td>
         <td className="hidden" />
         <td />
@@ -501,7 +615,12 @@ const YieldSummary = () => {
       </tr>
       <tr>
         <td />
-        <td>Improved yield estimate in {year} year of cover crops</td>
+        <td>
+          Improved yield estimate in
+          {year}
+          {' '}
+          year of cover crops
+        </td>
         <td />
         <td />
         <td />
@@ -509,8 +628,8 @@ const YieldSummary = () => {
         <td />
       </tr>
     </>
-  )
-} // YieldSummary
+  );
+}; // YieldSummary
 
 const Practices = () => {
   const dispatch = useDispatch();
@@ -523,15 +642,15 @@ const Practices = () => {
   const lon = useSelector(get.lon);
 
   const totals = [
-    useSelector(get.coverCropTotal)     || 0,
-    useSelector(get.seedbed.total)      || 0,
-    useSelector(get.planting.total)     || 0,
-    useSelector(get.termination.total)  || 0,
-    useSelector(get.tillageAll.total)   || 0,
-    -useSelector(get.fertility.total)   || 0,
-    useSelector(get.herbicide.total)    || 0,
-    -useSelector(get.erosion.total)      || 0,
-    -useSelector(get.yield.total)        || 0
+    useSelector(get.coverCropTotal) || 0,
+    useSelector(get.seedbed.total) || 0,
+    useSelector(get.planting.total) || 0,
+    useSelector(get.termination.total) || 0,
+    useSelector(get.tillageAll.total) || 0,
+    -useSelector(get.fertility.total) || 0,
+    useSelector(get.herbicide.total) || 0,
+    -useSelector(get.erosion.total) || 0,
+    -useSelector(get.yield.total) || 0,
   ];
 
   const totalCosts = totals.reduce((previous, value) => previous + Math.max(value, 0), 0);
@@ -540,17 +659,48 @@ const Practices = () => {
   return (
     <div className="Practices">
       <h1>Summary of Practices</h1>
-      
-      {farm && <p>Farm: {farm}</p>}
-      {field && <p>Field: {field} at {lat} latitude and {lon} longitude</p>}
-      
-      {priorCrop && cashCrop && <p>Crop management: Cover crop planted after {priorCrop} and prior to {cashCrop}.</p>}
+
+      {farm && (
+      <p>
+        Farm:
+        {farm}
+      </p>
+      )}
+      {field && (
+      <p>
+        Field:
+        {field}
+        {' '}
+        at
+        {lat}
+        {' '}
+        latitude and
+        {lon}
+        {' '}
+        longitude
+      </p>
+      )}
+
+      {priorCrop && cashCrop && (
+      <p>
+        Crop management: Cover crop planted after
+        {priorCrop}
+        {' '}
+        and prior to
+        {cashCrop}
+        .
+      </p>
+      )}
 
       <table>
         <thead>
           <tr>
-            <th colSpan={2} />
-            <th className="hidden" />
+            <th colSpan={2}>
+              &nbsp;
+            </th>
+            <th className="hidden">
+              &nbsp;
+            </th>
             <th>Description</th>
             <th>Costs/line item</th>
             <th>Total cost</th>
@@ -580,7 +730,7 @@ const Practices = () => {
           <tr className="total">
             <td colSpan={2}>Net cost of cover crops</td>
             <td className="hidden" />
-            <td style={{textAlign: 'right'}}>{dollars(totalBenefits - totalCosts)}</td>
+            <td style={{ textAlign: 'right' }}>{dollars(totalBenefits - totalCosts)}</td>
             <td />
             <td />
             <td />
@@ -593,6 +743,7 @@ const Practices = () => {
         dev && (
           <>
             <button
+              type="button"
               accessKey="1"
               onClick={() => {
                 dispatch(set.farm('My farm'));
@@ -611,9 +762,12 @@ const Practices = () => {
                 exampleYield1();
               }}
             >
-              Test <u>1</u>
+              Test
+              {' '}
+              <u>1</u>
             </button>
             <button
+              type="button"
               accessKey="2"
               onClick={() => {
                 dispatch(set.farm('My farm'));
@@ -632,9 +786,12 @@ const Practices = () => {
                 exampleYield2();
               }}
             >
-              Test <u>2</u>
+              Test
+              {' '}
+              <u>2</u>
             </button>
             <button
+              type="button"
               accessKey="3"
               onClick={() => {
                 dispatch(set.farm('My farm'));
@@ -653,9 +810,12 @@ const Practices = () => {
                 exampleYield1();
               }}
             >
-              Test <u>3</u>
+              Test
+              {' '}
+              <u>3</u>
             </button>
             <button
+              type="button"
               accessKey="4"
               onClick={() => {
                 dispatch(set.farm('My farm'));
@@ -674,9 +834,12 @@ const Practices = () => {
                 exampleYield2();
               }}
             >
-              Test <u>4</u>
+              Test
+              {' '}
+              <u>4</u>
             </button>
             <button
+              type="button"
               accessKey="5"
               onClick={() => {
                 dispatch(set.farm('My farm'));
@@ -695,15 +858,23 @@ const Practices = () => {
                 exampleYield1();
               }}
             >
-              Test <u>5</u>
+              Test
+              {' '}
+              <u>5</u>
             </button>
           </>
         )
       }
     </div>
-  )
-} // Practices
+  );
+}; // Practices
 
-Practices.menu = <span>S<u>u</u>mmary</span>;
+Practices.menu = (
+  <span>
+    S
+    <u>u</u>
+    mmary
+  </span>
+);
 
 export default Practices;

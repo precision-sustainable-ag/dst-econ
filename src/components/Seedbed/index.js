@@ -1,10 +1,13 @@
-import {useSelector} from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import {get, getDefaults, exampleSeedbed, clearInputs} from '../../store/Store';
+import {
+  get, getDefaults, exampleSeedbed, clearInputs,
+} from '../../store/Store';
 import Logic from '../Logic';
-import {ClearInputs} from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
-const defaults = getDefaults(Object.keys(get.seedbed).map(parm => 'seedbed.' + parm));
+const defaults = getDefaults(Object.keys(get.seedbed).map((parm) => `seedbed.${parm}`));
 
 const Seedbed = () => {
   // console.log('Render: Seedbed');
@@ -18,24 +21,28 @@ const Seedbed = () => {
       <h1>Seedbed Preparation</h1>
       <div id="About">
         <p>
-          In order to accurately evaluate the economic impact of implementing cover crops into your rotation, we only want to consider management decisions directly associated with the use of cover crops.
+          In order to accurately evaluate the economic impact of implementing cover crops into your rotation,
+          we only want to consider management decisions directly associated with the use of cover crops.
           In this module we will consider only activities that are incurred because a cover crop is planted.
-          For example, if you would normally conduct tillage (e.g. vertical tillage pass on corn stalks) after harvest this would not be considered an additional cost associated with cover crops.
+          For example, if you would normally conduct tillage (e.g. vertical tillage pass on corn stalks) after harvest
+          this would not be considered an additional cost associated with cover crops.
           Ensure your inputs are only those specific to seedbed preparation for cover crops.
-          For example, if you will no longer conduct fall tillage (e.g. inline or deep ripping) due to planting cover crops you will account for these changes in the Tillage Module.
+          For example, if you will no longer conduct fall tillage (e.g. inline or deep ripping) due to planting cover crops
+          you will account for these changes in the Tillage Module.
         </p>
 
         <p>
           Also, the costs associated with machinery are dependent upon the annual hours of use.
-          In this module you can accept the default value (for hours of annual use) or customize with the estimated hours associated with your operation.
+          In this module you can accept the default value (for hours of annual use)
+          or customize with the estimated hours associated with your operation.
           This will more accurately represent costs in your operation.
         </p>
       </div>
-      <hr/>
+      <hr />
 
       <strong>Cover Crop Establishment</strong>
       <form>
-        <table className={'seedbed inputs'}>
+        <table className="seedbed inputs">
           <tbody>
             <tr>
               <th colSpan="2">
@@ -43,7 +50,7 @@ const Seedbed = () => {
                 <ClearInputs defaults={defaults} />
               </th>
             </tr>
-            
+
             <Logic
               current="seedbed"
               property="q1"
@@ -65,11 +72,11 @@ const Seedbed = () => {
                 <Logic current="seedbed" question="Annual Use (acres on implement)" />
                 <Logic current="seedbed" question="Annual Use (hours on power)" />
                 <Logic current="seedbed" question="Acres/hour" />
-                <Logic 
+                <Logic
                   current="seedbed"
                   question="Estimated"
                   total={Number.isFinite(state.total) ? state.total : estimated}
-                  estimated={estimated} 
+                  estimated={estimated}
                 />
               </>
             )}
@@ -77,12 +84,17 @@ const Seedbed = () => {
         </table>
       </form>
       {
-        dev && <button onClick={exampleSeedbed}>Test data</button>
+        dev && <button type="button" onClick={exampleSeedbed}>Test data</button>
       }
     </>
-  )
-} // Seedbed
+  );
+}; // Seedbed
 
-Seedbed.menu = <span><u>S</u>eedbed Preparation</span>;
+Seedbed.menu = (
+  <span>
+    <u>S</u>
+    eedbed Preparation
+  </span>
+);
 
 export default Seedbed;

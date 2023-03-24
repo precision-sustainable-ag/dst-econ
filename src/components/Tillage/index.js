@@ -1,8 +1,9 @@
-import {useSelector, useDispatch} from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import {
   get,
-  set,
   getDefaults,
   dollars,
   clearInputs,
@@ -14,17 +15,62 @@ import {
 } from '../../store/Store';
 
 import Logic from '../Logic';
-import {ClearInputs} from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
-const tillageDefaults     = getDefaults(Object.keys(get.tillage1).map(parm => 'tillage1.' + parm));
-const fallDefaults        = getDefaults(Object.keys(get.tillageFall).map(parm => 'tillageFall.' + parm));
-const eliminationDefaults = getDefaults(Object.keys(get.tillageElimination).map(parm => 'tillageElimination.' + parm));
-const otherDefaults       = getDefaults(Object.keys(get.tillageOther).map(parm => 'tillageOther.' + parm));
+const tillageDefaults = getDefaults(Object.keys(get.tillage1).map((parm) => `tillage1.${parm}`));
+const fallDefaults = getDefaults(Object.keys(get.tillageFall).map((parm) => `tillageFall.${parm}`));
+const eliminationDefaults = getDefaults(Object.keys(get.tillageElimination).map((parm) => `tillageElimination.${parm}`));
+const otherDefaults = getDefaults(Object.keys(get.tillageOther).map((parm) => `tillageOther.${parm}`));
 
-const defaults = {...tillageDefaults, ...fallDefaults, ...eliminationDefaults, ...otherDefaults};
+const defaults = {
+  ...tillageDefaults, ...fallDefaults, ...eliminationDefaults, ...otherDefaults,
+};
+
+const Costs = ({
+  current, q2, q3, q4, onChange,
+}) => {
+  const state = useSelector(get[current]);
+  const estimated = useSelector(get[current].estimated);
+
+  return (
+    <>
+      <Logic
+        current={current}
+        property="q2"
+        q={q2}
+        a={['Yes', 'No']}
+        style={{ borderTop: '2px solid #444' }}
+        onChange={onChange}
+      />
+
+      {state.q2 === 'Yes' && (
+        <>
+          <Logic
+            current={current}
+            property="implement"
+            q={q3}
+            type="Tillage"
+          />
+
+          <Logic current={current} question="power" />
+          <Logic current={current} question="Annual Use (acres on implement)" />
+          <Logic current={current} question="Annual Use (hours on power)" />
+          <Logic current={current} question="Acres/hour" />
+
+          <Logic
+            current={current}
+            question="Estimated"
+            q={q4}
+            total={Number.isFinite(state.total) ? state.total : estimated}
+            estimated={estimated}
+          />
+        </>
+      )}
+    </>
+  );
+}; // Costs
 
 const Tillage = () => {
-  const dispatch  = useDispatch();
   const dev = useSelector(get.dev);
 
   const state = useSelector(get.tillage1);
@@ -33,62 +79,33 @@ const Tillage = () => {
   const tillageOther = useSelector(get.tillageOther);
   const tillageAll = useSelector(get.tillageAll);
 
-  const Costs = ({current, q2, q3, q4, onChange}) => {
-    const state = useSelector(get[current]);
-    const estimated = useSelector(get[current].estimated);
-
-    return (
-      <>
-        <Logic
-          current={current}
-          property="q2"
-          q={q2}
-          a={['Yes', 'No']}
-          style={{borderTop: '2px solid #444'}}
-          onChange={onChange}
-        />
-
-        {state.q2 === 'Yes' && (
-          <>
-            <Logic
-              current={current}
-              property="implement"
-              q={q3}
-              type="Tillage"
-            />
-
-            <Logic current={current} question="power" />
-            <Logic current={current} question="Annual Use (acres on implement)" />
-            <Logic current={current} question="Annual Use (hours on power)" />
-            <Logic current={current} question="Acres/hour" />
-
-            <Logic 
-              current={current}
-              question="Estimated"
-              q={q4}
-              total={Number.isFinite(state.total) ? state.total : estimated}
-              estimated={estimated}
-            />
-          </>
-        )}
-      </>
-    );
-  } // Costs
-
   return (
     <>
       <div className="Tillage">
         <h1>Tillage</h1>
         <p>
-          As a reminder to the user, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
+          As a reminder to the user, the
+          {' '}
+          <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
+          {' '}
+          considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
           Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
           For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
           Other growers have switched from conventional tillage to no-til planting after making a switch to extensive use of cover crops.
-          Review the <span className="link" onClick={() => dispatch(set.screen('Resources'))}>Resources page</span> for additional information.
+          Review the
+          {' '}
+          <NavLink
+            className="link"
+            to="/Resources"
+          >
+            Resources page
+          </NavLink>
+          {' '}
+          for additional information.
         </p>
 
         <form>
-          <table className={'tillage1 inputs'}>
+          <table className="tillage1 inputs">
             <tbody>
               <tr>
                 <th colSpan="2">
@@ -96,7 +113,7 @@ const Tillage = () => {
                   <ClearInputs defaults={defaults} />
                 </th>
               </tr>
-              
+
               <Logic
                 current="tillage1"
                 property="q1"
@@ -123,7 +140,7 @@ const Tillage = () => {
                         property="q5"
                         q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
                         a={['Yes', 'No']}
-                        style={{borderTop: '2px solid #444'}}
+                        style={{ borderTop: '2px solid #444' }}
                       />
 
                       <tr><th colSpan="2">Tillage Elimination</th></tr>
@@ -152,21 +169,21 @@ const Tillage = () => {
                 current="tillage1"
                 q="Tillage cost reductions due to adopting cover crop"
                 a={dollars(tillage1.costReductions)}
-                style={{background: 'lightyellow', borderTop: '2px solid #444'}}
-              />              
+                style={{ background: 'lightyellow', borderTop: '2px solid #444' }}
+              />
 
               <Logic
                 current="tillage1"
                 q="Tillage cost increases due to adopting cover crop"
                 a={dollars(tillageOther.total)}
-                style={{background: 'lightyellow'}}
-              />              
+                style={{ background: 'lightyellow' }}
+              />
 
               <Logic
                 current="tillage1"
                 q="Net impact of adopting cover crop on tillage costs"
                 a={dollars(tillageAll.total)}
-                style={{background: 'lightyellow'}}
+                style={{ background: 'lightyellow' }}
               />
             </tbody>
           </table>
@@ -175,20 +192,26 @@ const Tillage = () => {
       {
         dev && (
           <>
-            <button onClick={exampleTillage1}>Test 1</button>
-            <button onClick={exampleTillage2}>Test 2</button>
-            <button onClick={exampleTillage3}>Test 3</button>
-            <button onClick={exampleTillage4}>Test 4</button>
-            <button onClick={exampleTillage5}>Test 5</button>
+            <button type="button" onClick={exampleTillage1}>Test 1</button>
+            <button type="button" onClick={exampleTillage2}>Test 2</button>
+            <button type="button" onClick={exampleTillage3}>Test 3</button>
+            <button type="button" onClick={exampleTillage4}>Test 4</button>
+            <button type="button" onClick={exampleTillage5}>Test 5</button>
             <hr />
           </>
         )
       }
 
     </>
-  )
-} // Tillage
+  );
+}; // Tillage
 
-Tillage.menu = <span>T<u>i</u>llage</span>;
+Tillage.menu = (
+  <span>
+    T
+    <u>i</u>
+    llage
+  </span>
+);
 
 export default Tillage;

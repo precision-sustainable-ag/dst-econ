@@ -1,15 +1,20 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Logic from '../Logic';
-import {ClearInputs} from '../ClearInputs';
+import ClearInputs from '../ClearInputs';
 
-import {useSelector} from 'react-redux';
-import {get, db, getDefaults, clearInputs, exampleHerbicides} from '../../store/Store';
+import {
+  get, db, getDefaults, clearInputs, exampleHerbicides,
+} from '../../store/Store';
 
-const herbicideDefaults   = getDefaults(Object.keys(get.herbicide).map(parm => 'herbicide.' + parm));
-const fallDefaults        = getDefaults(Object.keys(get.herbicideFall).map(parm => 'herbicideFall.' + parm));
-const additionalDefaults  = getDefaults(Object.keys(get.herbicideAdditional).map(parm => 'herbicideAdditional.' + parm));
-const reducedDefaults     = getDefaults(Object.keys(get.herbicideReduced).map(parm => 'herbicideReduced.' + parm));
+const herbicideDefaults = getDefaults(Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`));
+const fallDefaults = getDefaults(Object.keys(get.herbicideFall).map((parm) => `herbicideFall.${parm}`));
+const additionalDefaults = getDefaults(Object.keys(get.herbicideAdditional).map((parm) => `herbicideAdditional.${parm}`));
+const reducedDefaults = getDefaults(Object.keys(get.herbicideReduced).map((parm) => `herbicideReduced.${parm}`));
 
-const defaults = {...herbicideDefaults, ...fallDefaults, ...additionalDefaults, ...reducedDefaults};
+const defaults = {
+  ...herbicideDefaults, ...fallDefaults, ...additionalDefaults, ...reducedDefaults,
+};
 
 const Herbicide = () => {
   const state = useSelector(get.herbicide);
@@ -25,15 +30,21 @@ const Herbicide = () => {
       <h1>Herbicide</h1>
       <p>
         This module will address reductions or additional herbicide costs associated with integrating cover crops into your rotation.
-        As a reminder, the <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your crop management system specific to the inclusion of cover crops.
+        As a reminder, the
+        {' '}
+        <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
+        {' '}
+        considers changes to your crop management system specific to the inclusion of cover crops.
         Therefore, this module only considers changes to your herbicide program specific to post emerge or fall herbicide applications.
-        For example, some users have found the allelopathic effects of using cereal rye have enabled them to reduce the amount of herbicide used in their spray program.
-        Some growers that have historically used multiple post emerge spray applications have found they can eliminate a herbicide pass when using cover crops.
+        For example, some users have found the allelopathic effects of using cereal rye have enabled them
+        to reduce the amount of herbicide used in their spray program.
+        Some growers that have historically used multiple post emerge spray applications have found
+        they can eliminate a herbicide pass when using cover crops.
         You can also read case studies linked to the right to gain more insight of how cover crops have changed management practices for growers.
       </p>
 
       <form>
-        <table className={'herbicide inputs'}>
+        <table className="herbicide inputs">
           <tbody>
             <tr>
               <th colSpan="2">
@@ -78,7 +89,7 @@ const Herbicide = () => {
                     current="herbicideAdditional"
                     property="unitCost"
                     q="Cost per unit of product"
-                    a={'dollar'}
+                    a="dollar"
                     suffix={db.herbicides[additionalProduct]?.['Unit (cost)']}
                   />
 
@@ -86,7 +97,7 @@ const Herbicide = () => {
                     current="herbicideAdditional"
                     property="rate"
                     q="Application rate"
-                    a={'number'}
+                    a="number"
                     suffix={db.herbicides[additionalProduct]?.['Unit (rate)']}
                   />
 
@@ -96,26 +107,26 @@ const Herbicide = () => {
                     q="Product cost"
                     a={additionalCost}
                   />
-      
+
                   <Logic
                     current="herbicideAdditional"
                     property="implement"
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
-                    custom={['I will not be making an additional application', 'Hire custom operator']}
+                    custom={['I will not reduce my post emerge spray applications', 'Hire custom operator']}
                   />
-      
+
                   <Logic current="herbicideAdditional" question="power" />
-      
+
                   <Logic current="herbicideAdditional" question="Annual Use (acres on implement)" />
                   <Logic current="herbicideAdditional" question="Annual Use (hours on power)" />
                   <Logic current="herbicideAdditional" question="Acres/hour" />
-      
+
                   <Logic
                     current="herbicideAdditional"
                     question="Estimated"
                     q="Chemical spray equipment cost ($/acre)"
-                    a={'dollar'}
+                    a="dollar"
                   />
                 </>
               )
@@ -128,7 +139,8 @@ const Herbicide = () => {
                   <Logic
                     current="herbicide"
                     property="q5"
-                    q="Do you plan on reducing the amount of herbicides used or eliminating a post-emerge spray application with the use of cover crops?"
+                    q="Do you plan on reducing the amount of herbicides used
+                       or eliminating a post-emerge spray application with the use of cover crops?"
                     a={['Yes', 'No']}
                     onChange={() => clearInputs(reducedDefaults)}
                   />
@@ -152,7 +164,7 @@ const Herbicide = () => {
                     current="herbicideReduced"
                     property="unitCost"
                     q="Cost per unit of product"
-                    a={'dollar'}
+                    a="dollar"
                     suffix={db.herbicides[reducedProject]?.['Unit (cost)']}
                   />
 
@@ -160,7 +172,7 @@ const Herbicide = () => {
                     current="herbicideReduced"
                     property="rate"
                     q="Application rate"
-                    a={'number'}
+                    a="number"
                     suffix={db.herbicides[reducedProject]?.['Unit (rate)']}
                   />
 
@@ -176,7 +188,7 @@ const Herbicide = () => {
                     property="implement"
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
-                    custom={['I will not be making an additional application', 'Hire custom operator']}
+                    custom={['I will not reduce my post emerge spray applications', 'Hire custom operator']}
                   />
 
                   <Logic current="herbicideReduced" question="power" />
@@ -189,7 +201,7 @@ const Herbicide = () => {
                     current="herbicideReduced"
                     question="Estimated"
                     q="Chemical spray equipment cost ($/acre)"
-                    a={'dollar'}
+                    a="dollar"
                   />
                 </>
               )
@@ -216,44 +228,51 @@ const Herbicide = () => {
                   <Logic
                     current="herbicideFall"
                     property="savings"
-                    q="Implementing cover crops will allow you to forgo a fall herbicide application. What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
+                    q="Implementing cover crops will allow you to forgo a fall herbicide application.
+                       What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
                     a="dollar"
                   />
-      
+
                   <Logic
                     current="herbicideFall"
                     property="implement"
                     q="How would you have conducted your fall herbicide program?"
                     type="Chemical"
                   />
-      
+
                   <Logic current="herbicideFall" question="power" />
-      
+
                   <Logic current="herbicideFall" question="Annual Use (acres on implement)" />
                   <Logic current="herbicideFall" question="Annual Use (hours on power)" />
                   <Logic current="herbicideFall" question="Acres/hour" />
-      
+
                   <Logic
                     current="herbicideFall"
                     question="Estimated"
                     q="Chemical spray equipment cost ($/acre)"
-                    a={'dollar'}
+                    a="dollar"
                   />
-                </>  
+                </>
               )
             }
 
           </tbody>
         </table>
       </form>
-      
+
       {
-        dev && <button onClick={exampleHerbicides}>Test</button>
+        dev && <button type="button" onClick={exampleHerbicides}>Test</button>
       }
     </div>
-  )
-} // Herbicide
+  );
+}; // Herbicide
 
-Herbicide.menu = <span>He<u>r</u>bicide</span>;
+Herbicide.menu = (
+  <span>
+    He
+    <u>r</u>
+    bicide
+  </span>
+);
 
 export default Herbicide;
