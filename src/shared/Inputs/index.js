@@ -241,14 +241,10 @@ const Input = ({
       renderInput = (params) => (
         <TextField
           autoFocus={props.autoFocus}
-          autoComplete="off"
+          autoComplete="new-password"
           variant={props.variant || 'outlined'}
           sx={{ background: 'white', width: max, padding: 0 }}
           {...params}
-          inputProps={{
-            role: 'presentation',
-            autoComplete: 'off',
-          }}
         />
       );
     }
@@ -257,7 +253,7 @@ const Input = ({
       <div className="input" id={id}>
         <MUIAutocomplete
           {...props}
-          autoComplete="off"
+          autoComplete="new-password"
           id={id}
           onKeyPress={keyPress}
           ref={focusRef}
@@ -296,7 +292,7 @@ const Input = ({
         <span className="input" id={id}>
           <TextField
             {...props}
-            autoComplete="off"
+            autoComplete="new-password"
             id={id}
             value={v === undefined ? '' : v} // https://github.com/facebook/react/issues/6222
             onFocus={(e) => {
@@ -313,7 +309,7 @@ const Input = ({
             variant={props.variant || 'outlined'}
             inputProps={{
               role: 'presentation',
-              autoComplete: 'off',
+              autoComplete: 'new-password',
               style: {
                 paddingLeft: 7,
                 paddingTop: 5,
