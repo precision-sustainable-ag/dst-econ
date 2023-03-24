@@ -8,7 +8,8 @@ import './styles.scss';
 
 const Costs = ({ desc }) => {
   const focused = useSelector(get.focused) || '';
-  const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
+  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
+  const type = focused?.split('.')[0] || 'planting';
   const state = useSelector(get[type]);
 
   const d = desc.replace('Storage shed', 'Storage');
@@ -46,9 +47,10 @@ const Activity = () => {
   const screenHeight = useSelector(get.screenHeight);
   const focused = useSelector(get.focused) || '';
 
-  const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
+  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
+  const type = focused.includes('.') ? focused.split('.')[0] : 'planting';
 
-  const state = useSelector(get[type]);
+  const state = useSelector(get[type]) || {};
   const { estimated } = state;
   const tot = state.total;
   const edited = estimated !== tot;
@@ -57,9 +59,9 @@ const Activity = () => {
   const PowerCost = state.powerCost;
   const state3 = useSelector(get[type]).q3;
 
-  if (!focused.includes('.total')) {
-    return null;
-  }
+  // if (!focused.includes('.total')) {
+  //   return null;
+  // }
 
   const heading = {
     seedbed: 'Seedbed Preparation',
@@ -98,7 +100,7 @@ const Activity = () => {
       position: 'fixed',
       left: onMap ? 'calc(920px + 4vw)' : rect.x + rect.width + 20,
       top,
-      zIndex: 1,
+      zIndex: 2,
     };
   }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import {
-  get, dollars, db, getDefaults, exampleSpecies,
+  get, dollars, db, getDefaults, exampleSeeds,
 } from '../../store/Store';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
@@ -86,11 +86,12 @@ const SpeciesRow = ({ n }) => {
   );
 }; // SpeciesRow
 
-const Species = () => {
+const Seeds = () => {
   const dev = useSelector(get.dev);
   const species = useSelector(get.species);
-  const state = useSelector(get.state);
+  const address = useSelector(get.address);
   const total = useSelector(get.coverCropTotal);
+  const { state } = address;
 
   const rec = db.stateRegions[state.toUpperCase()];
 
@@ -108,7 +109,7 @@ const Species = () => {
 
   return (
     <>
-      <form className="Species">
+      <form className="Seeds">
         <div>
           <h1>Cover Crops Species Selection</h1>
 
@@ -207,13 +208,13 @@ const Species = () => {
       </form>
 
       {
-        dev && <button type="button" onClick={exampleSpecies}>Test data</button>
+        dev && <button type="button" onClick={exampleSeeds}>Test data</button>
       }
     </>
   );
-}; // Species
+}; // Seeds
 
-Species.menu = (
+Seeds.menu = (
   <span>
     See
     <u>d</u>
@@ -221,4 +222,4 @@ Species.menu = (
   </span>
 );
 
-export default Species;
+export default Seeds;

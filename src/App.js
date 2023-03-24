@@ -16,7 +16,7 @@ import { get, set, db } from './store/Store';
 
 import Home from './components/Home';
 import Field from './components/Field';
-import Species from './components/Species';
+import Seeds from './components/Seeds';
 import Seedbed from './components/Seedbed';
 import Planting from './components/Planting';
 import Termination from './components/Termination';
@@ -44,7 +44,7 @@ const MyButton = ({ screen, ...otherProps }) => {
 
 const paths = {
   Field,
-  Species,
+  Seeds,
   Seedbed,
   Planting,
   Termination,
@@ -253,7 +253,7 @@ const App = () => {
         <Routes>
           <Route path="" element={<Field />} />
           <Route path="Home" element={<Home />} />
-          <Route path="Species" element={<Species />} />
+          <Route path="Seeds" element={<Seeds />} />
           <Route path="Seedbed" element={<Seedbed />} />
           <Route path="Planting" element={<Planting />} />
           <Route path="Termination" element={<Termination />} />
@@ -303,6 +303,12 @@ const App = () => {
 document.addEventListener('dblclick', (e) => {
   if (e.ctrlKey) {
     document.body.classList.toggle('debug');
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.altKey && e.key === 'd') { // Seeds accesskey
+    e.preventDefault();
   }
 });
 

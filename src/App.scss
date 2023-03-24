@@ -156,39 +156,35 @@ button.selected {
   background: #ccc;
 }
 
-form.Species td:nth-child(1) {
+form.Seeds td:nth-child(1) {
   width: 18rem;
 }
 
-form.Species td:nth-child(n + 2) {
+form.Seeds td:nth-child(n + 2) {
   text-align: right;
   width: 8em;
 }
 
-form.Species th {
+form.Seeds th {
   background: #eee;
 }
 
-form.Species tr:not(:last-child) td:nth-child(n + 2) {
+form.Seeds tr:not(:last-child) td:nth-child(n + 2) {
   background: #efe;
 }
 
-zdiv.Species tr > :nth-child(n + 4) {
-  display: none;
-}
-
-form.Species tr:last-child td {
+form.Seeds tr:last-child td {
   border-top: 1px solid #666;
   background: #eee;
 }
 
-form.Species tr > :nth-child(4) {
+form.Seeds tr > :nth-child(4) {
   border-left: 1px solid black;
 }
 
-form.Species tr > td:nth-child(1),
-form.Species tr > td:nth-child(2),
-form.Species tr > td:nth-child(3) {
+form.Seeds tr > td:nth-child(1),
+form.Seeds tr > td:nth-child(2),
+form.Seeds tr > td:nth-child(3) {
   border-bottom: none;
 }
 
