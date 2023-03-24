@@ -245,6 +245,10 @@ const Input = ({
           variant={props.variant || 'outlined'}
           sx={{ background: 'white', width: max, padding: 0 }}
           {...params}
+          inputProps={{
+            role: 'presentation',
+            autoComplete: 'off',
+          }}
         />
       );
     }
