@@ -24,22 +24,13 @@ import { get, set } from '../../store/Store';
 import './styles.scss';
 
 const keyPress = (event) => {
-  if (event.key === 'Enter') { // focus next field
-    const { form } = event.target;
-
-    if (form) {
-      let index = Array.prototype.indexOf.call(form, event.target) + 1;
-      while (
-        index < form.elements.length
-        && form.elements[index].tagName !== 'INPUT') { // skip over dropdown button elements
-        index += 1;
-      }
-      if (form.elements[index]) {
-        form.elements[index].focus();
-        form.elements[index].select();
-      }
-      event.preventDefault();
-    }
+  if (event.key === 'Enter') { // focus next field, thanks Chat-GPT!!!
+    const focusableElements = document.querySelectorAll('input:not([disabled])');
+    const currentIndex = Array.prototype.indexOf.call(focusableElements, document.activeElement);
+    const nextIndex = (currentIndex + 1) % focusableElements.length;
+    const nextElement = focusableElements[nextIndex];
+    nextElement.focus();
+    event.preventDefault();
   }
 }; // keyPress
 
