@@ -24,8 +24,9 @@ async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude })
             county: value('district')?.text,
             state: value('region')?.text,
             stateAbbreviation: value('region')?.properties?.short_code.replace(/US-/, ''),
-          }
-          return newVal
+            zoom,
+          };
+          return newVal;
         });
       }
     });

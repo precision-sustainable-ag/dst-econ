@@ -2,8 +2,8 @@
 /* eslint-disable import/no-relative-packages */
 
 import React from 'react';
-// import { Map } from '@psa/dst.ui.map';
 import mapboxgl from 'mapbox-gl';
+// import { NcalcMap as Map } from '@psa/dst.ui.ncalc-map';
 import { NcalcMap as Map } from './map';
 import { get, set } from '../../store/Store';
 import './styles.scss';

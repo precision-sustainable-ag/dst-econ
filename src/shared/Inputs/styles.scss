@@ -76,3 +76,8 @@ body.debug .input[id]::before {
   padding: 0.3rem;
   opacity: 0.8;
 }
+
+:-webkit-autofill {
+  -webkit-transition-delay: 9999999s;
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
