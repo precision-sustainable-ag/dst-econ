@@ -84,10 +84,8 @@ const initialState = {
   maxZoom: 20, // max zoom of satellite imagery for current lat/lon; used on home map
   status: '',
   previousScreen: 'Field',
-  lat: 40.7985,
-  lon: -74.8215,
-  // lat: 0,
-  // lon: 0,
+  lat: 0,
+  lon: 0,
   mapType: 'hybrid',
   mapZoom: 13,
   address: {
