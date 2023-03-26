@@ -252,6 +252,14 @@ const Input = ({
           {...props}
           id={id}
           onKeyPress={keyPress}
+          onKeyDown={(event) => {
+            if (event.key === 'Tab') {
+              const focused = document.querySelector('li.Mui-focused');
+              if (focused) {
+                update(event, focused.textContent);
+              }
+            }
+          }}
           ref={focusRef}
           sx={{ width: max }}
           // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
@@ -263,8 +271,8 @@ const Input = ({
           renderInput={renderInput}
           options={options}
           value={v}
-          onChange={(evt, value2) => {
-            update(evt, value2);
+          onChange={(event, value2) => {
+            update(event, value2);
           }}
         />
       </form>
