@@ -24,12 +24,19 @@ import { get, set } from '../../store/Store';
 import './styles.scss';
 
 const keyPress = (event) => {
-  if (event.key === 'Enter') { // focus next field, thanks Chat-GPT!!!
-    const focusableElements = document.querySelectorAll('input:not([disabled])');
-    const currentIndex = Array.prototype.indexOf.call(focusableElements, document.activeElement);
-    const nextIndex = (currentIndex + 1) % focusableElements.length;
-    const nextElement = focusableElements[nextIndex];
-    nextElement.focus();
+  if (event.key === 'Enter') {
+    // all INPUTs are wrapped in a FORM, so we need to check if their FORM is within another FORM:
+    const form = event.target?.closest('form')?.parentNode?.closest('form');
+    if (form) {
+      // focus next field, thanks Chat-GPT!!!
+      const focusableElements = form.querySelectorAll('input:not([disabled])');
+      const currentIndex = Array.prototype.indexOf.call(focusableElements, document.activeElement);
+      const nextIndex = (currentIndex + 1) % focusableElements.length;
+      const nextElement = focusableElements[nextIndex];
+      nextElement.focus();
+    }
+
+    // all INPUTs are wrapped in a FORM, so we don't want to submit their form when Enter is pressed:
     event.preventDefault();
   }
 }; // keyPress
