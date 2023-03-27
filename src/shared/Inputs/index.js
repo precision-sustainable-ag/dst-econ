@@ -24,27 +24,25 @@ import { get, set } from '../../store/Store';
 import './styles.scss';
 
 const keyPress = (event) => {
-  if (event.key === 'Enter') { // focus next field
-    const { form } = event.target;
-
+  if (event.key === 'Enter') {
+    // all INPUTs are wrapped in a FORM, so we need to check if their FORM is within another FORM:
+    const form = event.target?.closest('form')?.parentNode?.closest('form');
     if (form) {
-      let index = Array.prototype.indexOf.call(form, event.target) + 1;
-      while (
-        index < form.elements.length
-        && form.elements[index].tagName !== 'INPUT') { // skip over dropdown button elements
-        index += 1;
-      }
-      if (form.elements[index]) {
-        form.elements[index].focus();
-        form.elements[index].select();
-      }
-      event.preventDefault();
+      // focus next field, thanks Chat-GPT!!!
+      const focusableElements = form.querySelectorAll('input:not([disabled])');
+      const currentIndex = Array.prototype.indexOf.call(focusableElements, document.activeElement);
+      const nextIndex = (currentIndex + 1) % focusableElements.length;
+      const nextElement = focusableElements[nextIndex];
+      nextElement.focus();
     }
+
+    // all INPUTs are wrapped in a FORM, so we don't want to submit their form when Enter is pressed:
+    event.preventDefault();
   }
 }; // keyPress
 
 const Input = ({
-  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, ...props
+  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, suffix, ...props
 }) => {
   const dispatch = useDispatch();
 
@@ -241,7 +239,6 @@ const Input = ({
       renderInput = (params) => (
         <TextField
           autoFocus={props.autoFocus}
-          autoComplete="new-password"
           variant={props.variant || 'outlined'}
           sx={{ background: 'white', width: max, padding: 0 }}
           {...params}
@@ -250,12 +247,19 @@ const Input = ({
     }
 
     return (
-      <div className="input" id={id}>
+      <form className="input" id={id} autoComplete="off">
         <MUIAutocomplete
           {...props}
-          autoComplete="new-password"
           id={id}
           onKeyPress={keyPress}
+          onKeyDown={(event) => {
+            if (event.key === 'Tab') {
+              const focused = document.querySelector('li.Mui-focused');
+              if (focused) {
+                update(event, focused.textContent);
+              }
+            }
+          }}
           ref={focusRef}
           sx={{ width: max }}
           // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
@@ -267,11 +271,11 @@ const Input = ({
           renderInput={renderInput}
           options={options}
           value={v}
-          onChange={(evt, value2) => {
-            update(evt, value2);
+          onChange={(event, value2) => {
+            update(event, value2);
           }}
         />
-      </div>
+      </form>
     );
   }
   return (
@@ -289,11 +293,11 @@ const Input = ({
         />
       )
       : (
-        <span className="input" id={id}>
+        <form className="input" id={id} autoComplete="off">
           <TextField
             {...props}
-            autoComplete="new-password"
             id={id}
+            data-suffix={suffix}
             value={v === undefined ? '' : v} // https://github.com/facebook/react/issues/6222
             onFocus={(e) => {
               setTimeout(() => {
@@ -309,7 +313,6 @@ const Input = ({
             variant={props.variant || 'outlined'}
             inputProps={{
               role: 'presentation',
-              autoComplete: 'new-password',
               style: {
                 paddingLeft: 7,
                 paddingTop: 5,
@@ -372,7 +375,7 @@ const Input = ({
           {/* props.info && <Help>{props.info}</Help> */}
 
           {props.warning}
-        </span>
+        </form>
       )
   );
 }; // Input

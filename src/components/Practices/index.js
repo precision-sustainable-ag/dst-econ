@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { get, set } from '../../store/redux-autosetters';
 import {
-  exampleSpecies,
+  exampleSeeds,
   exampleHerbicides,
   exampleSeedbed,
   examplePlanting,
@@ -63,7 +63,7 @@ const CropSummary = () => {
       <tr>
         <td colSpan={2}>
           <NavLink
-            to="/Species"
+            to="/Seeds"
           >
             Cover crops planted
           </NavLink>
@@ -751,7 +751,7 @@ const Practices = () => {
                 dispatch(set.priorCrop('Corn'));
                 dispatch(set.cashCrop('Soybeans'));
 
-                exampleSpecies();
+                exampleSeeds();
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination1();
@@ -775,7 +775,7 @@ const Practices = () => {
                 dispatch(set.priorCrop('Corn'));
                 dispatch(set.cashCrop('Soybeans'));
 
-                exampleSpecies();
+                exampleSeeds();
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination2();
@@ -799,7 +799,7 @@ const Practices = () => {
                 dispatch(set.priorCrop('Corn'));
                 dispatch(set.cashCrop('Soybeans'));
 
-                exampleSpecies();
+                exampleSeeds();
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination3();
@@ -823,7 +823,7 @@ const Practices = () => {
                 dispatch(set.priorCrop('Corn'));
                 dispatch(set.cashCrop('Soybeans'));
 
-                exampleSpecies();
+                exampleSeeds();
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination4();
@@ -847,7 +847,7 @@ const Practices = () => {
                 dispatch(set.priorCrop('Corn'));
                 dispatch(set.cashCrop('Soybeans'));
 
-                exampleSpecies();
+                exampleSeeds();
                 exampleSeedbed();
                 examplePlanting();
                 exampleTermination5();

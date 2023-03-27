@@ -124,6 +124,7 @@ const Logic = ({
           type="radio"
           options={a}
           onChange={onChange}
+          suffix={suffix}
         />
       );
     } else {
@@ -132,6 +133,7 @@ const Logic = ({
           id={`${current}.${property}`}
           onChange={onChange}
           options={a}
+          suffix={suffix}
         />
       );
     }
@@ -145,6 +147,7 @@ const Logic = ({
         value={value}
         warning={warning}
         info={info}
+        suffix={suffix}
       />
     );
   } else if (Number.isFinite(a)) {
@@ -169,7 +172,6 @@ const Logic = ({
             <td style={style}>{q}</td>
             <td style={style}>
               {result}
-              <span className="suffix">{suffix}</span>
             </td>
           </tr>
         </>

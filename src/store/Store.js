@@ -84,17 +84,21 @@ const initialState = {
   maxZoom: 20, // max zoom of satellite imagery for current lat/lon; used on home map
   status: '',
   previousScreen: 'Field',
-  lat: 40.7985,
-  lon: -74.8215,
-  // lat: 0,
-  // lon: 0,
+  lat: 0,
+  lon: 0,
   mapType: 'hybrid',
   mapZoom: 13,
-  mapPolygon: [],
-  mapAddress: '',
+  address: {
+    address: '',
+    city: '',
+    county: '',
+    fullAddress: '',
+    state: 'New Jersey',
+    stateAbbreviation: 'NJ',
+    zipCode: '',
+  },
+  features: [],
   location: '',
-  state: 'New Jersey',
-  stateAbbreviation: 'NJ',
   farm: '',
   field: '',
   acres: undefined,
@@ -432,7 +436,7 @@ const afterChange = {
   'additional.nrcs': (state, { payload }) => {
     if (payload === 'Yes') {
       state.focus = 'additional.$costShare';
-      const data = db.eqip[state.stateAbbreviation];
+      const data = db.eqip[state.address.stateAbbreviation];
       const species = state.species.filter((e) => e);
       if (species.length === 1) {
         state.additional.$costShare = data?.basic;
@@ -777,10 +781,10 @@ export const clearInputs = (defaults, exclude = []) => {
 
 // let resizeTimer;
 
-export const exampleSpecies = () => {
+export const exampleSeeds = () => {
   store.dispatch(set.species({ index: 0, value: 'Clover, Crimson' }));
   store.dispatch(set.species({ index: 1, value: 'Clover, Berseem' }));
-}; // exampleSpecies
+}; // exampleSeeds
 
 export const exampleHerbicides = () => {
   const herbicideDefaults = getDefaults(Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`));

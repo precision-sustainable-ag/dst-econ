@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Map from '../../shared/Map';
@@ -6,8 +7,6 @@ import ClearInputs from '../ClearInputs';
 import {
   get, set, test, getDefaults,
 } from '../../store/Store';
-
-// const Map = () => null;
 
 const defaults = getDefaults(
   'lat|lon|location|farm|field|acres|$labor|priorCrop|otherPriorCrop|cashCrop|otherCashCrop|description',
@@ -67,6 +66,7 @@ const Field = () => {
                 <Input id="field" fullWidth />
 
                 <h2>How many acres are in your Field?</h2>
+
                 <Input id="acres" />
 
                 <h2>

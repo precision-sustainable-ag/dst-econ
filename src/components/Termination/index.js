@@ -20,7 +20,7 @@ import Input from '../../shared/Inputs';
 
 const defaults = getDefaults([
   'termination.additionalHerbicides', 'termination.additionalPrices', 'termination.additionalRates', 'termination.reducedHerbicides',
-  'termination.reducedPrices', 'termination.reducedRates', 'termination.q2',
+  'termination.reducedPrices', 'termination.reducedRates', 'termination.q2', 'termination.q3',
   'chemical.implement', 'chemical.power', 'chemical.implementsCost', 'chemical.powerCost', 'chemical.Labor', 'chemical.Fuel',
   'chemical.Depreciation', 'chemical.Interest', 'chemical.Repairs', 'chemical.Taxes', 'chemical.Insurance', 'chemical.Storage',
   'roller.implement', 'roller.power', 'roller.implementsCost', 'roller.powerCost', 'roller.Labor', 'roller.Fuel',
@@ -111,9 +111,8 @@ const Herbicide = () => {
       <Logic
         current="termination"
         property="unitCost"
-        q="Cost per unit of product"
+        q={`Cost per ${db.herbicides[state.product]?.['Unit (cost)']} of product`}
         a="dollar"
-        suffix={db.herbicides[state.product]?.['Unit (cost)']}
       />
 
       <Logic
@@ -280,7 +279,7 @@ const Termination = () => {
                   q="Will you change the herbicides use in your tank mix?"
                   a={['Yes', 'No']}
                   onChange={(_, value) => {
-                    clearInputs(defaults);
+                    // clearInputs(defaults);
                     if (value === 'No') {
                       navigate('/Tillage');
                     }
