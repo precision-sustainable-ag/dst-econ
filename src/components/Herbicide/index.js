@@ -20,7 +20,7 @@ const Herbicide = () => {
   const state = useSelector(get.herbicide);
   const additionalProduct = useSelector(get.herbicideAdditional.product);
   const additionalCost = useSelector(get.herbicideAdditional.cost);
-  const reducedProject = useSelector(get.herbicideReduced.product);
+  const reducedProduct = useSelector(get.herbicideReduced.product);
   const reducedCost = useSelector(get.herbicideReduced.cost);
 
   const dev = useSelector(get.dev);
@@ -88,9 +88,8 @@ const Herbicide = () => {
                   <Logic
                     current="herbicideAdditional"
                     property="unitCost"
-                    q="Cost per unit of product"
+                    q={`Cost per ${db.herbicides[additionalProduct]?.['Unit (cost)']} of product`}
                     a="dollar"
-                    suffix={db.herbicides[additionalProduct]?.['Unit (cost)']}
                   />
 
                   <Logic
@@ -163,9 +162,8 @@ const Herbicide = () => {
                   <Logic
                     current="herbicideReduced"
                     property="unitCost"
-                    q="Cost per unit of product"
+                    q={`Cost per ${db.herbicides[reducedProduct]?.['Unit (cost)']} of product`}
                     a="dollar"
-                    suffix={db.herbicides[reducedProject]?.['Unit (cost)']}
                   />
 
                   <Logic
@@ -173,7 +171,7 @@ const Herbicide = () => {
                     property="rate"
                     q="Application rate"
                     a="number"
-                    suffix={db.herbicides[reducedProject]?.['Unit (rate)']}
+                    suffix={db.herbicides[reducedProduct]?.['Unit (rate)']}
                   />
 
                   <Logic

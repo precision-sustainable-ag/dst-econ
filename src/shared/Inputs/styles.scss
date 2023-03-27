@@ -27,13 +27,6 @@
   top: 0.3rem;
 }
 
-.suffix {
-  display: inline-block;
-  position: absolute;
-  margin-left: 0.2rem;
-  margin-top: 0.3rem;
-}
-
 .info {
   font-size: 0.8rem;
   position: absolute;
@@ -75,6 +68,13 @@ body.debug .input[id]::before {
   color: brown;
   padding: 0.3rem;
   opacity: 0.8;
+}
+
+::after {
+  content: attr(data-suffix);
+  position: absolute;
+  left: calc(100% + 0.3rem);
+  top: 0.3rem;
 }
 
 :-webkit-autofill {

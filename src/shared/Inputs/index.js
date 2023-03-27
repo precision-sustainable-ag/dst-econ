@@ -42,7 +42,7 @@ const keyPress = (event) => {
 }; // keyPress
 
 const Input = ({
-  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, ...props
+  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, suffix, ...props
 }) => {
   const dispatch = useDispatch();
 
@@ -297,6 +297,7 @@ const Input = ({
           <TextField
             {...props}
             id={id}
+            data-suffix={suffix}
             value={v === undefined ? '' : v} // https://github.com/facebook/react/issues/6222
             onFocus={(e) => {
               setTimeout(() => {
