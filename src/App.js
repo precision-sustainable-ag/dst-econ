@@ -119,6 +119,7 @@ const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const screen = useSelector(get.screen);
+  const newScreen = useSelector(get.newScreen);
   const status = useSelector(get.status);
   const navigate = useNavigate();
   // const [windowSize, setWindowSize] = useState();
@@ -141,6 +142,13 @@ const App = () => {
       dispatch(set.screen(location.pathname.slice(1) || 'Field'));
     }
   }, [dispatch, location.pathname, screen]);
+
+  useEffect(() => {
+    if (newScreen !== '') {
+      navigate(newScreen);
+      dispatch(set.newScreen(''));
+    }
+  }, [newScreen]);
 
   useEffect(() => {
     document.addEventListener('keydown', (e) => {

@@ -78,6 +78,7 @@ const initialState = {
     a: [4, 3, 2, 1],
   },
   screen: 'Loading',
+  newScreen: '',
   screenWidth: window.innerWidth,
   screenHeight: window.innerHeight,
   showMap: window.innerWidth > 1200,
@@ -371,21 +372,21 @@ const afterChange = {
     if (payload === 'No') {
       state.herbicideFall.estimated = 0;
       state.herbicideFall.total = 0;
-      state.screen = 'Erosion';
+      state.newScreen = 'Erosion';
     }
   },
   'seedbed.q1': (state, { payload }) => {
     if (payload === 'No') {
       state.seedbed.estimated = 0;
       state.seedbed.total = 0;
-      state.screen = 'Planting';
+      state.newScreen = 'Planting';
     }
   },
   'seedbed.q2': (state, { payload }) => {
     if (payload === 'Yes') {
       state.seedbed.estimated = 0;
       state.seedbed.total = 0;
-      state.screen = 'Planting';
+      state.newScreen = 'Planting';
     }
   },
   // Termination ___________________________________________________________________________
@@ -425,12 +426,12 @@ const afterChange = {
     if (payload === 'Yes') {
       state.focus = 'tillageOther.implement';
     } else if (state.tillage1.q1 === 'Yes') {
-      state.screen = 'Fertility';
+      state.newScreen = 'Fertility';
     }
   },
   'tillage1.q1': (state, { payload }) => {
     if (payload === 'Yes' && state.tillageOther.q2 === 'No') {
-      state.screen = 'Fertility';
+      state.newScreen = 'Fertility';
     }
   },
   'additional.nrcs': (state, { payload }) => {
@@ -449,7 +450,7 @@ const afterChange = {
   },
   'additional.grazing': (state, { payload }) => {
     if (payload === 'No') {
-      state.screen = 'Yield';
+      state.newScreen = 'Yield';
     }
   },
   'additional.lease': (state, { payload }) => {
@@ -475,7 +476,7 @@ const afterChange = {
   },
   'erosion.q1': (state, { payload }) => {
     if (payload === 'No') {
-      state.screen = 'Additional';
+      state.newScreen = 'Additional';
     }
   },
   'erosion.q2': (state, { payload }) => {
