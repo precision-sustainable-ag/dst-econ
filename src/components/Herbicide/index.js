@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
+import Input from '../../shared/Inputs';
 
 // prettier-ignore
 import {
@@ -100,8 +101,25 @@ const Herbicide = () => {
                     current="herbicideAdditional"
                     property="product"
                     q="Product"
-                    a={['', ...Object.keys(db.herbicides).sort()]}
+                    a={[...Object.keys(db.herbicides).sort(), 'Other']}
                   />
+
+                  {additionalProduct === 'Other' && (
+                    <Input
+                      id="herbicideAdditional.product"
+                      onChange={(e) => {
+                        console.log(e);
+                      }}
+                      onInput={(e) => {
+                        console.log(e);
+                      }}
+                      type="text"
+                      // value={value}
+                      // warning={warning}
+                      // info={info}
+                      // suffix={suffix}
+                    />
+                  )}
 
                   <Logic
                     current="herbicideAdditional"
@@ -177,7 +195,8 @@ const Herbicide = () => {
                 <>
                   <tr>
                     <th colSpan="100">
-                      What is the estimated savings from reduced herbicides (cost per acre)?
+                      What is the estimated savings from reduced herbicides (cost per
+                      acre)?
                     </th>
                   </tr>
 
@@ -227,7 +246,10 @@ const Herbicide = () => {
                     current="herbicideReduced"
                     question="Annual Use (acres on implement)"
                   />
-                  <Logic current="herbicideReduced" question="Annual Use (hours on power)" />
+                  <Logic
+                    current="herbicideReduced"
+                    question="Annual Use (hours on power)"
+                  />
                   <Logic current="herbicideReduced" question="Acres/hour" />
 
                   <Logic
@@ -239,7 +261,7 @@ const Herbicide = () => {
                 </>
               )}
 
-              {state.q1 && (
+              {((state.q1 === 'Yes' && state.q2) || state.q1 === 'No') && (
                 <>
                   <tr>
                     <th colSpan="100">Fall Herbicides</th>
@@ -273,7 +295,10 @@ const Herbicide = () => {
 
                   <Logic current="herbicideFall" question="power" />
 
-                  <Logic current="herbicideFall" question="Annual Use (acres on implement)" />
+                  <Logic
+                    current="herbicideFall"
+                    question="Annual Use (acres on implement)"
+                  />
                   <Logic current="herbicideFall" question="Annual Use (hours on power)" />
                   <Logic current="herbicideFall" question="Acres/hour" />
 

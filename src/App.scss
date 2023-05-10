@@ -229,16 +229,17 @@ form.Seeds tr > td:nth-child(3) {
     }
   }
 
-  @media screen and (max-width: 1045px) {
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    position: absolute;
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  // @media screen and (max-width: 1045px) {
+  //   // bottom: 0px;
+  //   // left: 0px;
+  //   // right: 0px;
+  //   // position: absolute;
+  //   // z-index: 999;
+  //   // display: flex;
+  //   // justify-content: center;
+  //   // align-items: center;
+  //   height: -webkit-fill-available;
+  // }
 }
 
 .Field table {
@@ -506,6 +507,10 @@ summary {
   height: 100%;
   overflow: auto;
   z-index: 1;
+
+  // @media screen and (max-width: 1045px) {
+  //   max-height: -webkit-fill-available;
+  // }
 }
 
 h1 {

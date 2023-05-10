@@ -30,6 +30,7 @@ import Yield from './components/Yield';
 import Practices from './components/Practices';
 import Revenue from './components/Revenue';
 import Resources from './components/Resources';
+import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Activity, { Summary } from './components/Activity';
 
@@ -54,6 +55,7 @@ const paths = {
   Herbicide,
   Erosion,
   Additional,
+  Grazing,
   Yield,
   Practices,
   Revenue,
@@ -130,10 +132,11 @@ const App = () => {
     8: 'Herbicide',
     9: 'Erosion',
     10: 'Additional',
-    11: 'Yield',
-    12: 'Practices',
-    13: 'Revenue',
-    14: 'Resources',
+    11: 'Grazing',
+    12: 'Yield',
+    13: 'Practices',
+    14: 'Revenue',
+    15: 'Resources',
   };
 
   useEffect(() => {
@@ -203,16 +206,22 @@ const App = () => {
   }, [dispatch]);
 
   const airTables = {
-    coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
-    commodities: 'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
-    costDefaults: 'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
+    coefficients:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
+    commodities:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
+    costDefaults:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
     eqip: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT',
-    herbicides: 'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
-    implements: 'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
+    herbicides:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
+    implements:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
     power: 'https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2',
     rates: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A',
     seedList: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4',
-    stateRegions: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
+    stateRegions:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
   };
 
   if (screen === 'Loading') {
@@ -300,6 +309,7 @@ const App = () => {
           <Route path="Herbicide" element={<Herbicide />} />
           <Route path="Erosion" element={<Erosion />} />
           <Route path="Additional" element={<Additional />} />
+          <Route path="Grazing" element={<Grazing />} />
           <Route path="Yield" element={<Yield />} />
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />
