@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
-import Input from '../../shared/Inputs';
+// import Input from '../../shared/Inputs';
 
 // prettier-ignore
 import {
-  get, db, getDefaults, clearInputs, exampleHerbicides,
+  get, set, db, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -30,6 +30,7 @@ const defaults = {
 };
 
 const Herbicide = () => {
+  const dispatch = useDispatch();
   const state = useSelector(get.herbicide);
   const additionalProduct = useSelector(get.herbicideAdditional.product);
   const additionalCost = useSelector(get.herbicideAdditional.cost);
@@ -105,20 +106,27 @@ const Herbicide = () => {
                   />
 
                   {additionalProduct === 'Other' && (
-                    <Input
-                      id="herbicideAdditional.product"
-                      onChange={(e) => {
-                        console.log(e);
-                      }}
-                      onInput={(e) => {
-                        console.log(e);
-                      }}
-                      type="text"
-                      // value={value}
-                      // warning={warning}
-                      // info={info}
-                      // suffix={suffix}
-                    />
+                    <tr>
+                      <td>Product Name</td>
+                      <td>
+                        <input
+                          type="text"
+                          style={{
+                            height: '38px',
+                            width: '100%',
+                            borderColor: '#BBBBBB',
+                            borderRadius: '5px',
+                            outline: 'none',
+                            borderWidth: '1px',
+                            fontSize: '1rem',
+                            padding: '7.5px 4px 7.5px 6px',
+                          }}
+                          onChange={(e) => {
+                            dispatch(set.herbicideAdditional.product(e.target.value));
+                          }}
+                        />
+                      </td>
+                    </tr>
                   )}
 
                   <Logic
