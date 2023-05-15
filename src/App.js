@@ -5,7 +5,8 @@ import './App.scss';
 
 import { Button } from '@mui/material';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+// prettier-ignore
 import {
   Route, Routes, NavLink, useLocation, useNavigate,
 } from 'react-router-dom';
@@ -29,6 +30,7 @@ import Yield from './components/Yield';
 import Practices from './components/Practices';
 import Revenue from './components/Revenue';
 import Resources from './components/Resources';
+import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Activity, { Summary } from './components/Activity';
 
@@ -53,6 +55,7 @@ const paths = {
   Herbicide,
   Erosion,
   Additional,
+  Grazing,
   Yield,
   Practices,
   Revenue,
@@ -61,7 +64,7 @@ const paths = {
 
 const keys = Object.keys(paths);
 
-const Navigation = ({ current }) => {
+const Navigation = ({ current, mobile }) => {
   const previousScreen = useSelector(get.previousScreen);
 
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
@@ -70,43 +73,37 @@ const Navigation = ({ current }) => {
   return (
     <div id="Navigation">
       {back && (
-        <NavLink
-          to={`/${back.replace('Field', '')}`}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            tabIndex={-1}
-          >
-            BACK:
-            &nbsp;
-            {paths[back].menu}
+        <NavLink to={`/${back.replace('Field', '')}`}>
+          <Button variant="contained" color="primary" tabIndex={-1}>
+            {!mobile ? (
+              <div>
+                BACK: &nbsp;
+                {paths[back].menu}
+              </div>
+            ) : (
+              <div>BACK</div>
+            )}
           </Button>
         </NavLink>
       )}
       {next && (
-        <NavLink
-          to={`/${next}`}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-          >
-            NEXT:
-            &nbsp;
-            {paths[next].menu}
+        <NavLink to={`/${next}`}>
+          <Button variant="contained" color="primary">
+            {!mobile ? (
+              <div>
+                NEXT: &nbsp;
+                {paths[next].menu}
+              </div>
+            ) : (
+              <div>NEXT</div>
+            )}
           </Button>
         </NavLink>
       )}
 
       {current !== 'Resources' && next !== 'Resources' && (
-        <NavLink
-          to="/Resources"
-        >
-          <Button
-            variant="contained"
-            color="primary"
-          >
+        <NavLink to="/Resources">
+          <Button variant="contained" color="primary">
             Resources
           </Button>
         </NavLink>
@@ -122,20 +119,31 @@ const App = () => {
   const newScreen = useSelector(get.newScreen);
   const status = useSelector(get.status);
   const navigate = useNavigate();
-  // const [windowSize, setWindowSize] = useState();
+  const [screenIndex, setScreenIndex] = useState(0);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const screenNums = {
+    1: 'Field',
+    2: 'Seeds',
+    3: 'Seedbed',
+    4: 'Planting',
+    5: 'Termination',
+    6: 'Tillage',
+    7: 'Fertility',
+    8: 'Herbicide',
+    9: 'Erosion',
+    10: 'Additional',
+    11: 'Grazing',
+    12: 'Yield',
+    13: 'Practices',
+    14: 'Revenue',
+    15: 'Resources',
+  };
 
-  //  useEffect(() => {
-  //    function handleResize() {
-  //      setWindowSize({
-  //        width: window.innerWidth,
-  //        height: window.innerHeight,
-  //      });
-  //    }
-  //
-  //    window.addEventListener('resize', handleResize);
-  //    handleResize();
-  //    return () => window.removeEventListener('resize', handleResize);
-  //  }, []);
+  useEffect(() => {
+    const num = Object.keys(screenNums).find((key) => screenNums[key] === screen);
+
+    setScreenIndex(num - 1);
+  }, [screen]);
 
   useEffect(() => {
     if (screen !== 'Loading') {
@@ -149,6 +157,19 @@ const App = () => {
       dispatch(set.newScreen(''));
     }
   }, [newScreen]);
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     document.addEventListener('keydown', (e) => {
@@ -185,23 +206,28 @@ const App = () => {
   }, [dispatch]);
 
   const airTables = {
-    coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
-    commodities: 'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
-    costDefaults: 'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
+    coefficients:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
+    commodities:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblV85ANET2vrlBQr/viwBYOo3wLQFA3eVx',
+    costDefaults:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblqqN0XghRJZyshW/viwZ9dtPAntKn4Io8',
     eqip: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4rC6AccSvzDOnt/viwlh49tBRTiD8MJT',
-    herbicides: 'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
-    implements: 'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
+    herbicides:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblsdz6CDpxg3tLpW/viw1tViqJ37IzpNi8',
+    implements:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tblDGJgNgdgUWwt5r/viwap90pHwjxxj2Uf',
     power: 'https://airtable.com/appRBt6oxz1E9v2F4/tblWjL0ezivMdxKas/viwvYL95f0FrpfVh2',
     rates: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUemlQkXAucNgCq/viwXhUamsZ8fN6Q7A',
     seedList: 'https://airtable.com/appRBt6oxz1E9v2F4/tblUtl5VCxuxmTrfa/viwUptVsQiO85bCI4',
-    stateRegions: 'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
+    stateRegions:
+      'https://airtable.com/appRBt6oxz1E9v2F4/tbl4udtSpP9rTwuiV/viwUHiJXgFrI2EfMX',
   };
 
   if (screen === 'Loading') {
     return (
       <div className="loading">
-        Loading:
-        &nbsp;
+        Loading: &nbsp;
         {status}
       </div>
     );
@@ -210,6 +236,10 @@ const App = () => {
   return (
     <div id="Container">
       <nav>
+        <div className="mobile-menu">
+          <img src="PSAlogo-only.png" className="mobile-logo" alt="mobile-logo" />
+          <div>Cover Crop Decision Support Tool</div>
+        </div>
         <div
           style={{
             textAlign: 'center',
@@ -217,43 +247,52 @@ const App = () => {
             fontSize: '120%',
             marginBottom: '0.25rem',
           }}
+          className="desktop-title"
         >
           Cover Crop Decision Support Tool
         </div>
         <img alt="logo" src="PSAlogo-text.png" id="PSALogo" />
-        <div style={{ marginLeft: 130 }}>
-          {
-            keys.map((path) => {
-              let cname = path === screen ? 'selected' : '';
-              if (/Practices|Revenue|Resources/.test(path)) {
-                cname += ' summary';
-              }
-              const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
-              return (
-                <>
-                  {path === 'Practices' && <hr />}
-                  <NavLink
-                    key={path}
-                    to={path === 'Field' ? '/' : path}
-                    accessKey={accessKey}
-                    tabIndex={-1}
-                    onFocus={(e) => e.target.blur()}
-                  >
-                    <MyButton
-                      screen={path}
-                      className={cname}
-                      tabIndex={-1}
-                    >
-                      {paths[path].menu}
-                    </MyButton>
-                  </NavLink>
-                </>
-              );
-            })
-          }
+        <div style={{ marginLeft: 130 }} className="menu-items">
+          {keys.map((path) => {
+            let cname = path === screen ? 'selected' : '';
+            if (/Practices|Revenue|Resources/.test(path)) {
+              cname += ' summary';
+            }
+            const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
+            return (
+              <>
+                {path === 'Practices' && <hr />}
+                <NavLink
+                  key={path}
+                  to={path === 'Field' ? '/' : path}
+                  accessKey={accessKey}
+                  tabIndex={-1}
+                  onFocus={(e) => e.target.blur()}
+                >
+                  <MyButton screen={path} className={cname} tabIndex={-1}>
+                    {paths[path].menu}
+                  </MyButton>
+                </NavLink>
+              </>
+            );
+          })}
+        </div>
+
+        <div className="timeline-div">
+          <div className="timeline">
+            {Object.keys(screenNums).map((num) => (
+              <div
+                className="timeline-dot"
+                style={{
+                  backgroundColor: num - 1 <= screenIndex ? 'green' : 'grey',
+                }}
+              >
+                {num}
+              </div>
+            ))}
+          </div>
         </div>
       </nav>
-
       <Activity />
       <Summary />
 
@@ -270,38 +309,25 @@ const App = () => {
           <Route path="Herbicide" element={<Herbicide />} />
           <Route path="Erosion" element={<Erosion />} />
           <Route path="Additional" element={<Additional />} />
+          <Route path="Grazing" element={<Grazing />} />
           <Route path="Yield" element={<Yield />} />
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />
           <Route path="Resources" element={<Resources />} />
-          {
-            Object.keys(airTables).map((key) => (
-              <Route
-                path={key}
-                element={(
-                  <Airtable
-                    name={key}
-                    url={airTables[key]}
-                  />
-                )}
-              />
-            ))
-          }
+          {Object.keys(airTables).map((key) => (
+            <Route path={key} element={<Airtable name={key} url={airTables[key]} />} />
+          ))}
         </Routes>
       </div>
 
-      <Navigation current={screen} />
+      <Navigation current={screen} mobile={windowSize.width <= 1045} />
 
       <div id="AirTables">
-        <select
-          onChange={(e) => navigate(e.target.value)}
-        >
+        <select onChange={(e) => navigate(e.target.value)}>
           <option>&nbsp;</option>
-          {
-            Object.keys(airTables).map((key) => (
-              <option>{key}</option>
-            ))
-          }
+          {Object.keys(airTables).map((key) => (
+            <option>{key}</option>
+          ))}
         </select>
       </div>
     </div>
@@ -315,7 +341,8 @@ document.addEventListener('dblclick', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.altKey && e.key === 'd') { // Seeds accesskey
+  if (e.altKey && e.key === 'd') {
+    // Seeds accesskey
     e.preventDefault();
   }
 });
