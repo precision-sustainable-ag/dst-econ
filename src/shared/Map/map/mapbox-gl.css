@@ -753,5 +753,18 @@ a.mapboxgl-ctrl-logo.mapboxgl-compact {
 
 .mapboxgl-canvas-container.mapboxgl-touch-pan-blocker-override.mapboxgl-scrollable-page,
 .mapboxgl-canvas-container.mapboxgl-touch-pan-blocker-override.mapboxgl-scrollable-page .mapboxgl-canvas {
-    touch-action: pan-x pan-y;
+  touch-action: pan-x pan-y;
+}
+
+.mapbox-gl-draw_polygon.active {
+  background-color: #aaddaa;
+  outline: 2px solid white;
+}
+
+.mapbox-gl-draw_polygon.active:hover {
+  background-color: #ccffcc !important;
+}
+
+.mapboxgl-ctrl-group > .mapbox-gl-draw_trash {
+  display: none;
 }

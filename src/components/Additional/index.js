@@ -5,7 +5,6 @@ import Input from '../../shared/Inputs';
 import Help from '../../shared/Help';
 import ClearInputs from '../ClearInputs';
 
-// prettier-ignore
 import {
   get, set, test, getDefaults,
 } from '../../store/Store';
@@ -119,7 +118,6 @@ const Additional = () => {
   return (
     <div className="Additional">
       <h1>Additional Considerations</h1>
-      {/* prettier-ignore */}
       <p>
         This portion of the
         <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
@@ -129,7 +127,6 @@ const Additional = () => {
       </p>
 
       <h4>Cost-Share or Other Financial Incentives</h4>
-      {/* prettier-ignore */}
       <p>
         As you consider the financial impacts of using cover crops in your operation, there are
         a number of programs that may provide cost share or financial support for your farm.

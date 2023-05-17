@@ -12,7 +12,6 @@ const Erosion = () => {
   return (
     <div className="Erosion">
       <h1>Soil Erosion Control</h1>
-      {/* prettier-ignore */}
       <p>
         Using cover crops has been documented to provide benefits with controlling soil
         erosion. Select the
@@ -85,7 +84,6 @@ const Erosion = () => {
   );
 }; // Erosion
 
-// prettier-ignore
 Erosion.menu = (
   <span>
     Erosio

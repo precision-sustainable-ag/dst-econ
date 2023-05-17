@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable no-underscore-dangle */
 import React, { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -24,23 +24,19 @@ const fastFly = {
   easing: (t) => t ** 2,
 };
 
-const NcalcMap = ({
+const ReduxMap = ({
   getters = {},
   setters = {},
-  setAddress = () => {},
-  setFeatures = () => {},
-  setZoom = () => {},
   setMap = () => {},
-  onDraw = () => {},
   initWidth = '400px',
   initHeight = '400px',
-  initFeatures = getters.features ? useSelector(getters.features) : [],
-  initAddress = getters.address ? useSelector(getters.address.fullAddress) : '',
-  initLon = getters.lon ? useSelector(getters.lon) : -75,
-  initLat = getters.lat ? useSelector(getters.lat) : 40,
-  initStartZoom = getters.mapZoom ? useSelector(getters.mapZoom) : 12,
-  initMinZoom = 5,
-  initMaxZoom = 16,
+  initFeatures = [],
+  mapLocation = getters.map ? useSelector(getters.map) : { lat: 40, lon: -75, address: { fullAddress: '' } },
+  mapFeatures = getters.mapFeatures ? useSelector(getters.mapFeatures) : {},
+  initAddress = mapLocation.address?.fullAddress || '',
+  initLon = mapLocation.lon,
+  initLat = mapLocation.lat,
+  initStartZoom = getters.mapFeatures ? useSelector(getters.mapFeatures.zoom) : 12,
   hasSearchBar = false,
   hasMarker = false,
   hasNavigation = false,
@@ -48,7 +44,6 @@ const NcalcMap = ({
   hasDrawing = false,
   hasGeolocate = false,
   hasFullScreen = false,
-  hasMarkerPopup = false,
   hasMarkerMovable = false,
   scrollZoom = true,
   dragRotate = true,
@@ -63,28 +58,23 @@ const NcalcMap = ({
 }) => {
   const dispatch = useDispatch();
 
-  const updateAddress = (addr, marker) => {
-    if (setters.address) dispatch(setters.address(addr()));
-    if (setters.lat) dispatch(setters.lat(marker.latitude));
-    if (setters.lon) dispatch(setters.lon(marker.longitude));
-  }; // updateAddress
+  let newPolygon;
 
-  const [lastZoom, setLastZoom] = useState(initStartZoom);
+  const updateLocation = (addr, marker) => {
+    if (setters.map) {
+      dispatch(setters.map({
+        address: addr(),
+        lat: marker.latitude,
+        lon: marker.longitude,
+      }));
+    }
+  }; // updateLocation
 
-  // eslint-disable-next-line no-unused-vars
-  const [viewport, setViewport] = useState({
-    initWidth,
-    initHeight,
-    initLon,
-    initLat,
-    lastZoom,
-    initMinZoom,
-    initMaxZoom,
-  });
   const [marker, setMarker] = useState({
     longitude: initLon,
     latitude: initLat,
   });
+
   const [cursorLoc, setCursorLoc] = useState({
     longitude: undefined,
     latitude: undefined,
@@ -93,7 +83,6 @@ const NcalcMap = ({
   const [polygonArea, setPolygonArea] = useState(0);
   const [isDrawActive, setIsDrawActive] = useState(false);
   const [geocodeResult, setGeocodeResult] = useState(undefined);
-  const [popupOpen, setPopupOpen] = useState(true);
   const [flyToOptions, setFlyToOptions] = useState({});
 
   const map = useRef();
@@ -108,6 +97,13 @@ const NcalcMap = ({
   if (searchBox && autoFocus) {
     searchBox.focus();
   }
+
+  useEffect(() => {
+    setMarker({
+      longitude: initLon,
+      latitude: initLat,
+    });
+  }, [initLon, initLat]);
 
   /// / GEOCODER CONTROL
   const Geocoder = new MapboxGeocoder({
@@ -134,7 +130,10 @@ const NcalcMap = ({
 
   // delete all shapes after geocode search
   useEffect(() => {
-    if (hasDrawing && drawerRef.current) drawerRef.current.deleteAll();
+    if (hasDrawing && drawerRef.current) {
+      drawerRef.current.deleteAll();
+      setPolygonArea(0);
+    }
   }, [geocodeResult]);
 
   // upon marker move, find the address of this new location and set the state
@@ -145,29 +144,15 @@ const NcalcMap = ({
         if (searchBox) {
           searchBox.placeholder = address().fullAddress;
         }
-        // Geocoder.setPlaceholder(address().fullAddress);
 
-        updateAddress(address, marker);
-        setAddress(address);
+        updateLocation(address, marker);
       },
       longitude: marker.longitude,
       latitude: marker.latitude,
     });
 
-    setAddress((addr) => ({
-      ...addr,
-      longitude: marker.longitude,
-      latitude: marker.latitude,
-    }));
     if (markerRef.current) {
       const lngLat = [marker.longitude, marker.latitude];
-      popupRef.current.setHTML(
-        `<span> click and drag </span>
-      <br />
-      <span>${marker.longitude.toFixed(4)}  ${marker.latitude.toFixed(
-  4,
-)}</span>`,
-      );
       markerRef.current.setLngLat(lngLat).setPopup(popupRef.current);
       map.current.flyTo({
         center: lngLat,
@@ -187,17 +172,10 @@ const NcalcMap = ({
     });
     map.current = Map;
 
-    /// / MARKER POPUP
-    // const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-    //   'drag marker or double click anywhere'
-    // );
-    const Popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
-      `<span> click and drag </span>
-      <br />
-      <span>${marker.longitude.toFixed(4)}  ${marker.latitude.toFixed(
-  4,
-)}</span>`,
-    );
+    const Popup = new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
+      <div style="background: #eee; text-align: center">Click to drag</div>
+      ${marker.longitude.toFixed(4)}  ${marker.latitude.toFixed(4)}
+    `);
     popupRef.current = Popup;
 
     /// / MARKER CONTROL
@@ -207,10 +185,42 @@ const NcalcMap = ({
       scale: 1,
       ...markerOptions,
     })
-      .setLngLat([marker.longitude, marker.latitude])
-      .setPopup(Popup);
+      .setLngLat([marker.longitude, marker.latitude]);
+
     markerRef.current = Marker;
+
     Marker.className = styles.marker;
+
+    let isDragging = false;
+
+    if (hasMarkerMovable) {
+      Marker.setPopup(Popup);
+
+      // show Popup on hover
+      Marker.getElement().addEventListener('mouseenter', () => {
+        if (!isDragging) {
+          Marker.togglePopup();
+        }
+      });
+
+      // hide Popup when not hovering over marker
+      Marker.getElement().addEventListener('mouseleave', () => {
+        if (!isDragging) {
+          Marker.togglePopup();
+        }
+      });
+
+      // update Popup content while marker is being dragged
+      Marker.on('drag', () => {
+        Marker.getPopup().setHTML(`
+          <div style="background: #eee; text-align: center">Click to drag</div>
+          ${Marker.getLngLat().lng.toFixed(4)}  ${Marker.getLngLat().lat.toFixed(4)}
+        `);
+      });
+
+      Marker.on('dragstart', () => { isDragging = true; });
+      Marker.on('dragend', () => { isDragging = false; });
+    }
 
     const simpleSelect = MapboxDraw.modes.simple_select;
     const directSelect = MapboxDraw.modes.direct_select;
@@ -232,7 +242,6 @@ const NcalcMap = ({
 
     /// / GEOLOCATE CONTROL
     const Geolocate = new mapboxgl.GeolocateControl({ container: map.current });
-    Geolocate._updateCamera = () => {};
 
     /// / NAVIGATION CONTROL
     const Navigation = new mapboxgl.NavigationControl({
@@ -251,12 +260,6 @@ const NcalcMap = ({
     if (hasDrawing) map.current.addControl(Draw, 'top-left');
     if (hasSearchBar) map.current.addControl(Geocoder, 'top-left');
     if (hasMarker && !isDrawActive) Marker.addTo(map.current);
-
-    // if (!initAddress) {
-    //   Geocoder.setPlaceholder('Search Your Address ...');
-    // }
-
-    // console.log(initAddress);
 
     /// / FUNCTIONS
     function onDragEnd(e) {
@@ -285,6 +288,12 @@ const NcalcMap = ({
       if (hasDrawing && drawerRef.current) {
         drawerRef.current.deleteAll();
         setPolygonArea(0);
+        if (setters.mapFeatures) {
+          dispatch(setters.mapFeatures({
+            ...mapFeatures,
+            area: 0,
+          }));
+        }
       }
     };
 
@@ -298,62 +307,68 @@ const NcalcMap = ({
             longitude: coords[0],
             latitude: coords[1],
           }));
-          setViewport((prev) => ({
-            ...prev,
-            longitude: coords[0],
-            latitude: coords[1],
-          }));
         }
       }
     };
 
     const handlePolyAreaCalc = (e) => {
-      if (e.features.length > 0) {
-        const a = area(e.features[0]) / acreDiv;
-        setPolygonArea(a);
-        setFeatures(e.features);
-        if (setters.features) {
-          dispatch(setters.features(drawerRef.current.getAll().features));
+      let totalArea = 0;
+      const { sources } = map.current.getStyle();
+
+      Object.keys(sources).forEach((sourceName) => {
+        const source = map.current.getSource(sourceName);
+        if (source.type === 'geojson') {
+          const { features } = source._data;
+          features.forEach((feature) => {
+            totalArea += area(feature) / acreDiv;
+          });
         }
-        handlePolyCentCalc(e);
+      });
+
+      setPolygonArea(totalArea);
+
+      dispatch(setters.mapFeatures({
+        ...mapFeatures,
+        area: totalArea.toFixed(2),
+      }));
+
+      handlePolyCentCalc(e);
+    };
+
+    const handleDrawCreate = () => {
+      newPolygon = true;
+      setTimeout(() => {
+        newPolygon = false;
+      }, 100);
+    };
+    const handleDrawDelete = (e) => {
+      setIsDrawActive(false);
+      handlePolyAreaCalc(e);
+
+      document.querySelector('.mapbox-gl-draw_trash').style.display = 'none';
+    };
+    const handleDrawUpdate = (e) => {
+      handlePolyAreaCalc(e);
+    };
+
+    const showHideTrashcan = (e) => {
+      const selectedFeatures = e.features;
+      const trashButton = document.querySelector('.mapbox-gl-draw_trash');
+      if (selectedFeatures.length > 0) {
+        trashButton.style.display = 'block';
       } else {
-        setPolygonArea(0);
+        trashButton.style.display = 'none';
       }
     };
 
-    const handleDrawCreate = (e) => {
-      if (setters.features) {
-        dispatch(setters.features(drawerRef.current.getAll().features));
-      }
-      onDraw({ mode: 'add', e });
-    };
-    const handleDrawDelete = (e) => {
-      if (setters.features) {
-        dispatch(setters.features(drawerRef.current.getAll().features));
-      }
-      setIsDrawActive(false);
-      onDraw({ mode: 'delete', e });
-    };
-    const handleDrawUpdate = (e) => {
-      if (setters.features) {
-        dispatch(setters.features(drawerRef.current.getAll().features));
-      }
-      onDraw({ mode: 'update', e });
-      handlePolyAreaCalc(e);
-    };
     const handleDrawSelection = (e) => {
-      if (setters.features) {
-        dispatch(setters.features(drawerRef.current.getAll().features));
-      }
-      onDraw({ mode: 'select', e });
+      showHideTrashcan(e);
       handlePolyAreaCalc(e);
     };
 
     /// / EVENTS
     Geolocate.on('geolocate', handleGeolocate);
     Geocoder.on('result', (e) => {
-      let streetNum;
-      let zipCode;
       if (e && e.result) {
         setGeocodeResult(e.result);
         const fullAddress = e.result.place_name;
@@ -364,26 +379,14 @@ const NcalcMap = ({
             apiKey: MAPBOX_TOKEN,
             setterFunc: (address) => {
               document.querySelector('.mapboxgl-ctrl-geocoder--input').placeholder = address().fullAddress;
-              // Geocoder.setPlaceholder(address().fullAddress);
-              updateAddress(address, { longitude, latitude });
-              setAddress(address);
+              updateLocation(address, { longitude, latitude });
             },
             longitude,
             latitude,
           });
-        } else {
-          const splitted = fullAddress.split(', ');
-          streetNum = splitted[0];
-          const stateZip = splitted[splitted.length - 2].split(' ');
-          zipCode = stateZip[stateZip.length - 1];
         }
+
         if (fullAddress) {
-          setViewport((prev) => ({
-            ...prev,
-            address: streetNum,
-            zipCode,
-            fullAddress,
-          }));
           setFlyToOptions(fastFly);
 
           setMarker((prev) => ({
@@ -397,6 +400,7 @@ const NcalcMap = ({
     });
     if (hasMarkerMovable) {
       map.current.on('dblclick', (e) => {
+        if (newPolygon) return;
         setMarker((prev) => ({
           ...prev,
           longitude: e.lngLat.lng,
@@ -412,7 +416,7 @@ const NcalcMap = ({
       });
     });
 
-    map.current.on('load', (e) => {
+    map.current.on('load', () => {
       if (bounds) {
         map.current.fitBounds(bounds);
       }
@@ -423,10 +427,6 @@ const NcalcMap = ({
       if (!keyboard) map.current.keyboard.disable();
       if (!doubleClickZoom) map.current.doubleClickZoom.disable();
       if (!touchZoomRotate) map.current.touchZoomRotate.disable();
-      if (hasMarkerPopup) {
-        markerRef.current.togglePopup();
-        setTimeout(() => markerRef.current.togglePopup(), 2000);
-      }
 
       if (
         drawerRef.current
@@ -441,7 +441,7 @@ const NcalcMap = ({
         setFeaturesInitialized(true);
       }
 
-      map.current.addPolygon = function (id, polygon, options = {}) {
+      map.current.addPolygon = (id, polygon, options = {}) => {
         if (typeof polygon === 'string') {
           fetch(polygon)
             .then((response) => response.json())
@@ -530,14 +530,14 @@ const NcalcMap = ({
         if (options.fitBounds) {
           let overallBounds = null;
           polygon.forEach((p) => {
-            const bounds = p.reduce((bounds1, coord) => (
+            const newBounds = p.reduce((bounds1, coord) => (
               bounds1.extend(coord)
             ), new mapboxgl.LngLatBounds(p[0], p[0]));
 
             if (overallBounds) {
-              overallBounds = overallBounds.extend(bounds);
+              overallBounds = overallBounds.extend(newBounds);
             } else {
-              overallBounds = bounds;
+              overallBounds = newBounds;
             }
           });
 
@@ -560,17 +560,19 @@ const NcalcMap = ({
     map.current.on('draw.delete', handleDrawDelete);
     map.current.on('draw.update', handleDrawUpdate);
     map.current.on('draw.selectionchange', handleDrawSelection);
-    Marker.on('dragend', onDragEnd);
-  }, [map]);
 
-  useEffect(() => {
     map.current.on('zoom', () => {
       const currentZoom = map.current.getZoom();
-      setLastZoom(currentZoom);
-      setZoom(currentZoom);
-      if (setters.mapZoom) dispatch(setters.mapZoom(currentZoom));
+      if (setters.mapFeatures) {
+        dispatch(setters.mapFeatures({
+          ...mapFeatures,
+          zoom: currentZoom,
+        }));
+      }
     });
-  }, []);
+
+    Marker.on('dragend', onDragEnd);
+  }, [map]);
 
   return (
     <div className={styles.wrapper}>
@@ -582,17 +584,15 @@ const NcalcMap = ({
       />
       {hasCoordBar && cursorLoc.longitude && (
         <div className={styles.infobar}>
-          <ul>
-            <li>{`Longitude:${cursorLoc.longitude}`}</li>
-            <li>{`Latitude:${cursorLoc.latitude}`}</li>
-            {polygonArea > 0 && (
-              <li>{`Area ${polygonArea.toFixed(2)} acres`}</li>
-            )}
-          </ul>
+          <div>{`Longitude:${cursorLoc.longitude}`}</div>
+          <div>{`Latitude:${cursorLoc.latitude}`}</div>
+          {polygonArea > 0 && (
+            <div>{`Area: ${polygonArea.toFixed(2)} acres`}</div>
+          )}
         </div>
       )}
     </div>
   );
 };
 
-export { NcalcMap };
+export default ReduxMap;

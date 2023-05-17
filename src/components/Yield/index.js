@@ -6,7 +6,6 @@ import { Card, CardContent } from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-// prettier-ignore
 import {
   get, getDefaults, dollars, exampleYield1, exampleYield2,
 } from '../../store/Store';
@@ -94,7 +93,6 @@ const Yield = () => {
     ],
   };
 
-  // prettier-ignore
   const chartStyle = (
     screenWidth > 1400
       ? {
@@ -162,9 +160,7 @@ const Yield = () => {
             <Logic
               current="yield"
               property="yield"
-              // prettier-ignore
               q={(
-              // prettier-ignore
                 <>
                   What is the expected yield for
                   {cashCrop}

@@ -1,10 +1,10 @@
 {
-  "name": "@psa/dst.ui.ncalc-map",
+  "name": "@psa/dst.ui.redux-map",
   "version": "0.0.1",
   "main": "dist/index.js",
   "componentId": {
     "scope": "psa.dst",
-    "name": "ui/ncalc-map",
+    "name": "ui/redux-map",
     "version": "0.0.1"
   },
   "dependencies": {

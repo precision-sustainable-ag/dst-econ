@@ -1,7 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-// prettier-ignore
 import {
   get, dollars, db, getDefaults, exampleSeeds,
 } from '../../store/Store';
@@ -117,9 +115,9 @@ const SpeciesRow = ({ n }) => {
 const Seeds = () => {
   const dev = useSelector(get.dev);
   const species = useSelector(get.species);
-  const address = useSelector(get.address);
+  const address = useSelector(get.map.address);
   const total = useSelector(get.coverCropTotal);
-  const { state } = address;
+  const state = address.state || '';
 
   const rec = db.stateRegions[state.toUpperCase()];
 
@@ -188,7 +186,6 @@ const Seeds = () => {
               </tbody>
             </table>
           </div>
-          {/* prettier-ignore */}
           <p>
             A common strategy for selecting a cover crop is to base your decision upon the need
             for a specific change you wish to make in a field or farm. For example, if you wish
@@ -201,6 +198,7 @@ const Seeds = () => {
             {' '}
             <a href={link} target="_blank" rel="noreferrer">
               {region}
+              {' '}
               Cover Crops Council Species Selector
             </a>
             .
@@ -216,7 +214,7 @@ const Seeds = () => {
             boxes or input your own rate. If you wish to learn more about possible seeding
             rates, consider using the &quot;Cover Crop Seeding Rate Calculator&quot;.
           </p>
-          {/* prettier-ignore */}
+
           <p>
             Prices for cover crops may vary widely based upon your geography and availability
             from season to season. You may utilize the default value or enter specific pricing
@@ -247,7 +245,6 @@ const Seeds = () => {
   );
 }; // Seeds
 
-// prettier-ignore
 Seeds.menu = (
   <span>
     See

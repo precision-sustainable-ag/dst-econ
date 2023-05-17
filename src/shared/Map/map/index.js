@@ -1,2 +1,3 @@
-/* eslint-disable */
-export { NcalcMap } from './ncalc-map';
+import ReduxMap from './redux-map';
+
+export default ReduxMap;

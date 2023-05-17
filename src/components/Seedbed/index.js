@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-// prettier-ignore
 import {
   get, getDefaults, exampleSeedbed, clearInputs,
 } from '../../store/Store';

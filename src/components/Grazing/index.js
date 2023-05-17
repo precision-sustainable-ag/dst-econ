@@ -2,10 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
 
-// prettier-ignore
-import {
-  get,
-} from '../../store/Store';
+import { get } from '../../store/Store';
 
 const Stop = () => <div className="stop" />;
 
@@ -13,7 +10,6 @@ const Graze = ({ type }) => {
   const context = useSelector(get.additional);
   return (
     <>
-      {/* prettier-ignore */}
       <div>
         Do you intend to
         {type}
@@ -22,7 +18,6 @@ const Graze = ({ type }) => {
       <div>
         <Input id={`additional.${type}Graze`} options={['Yes', 'No']} type="radio" />
       </div>
-      {/* prettier-ignore */}
       <div hidden={context[`${type}Graze`] !== 'Yes'}>
         Amount of forage for
         {type}

@@ -4,13 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
-// prettier-ignore
-import {
-  get, set, test, getDefaults,
-} from '../../store/Store';
+import { get, set, getDefaults } from '../../store/Store';
 
 const defaults = getDefaults(
-  'lat|lon|location|farm|field|acres|$labor|otherPriorCrop|cashCrop|otherCashCrop',
+  'location|farm|field|acres|$labor|otherPriorCrop|cashCrop|otherCashCrop',
 );
 
 const Field = () => {
@@ -25,7 +22,6 @@ const Field = () => {
     <>
       <form className="Field">
         <h1>Field and Farm</h1>
-        {/* prettier-ignore */}
         <p>
           Our first step with the
           <strong>
@@ -158,9 +154,6 @@ const Field = () => {
               dispatch(set.cashCrop('Other'));
               dispatch(set.otherCashCrop('Barley'));
               dispatch(set.$labor(999));
-
-              test('lat', 33.9312); // TODO
-              test('lon', -83.3208);
             }}
           >
             Test data

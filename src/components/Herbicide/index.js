@@ -4,7 +4,6 @@ import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
 // import Input from '../../shared/Inputs';
 
-// prettier-ignore
 import {
   get, set, db, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
@@ -42,7 +41,6 @@ const Herbicide = () => {
   return (
     <div className="Herbicide">
       <h1>Herbicide</h1>
-      {/* prettier-ignore */}
       <p>
         This module will address reductions or additional herbicide costs associated with
         integrating cover crops into your rotation. As a reminder, the

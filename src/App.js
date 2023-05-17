@@ -6,7 +6,7 @@ import './App.scss';
 import { Button } from '@mui/material';
 
 import React, { useEffect, useState } from 'react';
-// prettier-ignore
+
 import {
   Route, Routes, NavLink, useLocation, useNavigate,
 } from 'react-router-dom';

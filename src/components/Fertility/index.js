@@ -68,14 +68,12 @@ const Fertility = () => {
               <tr>
                 <td />
                 <th>N</th>
-                {/* prettier-ignore */}
                 <th>
                   P
                   <sub>2</sub>
                   O
                   <sub>5</sub>
                 </th>
-                {/* prettier-ignore */}
                 <th>
                   K
                   <sub>2</sub>

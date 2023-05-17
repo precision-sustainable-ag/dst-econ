@@ -77,7 +77,6 @@ const CropSummary = () => {
         <tr key={crop}>
           <td />
           <td>{crop}</td>
-          {/* prettier-ignore */}
           <td>
             {rates[i]}
             pounds @
@@ -180,7 +179,6 @@ const TerminationSummary = () => {
             Product:
             {product}
           </td>
-          {/* prettier-ignore */}
           <td>
             {rate}
             pounds/acre @
@@ -215,7 +213,6 @@ const TerminationSummary = () => {
                 &nbsp;&nbsp;&nbsp;&nbsp;Product:
                 {herb}
               </td>
-              {/* prettier-ignore */}
               <td>
                 {additionalRates[i]}
                 pounds @
@@ -248,7 +245,6 @@ const TerminationSummary = () => {
                 &nbsp;&nbsp;&nbsp;&nbsp;Product:
                 {herb}
               </td>
-              {/* prettier-ignore */}
               <td>
                 {reducedRates[i]}
                 pounds @
@@ -323,7 +319,6 @@ const FertilitySummary = () => {
       <tr>
         <td />
         <td>Fertilizer credit</td>
-        {/* prettier-ignore */}
         <td>
           {fertN > 0 && (
             <>
@@ -334,7 +329,6 @@ const FertilitySummary = () => {
           )}
           {fertP > 0 && (
             <>
-              {/* prettier-ignore */}
               {fertP}
               pound P
               <sub>2</sub>
@@ -346,7 +340,6 @@ const FertilitySummary = () => {
           )}
           {fertK > 0 && (
             <>
-              {/* prettier-ignore */}
               {fertK}
               pound K
               <sub>2</sub>
@@ -359,23 +352,19 @@ const FertilitySummary = () => {
         <td>{dollars($fertCredit)}</td>
         <td />
       </tr>
-      {/* prettier-ignore */}
       <tr>
         <td />
         <td>Additional fertilizer expense</td>
         <td>
           {fertNAdded > 0 && (
             <>
-              {/* prettier-ignore */}
               {fertNAdded}
               pound N/acre
               <br />
             </>
           )}
-          {/* prettier-ignore */}
           {fertPAdded > 0 && (
             <>
-              {/* prettier-ignore */}
               {fertPAdded}
               pound P
               <sub>2</sub>
@@ -453,7 +442,6 @@ const HerbicideSummary = () => {
             &nbsp;&nbsp;&nbsp;&nbsp;Product:
             {additionalProduct}
           </td>
-          {/* prettier-ignore */}
           <td>
             {additionalRate}
             pounds/acre @
@@ -487,7 +475,6 @@ const HerbicideSummary = () => {
             &nbsp;&nbsp;&nbsp;&nbsp;Product:
             {reducedProduct}
           </td>
-          {/* prettier-ignore */}
           <td>
             {reducedRate}
             pounds/acre @
@@ -562,7 +549,6 @@ const YieldSummary = () => {
       </tr>
       <tr>
         <td />
-        {/* prettier-ignore */}
         <td>
           Improved yield estimate in
           {year}
@@ -585,8 +571,8 @@ const Practices = () => {
   const field = useSelector(get.field);
   const priorCrop = useSelector(get.priorCrop);
   const cashCrop = useSelector(get.cashCrop);
-  const lat = useSelector(get.lat);
-  const lon = useSelector(get.lon);
+  const lat = useSelector(get.map.lat);
+  const lon = useSelector(get.map.lon);
 
   const totals = [
     useSelector(get.coverCropTotal) || 0,
@@ -604,7 +590,6 @@ const Practices = () => {
   const totalBenefits = -totals.reduce((previous, value) => previous + Math.min(value, 0), 0);
 
   return (
-    // prettier-ignore
     <div className="Practices">
       <h1>Summary of Practices</h1>
       {farm && (
@@ -613,7 +598,7 @@ const Practices = () => {
           {farm}
         </p>
       )}
-      {field && ( // prettier-ignore
+      {field && (
         <p>
           Field:
           {field}
@@ -624,11 +609,9 @@ const Practices = () => {
           longitude
         </p>
       )}
-      {/* prettier-ignore */}
       {priorCrop
-      && cashCrop && ( // prettier-ignore
+      && cashCrop && (
         <p>
-          {/* prettier-ignore */}
           Crop management: Cover crop planted after
           {priorCrop}
           and prior to
@@ -702,7 +685,6 @@ const Practices = () => {
               exampleYield1();
             }}
           >
-            {/* prettier-ignore */}
             Test
             <u>1</u>
           </button>
@@ -726,7 +708,6 @@ const Practices = () => {
               exampleYield2();
             }}
           >
-            {/* prettier-ignore */}
             Test
             <u>2</u>
           </button>
@@ -750,7 +731,6 @@ const Practices = () => {
               exampleYield1();
             }}
           >
-            {/* prettier-ignore */}
             Test
             <u>3</u>
           </button>
@@ -774,7 +754,6 @@ const Practices = () => {
               exampleYield2();
             }}
           >
-            {/* prettier-ignore */}
             Test
             <u>4</u>
           </button>
@@ -798,7 +777,6 @@ const Practices = () => {
               exampleYield1();
             }}
           >
-            {/* prettier-ignore */}
             Test
             <u>5</u>
           </button>
@@ -808,7 +786,6 @@ const Practices = () => {
   );
 }; // Practices
 
-// prettier-ignore
 Practices.menu = (
   <span>
     S

@@ -82,7 +82,6 @@ const Planting = () => {
   );
 }; // Planting
 
-// prettier-ignore
 Planting.menu = (
   <span>
     P

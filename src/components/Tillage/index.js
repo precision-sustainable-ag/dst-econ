@@ -37,7 +37,6 @@ const defaults = {
   ...otherDefaults,
 };
 
-// prettier-ignore
 const Costs = ({
   current, q2, q3, q4, onChange,
 }) => {
@@ -90,7 +89,6 @@ const Tillage = () => {
     <>
       <div className="Tillage">
         <h1>Tillage</h1>
-        {/* prettier-ignore */}
         <p>
           As a reminder to the user, the
           <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
@@ -102,7 +100,6 @@ const Tillage = () => {
           fall. Other growers have switched from conventional tillage to no-til planting after
           making a switch to extensive use of cover crops. Review the
           {' '}
-          {/* prettier-ignore */}
           <NavLink className="link" to="/Resources">
             Resources page
           </NavLink>
@@ -160,7 +157,6 @@ const Tillage = () => {
                           q2="Will you be eliminating any other tillage than fall tillage, because of planting a cover crop?"
                           q3="What other tillage activity will be eliminated because of planting a cover crop?"
                           q4="Estimated cost of eliminated tillage activity"
-                          // prettier-ignore
                           onChange={() => clearInputs(eliminationDefaults, 'tillageElimination.q2')}
                         />
                       </>
@@ -228,7 +224,6 @@ const Tillage = () => {
   );
 }; // Tillage
 
-// prettier-ignore
 Tillage.menu = (
   <span>
     T

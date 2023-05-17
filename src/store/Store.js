@@ -82,21 +82,16 @@ const initialState = {
   screenWidth: window.innerWidth,
   screenHeight: window.innerHeight,
   showMap: window.innerWidth > 1200,
-  maxZoom: 20, // max zoom of satellite imagery for current lat/lon; used on home map
   status: '',
   previousScreen: 'Field',
-  lat: 0,
-  lon: 0,
-  mapType: 'hybrid',
-  mapZoom: 13,
-  address: {
-    address: '',
-    city: '',
-    county: '',
-    fullAddress: '',
-    state: 'New Jersey',
-    stateAbbreviation: 'NJ',
-    zipCode: '',
+  map: {
+    lat: 0,
+    lon: 0,
+    address: {},
+  },
+  mapFeatures: {
+    zoom: 13,
+    area: 0,
   },
   features: [],
   location: '',
@@ -138,9 +133,7 @@ const initialState = {
   fertPAdded: 0,
   fertKAdded: 0,
   $fertApplication: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
-  // prettier-ignore
   $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
-  // prettier-ignore
   $fertCost: (state) => -(
     state.fertNAdded * state.$fertN
     + state.fertPAdded * state.$fertP
@@ -148,7 +141,6 @@ const initialState = {
   ) - state.$fertApplication,
   seedbed: { ...shared },
   planting: { ...shared },
-  // prettier-ignore
   herbicide: {
     ...shared,
     total: (state) => (state.herbicideAdditional.cost || 0)
@@ -163,7 +155,6 @@ const initialState = {
     product: '',
     unitCost: (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Cost ($)'],
     rate: (state) => db.herbicides?.[state.herbicideAdditional.product]?.Rate,
-    // prettier-ignore
     cost: (state) => state.herbicideAdditional.unitCost * state.herbicideAdditional.rate || 0,
   },
   herbicideReduced: {
@@ -182,7 +173,6 @@ const initialState = {
     yield: undefined,
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
-    // prettier-ignore
     adjusted: (state) => {
       const r = [
         +(
@@ -227,7 +217,6 @@ const initialState = {
 
   tillage1: {
     ...shared,
-    // prettier-ignore
     costReductions: (state) => (state.tillage1.q5 === 'Yes' ? -state.tillageFall.total : 0)
     - (state.tillageElimination.total || 0),
   },
@@ -236,14 +225,12 @@ const initialState = {
   tillageOther: { ...shared },
   tillageAll: {
     ...shared,
-    // prettier-ignore
     total: (state) => (state.tillage1.costReductions || 0) + (state.tillageOther.total || 0),
   },
   termination: {
     ...shared,
     unitCost: (state) => db.herbicides?.[state.termination.product]?.['Cost ($)'],
     rate: (state) => db.herbicides?.[state.termination.product]?.Rate,
-    // prettier-ignore
     productCost: (state) => state.termination.unitCost * state.termination.rate || undefined,
     additionalHerbicides: [],
     additionalRates: [],
@@ -252,7 +239,6 @@ const initialState = {
       let total = 0;
 
       state.termination.additionalHerbicides.forEach((s, n) => {
-        // prettier-ignore
         if (s) {
           total
           += (state.termination.additionalRates[n] || 0)
@@ -268,7 +254,6 @@ const initialState = {
       let total = 0;
 
       state.termination.reducedHerbicides.forEach((s, n) => {
-        // prettier-ignore
         if (s) {
           total
           += (state.termination.reducedRates[n] || 0)
@@ -278,7 +263,6 @@ const initialState = {
 
       return total;
     },
-    // prettier-ignore
     total: (state) => (+state.termination.productCost || 0)
       + (+state.chemical.total || 0)
       + (+state.roller.total || 0)
@@ -314,7 +298,6 @@ const initialState = {
     baleSize: undefined,
     baleTime: undefined,
     tractor: '',
-    // prettier-ignore
     lbsNotFed: (state) => +(
       (state.additional.fallDryMatter * state.additional.fallWaste
       + state.additional.springDryMatter * state.additional.springWaste)
@@ -339,13 +322,6 @@ const afterChange = {
       state.previousScreen = state.screen;
     }
   },
-  // lat: (state) => {
-  //   const mz = 4;
-  //   store.dispatch(set.maxZoom(mz))
-  //   // mz.getMaxZoomAtLatLng({lat: +state.lat, lng: +state.lon}, (result) => {
-  //   //   store.dispatch(set.maxZoom(result.zoom))
-  //   // });
-  // },
   priorCrop: (state, { payload }) => {
     if (payload === 'Other') {
       state.focus = 'otherPriorCrop';
@@ -471,7 +447,7 @@ const afterChange = {
   'additional.nrcs': (state, { payload }) => {
     if (payload === 'Yes') {
       state.focus = 'additional.$costShare';
-      const data = db.eqip[state.address.stateAbbreviation];
+      const data = db.eqip[state.map.address.stateAbbreviation];
       const species = state.species.filter((e) => e);
       if (species.length === 1) {
         state.additional.$costShare = data?.basic;
@@ -563,7 +539,6 @@ const getCosts = (state, current) => {
 
       const { acresHour } = state[current];
 
-      // prettier-ignore
       const divisor = type === 'implements'
         ? section.annualUseAcres
         : section.annualUseHours * acresHour;
@@ -581,7 +556,6 @@ const getCosts = (state, current) => {
       // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
 
       // console.log(p['default ASABE category']);
-      // prettier-ignore
       const tradein = (RV1
         - RV2
         * p['expected life (years)']
@@ -596,9 +570,7 @@ const getCosts = (state, current) => {
         * RV5;
       const listprice = p['purchase price 2020'] / (1 - p['list discount']);
       const $tradein = tradein * listprice;
-      // prettier-ignore
       const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
-      // prettier-ignore
       const accumulatedrepairs = listprice
       * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];
@@ -609,7 +581,6 @@ const getCosts = (state, current) => {
 
       switch (parm) {
         case 'Fuel':
-          // prettier-ignore
           value = +(
             p.HP
             * p['fuel use (gal/PTO hp/hr)']
@@ -620,7 +591,6 @@ const getCosts = (state, current) => {
         case 'Depreciation':
           value = annualdepreciation / divisor;
           break;
-        // prettier-ignore
         case 'Interest':
           value = (((p['purchase price 2020'] + $tradein + annualdepreciation) / 2)
           * db.rates.interest.value)
@@ -630,13 +600,11 @@ const getCosts = (state, current) => {
           value = annualrepairs / divisor;
           break;
         case 'Taxes':
-          // prettier-ignore
           value = (((p['purchase price 2020'] + $tradein + annualdepreciation) / 2)
           * db.rates.property.value)
           / divisor;
           break;
         case 'Insurance':
-          // prettier-ignore
           value = (((p['purchase price 2020'] + $tradein + annualdepreciation) / 2)
           * db.rates.insurance.value)
           / divisor;
@@ -645,7 +613,6 @@ const getCosts = (state, current) => {
           value = (db.rates.storage.value * p['shed (ft^2)']) / divisor;
           break;
         case 'Labor':
-          // prettier-ignore
           value = ((p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour)
           * db.rates.skilled.value;
           break;
@@ -689,9 +656,7 @@ const getCosts = (state, current) => {
   afterChange[`${section}.Taxes`] = (state) => getCosts(state, section);
   afterChange[`${section}.Storage`] = (state) => getCosts(state, section);
   afterChange[`${section}.Insurance`] = (state) => getCosts(state, section);
-  // prettier-ignore
   afterChange[`${section}.annualUseHours`] = (state, { payload }) => payload && getCosts(state, section);
-  // prettier-ignore
   afterChange[`${section}.annualUseAcres`] = (state, { payload }) => payload && getCosts(state, section);
 
   afterChange[`${section}.implement`] = (state, { payload }) => {
@@ -721,7 +686,6 @@ const getCosts = (state, current) => {
       const p = db.implements[payload];
 
       obj.power = p['default power unit'];
-      // prettier-ignore
       obj.acresHour = +(
         (p.size1 * p['field speed (m/h)'] * p['field efficiency'])
         / db.rates.conversion.value
@@ -827,7 +791,6 @@ export const dollars = (n) => {
     return '';
   }
   if (+n < 0) {
-    // prettier-ignore
     return (
       <span style={{ color: 'red' }}>
         ($

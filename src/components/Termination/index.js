@@ -115,11 +115,8 @@ const OtherHerbicides = ({ state, prop, description }) => (
     </tbody>
     <tfoot>
       <tr>
-        {/* prettier-ignore */}
         <td colSpan="3" style={{ textAlign: 'right', background: 'yellow' }}>
-          {/* prettier-ignore */}
           Total
-          {/* prettier-ignore */}
           {prop === 'additional' ? 'Costs' : 'Benefits'}
           :
           {dollars(state[`${prop}Total`])}
