@@ -276,7 +276,7 @@ export const Summary = () => {
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const acres = useSelector(get.acres);
+  const acres = useSelector(get.mapFeatures.area);
   const cashCrop = useSelector(get.cashCrop);
 
   const style = total > 0 ? { color: 'red' } : { color: 'black' };
@@ -299,7 +299,6 @@ export const Summary = () => {
                         <td>Farm     </td>
                         <td style={{ textAlign: 'left' }}>
                           {farm}
-                          {' '}
                         </td>
                       </tr>
                       )}
@@ -308,7 +307,6 @@ export const Summary = () => {
                         <td>Field    </td>
                         <td style={{ textAlign: 'left' }}>
                           {field}
-                          {' '}
                         </td>
                       </tr>
                       )}
@@ -317,7 +315,6 @@ export const Summary = () => {
                         <td>Acres    </td>
                         <td style={{ textAlign: 'left' }}>
                           {acres}
-                          {' '}
                         </td>
                       </tr>
                       )}
@@ -326,7 +323,6 @@ export const Summary = () => {
                         <td>Cash crop</td>
                         <td style={{ textAlign: 'left' }}>
                           {cashCrop}
-                          {' '}
                         </td>
                       </tr>
                       )}

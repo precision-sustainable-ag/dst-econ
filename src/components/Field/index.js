@@ -7,7 +7,7 @@ import ClearInputs from '../ClearInputs';
 import { get, set, getDefaults } from '../../store/Store';
 
 const defaults = getDefaults(
-  'location|farm|field|acres|$labor|otherPriorCrop|cashCrop|otherCashCrop',
+  'location|farm|field|mapFeatures.area|$labor|otherPriorCrop|cashCrop|otherCashCrop',
 );
 
 const Field = () => {
@@ -24,6 +24,7 @@ const Field = () => {
         <h1>Field and Farm</h1>
         <p>
           Our first step with the
+          {' '}
           <strong>
             <em>Cover Crop Economic DST (Decision Support Tool)</em>
           </strong>
@@ -65,7 +66,7 @@ const Field = () => {
 
                 <h2>How many acres are in your Field?</h2>
 
-                <Input id="acres" />
+                <Input id="mapFeatures.area" />
 
                 {priorCrop === 'Other' && (
                   <Input id="otherPriorCrop" placeholder="Enter prior crop here" />
@@ -112,7 +113,7 @@ const Field = () => {
           <Input id="field" fullWidth />
 
           <h2>How many acres are in your Field?</h2>
-          <Input id="acres" />
+          <Input id="mapFeatures.area" />
 
           <h2>What is your intended Cash Crop for this Field?</h2>
           <Input
@@ -148,7 +149,7 @@ const Field = () => {
               dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
               dispatch(set.farm('My farm'));
               dispatch(set.field('My field'));
-              dispatch(set.acres(123));
+              dispatch(set.mapFeatures.area(123));
               dispatch(set.field('My field'));
               dispatch(set.otherPriorCrop('Wheat'));
               dispatch(set.cashCrop('Other'));

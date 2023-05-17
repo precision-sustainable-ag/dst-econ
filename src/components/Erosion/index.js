@@ -88,6 +88,7 @@ Erosion.menu = (
   <span>
     Erosio
     <u>n</u>
+    {' '}
     Control
   </span>
 );

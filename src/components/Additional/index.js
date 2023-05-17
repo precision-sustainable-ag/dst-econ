@@ -120,6 +120,7 @@ const Additional = () => {
       <h1>Additional Considerations</h1>
       <p>
         This portion of the
+        {' '}
         <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
         {' '}
         will address additional considerations that may impact the profitability of using cover

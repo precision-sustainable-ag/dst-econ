@@ -66,22 +66,11 @@ const initialState = {
   focus: null,
   focused: null,
   scrollTop: 0,
-  firstName: '',
-  lastName: '',
-  fullName: (state) => `${state.firstName} ${state.lastName}`,
-  fullName2: (state) => state.fullName,
   dev: /(localhost|dev)/i.test(window.location),
-  test: '',
-  test2: { a: { b: { c: 3 } } },
-  array1: ['This ', 'is ', 'a ', 'test'],
-  array2: {
-    a: [4, 3, 2, 1],
-  },
   screen: 'Loading',
   newScreen: '',
   screenWidth: window.innerWidth,
   screenHeight: window.innerHeight,
-  showMap: window.innerWidth > 1200,
   status: '',
   previousScreen: 'Field',
   map: {
@@ -93,11 +82,9 @@ const initialState = {
     zoom: 13,
     area: 0,
   },
-  features: [],
   location: '',
   farm: '',
   field: '',
-  acres: undefined,
   $labor: undefined,
   priorCrop: '',
   otherPriorCrop: '',
@@ -209,7 +196,7 @@ const initialState = {
   },
   erosion: {
     ...shared,
-    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.acres,
+    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.mapFeatures.area,
   },
   chemical: { ...shared },
   roller: { ...shared },
@@ -1111,7 +1098,7 @@ export const exampleFertilityCost = () => {
 export const exampleErosion = () => {
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.acres(150));
+  store.dispatch(set.mapFeatures.area(150));
   store.dispatch(set.erosion.q1('Yes'));
   store.dispatch(set.erosion.q2('Trackhoe'));
   store.dispatch(set.erosion.q4(20));

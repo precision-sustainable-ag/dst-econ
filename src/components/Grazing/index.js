@@ -45,10 +45,9 @@ const GrazingHelper = () => {
           <header>Grazing Cover Crops</header>
 
           <div className="colspan">
-            Diversified crop and livestock operators can take advantage of the forage value
-            cover crops provide. Growers without livestock may also find potential lease
-            opportunities with livestock operators in their area. The following question
-            will help you evaluate the financial impact of grazing livestock.
+            Diversified crop and livestock operators can take advantage of the forage value cover crops provide.
+            Growers without livestock may also find potential lease opportunities with livestock operators in their area.
+            The following question will help you evaluate the financial impact of grazing livestock.
           </div>
 
           <div>Do you intend on grazing your cover crops?</div>
@@ -58,8 +57,7 @@ const GrazingHelper = () => {
           {context.grazing !== 'Yes' && <Stop />}
 
           <div>
-            Do you intend to lease your cover crop acres to a livestock producer (not graze
-            them with your operation)?
+            Do you intend to lease your cover crop acres to a livestock producer (not graze them with your operation)?
           </div>
           <div>
             <Input id="additional.lease" options={['Yes', 'No']} type="radio" />
@@ -70,8 +68,7 @@ const GrazingHelper = () => {
           {context.lease === 'Yes' && (
             <>
               <div>
-                What is the approximate value (per acre) you will receive for leasing your
-                cover crop acres for grazing?
+                What is the approximate value (per acre) you will receive for leasing your cover crop acres for grazing?
               </div>
               <div>
                 <Input id="additional.$lease" />
@@ -89,8 +86,7 @@ const GrazingHelper = () => {
           </div>
 
           <div>
-            How much additional time (hours per acre) will be required for management of
-            the grazing operation?
+            How much additional time (hours per acre) will be required for management of the grazing operation?
           </div>
           <div>
             <Input id="additional.hoursAcre" />

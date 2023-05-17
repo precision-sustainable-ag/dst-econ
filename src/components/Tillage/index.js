@@ -92,13 +92,10 @@ const Tillage = () => {
         <p>
           As a reminder to the user, the
           <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
-          considers changes to
-          your crop management system specific to the inclusion of cover crops into your
-          rotation. Therefore, this module will consider any reduction or addition of tillage
-          that may result from utilizing cover crops. For example, many growers have discovered
-          that utilizing cover crops will reduce or eliminate the need for deep tillage in the
-          fall. Other growers have switched from conventional tillage to no-til planting after
-          making a switch to extensive use of cover crops. Review the
+          considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
+          Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
+          For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
+          Other growers have switched from conventional tillage to no-till planting after making a switch to extensive use of cover crops. Review the
           {' '}
           <NavLink className="link" to="/Resources">
             Resources page

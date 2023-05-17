@@ -46,6 +46,7 @@ const Herbicide = () => {
         integrating cover crops into your rotation. As a reminder, the
         {' '}
         <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
+        {' '}
         considers changes to
         your crop management system specific to the inclusion of cover crops. Therefore, this
         module only considers changes to your herbicide program specific to post emerge or fall

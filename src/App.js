@@ -15,7 +15,6 @@ import { renderToString } from 'react-dom/server';
 
 import { get, set, db } from './store/Store';
 
-import Home from './components/Home';
 import Field from './components/Field';
 import Seeds from './components/Seeds';
 import Seedbed from './components/Seedbed';
@@ -299,7 +298,6 @@ const App = () => {
       <div id="Main">
         <Routes>
           <Route path="" element={<Field />} />
-          <Route path="Home" element={<Home />} />
           <Route path="Seeds" element={<Seeds />} />
           <Route path="Seedbed" element={<Seedbed />} />
           <Route path="Planting" element={<Planting />} />
