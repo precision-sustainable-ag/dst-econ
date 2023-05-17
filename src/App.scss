@@ -730,3 +730,32 @@ body.debug #AirTables {
     margin-bottom: 10px;
   }
 }
+
+button.disabled {
+  position: relative;
+  &:hover {
+    &::before {
+      content: "Please enter acres, crop, labor value, and diesel price to continue.";
+      position: absolute;
+      left: calc(100% + 12px);
+      width: 10rem;
+      display: block;
+      background: lightyellow;
+      color: #444;
+      font-size: 80%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      z-index: 999;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 8px);
+      transform: translate(-50%, -50%);
+      border-style: solid;
+      border-width: 6px 6px 6px 0;
+      border-color: transparent lightyellow transparent transparent;
+    }
+  }
+}

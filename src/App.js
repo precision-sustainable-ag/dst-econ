@@ -138,6 +138,12 @@ const App = () => {
     15: 'Resources',
   };
 
+  const acres = useSelector(get.mapFeatures.area);
+  const $labor = useSelector(get.$labor);
+  const $diesel = useSelector(get.$diesel);
+  const crop = useSelector(get.cashCrop);
+  const disabled = !acres || !$labor || !$diesel || !crop;
+
   useEffect(() => {
     const num = Object.keys(screenNums).find((key) => screenNums[key] === screen);
 
@@ -257,18 +263,25 @@ const App = () => {
             if (/Practices|Revenue|Resources/.test(path)) {
               cname += ' summary';
             }
+            if (disabled) {
+              cname += ' disabled';
+            }
             const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
             return (
               <>
                 {path === 'Practices' && <hr />}
                 <NavLink
                   key={path}
-                  to={path === 'Field' ? '/' : path}
+                  to={disabled || path === 'Field' ? '/' : path}
                   accessKey={accessKey}
                   tabIndex={-1}
                   onFocus={(e) => e.target.blur()}
                 >
-                  <MyButton screen={path} className={cname} tabIndex={-1}>
+                  <MyButton
+                    screen={path}
+                    className={cname}
+                    tabIndex={-1}
+                  >
                     {paths[path].menu}
                   </MyButton>
                 </NavLink>
