@@ -16,6 +16,11 @@ const Costs = ({ desc }) => {
 
   const val = state[d];
 
+  if (!state.$implements) {
+    console.log(`${desc} missing $implements`);
+    return null;
+  }
+
   const iCost = state.$implements[d];
   const pCost = state.$power[d];
   const total = `$${(iCost + pCost).toFixed(2)}`;
@@ -171,14 +176,14 @@ const Activity = () => {
                 </tr>
               </thead>
               <tbody>
-                <Costs desc="Labor" lookup="Labor" />
-                <Costs desc="Fuel" lookup="" />
-                <Costs desc="Depreciation" lookup="Depreciation" />
-                <Costs desc="Interest" lookup="Interest" />
-                <Costs desc="Repairs" lookup="Repairs" />
-                <Costs desc="Taxes" lookup="Taxes" />
-                <Costs desc="Insurance" lookup="Insurance" />
-                <Costs desc="Storage shed" lookup="Storage" />
+                <Costs desc="Labor" />
+                <Costs desc="Fuel" />
+                <Costs desc="Depreciation" />
+                <Costs desc="Interest" />
+                <Costs desc="Repairs" />
+                <Costs desc="Taxes" />
+                <Costs desc="Insurance" />
+                <Costs desc="Storage shed" />
                 <tr className="total">
                   <td>Total</td>
                   <td>{`$${state.$implements.total.toFixed(2)}`}</td>

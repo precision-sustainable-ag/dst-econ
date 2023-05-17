@@ -80,12 +80,13 @@ const initialState = {
   },
   mapFeatures: {
     zoom: 13,
-    area: 0,
+    area: '',
   },
   location: '',
   farm: '',
   field: '',
-  $labor: undefined,
+  $labor: 15,
+  $diesel: 4,
   priorCrop: '',
   otherPriorCrop: '',
   cashCrop: '',
@@ -572,7 +573,7 @@ const getCosts = (state, current) => {
             p.HP
             * p['fuel use (gal/PTO hp/hr)']
             * (1 + +db.rates.lubrication.value)
-            * db.rates.fuel.value
+            * state.$diesel
           ) / acresHour;
           break;
         case 'Depreciation':
@@ -601,7 +602,7 @@ const getCosts = (state, current) => {
           break;
         case 'Labor':
           value = ((p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour)
-          * db.rates.skilled.value;
+          * state.$labor;
           break;
         default:
           value = p[parm];
@@ -699,6 +700,22 @@ const getCosts = (state, current) => {
     }
   };
 });
+
+afterChange.$labor = (state) => {
+  getCosts(state, 'seedbed');
+  getCosts(state, 'planting');
+  getCosts(state, 'chemical');
+  getCosts(state, 'roller');
+  getCosts(state, 'tillage');
+  getCosts(state, 'tillageFall');
+  getCosts(state, 'tillageElimination');
+  getCosts(state, 'tillageOther');
+  getCosts(state, 'herbicideAdditional');
+  getCosts(state, 'herbicideReduced');
+  getCosts(state, 'herbicideFall');
+};
+
+afterChange.$diesel = afterChange.$labor;
 
 let status = '';
 const loadData = async (tables) => {

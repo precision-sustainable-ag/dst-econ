@@ -7,7 +7,7 @@ import ClearInputs from '../ClearInputs';
 import { get, set, getDefaults } from '../../store/Store';
 
 const defaults = getDefaults(
-  'location|farm|field|mapFeatures.area|$labor|otherPriorCrop|cashCrop|otherCashCrop',
+  'location|farm|field|mapFeatures.area|$labor|$diesel|otherPriorCrop|cashCrop|otherCashCrop',
 );
 
 const Field = () => {
@@ -65,8 +65,7 @@ const Field = () => {
                 <Input id="field" fullWidth />
 
                 <h2>How many acres are in your Field?</h2>
-
-                <Input id="mapFeatures.area" />
+                <Input id="mapFeatures.area" type="number" />
 
                 {priorCrop === 'Other' && (
                   <Input id="otherPriorCrop" placeholder="Enter prior crop here" />
@@ -95,7 +94,7 @@ const Field = () => {
                 <Input id="$labor" />
 
                 <h2>What is your diesel cost? ($/gal)</h2>
-                <Input id="$labor" />
+                <Input id="$diesel" />
               </td>
             </tr>
           </tbody>
@@ -138,7 +137,7 @@ const Field = () => {
           <Input id="$labor" />
 
           <h2>What is your diesel cost? ($/gal)</h2>
-          <Input id="$labor" />
+          <Input id="$diesel" />
         </div>
       </form>
       {dev && (
@@ -146,7 +145,7 @@ const Field = () => {
           <button
             type="button"
             onClick={() => {
-              dispatch(set.location('293 Ponderosa Drive, Athens, GA, USA'));
+              dispatch(set.location('123 Main Street, Athens, GA, USA'));
               dispatch(set.farm('My farm'));
               dispatch(set.field('My field'));
               dispatch(set.mapFeatures.area(123));
