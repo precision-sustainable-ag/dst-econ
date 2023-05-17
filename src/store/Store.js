@@ -129,6 +129,7 @@ const initialState = {
   ) - state.$fertApplication,
   seedbed: { ...shared },
   planting: { ...shared },
+  unused: { ...shared },
   herbicide: {
     ...shared,
     total: (state) => (state.herbicideAdditional.cost || 0)

@@ -8,8 +8,8 @@ import './styles.scss';
 
 const Costs = ({ desc }) => {
   const focused = useSelector(get.focused) || '';
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
-  const type = focused?.split('.')[0] || 'planting';
+  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'unused';
+  const type = focused?.split('.')[0] || 'unused';
   const state = useSelector(get[type]);
 
   const d = desc.replace('Storage shed', 'Storage');
@@ -52,8 +52,8 @@ const Activity = () => {
   const screenHeight = useSelector(get.screenHeight);
   const focused = useSelector(get.focused) || '';
 
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
-  const type = focused.includes('.') ? focused.split('.')[0] : 'planting';
+  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'unused';
+  const type = focused.includes('.') ? focused.split('.')[0] : 'unused';
 
   const state = useSelector(get[type]) || {};
   const { estimated } = state;
