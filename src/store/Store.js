@@ -126,7 +126,7 @@ const initialState = {
     state.fertNAdded * state.$fertN
     + state.fertPAdded * state.$fertP
     + state.fertKAdded * state.$fertK
-  ) - state.$fertApplication,
+  ) - (state.$fertApplication || 0),
   seedbed: { ...shared },
   planting: { ...shared },
   unused: { ...shared },
@@ -773,6 +773,8 @@ const loadData = async (tables) => {
     store.dispatch(set.screen('Field'));
     store.dispatch(set.$labor(db.rates?.skilled?.value));
     store.dispatch(set.$diesel(db.rates?.fuel?.value));
+    store.dispatch(set.$fertP(db.rates?.P2O5?.value));
+    store.dispatch(set.$fertK(db.rates?.K2O?.value));
   }
 }; // loadData
 

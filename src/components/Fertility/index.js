@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
+import Help from '../../shared/Help';
 import {
   get,
   dollars,
@@ -45,15 +46,13 @@ const Fertility = () => {
       <form>
         <h1>Fertility</h1>
         <p>
-          Integrating cover crops into your rotation can affect fertility in multiple ways. One
-          of the most commonly cited impacts is incorporating a legume into your cover crop
-          mix. Depending upon the species selected and maturity at termination the legume cover
-          crop can provide a nitrogen credit for your rotation. Many cover crops have also
-          demonstrated an ability to reduce the export of subsurface drainage water and
-          dissolved nutrients such as nitrogen and phosphorous. In this module you can input
-          your estimates of macronutrients saved (or not applied) and the value of those
-          macronutrients. Alternatively, if you intend to apply additional nutrients with the
-          integration of cover crops you can also provide those values.
+          Integrating cover crops into your rotation can affect fertility in multiple ways.
+          One of the most commonly cited impacts is incorporating a legume into your cover crop mix.
+          Depending upon the species selected and maturity at termination the legume cover crop can provide a nitrogen credit for your rotation.
+          Many cover crops have also demonstrated an ability to reduce the export of subsurface drainage water and dissolved nutrients
+          such as nitrogen and phosphorous.
+          In this module you can input your estimates of macronutrients saved (or not applied) and the value of those macronutrients.
+          Alternatively, if you intend to apply additional nutrients with the integration of cover crops you can also provide those values.
         </p>
         <div className="mobile-table-div">
           <table className="mobile-table">
@@ -80,18 +79,7 @@ const Fertility = () => {
                   O
                 </th>
               </tr>
-              <tr>
-                <td>Expected fertilizer credit from your cover crop species (pounds/acre).</td>
-                <td>
-                  <Input id="fertN" autoFocus />
-                </td>
-                <td>
-                  <Input id="fertP" />
-                </td>
-                <td>
-                  <Input id="fertK" />
-                </td>
-              </tr>
+
               <tr>
                 <td>Fertilizer value ($/pound of nutrient)</td>
                 <td>
@@ -106,6 +94,19 @@ const Fertility = () => {
               </tr>
 
               <tr>
+                <td>Expected fertilizer credit from your cover crop species (pounds/acre).</td>
+                <td>
+                  <Input id="fertN" autoFocus />
+                </td>
+                <td>
+                  <Input id="fertP" />
+                </td>
+                <td>
+                  <Input id="fertK" />
+                </td>
+              </tr>
+
+              <tr>
                 <td>Will you add fertilizer specifically for cover crop production?</td>
                 <td colSpan={3}>
                   <Input id="useFertilizer" options={['Yes', 'No']} type="radio" row />
@@ -113,26 +114,38 @@ const Fertility = () => {
               </tr>
 
               {useFertilizer && (
-                <tr>
-                  <td>Fertilizer added for cover crop production (pounds/acre)</td>
-                  <td>
-                    <Input id="fertNAdded" />
-                  </td>
-                  <td>
-                    <Input id="fertPAdded" />
-                  </td>
-                  <td>
-                    <Input id="fertKAdded" />
-                  </td>
-                </tr>
+                <>
+                  <tr>
+                    <td>Fertilizer added for cover crop production (pounds/acre)</td>
+                    <td>
+                      <Input id="fertNAdded" />
+                    </td>
+                    <td>
+                      <Input id="fertPAdded" />
+                    </td>
+                    <td>
+                      <Input id="fertKAdded" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Cost of fertilizer application ($/acre)
+                      {' '}
+                      <Help>
+                        <p>
+                          If additional fertilizer requires an additional trip or trips through the field, enter your expected application cost.
+                          If additional fertilizer will be added, even to a cover crop, with an activity that would be done
+                          even if you did not plant a cover crop, enter a zero value.
+                        </p>
+                      </Help>
+                    </td>
+                    <td colSpan={3}>
+                      <Input id="$fertApplication" value={$fertApplication ?? dFertApplication} />
+                    </td>
+                  </tr>
+                </>
               )}
 
-              <tr>
-                <td>Cost of fertilizer application ($/acre)</td>
-                <td colSpan={3}>
-                  <Input id="$fertApplication" value={$fertApplication ?? dFertApplication} />
-                </td>
-              </tr>
               <tr>
                 <td>Value of fertilizer credit from cover crops ($/acre)</td>
                 <td colSpan={3}>{dollars($fertCredit)}</td>

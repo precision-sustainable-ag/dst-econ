@@ -142,7 +142,8 @@ const App = () => {
   const $labor = useSelector(get.$labor);
   const $diesel = useSelector(get.$diesel);
   const crop = useSelector(get.cashCrop);
-  const disabled = !acres || !$labor || !$diesel || !crop;
+  const map = useSelector(get.map);
+  const disabled = !map.lat || !acres || !$labor || !$diesel || !crop;
 
   useEffect(() => {
     const num = Object.keys(screenNums).find((key) => screenNums[key] === screen);
