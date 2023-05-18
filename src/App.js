@@ -305,7 +305,11 @@ const App = () => {
           </div>
         </div>
       </nav>
-      <Activity />
+
+      {
+        db[screen] ? null : <Activity />
+      }
+
       <Summary />
 
       <div id="Main">

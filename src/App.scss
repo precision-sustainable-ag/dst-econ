@@ -242,45 +242,6 @@ form.Seeds tr > td:nth-child(3) {
   // }
 }
 
-.Field table {
-  width: 100%;
-  background: #f8f8f8;
-
-  @media screen and (max-width: 1045px) {
-    display: none;
-  }
-}
-
-.field-mobile {
-  width: 100%;
-  background: #f8f8f8;
-  padding: 20px 0px;
-
-  @media screen and (min-width: 1045px) {
-    display: none;
-  }
-}
-
-.Field table input {
-  background: white;
-}
-
-.Field tr {
-  vertical-align: top;
-}
-
-.Field tr:last-child td {
-  height: auto;
-}
-
-.Field td:nth-child(1) {
-  width: 60%;
-}
-
-.Field td:nth-child(1) {
-  border-right: 2px solid black;
-}
-
 .MuiSelect-root * {
   width: 100% !important;
   display: none !important;
@@ -323,16 +284,6 @@ input[type='number'] {
 
 .MuiAutocomplete-inputRoot {
   padding: 0 !important;
-}
-
-.MuiAutocomplete-inputRoot > * {
-  zpadding: 0.3rem !important;
-}
-
-.Field h2 {
-  font-size: 100%;
-  margin-bottom: 0.3rem;
-  margin-top: 0.8rem;
 }
 
 .airtable {
