@@ -35,9 +35,9 @@ const shared = {
   Depreciation: true,
   Interest: true,
   Repairs: true,
-  Taxes: true,
-  Storage: true,
-  Insurance: true,
+  Taxes: false,
+  Storage: false,
+  Insurance: false,
   $implements: {
     Labor: 0,
     Fuel: 0,
@@ -546,23 +546,17 @@ const getCosts = (state, current) => {
       // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
 
       // console.log(p['default ASABE category']);
-      const tradein = (RV1
-        - RV2
-        * p['expected life (years)']
-        ** 0.5
-        - RV3
-        * p['expected use (hr/yr)']
-        ** 0.5
-        + RV4
-        * db.rates.projected.value)
-        ** 2
-        + 0.25
-        * RV5;
+      const tradein = (
+        RV1
+        - RV2 * p['expected life (years)'] ** 0.5
+        - RV3 * p['expected use (hr/yr)'] ** 0.5
+        + RV4 * db.rates.projected.value
+      ) ** 2
+        + 0.25 * RV5;
       const listprice = p['purchase price 2020'] / (1 - p['list discount']);
       const $tradein = tradein * listprice;
       const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
-      const accumulatedrepairs = listprice
-      * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
+      const accumulatedrepairs = listprice * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];
 
       // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
@@ -582,22 +576,31 @@ const getCosts = (state, current) => {
           value = annualdepreciation / divisor;
           break;
         case 'Interest':
-          value = (((p['purchase price 2020'] + $tradein + annualdepreciation) / 2)
-          * db.rates.interest.value)
-          / divisor;
+          value = (
+            (
+              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+            )
+            * db.rates.interest.value
+          ) / divisor;
           break;
         case 'Repairs':
           value = annualrepairs / divisor;
           break;
         case 'Taxes':
-          value = (((p['purchase price 2020'] + $tradein + annualdepreciation) / 2)
-          * db.rates.property.value)
-          / divisor;
+          value = (
+            (
+              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+            )
+            * db.rates.property.value
+          ) / divisor;
           break;
         case 'Insurance':
-          value = (((p['purchase price 2020'] + $tradein + annualdepreciation) / 2)
-          * db.rates.insurance.value)
-          / divisor;
+          value = (
+            (
+              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+            )
+            * db.rates.insurance.value
+          ) / divisor;
           break;
         case 'Storage':
           value = (db.rates.storage.value * p['shed (ft^2)']) / divisor;
