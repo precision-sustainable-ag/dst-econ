@@ -335,7 +335,9 @@ const App = () => {
         </Routes>
       </div>
 
-      <Navigation current={screen} mobile={windowSize.width <= 1045} />
+      {
+        disabled ? null : <Navigation current={screen} mobile={windowSize.width <= 1045} />
+      }
 
       <div id="AirTables">
         <select onChange={(e) => navigate(e.target.value)}>
