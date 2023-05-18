@@ -87,8 +87,6 @@ const initialState = {
   field: '',
   $labor: 0,
   $diesel: 0,
-  priorCrop: '',
-  otherPriorCrop: '',
   cashCrop: '',
   otherCashCrop: '',
   description: null,
@@ -309,13 +307,6 @@ const afterChange = {
     }
     if (state.screen !== 'Resources') {
       state.previousScreen = state.screen;
-    }
-  },
-  priorCrop: (state, { payload }) => {
-    if (payload === 'Other') {
-      state.focus = 'otherPriorCrop';
-    } else {
-      state.otherPriorCrop = '';
     }
   },
   cashCrop: (state, { payload }) => {

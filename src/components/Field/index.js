@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Map from '../../shared/Map';
@@ -8,7 +7,7 @@ import { get, set, getDefaults } from '../../store/Store';
 import './styles.scss';
 
 const defaults = getDefaults(
-  'location|farm|field|mapFeatures.area|$labor|$diesel|otherPriorCrop|cashCrop|otherCashCrop',
+  'location|farm|field|mapFeatures.area|$labor|$diesel|cashCrop|otherCashCrop',
 );
 
 const Field = () => {
@@ -91,7 +90,6 @@ const Field = () => {
               dispatch(set.field('My field'));
               dispatch(set.mapFeatures.area(123));
               dispatch(set.field('My field'));
-              dispatch(set.otherPriorCrop('Wheat'));
               dispatch(set.cashCrop('Other'));
               dispatch(set.otherCashCrop('Barley'));
               dispatch(set.$labor(999));

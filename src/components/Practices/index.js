@@ -79,6 +79,7 @@ const CropSummary = () => {
           <td>{crop}</td>
           <td>
             {rates[i]}
+            {' '}
             pounds @
             {dollars(prices[i])}
             /acre
@@ -177,10 +178,12 @@ const TerminationSummary = () => {
           <td />
           <td>
             Product:
+            {' '}
             {product}
           </td>
           <td>
             {rate}
+            {' '}
             pounds/acre @
             {dollars(unitCost)}
           </td>
@@ -211,10 +214,12 @@ const TerminationSummary = () => {
               <td />
               <td>
                 &nbsp;&nbsp;&nbsp;&nbsp;Product:
+                {' '}
                 {herb}
               </td>
               <td>
                 {additionalRates[i]}
+                {' '}
                 pounds @
                 {dollars(additionalPrices[i])}
                 /acre
@@ -243,10 +248,12 @@ const TerminationSummary = () => {
               <td />
               <td>
                 &nbsp;&nbsp;&nbsp;&nbsp;Product:
+                {' '}
                 {herb}
               </td>
               <td>
                 {reducedRates[i]}
+                {' '}
                 pounds @
                 {dollars(reducedPrices[i])}
                 /acre
@@ -323,6 +330,7 @@ const FertilitySummary = () => {
           {fertN > 0 && (
             <>
               {fertN}
+              {' '}
               pound N/acre
               <br />
             </>
@@ -330,6 +338,7 @@ const FertilitySummary = () => {
           {fertP > 0 && (
             <>
               {fertP}
+              {' '}
               pound P
               <sub>2</sub>
               O
@@ -341,6 +350,7 @@ const FertilitySummary = () => {
           {fertK > 0 && (
             <>
               {fertK}
+              {' '}
               pound K
               <sub>2</sub>
               O/acre
@@ -359,6 +369,7 @@ const FertilitySummary = () => {
           {fertNAdded > 0 && (
             <>
               {fertNAdded}
+              {' '}
               pound N/acre
               <br />
             </>
@@ -366,6 +377,7 @@ const FertilitySummary = () => {
           {fertPAdded > 0 && (
             <>
               {fertPAdded}
+              {' '}
               pound P
               <sub>2</sub>
               O
@@ -377,6 +389,7 @@ const FertilitySummary = () => {
           {fertKAdded > 0 && (
             <>
               {fertKAdded}
+              {' '}
               pound K
               <sub>2</sub>
               O/acre
@@ -440,10 +453,12 @@ const HerbicideSummary = () => {
           <td />
           <td>
             &nbsp;&nbsp;&nbsp;&nbsp;Product:
+            {' '}
             {additionalProduct}
           </td>
           <td>
             {additionalRate}
+            {' '}
             pounds/acre @
             {dollars(additionalUnitCost)}
           </td>
@@ -473,10 +488,12 @@ const HerbicideSummary = () => {
           <td />
           <td>
             &nbsp;&nbsp;&nbsp;&nbsp;Product:
+            {' '}
             {reducedProduct}
           </td>
           <td>
             {reducedRate}
+            {' '}
             pounds/acre @
             {dollars(reducedUnitCost)}
           </td>
@@ -569,10 +586,8 @@ const Practices = () => {
   const dev = useSelector(get.dev);
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const priorCrop = useSelector(get.priorCrop);
-  const cashCrop = useSelector(get.cashCrop);
-  const lat = useSelector(get.map.lat);
-  const lon = useSelector(get.map.lon);
+  const lat = useSelector(get.map.lat).toFixed(4);
+  const lon = useSelector(get.map.lon).toFixed(4);
 
   const totals = [
     useSelector(get.coverCropTotal) || 0,
@@ -595,28 +610,25 @@ const Practices = () => {
       {farm && (
         <p>
           Farm:
+          {' '}
           {farm}
         </p>
       )}
       {field && (
         <p>
           Field:
+          {' '}
           {field}
+          {' '}
           at
+          {' '}
           {lat}
+          {' '}
           latitude and
+          {' '}
           {lon}
+          {' '}
           longitude
-        </p>
-      )}
-      {priorCrop
-      && cashCrop && (
-        <p>
-          Crop management: Cover crop planted after
-          {priorCrop}
-          and prior to
-          {cashCrop}
-          .
         </p>
       )}
       <div className="practices-mobile">
@@ -626,9 +638,9 @@ const Practices = () => {
               <th colSpan={2}>&nbsp;</th>
               <th className="hidden">&nbsp;</th>
               <th>Description</th>
-              <th>Costs/line item</th>
+              <th>Costs by line item</th>
               <th>Total cost</th>
-              <th>Benefit/line item</th>
+              <th>Benefit by line item</th>
               <th>Total Benefit</th>
             </tr>
           </thead>
@@ -671,7 +683,6 @@ const Practices = () => {
             onClick={() => {
               dispatch(set.farm('My farm'));
               dispatch(set.field('NW40 of home place'));
-              dispatch(set.priorCrop('Corn'));
               dispatch(set.cashCrop('Soybeans'));
 
               exampleSeeds();
@@ -694,7 +705,6 @@ const Practices = () => {
             onClick={() => {
               dispatch(set.farm('My farm'));
               dispatch(set.field('NW40 of home place'));
-              dispatch(set.priorCrop('Corn'));
               dispatch(set.cashCrop('Soybeans'));
 
               exampleSeeds();
@@ -717,7 +727,6 @@ const Practices = () => {
             onClick={() => {
               dispatch(set.farm('My farm'));
               dispatch(set.field('NW40 of home place'));
-              dispatch(set.priorCrop('Corn'));
               dispatch(set.cashCrop('Soybeans'));
 
               exampleSeeds();
@@ -740,7 +749,6 @@ const Practices = () => {
             onClick={() => {
               dispatch(set.farm('My farm'));
               dispatch(set.field('NW40 of home place'));
-              dispatch(set.priorCrop('Corn'));
               dispatch(set.cashCrop('Soybeans'));
 
               exampleSeeds();
@@ -763,7 +771,6 @@ const Practices = () => {
             onClick={() => {
               dispatch(set.farm('My farm'));
               dispatch(set.field('NW40 of home place'));
-              dispatch(set.priorCrop('Corn'));
               dispatch(set.cashCrop('Soybeans'));
 
               exampleSeeds();
