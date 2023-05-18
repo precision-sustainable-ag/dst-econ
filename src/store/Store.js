@@ -85,8 +85,8 @@ const initialState = {
   location: '',
   farm: '',
   field: '',
-  $labor: 15,
-  $diesel: 4,
+  $labor: 0,
+  $diesel: 0,
   priorCrop: '',
   otherPriorCrop: '',
   cashCrop: '',
@@ -531,6 +531,7 @@ const getCosts = (state, current) => {
       const divisor = type === 'implements'
         ? section.annualUseAcres
         : section.annualUseHours * acresHour;
+
       const p = db[type][o] || {};
 
       const ASABE = db.coefficients[p['default ASABE category']] || {};
@@ -767,6 +768,8 @@ const loadData = async (tables) => {
     loadData(tables);
   } else {
     store.dispatch(set.screen('Field'));
+    store.dispatch(set.$labor(db.rates?.skilled?.value));
+    store.dispatch(set.$diesel(db.rates?.fuel?.value));
   }
 }; // loadData
 
