@@ -55,7 +55,7 @@ const Erosion = () => {
                   current="erosion"
                   property="q2"
                   q="How will soil repair activities be conducted on this field?"
-                  a={Object.keys(db.erosionControl)}
+                  a={Object.keys(db.erosionControl).sort()}
                 />
 
                 <Logic current="erosion" property="q3" q="Cost ($) per hour" a="dollar" />

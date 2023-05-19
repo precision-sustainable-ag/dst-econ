@@ -37,6 +37,28 @@ const Field = () => {
         <p>Please answer all of the following:</p>
 
         <div className="inputs">
+          {dev && (
+            <div className="test-buttons">
+              <button
+                type="button"
+                style={{ position: 'absolute', zIndex: 1 }}
+                onClick={() => {
+                  dispatch(set.location('123 Main Street, Athens, GA, USA'));
+                  dispatch(set.farm('My farm'));
+                  dispatch(set.field('My field'));
+                  dispatch(set.mapFeatures.area(123));
+                  dispatch(set.field('My field'));
+                  dispatch(set.cashCrop('Corn'));
+                  dispatch(set.map.lat(33.9347));
+                  dispatch(set.map.lon(-83.3157));
+                  dispatch(set.mapFeatures.zoom(13));
+                }}
+              >
+                Test data
+              </button>
+            </div>
+          )}
+
           <div className="clear">
             <ClearInputs defaults={defaults} />
           </div>
@@ -80,25 +102,6 @@ const Field = () => {
           </div>
         </div>
       </form>
-      {dev && (
-        <div className="test-buttons">
-          <button
-            type="button"
-            onClick={() => {
-              dispatch(set.location('123 Main Street, Athens, GA, USA'));
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('My field'));
-              dispatch(set.mapFeatures.area(123));
-              dispatch(set.field('My field'));
-              dispatch(set.cashCrop('Other'));
-              dispatch(set.otherCashCrop('Barley'));
-              dispatch(set.$labor(999));
-            }}
-          >
-            Test data
-          </button>
-        </div>
-      )}
     </div>
   );
 }; // Field
