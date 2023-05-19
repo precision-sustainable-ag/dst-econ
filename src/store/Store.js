@@ -470,11 +470,7 @@ const afterChange = {
     }
   },
   'erosion.q2': (state, { payload }) => {
-    state.erosion.q3 = {
-      'Skid steer': 80,
-      Trackhoe: 100,
-      Dozer: 125,
-    }[payload];
+    state.erosion.q3 = db.erosionControl[payload].cost;
   },
 };
 
@@ -788,6 +784,7 @@ loadData([
   'stateRegions',
   'commodities',
   'eqip',
+  'erosionControl',
 ]);
 
 export const dollars = (n) => {
