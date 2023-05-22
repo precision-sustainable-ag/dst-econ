@@ -31,6 +31,7 @@ import Revenue from './components/Revenue';
 import Resources from './components/Resources';
 import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
+import Data from './components/Data';
 import Activity, { Summary } from './components/Activity';
 
 const MyButton = ({ screen, ...otherProps }) => {
@@ -325,6 +326,7 @@ const App = () => {
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />
           <Route path="Resources" element={<Resources />} />
+          <Route path="Data" element={<Data />} />
           {Object.keys(airTables).map((key) => (
             <Route path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}

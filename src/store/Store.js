@@ -3,9 +3,10 @@
 
 import React from 'react';
 import { createStore, set, get } from './redux-autosetters';
+import { db } from './airtables';
 
 export { set, get } from './redux-autosetters';
-export const db = {};
+export { db } from './airtables';
 
 const shared = {
   q1: '',
@@ -62,11 +63,14 @@ const shared = {
   },
 };
 
+const dev = /(localhost|dev)/i.test(window.location);
+
 const initialState = {
   focus: null,
   focused: null,
   scrollTop: 0,
-  dev: /(localhost|dev)/i.test(window.location),
+  airTables: '',
+  dev,
   screen: 'Loading',
   newScreen: '',
   screenWidth: window.innerWidth,
@@ -709,8 +713,24 @@ afterChange.$labor = (state) => {
 
 afterChange.$diesel = afterChange.$labor;
 
+const loaded = () => {
+  store.dispatch(set.screen('Field'));
+  store.dispatch(set.$labor(db.rates?.skilled?.value));
+  store.dispatch(set.$diesel(db.rates?.fuel?.value));
+  store.dispatch(set.$fertP(db.rates?.P2O5?.value));
+  store.dispatch(set.$fertK(db.rates?.K2O?.value));
+}; // loaded
+
 let status = '';
-const loadData = async (tables) => {
+let airTables = `
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable max-len */
+/* eslint-disable comma-dangle */
+/* eslint-disable quote-props */
+/* eslint-disable quotes */
+`.trim();
+
+const loadAirtables = async (tables) => {
   // 'Typical Seeding Rate (lb/ac) [seedingRate]' becomes 'seedingRate'
   const alias = (col) => (col.includes('[') ? col.split(/[[\]]/)[1] : col);
 
@@ -754,16 +774,30 @@ const loadData = async (tables) => {
     });
   });
 
+  airTables += `\nconst AT${table} = ${JSON.stringify(db[table], null, 2)};\n`;
+
   if (tables.length) {
-    loadData(tables);
+    loadAirtables(tables);
   } else {
-    store.dispatch(set.screen('Field'));
-    store.dispatch(set.$labor(db.rates?.skilled?.value));
-    store.dispatch(set.$diesel(db.rates?.fuel?.value));
-    store.dispatch(set.$fertP(db.rates?.P2O5?.value));
-    store.dispatch(set.$fertK(db.rates?.K2O?.value));
+    airTables = `${airTables}
+export const db = {
+  coefficients: ATcoefficients,
+  rates: ATrates,
+  costDefaults: ATcostDefaults,
+  herbicides: ATherbicides,
+  implements: ATimplements,
+  power: ATpower,
+  seedList: ATseedList,
+  stateRegions: ATstateRegions,
+  commodities: ATcommodities,
+  eqip: ATeqip,
+  erosionControl: ATerosionControl,
+};
+`;
+    store.dispatch(set.airTables(airTables));
+    loaded();
   }
-}; // loadData
+}; // loadAirtables
 
 export const queue = (f, time = 1) => {
   setTimeout(f, (queue.i += 1) * time);
@@ -773,7 +807,7 @@ export const queue = (f, time = 1) => {
 };
 queue.i = 0;
 
-loadData([
+const tables = [
   'coefficients',
   'rates',
   'costDefaults',
@@ -785,7 +819,13 @@ loadData([
   'commodities',
   'eqip',
   'erosionControl',
-]);
+];
+
+if (dev) {
+  loadAirtables(tables);
+} else {
+  loaded();
+}
 
 export const dollars = (n) => {
   if (!Number.isFinite(n)) {
