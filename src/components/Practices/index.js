@@ -35,20 +35,22 @@ const Implement = ({ desc, type, benefit }) => {
   const total = useSelector(get[type].total);
   const implement = useSelector(get[type].implement);
   const power = useSelector(get[type].power);
-  return total > 0 && (
-    <tr>
-      <td />
-      <td>{desc}</td>
-      <td>
-        {implement}
-        <br />
-        {power}
-      </td>
-      <td>{benefit ? '' : dollars(total)}</td>
-      <td />
-      <td>{benefit ? dollars(total) : ''}</td>
-      <td />
-    </tr>
+  return (
+    total > 0 && (
+      <tr>
+        <td />
+        <td>{desc}</td>
+        <td>
+          {implement}
+          <br />
+          {power}
+        </td>
+        <td>{benefit ? '' : dollars(total)}</td>
+        <td />
+        <td>{benefit ? dollars(total) : ''}</td>
+        <td />
+      </tr>
+    )
   );
 }; // Implement
 
@@ -62,11 +64,7 @@ const CropSummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Seeds"
-          >
-            Cover crops planted
-          </NavLink>
+          <NavLink to="/Seeds">Cover crops planted</NavLink>
         </td>
         <td className="hidden" />
         <td />
@@ -83,7 +81,6 @@ const CropSummary = () => {
             {rates[i]}
             {' '}
             pounds @
-            {' '}
             {dollars(prices[i])}
             /acre
           </td>
@@ -105,11 +102,7 @@ const SeedbedSummary = () => {
   return (
     <tr>
       <td colSpan={2}>
-        <NavLink
-          to="/Seedbed"
-        >
-          Cover crop seedbed preparation
-        </NavLink>
+        <NavLink to="/Seedbed">Cover crop seedbed preparation</NavLink>
       </td>
       <td className="hidden" />
       <td>
@@ -133,11 +126,7 @@ const PlantingSummary = () => {
   return (
     <tr>
       <td colSpan={2}>
-        <NavLink
-          to="/Planting"
-        >
-          Cover crop planting activity
-        </NavLink>
+        <NavLink to="/Planting">Cover crop planting activity</NavLink>
       </td>
       <td className="hidden" />
       <td>
@@ -175,11 +164,7 @@ const TerminationSummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Termination"
-          >
-            Cover crop termination activity
-          </NavLink>
+          <NavLink to="/Termination">Cover crop termination activity</NavLink>
         </td>
         <td className="hidden" />
         <td>{method}</td>
@@ -188,109 +173,99 @@ const TerminationSummary = () => {
         <td />
         <td>{benefits(total)}</td>
       </tr>
-      {
-        productCost > 0 && (
-          <tr>
-            <td />
-            <td>
-              Product:
-              {product}
-            </td>
-            <td>
-              {rate}
-              {' '}
-              pounds/acre @
-              {' '}
-              {dollars(unitCost)}
-            </td>
-            <td>{dollars(productCost)}</td>
-            <td />
-            <td />
-            <td />
-          </tr>
-        )
-      }
+      {productCost > 0 && (
+        <tr>
+          <td />
+          <td>
+            Product:
+            {' '}
+            {product}
+          </td>
+          <td>
+            {rate}
+            {' '}
+            pounds/acre @
+            {dollars(unitCost)}
+          </td>
+          <td>{dollars(productCost)}</td>
+          <td />
+          <td />
+          <td />
+        </tr>
+      )}
 
       <Implement desc="Chemical spray equipment" type="chemical" />
       <Implement desc="Roller equipment" type="roller" />
       <Implement desc="Tillage equiment" type="tillage" />
 
-      {
-        additionalTotal ? (
-          <>
-            <tr>
+      {additionalTotal ? (
+        <>
+          <tr>
+            <td />
+            <td>Additional herbicides</td>
+            <td />
+            <td>{costs(additionalTotal)}</td>
+            <td />
+            <td>{benefits(additionalTotal)}</td>
+            <td />
+          </tr>
+          {additionalHerbicides.map((herb, i) => (
+            <tr key={herb}>
               <td />
-              <td>Additional herbicides</td>
+              <td>
+                &nbsp;&nbsp;&nbsp;&nbsp;Product:
+                {' '}
+                {herb}
+              </td>
+              <td>
+                {additionalRates[i]}
+                {' '}
+                pounds @
+                {dollars(additionalPrices[i])}
+                /acre
+              </td>
+              <td>{dollars(additionalRates[i] * additionalPrices[i])}</td>
               <td />
-              <td>{costs(additionalTotal)}</td>
               <td />
-              <td>{benefits(additionalTotal)}</td>
               <td />
             </tr>
-            {
-              additionalHerbicides.map((herb, i) => (
-                <tr key={herb}>
-                  <td />
-                  <td>
-&nbsp;&nbsp;&nbsp;&nbsp;Product:
-                    {herb}
-                  </td>
-                  <td>
-                    {additionalRates[i]}
-                    {' '}
-                    pounds @
-                    {' '}
-                    {dollars(additionalPrices[i])}
-                    /acre
-                  </td>
-                  <td>{dollars(additionalRates[i] * additionalPrices[i])}</td>
-                  <td />
-                  <td />
-                  <td />
-                </tr>
-              ))
-            }
-          </>
-        ) : null
-      }
-      {
-        reducedTotal ? (
-          <>
-            <tr>
+          ))}
+        </>
+      ) : null}
+      {reducedTotal ? (
+        <>
+          <tr>
+            <td />
+            <td>Reduced herbicides</td>
+            <td />
+            <td />
+            <td />
+            <td>{dollars(reducedTotal)}</td>
+            <td />
+          </tr>
+          {reducedHerbicides.map((herb, i) => (
+            <tr key={herb}>
               <td />
-              <td>Reduced herbicides</td>
+              <td>
+                &nbsp;&nbsp;&nbsp;&nbsp;Product:
+                {' '}
+                {herb}
+              </td>
+              <td>
+                {reducedRates[i]}
+                {' '}
+                pounds @
+                {dollars(reducedPrices[i])}
+                /acre
+              </td>
               <td />
               <td />
-              <td />
-              <td>{dollars(reducedTotal)}</td>
+              <td>{dollars(reducedRates[i] * reducedPrices[i])}</td>
               <td />
             </tr>
-            {
-              reducedHerbicides.map((herb, i) => (
-                <tr key={herb}>
-                  <td />
-                  <td>
-&nbsp;&nbsp;&nbsp;&nbsp;Product:
-                    {herb}
-                  </td>
-                  <td>
-                    {reducedRates[i]}
-                    {' '}
-                    pounds @
-                    {' '}
-                    {dollars(reducedPrices[i])}
-                    /acre
-                  </td>
-                  <td />
-                  <td />
-                  <td>{dollars(reducedRates[i] * reducedPrices[i])}</td>
-                  <td />
-                </tr>
-              ))
-            }
-          </>
-        ) : null
-      }
+          ))}
+        </>
+      ) : null}
     </>
   );
 }; // TerminationSummary
@@ -302,9 +277,7 @@ const TillageSummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Tillage"
-          >
+          <NavLink to="/Tillage">
             Tillage modifications
             <br />
             to normal cropping system
@@ -341,11 +314,7 @@ const FertilitySummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Fertility"
-          >
-            Fertility
-          </NavLink>
+          <NavLink to="/Fertility">Fertility</NavLink>
         </td>
         <td className="hidden" />
         <td />
@@ -359,33 +328,33 @@ const FertilitySummary = () => {
         <td>Fertilizer credit</td>
         <td>
           {fertN > 0 && (
-          <>
-            {fertN}
-            {' '}
-            pound N/acre
-            <br />
-          </>
+            <>
+              {fertN}
+              {' '}
+              pound N/acre
+              <br />
+            </>
           )}
           {fertP > 0 && (
-          <>
-            {fertP}
-            {' '}
-            pound P
-            <sub>2</sub>
-            O
-            <sub>5</sub>
-            /acre
-            <br />
-          </>
+            <>
+              {fertP}
+              {' '}
+              pound P
+              <sub>2</sub>
+              O
+              <sub>5</sub>
+              /acre
+              <br />
+            </>
           )}
           {fertK > 0 && (
-          <>
-            {fertK}
-            {' '}
-            pound K
-            <sub>2</sub>
-            O/acre
-          </>
+            <>
+              {fertK}
+              {' '}
+              pound K
+              <sub>2</sub>
+              O/acre
+            </>
           )}
         </td>
         <td />
@@ -398,33 +367,33 @@ const FertilitySummary = () => {
         <td>Additional fertilizer expense</td>
         <td>
           {fertNAdded > 0 && (
-          <>
-            {fertNAdded}
-            {' '}
-            pound N/acre
-            <br />
-          </>
+            <>
+              {fertNAdded}
+              {' '}
+              pound N/acre
+              <br />
+            </>
           )}
           {fertPAdded > 0 && (
-          <>
-            {fertPAdded}
-            {' '}
-            pound P
-            <sub>2</sub>
-            O
-            <sub>5</sub>
-            /acre
-            <br />
-          </>
+            <>
+              {fertPAdded}
+              {' '}
+              pound P
+              <sub>2</sub>
+              O
+              <sub>5</sub>
+              /acre
+              <br />
+            </>
           )}
           {fertKAdded > 0 && (
-          <>
-            {fertKAdded}
-            {' '}
-            pound K
-            <sub>2</sub>
-            O/acre
-          </>
+            <>
+              {fertKAdded}
+              {' '}
+              pound K
+              <sub>2</sub>
+              O/acre
+            </>
           )}
         </td>
         <td>{dollars(-$fertCost - $fertApplication)}</td>
@@ -464,9 +433,7 @@ const HerbicideSummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Herbicide"
-          >
+          <NavLink to="/Herbicide">
             Herbicide modifications
             <br />
             to normal cropping system
@@ -481,67 +448,61 @@ const HerbicideSummary = () => {
       </tr>
 
       <Implement desc="Additional herbicides" type="herbicideAdditional" />
-      {
-        additionalProductCost > 0 && (
-          <tr>
-            <td />
-            <td>
-&nbsp;&nbsp;&nbsp;&nbsp;Product:
-              {additionalProduct}
-            </td>
-            <td>
-              {additionalRate}
-              {' '}
-              pounds/acre @
-              {' '}
-              {dollars(additionalUnitCost)}
-            </td>
-            <td>{dollars(additionalProductCost)}</td>
-            <td />
-            <td />
-            <td />
-          </tr>
-        )
-      }
+      {additionalProductCost > 0 && (
+        <tr>
+          <td />
+          <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;Product:
+            {' '}
+            {additionalProduct}
+          </td>
+          <td>
+            {additionalRate}
+            {' '}
+            pounds/acre @
+            {dollars(additionalUnitCost)}
+          </td>
+          <td>{dollars(additionalProductCost)}</td>
+          <td />
+          <td />
+          <td />
+        </tr>
+      )}
 
       <Implement desc="Fall herbicides" type="herbicideFall" />
-      {
-        fallSavings > 0 && (
-          <tr>
-            <td />
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;Savings</td>
-            <td />
-            <td />
-            <td />
-            <td>{dollars(fallSavings)}</td>
-            <td />
-          </tr>
-        )
-      }
+      {fallSavings > 0 && (
+        <tr>
+          <td />
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;Savings</td>
+          <td />
+          <td />
+          <td />
+          <td>{dollars(fallSavings)}</td>
+          <td />
+        </tr>
+      )}
 
       <Implement desc="Reduced herbicides" type="herbicideReduced" benefit />
-      {
-        reducedProductCost > 0 && (
-          <tr>
-            <td />
-            <td>
-&nbsp;&nbsp;&nbsp;&nbsp;Product:
-              {reducedProduct}
-            </td>
-            <td>
-              {reducedRate}
-              {' '}
-              pounds/acre @
-              {' '}
-              {dollars(reducedUnitCost)}
-            </td>
-            <td />
-            <td />
-            <td>{dollars(reducedProductCost)}</td>
-            <td />
-          </tr>
-        )
-      }
+      {reducedProductCost > 0 && (
+        <tr>
+          <td />
+          <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;Product:
+            {' '}
+            {reducedProduct}
+          </td>
+          <td>
+            {reducedRate}
+            {' '}
+            pounds/acre @
+            {dollars(reducedUnitCost)}
+          </td>
+          <td />
+          <td />
+          <td>{dollars(reducedProductCost)}</td>
+          <td />
+        </tr>
+      )}
     </>
   );
 }; // HerbicideSummary
@@ -554,11 +515,7 @@ const ErosionSummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Erosion"
-          >
-            Erosion control
-          </NavLink>
+          <NavLink to="/Erosion">Erosion control</NavLink>
         </td>
         <td className="hidden" />
         <td />
@@ -568,22 +525,20 @@ const ErosionSummary = () => {
         <td>{dollars(total)}</td>
       </tr>
 
-      {
-        total > 0 && (
-          <tr>
-            <td />
-            <td>
-              Reduced hours of repairing fields with
-              {tool.toLowerCase()}
-            </td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-          </tr>
-        )
-      }
+      {total > 0 && (
+        <tr>
+          <td />
+          <td>
+            Reduced hours of repairing fields with
+            {tool.toLowerCase()}
+          </td>
+          <td />
+          <td />
+          <td />
+          <td />
+          <td />
+        </tr>
+      )}
     </>
   );
 }; // ErosionSummary
@@ -600,11 +555,7 @@ const YieldSummary = () => {
     <>
       <tr>
         <td colSpan={2}>
-          <NavLink
-            to="/Yield"
-          >
-            Yield impact
-          </NavLink>
+          <NavLink to="/Yield">Yield impact</NavLink>
         </td>
         <td className="hidden" />
         <td />
@@ -618,7 +569,6 @@ const YieldSummary = () => {
         <td>
           Improved yield estimate in
           {year}
-          {' '}
           year of cover crops
         </td>
         <td />
@@ -636,10 +586,8 @@ const Practices = () => {
   const dev = useSelector(get.dev);
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const priorCrop = useSelector(get.priorCrop);
-  const cashCrop = useSelector(get.cashCrop);
-  const lat = useSelector(get.lat);
-  const lon = useSelector(get.lon);
+  const lat = useSelector(get.map.lat).toFixed(4);
+  const lon = useSelector(get.map.lon).toFixed(4);
 
   const totals = [
     useSelector(get.coverCropTotal) || 0,
@@ -659,212 +607,188 @@ const Practices = () => {
   return (
     <div className="Practices">
       <h1>Summary of Practices</h1>
-
       {farm && (
-      <p>
-        Farm:
-        {farm}
-      </p>
+        <p>
+          Farm:
+          {' '}
+          {farm}
+        </p>
       )}
       {field && (
-      <p>
-        Field:
-        {field}
-        {' '}
-        at
-        {lat}
-        {' '}
-        latitude and
-        {lon}
-        {' '}
-        longitude
-      </p>
+        <p>
+          Field:
+          {' '}
+          {field}
+          {' '}
+          at
+          {' '}
+          {lat}
+          {' '}
+          latitude and
+          {' '}
+          {lon}
+          {' '}
+          longitude
+        </p>
       )}
+      <div className="practices-mobile">
+        <table>
+          <thead>
+            <tr>
+              <th colSpan={2}>&nbsp;</th>
+              <th className="hidden">&nbsp;</th>
+              <th>Description</th>
+              <th>Costs by line item</th>
+              <th>Total cost</th>
+              <th>Benefit by line item</th>
+              <th>Total Benefit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <CropSummary />
+            <SeedbedSummary />
+            <PlantingSummary />
+            <TerminationSummary />
+            <TillageSummary />
+            <FertilitySummary />
+            <HerbicideSummary />
+            <ErosionSummary />
+            <YieldSummary />
+            <tr className="total">
+              <td colSpan={2}>Total</td>
+              <td className="hidden" />
+              <td />
+              <td />
+              <td>{dollars(totalCosts)}</td>
+              <td />
+              <td>{dollars(totalBenefits)}</td>
+            </tr>
+            <tr className="total">
+              <td colSpan={2}>Net cost of cover crops</td>
+              <td className="hidden" />
+              <td style={{ textAlign: 'right' }}>{dollars(totalBenefits - totalCosts)}</td>
+              <td />
+              <td />
+              <td />
+              <td />
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {dev && (
+        <div className="test-buttons" style={{ marginTop: '10px' }}>
+          <button
+            type="button"
+            accessKey="1"
+            onClick={() => {
+              dispatch(set.farm('My farm'));
+              dispatch(set.field('NW40 of home place'));
+              dispatch(set.cashCrop('Soybeans'));
 
-      {priorCrop && cashCrop && (
-      <p>
-        Crop management: Cover crop planted after
-        {priorCrop}
-        {' '}
-        and prior to
-        {cashCrop}
-        .
-      </p>
+              exampleSeeds();
+              exampleSeedbed();
+              examplePlanting();
+              exampleTermination1();
+              exampleTillage1();
+              exampleHerbicides();
+              exampleFertilityBenefit();
+              exampleErosion();
+              exampleYield1();
+            }}
+          >
+            Test
+            <u>1</u>
+          </button>
+          <button
+            type="button"
+            accessKey="2"
+            onClick={() => {
+              dispatch(set.farm('My farm'));
+              dispatch(set.field('NW40 of home place'));
+              dispatch(set.cashCrop('Soybeans'));
+
+              exampleSeeds();
+              exampleSeedbed();
+              examplePlanting();
+              exampleTermination2();
+              exampleTillage2();
+              exampleHerbicides();
+              exampleFertilityCost();
+              exampleErosion();
+              exampleYield2();
+            }}
+          >
+            Test
+            <u>2</u>
+          </button>
+          <button
+            type="button"
+            accessKey="3"
+            onClick={() => {
+              dispatch(set.farm('My farm'));
+              dispatch(set.field('NW40 of home place'));
+              dispatch(set.cashCrop('Soybeans'));
+
+              exampleSeeds();
+              exampleSeedbed();
+              examplePlanting();
+              exampleTermination3();
+              exampleTillage3();
+              exampleHerbicides();
+              exampleFertilityBenefit();
+              exampleErosion();
+              exampleYield1();
+            }}
+          >
+            Test
+            <u>3</u>
+          </button>
+          <button
+            type="button"
+            accessKey="4"
+            onClick={() => {
+              dispatch(set.farm('My farm'));
+              dispatch(set.field('NW40 of home place'));
+              dispatch(set.cashCrop('Soybeans'));
+
+              exampleSeeds();
+              exampleSeedbed();
+              examplePlanting();
+              exampleTermination4();
+              exampleTillage4();
+              exampleHerbicides();
+              exampleFertilityCost();
+              exampleErosion();
+              exampleYield2();
+            }}
+          >
+            Test
+            <u>4</u>
+          </button>
+          <button
+            type="button"
+            accessKey="5"
+            onClick={() => {
+              dispatch(set.farm('My farm'));
+              dispatch(set.field('NW40 of home place'));
+              dispatch(set.cashCrop('Soybeans'));
+
+              exampleSeeds();
+              exampleSeedbed();
+              examplePlanting();
+              exampleTermination5();
+              exampleTillage5();
+              exampleHerbicides();
+              exampleFertilityBenefit();
+              exampleErosion();
+              exampleYield1();
+            }}
+          >
+            Test
+            <u>5</u>
+          </button>
+        </div>
       )}
-
-      <table>
-        <thead>
-          <tr>
-            <th colSpan={2}>
-              &nbsp;
-            </th>
-            <th className="hidden">
-              &nbsp;
-            </th>
-            <th>Description</th>
-            <th>Costs/line item</th>
-            <th>Total cost</th>
-            <th>Benefit/line item</th>
-            <th>Total Benefit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <CropSummary />
-          <SeedbedSummary />
-          <PlantingSummary />
-          <TerminationSummary />
-          <TillageSummary />
-          <FertilitySummary />
-          <HerbicideSummary />
-          <ErosionSummary />
-          <YieldSummary />
-          <tr className="total">
-            <td colSpan={2}>Total</td>
-            <td className="hidden" />
-            <td />
-            <td />
-            <td>{dollars(totalCosts)}</td>
-            <td />
-            <td>{dollars(totalBenefits)}</td>
-          </tr>
-          <tr className="total">
-            <td colSpan={2}>Net cost of cover crops</td>
-            <td className="hidden" />
-            <td style={{ textAlign: 'right' }}>{dollars(totalBenefits - totalCosts)}</td>
-            <td />
-            <td />
-            <td />
-            <td />
-          </tr>
-        </tbody>
-      </table>
-
-      {
-        dev && (
-          <>
-            <button
-              type="button"
-              accessKey="1"
-              onClick={() => {
-                dispatch(set.farm('My farm'));
-                dispatch(set.field('NW40 of home place'));
-                dispatch(set.priorCrop('Corn'));
-                dispatch(set.cashCrop('Soybeans'));
-
-                exampleSeeds();
-                exampleSeedbed();
-                examplePlanting();
-                exampleTermination1();
-                exampleTillage1();
-                exampleHerbicides();
-                exampleFertilityBenefit();
-                exampleErosion();
-                exampleYield1();
-              }}
-            >
-              Test
-              {' '}
-              <u>1</u>
-            </button>
-            <button
-              type="button"
-              accessKey="2"
-              onClick={() => {
-                dispatch(set.farm('My farm'));
-                dispatch(set.field('NW40 of home place'));
-                dispatch(set.priorCrop('Corn'));
-                dispatch(set.cashCrop('Soybeans'));
-
-                exampleSeeds();
-                exampleSeedbed();
-                examplePlanting();
-                exampleTermination2();
-                exampleTillage2();
-                exampleHerbicides();
-                exampleFertilityCost();
-                exampleErosion();
-                exampleYield2();
-              }}
-            >
-              Test
-              {' '}
-              <u>2</u>
-            </button>
-            <button
-              type="button"
-              accessKey="3"
-              onClick={() => {
-                dispatch(set.farm('My farm'));
-                dispatch(set.field('NW40 of home place'));
-                dispatch(set.priorCrop('Corn'));
-                dispatch(set.cashCrop('Soybeans'));
-
-                exampleSeeds();
-                exampleSeedbed();
-                examplePlanting();
-                exampleTermination3();
-                exampleTillage3();
-                exampleHerbicides();
-                exampleFertilityBenefit();
-                exampleErosion();
-                exampleYield1();
-              }}
-            >
-              Test
-              {' '}
-              <u>3</u>
-            </button>
-            <button
-              type="button"
-              accessKey="4"
-              onClick={() => {
-                dispatch(set.farm('My farm'));
-                dispatch(set.field('NW40 of home place'));
-                dispatch(set.priorCrop('Corn'));
-                dispatch(set.cashCrop('Soybeans'));
-
-                exampleSeeds();
-                exampleSeedbed();
-                examplePlanting();
-                exampleTermination4();
-                exampleTillage4();
-                exampleHerbicides();
-                exampleFertilityCost();
-                exampleErosion();
-                exampleYield2();
-              }}
-            >
-              Test
-              {' '}
-              <u>4</u>
-            </button>
-            <button
-              type="button"
-              accessKey="5"
-              onClick={() => {
-                dispatch(set.farm('My farm'));
-                dispatch(set.field('NW40 of home place'));
-                dispatch(set.priorCrop('Corn'));
-                dispatch(set.cashCrop('Soybeans'));
-
-                exampleSeeds();
-                exampleSeedbed();
-                examplePlanting();
-                exampleTermination5();
-                exampleTillage5();
-                exampleHerbicides();
-                exampleFertilityBenefit();
-                exampleErosion();
-                exampleYield1();
-              }}
-            >
-              Test
-              {' '}
-              <u>5</u>
-            </button>
-          </>
-        )
-      }
     </div>
   );
 }; // Practices

@@ -8,13 +8,18 @@ import './styles.scss';
 
 const Costs = ({ desc }) => {
   const focused = useSelector(get.focused) || '';
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
-  const type = focused?.split('.')[0] || 'planting';
+  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'unused';
+  const type = focused?.split('.')[0] || 'unused';
   const state = useSelector(get[type]);
 
   const d = desc.replace('Storage shed', 'Storage');
 
   const val = state[d];
+
+  if (!state.$implements) {
+    console.log(`${desc} missing $implements`);
+    return null;
+  }
 
   const iCost = state.$implements[d];
   const pCost = state.$power[d];
@@ -47,8 +52,8 @@ const Activity = () => {
   const screenHeight = useSelector(get.screenHeight);
   const focused = useSelector(get.focused) || '';
 
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'planting';
-  const type = focused.includes('.') ? focused.split('.')[0] : 'planting';
+  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'unused';
+  const type = focused.includes('.') ? focused.split('.')[0] : 'unused';
 
   const state = useSelector(get[type]) || {};
   const { estimated } = state;
@@ -171,14 +176,14 @@ const Activity = () => {
                 </tr>
               </thead>
               <tbody>
-                <Costs desc="Labor" lookup="Labor" />
-                <Costs desc="Fuel" lookup="" />
-                <Costs desc="Depreciation" lookup="Depreciation" />
-                <Costs desc="Interest" lookup="Interest" />
-                <Costs desc="Repairs" lookup="Repairs" />
-                <Costs desc="Taxes" lookup="Taxes" />
-                <Costs desc="Insurance" lookup="Insurance" />
-                <Costs desc="Storage shed" lookup="Storage" />
+                <Costs desc="Labor" />
+                <Costs desc="Fuel" />
+                <Costs desc="Depreciation" />
+                <Costs desc="Interest" />
+                <Costs desc="Repairs" />
+                <Costs desc="Taxes" />
+                <Costs desc="Insurance" />
+                <Costs desc="Storage shed" />
                 <tr className="total">
                   <td>Total</td>
                   <td>{`$${state.$implements.total.toFixed(2)}`}</td>
@@ -276,7 +281,7 @@ export const Summary = () => {
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const acres = useSelector(get.acres);
+  const acres = useSelector(get.mapFeatures.area);
   const cashCrop = useSelector(get.cashCrop);
 
   const style = total > 0 ? { color: 'red' } : { color: 'black' };
@@ -299,7 +304,6 @@ export const Summary = () => {
                         <td>Farm     </td>
                         <td style={{ textAlign: 'left' }}>
                           {farm}
-                          {' '}
                         </td>
                       </tr>
                       )}
@@ -308,7 +312,6 @@ export const Summary = () => {
                         <td>Field    </td>
                         <td style={{ textAlign: 'left' }}>
                           {field}
-                          {' '}
                         </td>
                       </tr>
                       )}
@@ -317,7 +320,6 @@ export const Summary = () => {
                         <td>Acres    </td>
                         <td style={{ textAlign: 'left' }}>
                           {acres}
-                          {' '}
                         </td>
                       </tr>
                       )}
@@ -326,7 +328,6 @@ export const Summary = () => {
                         <td>Cash crop</td>
                         <td style={{ textAlign: 'left' }}>
                           {cashCrop}
-                          {' '}
                         </td>
                       </tr>
                       )}

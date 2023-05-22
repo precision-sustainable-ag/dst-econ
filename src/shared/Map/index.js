@@ -5,8 +5,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import mapboxgl from 'mapbox-gl';
-// import { NcalcMap as Map } from '@psa/dst.ui.ncalc-map';
-import { NcalcMap as Map } from './map';
+import Map from './map';
 import { get, set } from '../../store/Store';
 import './styles.scss';
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
@@ -34,7 +33,6 @@ const InteractiveMap = () => (
     setters={set}
     initWidth="100%"
     initHeight="400px"
-    initStartZoom={13}
     hasSearchBar
     hasGeolocate
     hasMarker
@@ -48,7 +46,7 @@ const InteractiveMap = () => (
 ); // InteractiveMap
 
 const MapComp = () => {
-  const lat = useSelector(get.lat);
+  const lat = useSelector(get.map.lat);
 
   return (
     <div className="map">

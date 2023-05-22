@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 * {
   box-sizing: border-box;
 }
@@ -49,7 +49,7 @@ button img {
   padding-left: 130px;
 
   @media screen and (max-width: 1045px) {
-    height: 60px;
+    height: 10px;
   }
 }
 
@@ -188,7 +188,7 @@ form.Seeds tr > td:nth-child(3) {
   border-bottom: none;
 }
 
-[inputmode="numeric"] {
+[inputmode='numeric'] {
   border: none;
   font-size: 110%;
   border-bottom: 1px solid silver;
@@ -198,7 +198,7 @@ form.Seeds tr > td:nth-child(3) {
   outline: none;
 }
 
-[inputmode="numeric"]:focus {
+[inputmode='numeric']:focus {
   transition: all 0.2s;
   border-bottom: 2px solid navy;
 }
@@ -228,45 +228,18 @@ form.Seeds tr > td:nth-child(3) {
       font-size: 0.64rem;
     }
   }
-}
 
-.Field table {
-  width: 100%;
-  background: #f8f8f8;
-
-  @media screen and (max-width: 1045px) {
-    display: none;
-  }
-}
-
-.field-mobile {
-  width: 100%;
-  background: #f8f8f8;
-  padding: 20px 0px;
-
-  @media screen and (min-width: 1045px) {
-    display: none;
-  }
-}
-
-.Field table input {
-  background: white;
-}
-
-.Field tr {
-  vertical-align: top;
-}
-
-.Field tr:last-child td {
-  height: auto;
-}
-
-.Field td:nth-child(1) {
-  width: 60%;
-}
-
-.Field td:nth-child(1) {
-  border-right: 2px solid black;
+  // @media screen and (max-width: 1045px) {
+  //   // bottom: 0px;
+  //   // left: 0px;
+  //   // right: 0px;
+  //   // position: absolute;
+  //   // z-index: 999;
+  //   // display: flex;
+  //   // justify-content: center;
+  //   // align-items: center;
+  //   height: -webkit-fill-available;
+  // }
 }
 
 .MuiSelect-root * {
@@ -290,13 +263,13 @@ tr.plantingTotal,
   background: yellow;
 }
 
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -311,16 +284,6 @@ input[type="number"] {
 
 .MuiAutocomplete-inputRoot {
   padding: 0 !important;
-}
-
-.MuiAutocomplete-inputRoot > * {
-  zpadding: 0.3rem !important;
-}
-
-.Field h2 {
-  font-size: 100%;
-  margin-bottom: 0.3rem;
-  margin-top: 0.8rem;
 }
 
 .airtable {
@@ -443,6 +406,10 @@ button.selected u {
   top: 2rem;
   left: 0.25rem;
   width: 8rem;
+
+  @media screen and (max-width: 1045px) {
+    display: none;
+  }
 }
 
 summary {
@@ -487,10 +454,14 @@ summary {
   padding: 0 0.5rem;
   padding-bottom: 2rem;
   background: white;
-  zheight: calc(100vh - (6rem + 1.5rem + 4rem));
+  // height: calc(100vh - (6rem + 1.5rem + 4rem));
   height: 100%;
   overflow: auto;
   z-index: 1;
+
+  // @media screen and (max-width: 1045px) {
+  //   max-height: -webkit-fill-available;
+  // }
 }
 
 h1 {
@@ -598,4 +569,144 @@ body.debug #AirTables {
   position: fixed;
   top: 0;
   right: 0;
+}
+
+.mobile-logo {
+  height: 30px;
+  width: 30px;
+  object-fit: contain;
+  filter: invert(1);
+}
+
+.mobile-menu {
+  text-align: center;
+  font-weight: bold;
+  font-size: 120%;
+  margin-bottom: 0.25rem;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media screen and (min-width: 1045px) {
+    display: none;
+  }
+}
+
+.desktop-title {
+  @media screen and (max-width: 1045px) {
+    display: none;
+  }
+}
+
+.timeline-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.6rem;
+}
+
+.timeline {
+  height: 2px;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media screen and (min-width: 1045px) {
+    display: none;
+  }
+}
+
+.timeline-div {
+  width: 100%;
+  height: 25px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin-top: 15px;
+
+  @media screen and (min-width: 1045px) {
+    display: none;
+  }
+}
+
+.mobile-table {
+  @media screen and (max-width: 1045px) {
+    width: 100%;
+  }
+}
+
+.mobile-table-div {
+  @media screen and (max-width: 1045px) {
+    width: 100vw;
+    margin-left: -8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.test-buttons {
+  @media screen and (max-width: 1045px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+.yield-img-div {
+  padding-left: 3rem;
+  @media screen and (max-width: 1045px) {
+    padding-left: 0px;
+  }
+}
+
+.yield-img {
+  @media screen and (max-width: 1045px) {
+    width: 100%;
+  }
+}
+
+.practices-mobile {
+  @media screen and (max-width: 1045px) {
+    max-width: 100vw;
+    overflow: scroll;
+    width: 100vw;
+    margin-left: -8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+button.disabled {
+  position: relative;
+  &:hover {
+    &::before {
+      content: "To continue, please select your location, and enter acres, crop, labor value, and diesel price.";
+      position: absolute;
+      left: calc(100% + 12px);
+      width: 10rem;
+      display: block;
+      background: lightyellow;
+      color: #444;
+      font-size: 80%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      z-index: 999;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 8px);
+      transform: translate(-50%, -50%);
+      border-style: solid;
+      border-width: 6px 6px 6px 0;
+      border-color: transparent lightyellow transparent transparent;
+    }
+  }
 }

@@ -1,0 +1,41 @@
+#Field {
+  h2 {
+    font-size: 100%;
+    margin-bottom: 0.3rem;
+    margin-top: 0.8rem;
+  }
+    
+  .inputs {
+    border: 1px solid black;
+    background: #f8f8f8;
+
+    .clear {
+      position: relative;
+      height: 1.7rem;
+      border-bottom: 1px solid #aaa;
+
+      button {
+        height: 100%;
+      }
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 60% 1fr;
+    
+      > * {
+        padding: 0 0.3rem;
+      }
+
+      @media (max-width: 1050px) {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    @media (min-width: 1051px) {
+      .field-grid > .map {
+        border-right: 2px solid black;
+      }
+    }
+  }
+}
