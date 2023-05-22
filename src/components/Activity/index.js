@@ -257,7 +257,7 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={fertilityTotal} desc="Fertility" />
           <SummaryRow type={type} parm={herbicideTotal} desc="Herbicides" />
           <SummaryRow type={type} parm={erosionTotal} desc="Erosion" />
-          <SummaryRow type={type} parm={yieldTotal} desc="Yield" />
+          <SummaryRow type={type} parm={yieldTotal} desc="Yield impact" />
         </tbody>
       </>
     );

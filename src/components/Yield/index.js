@@ -163,7 +163,9 @@ const Yield = () => {
               q={(
                 <>
                   What is the expected yield for
+                  {' '}
                   {cashCrop}
+                  {' '}
                   in this field?
                   <Help>
                     <p>

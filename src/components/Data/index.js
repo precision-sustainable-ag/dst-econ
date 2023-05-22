@@ -5,7 +5,6 @@ import './styles.scss';
 
 const Data = () => {
   const airTables = useSelector(get.airTables);
-  console.log(airTables);
   return (
     <div id="Data">
       <p>
@@ -18,13 +17,5 @@ const Data = () => {
     </div>
   );
 }; // Data
-
-Data.menu = (
-  <span>
-    D
-    <u>a</u>
-    ta
-  </span>
-);
 
 export default Data;
