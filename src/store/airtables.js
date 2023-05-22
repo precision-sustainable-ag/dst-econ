@@ -3284,8 +3284,7 @@ const ATcommodities = {
     "three year": 0.0176,
     "five year": 0.03,
     "Notes": "Price is 2023 RMA springtime price; % change is from SARE publication by Myers.",
-    "order": 1,
-    "yield": "22"
+    "order": 1
   },
   "Soybeans": {
     "key": "Soybeans",
@@ -3294,8 +3293,7 @@ const ATcommodities = {
     "three year": 0.0354,
     "five year": 0.0496,
     "Notes": "Price is 2023 RMA springtime price; % change is from SARE publication by Myers.",
-    "order": 2,
-    "yield": "33"
+    "order": 2
   },
   "Wheat": {
     "key": "Wheat",
@@ -3304,8 +3302,7 @@ const ATcommodities = {
     "order": 3,
     "one year": "",
     "three year": "",
-    "five year": "",
-    "yield": ""
+    "five year": ""
   },
   "Grain Sorghum (milo)": {
     "key": "Grain Sorghum (milo)",
@@ -3314,8 +3311,7 @@ const ATcommodities = {
     "order": 4,
     "one year": "",
     "three year": "",
-    "five year": "",
-    "yield": ""
+    "five year": ""
   },
   "Cotton": {
     "key": "Cotton",
@@ -3324,8 +3320,7 @@ const ATcommodities = {
     "order": 5,
     "one year": "",
     "three year": "",
-    "five year": "",
-    "yield": ""
+    "five year": ""
   },
   "Rice": {
     "key": "Rice",
@@ -3334,8 +3329,7 @@ const ATcommodities = {
     "order": 6,
     "one year": "",
     "three year": "",
-    "five year": "",
-    "yield": ""
+    "five year": ""
   },
   "Sunflower": {
     "key": "Sunflower",
@@ -3344,8 +3338,7 @@ const ATcommodities = {
     "order": 7,
     "one year": "",
     "three year": "",
-    "five year": "",
-    "yield": ""
+    "five year": ""
   },
   "Canola": {
     "key": "Canola",
@@ -3354,8 +3347,7 @@ const ATcommodities = {
     "order": 8,
     "one year": "",
     "three year": "",
-    "five year": "",
-    "yield": ""
+    "five year": ""
   }
 };
 
