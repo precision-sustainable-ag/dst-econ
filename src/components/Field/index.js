@@ -3,7 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
-import { get, set, getDefaults } from '../../store/Store';
+import {
+  get, set, getDefaults, db,
+} from '../../store/Store';
 import './styles.scss';
 
 const defaults = getDefaults(
@@ -77,17 +79,7 @@ const Field = () => {
               <h2>What is your intended Cash Crop for this Field?</h2>
               <Input
                 id="cashCrop"
-                options={[
-                  'Corn',
-                  'Soybeans',
-                  'Wheat',
-                  'Grain Sorghum (milo)',
-                  'Cotton',
-                  'Rice',
-                  'Sunflowers',
-                  'Canola',
-                  'Other',
-                ]}
+                options={[...Object.keys(db.commodities), 'Other']}
               />
               {cashCrop === 'Other' && (
                 <Input id="otherCashCrop" placeholder="Enter cash crop here" />

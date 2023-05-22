@@ -315,8 +315,10 @@ const afterChange = {
   },
   cashCrop: (state, { payload }) => {
     if (payload === 'Other') {
+      state.yield.yield = '';
       state.focus = 'otherCashCrop';
     } else {
+      state.yield.yield = db.commodities[payload].yield;
       state.otherCashCrop = '';
     }
   },
@@ -736,8 +738,10 @@ const loadAirtables = async (tables) => {
 
   const table = tables.shift();
 
+  const order = table === 'commodities' ? 'order' : 'key';
+
   const response = await fetch(
-    `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2`,
+    `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2&sort%5B0%5D%5Bfield%5D=${order}`,
   );
   const rec = await response.json();
 
