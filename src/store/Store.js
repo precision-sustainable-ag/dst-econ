@@ -689,7 +689,7 @@ const getCosts = (state, current) => {
     const obj = state[section];
 
     if (obj.power) {
-      obj.annualUseHours = db.power[obj.power]['expected use (hr/yr)'];
+      obj.annualUseHours = db.power[obj.power]?.['expected use (hr/yr)'];
       getCosts(state, section);
 
       if (/tillage[1-3]/.test(section)) {

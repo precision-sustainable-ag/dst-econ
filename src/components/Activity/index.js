@@ -6,10 +6,7 @@ import { get, dollars } from '../../store/Store';
 import Input from '../../shared/Inputs';
 import './styles.scss';
 
-const Costs = ({ desc }) => {
-  const focused = useSelector(get.focused) || '';
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'unused';
-  const type = focused?.split('.')[0] || 'unused';
+const Costs = ({ desc, type }) => {
   const state = useSelector(get[type]);
 
   const d = desc.replace('Storage shed', 'Storage');
@@ -46,15 +43,7 @@ const Costs = ({ desc }) => {
   );
 }; // Costs
 
-const Activity = () => {
-  // const dispatch = useDispatch();
-  const width = useSelector(get.screenWidth);
-  const screenHeight = useSelector(get.screenHeight);
-  const focused = useSelector(get.focused) || '';
-
-  // const type = focused.includes('.total') ? focused.replace('.total', '') : 'unused';
-  const type = focused.includes('.') ? focused.split('.')[0] : 'unused';
-
+const Activity = ({ type }) => {
   const state = useSelector(get[type]) || {};
   const { estimated } = state;
   const tot = state.total;
@@ -63,10 +52,6 @@ const Activity = () => {
   const ImplementsCost = state.implementsCost;
   const PowerCost = state.powerCost;
   const state3 = useSelector(get[type]).q3;
-
-  // if (!focused.includes('.total')) {
-  //   return null;
-  // }
 
   const heading = {
     seedbed: 'Seedbed Preparation',
@@ -90,113 +75,83 @@ const Activity = () => {
   }
 
   let style;
-  const onMap = width > 1400;
-
-  const rect = document.querySelector(`[id="${focused.split('.')[0]}.annualUseAcres"]`)?.getBoundingClientRect();
-
-  if (rect) {
-    let top = onMap ? rect.y - 120 : rect.y - 20;
-
-    if (top + 480 > screenHeight) {
-      top = Math.max(0, screenHeight - 480);
-    }
-
-    style = {
-      position: 'fixed',
-      left: onMap ? 'calc(920px + 4vw)' : rect.x + rect.width + 20,
-      top,
-      zIndex: 2,
-    };
-  }
 
   const breakdown = (
     (state3 !== 'Custom Operator' && imp !== 'Hire custom operator')
       && imp
       && !edited
   ) && (
-    <Draggable>
-      <div
-        className={cname}
-        id="Breakdown"
-        style={style}
-        // onClick={() => {  // TODO: removed for linting purposes
-        //   setTimeout(() => {
-        //     dispatch(set.focus(focused));
-        //   }, 1);
-        // }}
-      >
-        <Card style={{ background: '#f8f8f8' }}>
-          <CardContent>
-            <table id="Costs">
-              <thead>
-                <tr>
-                  <th rowSpan="2" style={{ verticalAlign: 'bottom' }}>
-                    Cost Description
-                  </th>
-                  <th colSpan="3">{heading}</th>
-                </tr>
-                <tr>
-                  <th className="hidden">&nbsp;</th>
-                  <th>
-                    <label>
-                      Implement
-                      <br />
-                      Cost
-                      <br />
-                      ($/acre)
-                      <Input
-                        id={`${type}.implementsCost`}
-                        type="checkbox"
-                        tabIndex={-1}
-                      />
-                    </label>
-                  </th>
-                  <th>
-                    <label>
-                      Power
-                      <br />
-                      Cost
-                      <br />
-                      ($/acre)
-                      <br />
-                      <Input
-                        id={`${type}.powerCost`}
-                        type="checkbox"
-                        tabIndex={-1}
-                      />
-                    </label>
-                  </th>
-                  <th>
-                    Relevant
-                    <br />
-                    Cost
-                    <br />
-                    ($/acre)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <Costs desc="Labor" />
-                <Costs desc="Fuel" />
-                <Costs desc="Depreciation" />
-                <Costs desc="Interest" />
-                <Costs desc="Repairs" />
-                <Costs desc="Taxes" />
-                <Costs desc="Insurance" />
-                <Costs desc="Storage shed" />
-                <tr className="total">
-                  <td>Total</td>
-                  <td>{`$${state.$implements.total.toFixed(2)}`}</td>
-                  <td>{`$${state.$power.total.toFixed(2)}`}</td>
-                  <td>{`$${(state.$implements.total + state.$power.total).toFixed(2)}`}</td>
-                </tr>
-              </tbody>
-            </table>
-
-          </CardContent>
-        </Card>
-      </div>
-    </Draggable>
+    <div
+      className={cname}
+      id="Breakdown"
+      style={style}
+    >
+      <table id="Costs">
+        <thead>
+          <tr>
+            <th rowSpan="2" style={{ verticalAlign: 'bottom' }}>
+              Cost Description
+            </th>
+            <th colSpan="3">{heading}</th>
+          </tr>
+          <tr>
+            <th className="hidden">&nbsp;</th>
+            <th>
+              <label>
+                Implement
+                <br />
+                Cost
+                <br />
+                ($/acre)
+                <Input
+                  id={`${type}.implementsCost`}
+                  type="checkbox"
+                  tabIndex={-1}
+                />
+              </label>
+            </th>
+            <th>
+              <label>
+                Power
+                <br />
+                Cost
+                <br />
+                ($/acre)
+                <br />
+                <Input
+                  id={`${type}.powerCost`}
+                  type="checkbox"
+                  tabIndex={-1}
+                />
+              </label>
+            </th>
+            <th>
+              Relevant
+              <br />
+              Cost
+              <br />
+              ($/acre)
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <Costs type={type} desc="Labor" />
+          <Costs type={type} desc="Fuel" />
+          <Costs type={type} desc="Depreciation" />
+          <Costs type={type} desc="Interest" />
+          <Costs type={type} desc="Repairs" />
+          <Costs type={type} desc="Taxes" />
+          <Costs type={type} desc="Insurance" />
+          <Costs type={type} desc="Storage shed" />
+          <tr className="total">
+            <td>Total</td>
+            <td>{`$${state.$implements.total.toFixed(2)}`}</td>
+            <td>{`$${state.$power.total.toFixed(2)}`}</td>
+            <td>{`$${(state.$implements.total + state.$power.total).toFixed(2)}`}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 
   return breakdown;

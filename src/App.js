@@ -35,7 +35,7 @@ import Resources from './components/Resources';
 import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Data from './components/Data';
-import Activity, { Summary } from './components/Activity';
+import { Summary } from './components/Activity';
 
 const MyModal = () => {
   const modalData = useSelector(get.modalData);
@@ -48,7 +48,6 @@ const MyModal = () => {
 
   return (
     <Modal
-      onClick={() => dispatch(set.modalData(''))}
       open
     >
       <Popover
@@ -364,10 +363,6 @@ const App = () => {
           </div>
         </div>
       </nav>
-
-      {
-        db[screen] ? null : <Activity />
-      }
 
       <Summary />
 

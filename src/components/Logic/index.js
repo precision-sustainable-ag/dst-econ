@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
+import Activity from '../Activity';
 
 import { get, dollars, db } from '../../store/Store';
 
@@ -19,6 +20,7 @@ const Logic = ({
 
   let info = '';
   let shown = true;
+  let td = true;
 
   if (property === 'implement') {
     a = [...custom, ...Object.keys(db.implements).filter((key) => db.implements[key].type === type).sort()];
@@ -26,6 +28,7 @@ const Logic = ({
 
   switch (question) {
     case 'Annual Use (acres on implement)':
+      td = false;
       property = 'annualUseAcres';
       info = (
         <>
@@ -39,6 +42,7 @@ const Logic = ({
       shown = currentImplement && !iscustom;
       break;
     case 'Annual Use (hours on power)':
+      td = false;
       property = 'annualUseHours';
       q = q || question;
 
@@ -53,17 +57,20 @@ const Logic = ({
       shown = currentImplement && !iscustom;
       break;
     case 'Acres/hour':
+      td = false;
       q = q || question;
       a = acresHour;
       shown = currentImplement && !iscustom;
       break;
     case 'power':
+      td = false;
       property = 'power';
       q = q || 'What power will be used?';
       a = ['', ...Object.keys(db.power).sort((a2, b) => a2.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
       shown = currentImplement && !iscustom;
       break;
     case 'Estimated':
+      td = false;
       property = 'total';
       estimated = context.estimated;
       q = (
@@ -171,6 +178,19 @@ const Logic = ({
           <tr className={current}>
             <td style={style}>{q}</td>
             <td style={style}>{result}</td>
+            {
+              property === 'implement' ? (
+                <td
+                  style={{ padding: 0, border: '1px solid black' }}
+                  rowSpan="6"
+                >
+                  <Activity type={current} />
+                </td>
+              )
+                : (
+                  td && <td />
+                )
+            }
           </tr>
         </>
       )

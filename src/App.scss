@@ -6,6 +6,7 @@
 
 html {
   background: #bbb;
+  font-size: 15px;
 }
 
 .selected {
@@ -708,5 +709,20 @@ button.disabled {
       border-width: 6px 6px 6px 0;
       border-color: transparent lightyellow transparent transparent;
     }
+  }
+}
+
+table.power {
+  .MuiTypography-root,
+  .MuiInputBase-input {
+    font-size: 90%;
+  }
+
+  td:nth-child(1) {width: 40%;}
+  td:nth-child(2) {width: 30%;}
+  td:nth-child(3) {width: 30%;}
+
+  th[colspan] {
+    border-top: 2px solid #444;
   }
 }
