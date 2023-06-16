@@ -16,8 +16,9 @@ import {
   Checkbox,
   FormLabel,
   Autocomplete as MUIAutocomplete,
-  Icon,
 } from '@mui/material';
+
+import Help from '../Help';
 
 import { get, set } from '../../store/Store';
 
@@ -53,9 +54,6 @@ const Input = ({
 
   const focus = useSelector(get.focus) === obj;
   const focusRef = useRef(null);
-  const helpRef = useRef(null);
-
-  const [help, setHelp] = useState(false);
 
   let sel = get;
   id.split('.').forEach((k) => {
@@ -99,20 +97,6 @@ const Input = ({
   }
 
   const [v, setValue] = useState(val);
-
-  useEffect(() => {
-    const click = (e) => {
-      if (e.target !== helpRef.current) {
-        setHelp(false);
-      }
-    };
-
-    document.addEventListener('click', click);
-
-    return () => {
-      document.removeEventListener('click', click);
-    };
-  }, []);
 
   useEffect(() => {
     if (v2 !== sel2 || v2 !== value) {
@@ -350,29 +334,7 @@ const Input = ({
             }}
           />
 
-          {props.info && (
-          <>
-            <Icon
-              style={{ marginTop: 6, marginLeft: 2 }}
-              onClick={() => {
-                setHelp(!help);
-                dispatch(set.focus(id));
-              }}
-              className="help"
-              ref={helpRef}
-            >
-              help
-            </Icon>
-            <div
-              style={{ display: help ? 'block' : 'none' }}
-              className="info"
-            >
-              {props.info}
-            </div>
-          </>
-          )}
-
-          {/* props.info && <Help>{props.info}</Help> */}
+          {props.info && <Help>{props.info}</Help>}
 
           {props.warning}
         </form>

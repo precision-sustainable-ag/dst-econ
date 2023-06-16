@@ -57,10 +57,6 @@
   display: block;
 }
 
-*:focus-within ~ .help {
-  zdisplay: none;
-}
-
 body.debug .input[id]::before {
   content: attr(id);
   white-space: pre;
