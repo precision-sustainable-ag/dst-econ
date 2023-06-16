@@ -68,6 +68,8 @@ const dev = /(localhost|dev)/i.test(window.location);
 const initialState = {
   focus: null,
   focused: null,
+  modalData: '',
+  anchor: '',
   scrollTop: 0,
   airTables: '',
   dev,

@@ -170,9 +170,7 @@ const Logic = ({
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
           <tr className={current}>
             <td style={style}>{q}</td>
-            <td style={style}>
-              {result}
-            </td>
+            <td style={style}>{result}</td>
           </tr>
         </>
       )

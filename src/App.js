@@ -3,7 +3,10 @@
 /* eslint-disable no-console */
 import './App.scss';
 
-import { Button } from '@mui/material';
+import {
+  Modal, Button, IconButton, Popover,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 import React, { useEffect, useState } from 'react';
 
@@ -33,6 +36,63 @@ import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Data from './components/Data';
 import Activity, { Summary } from './components/Activity';
+
+const MyModal = () => {
+  const modalData = useSelector(get.modalData);
+  const anchor = useSelector(get.anchor);
+  const dispatch = useDispatch();
+
+  if (!modalData) {
+    return null;
+  }
+
+  return (
+    <Modal
+      onClick={() => dispatch(set.modalData(''))}
+      open
+    >
+      <Popover
+        // id={id}
+        open={modalData > ''}
+        anchorEl={anchor}
+        // onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            dispatch(set.modalData(''));
+          }
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            padding: 10,
+            maxWidth: '30rem',
+          }}
+        >
+          <IconButton
+            sx={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              zIndex: 1,
+            }}
+            onClick={() => dispatch(set.modalData(''))}
+          >
+            <CloseIcon
+              style={{ fontSize: '1.2rem' }}
+            />
+          </IconButton>
+
+          {modalData}
+        </div>
+      </Popover>
+    </Modal>
+  );
+};
 
 const MyButton = ({ screen, ...otherProps }) => {
   const cashCrop = useSelector(get.cashCrop);
@@ -237,6 +297,8 @@ const App = () => {
 
   return (
     <div id="Container">
+      <MyModal />
+
       <nav>
         <div className="mobile-menu">
           <img src="PSAlogo-only.png" className="mobile-logo" alt="mobile-logo" />
