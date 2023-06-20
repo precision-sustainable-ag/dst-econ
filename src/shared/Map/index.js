@@ -21,9 +21,9 @@ const OpeningMap = () => (
     ]}
     layer="mapbox://styles/mapbox/outdoors-v11"
     initWidth="100%"
-    initHeight="400px"
     hasSearchBar
     hasGeolocate
+    hasMarkerMovable
   />
 ); // OpeningMap
 
@@ -32,7 +32,6 @@ const InteractiveMap = () => (
     getters={get}
     setters={set}
     initWidth="100%"
-    initHeight="400px"
     hasSearchBar
     hasGeolocate
     hasMarker

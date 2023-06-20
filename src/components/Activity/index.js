@@ -251,43 +251,40 @@ export const Summary = () => {
               <strong className="cursor">Summary</strong>
               <table>
                 {(farm || field || acres || cashCrop) && (
-                  <>
-                    <thead />
-                    <tbody>
-                      {farm && (
+                  <tbody>
+                    {farm && (
                       <tr>
                         <td>Farm     </td>
                         <td style={{ textAlign: 'left' }}>
                           {farm}
                         </td>
                       </tr>
-                      )}
-                      {field && (
-                      <tr>
-                        <td>Field    </td>
-                        <td style={{ textAlign: 'left' }}>
-                          {field}
-                        </td>
-                      </tr>
-                      )}
-                      {acres && (
+                    )}
+                    {field && (
+                    <tr>
+                      <td>Field    </td>
+                      <td style={{ textAlign: 'left' }}>
+                        {field}
+                      </td>
+                    </tr>
+                    )}
+                    {acres && (
                       <tr>
                         <td>Acres    </td>
                         <td style={{ textAlign: 'left' }}>
                           {acres}
                         </td>
                       </tr>
-                      )}
-                      {cashCrop && (
+                    )}
+                    {cashCrop && (
                       <tr>
                         <td>Cash crop</td>
                         <td style={{ textAlign: 'left' }}>
                           {cashCrop}
                         </td>
                       </tr>
-                      )}
-                    </tbody>
-                  </>
+                    )}
+                  </tbody>
                 )}
                 <CostsBenefits type="Costs" />
                 <CostsBenefits type="Benefits" />
