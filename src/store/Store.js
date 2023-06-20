@@ -273,6 +273,8 @@ const initialState = {
     $costShare: '0.00',
     $carbonOffset: '0.00',
     $insuranceDiscount: '0.00',
+  },
+  grazing: {
     grazing: '',
     lease: '',
     $lease: undefined,
@@ -302,6 +304,128 @@ const initialState = {
 
 export const formulas = { ...initialState };
 
+const getCosts = (state, current) => {
+  ['implements', 'power'].forEach((type) => {
+    state[current][`$${type}`].total = 0;
+
+    [
+      'Fuel',
+      'Depreciation',
+      'Interest',
+      'Repairs',
+      'Taxes',
+      'Insurance',
+      'Storage',
+      'Labor',
+    ].forEach((parm) => {
+      if (!state[current][`${type}Cost`] || !state[current][parm]) {
+        state[current][`$${type}`][parm] = 0;
+        return;
+      }
+
+      const section = state[current];
+      const o = type === 'implements' ? section.implement : section.power;
+
+      const { acresHour } = state[current];
+
+      const divisor = type === 'implements'
+        ? section.annualUseAcres
+        : section.annualUseHours * acresHour;
+
+      const p = db[type][o] || {};
+
+      const ASABE = db.coefficients[p['default ASABE category']] || {};
+
+      const RF1 = ASABE.RF1 || 0;
+      const RF2 = ASABE.RF2 || 0;
+      const RV1 = ASABE.RV1 || 0;
+      const RV2 = ASABE.RV2 || 0;
+      const RV3 = ASABE.RV3 || 0;
+      const RV4 = ASABE.RV4 || 0;
+      const RV5 = ASABE.RV5 || 0;
+      // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
+
+      // console.log(p['default ASABE category']);
+      const tradein = (
+        RV1
+        - RV2 * p['expected life (years)'] ** 0.5
+        - RV3 * p['expected use (hr/yr)'] ** 0.5
+        + RV4 * db.rates.projected.value
+      ) ** 2
+        + 0.25 * RV5;
+      const listprice = p['purchase price 2020'] / (1 - p['list discount']);
+      const $tradein = tradein * listprice;
+      const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
+      const accumulatedrepairs = listprice * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
+      const annualrepairs = accumulatedrepairs / p['expected life (years)'];
+
+      // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
+
+      let value;
+
+      switch (parm) {
+        case 'Fuel':
+          value = +(
+            p.HP
+            * p['fuel use (gal/PTO hp/hr)']
+            * (1 + +db.rates.lubrication.value)
+            * state.$diesel
+          ) / acresHour;
+          break;
+        case 'Depreciation':
+          value = annualdepreciation / divisor;
+          break;
+        case 'Interest':
+          value = (
+            (
+              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+            )
+            * db.rates.interest.value
+          ) / divisor;
+          break;
+        case 'Repairs':
+          value = annualrepairs / divisor;
+          break;
+        case 'Taxes':
+          value = (
+            (
+              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+            )
+            * db.rates.property.value
+          ) / divisor;
+          break;
+        case 'Insurance':
+          value = (
+            (
+              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+            )
+            * db.rates.insurance.value
+          ) / divisor;
+          break;
+        case 'Storage':
+          value = (db.rates.storage.value * p['shed (ft^2)']) / divisor;
+          break;
+        case 'Labor':
+          value = ((p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour)
+          * state.$labor;
+          break;
+        default:
+          value = p[parm];
+      }
+
+      value = value || 0;
+
+      state[current][`$${type}`][parm] = value;
+      state[current][`$${type}`].total += value;
+    });
+
+    state[current].estimated = +(
+      state[current].$implements.total + state[current].$power.total
+    ).toFixed(2);
+    state[current].total = state[current].estimated;
+  });
+}; // getCosts
+
 const afterChange = {
   screen: (state) => {
     if (state.screen === 'Field') {
@@ -320,7 +444,7 @@ const afterChange = {
       state.yield.yield = '';
       state.focus = 'otherCashCrop';
     } else {
-      state.yield.yield = db.commodities[payload].yield;
+      state.yield.yield = db.commodities[payload]?.yield;
       state.otherCashCrop = '';
     }
   },
@@ -480,7 +604,25 @@ const afterChange = {
   'erosion.q2': (state, { payload }) => {
     state.erosion.q3 = db.erosionControl[payload].cost;
   },
+  $labor: (state) => {
+    getCosts(state, 'seedbed');
+    getCosts(state, 'planting');
+    getCosts(state, 'chemical');
+    getCosts(state, 'roller');
+    getCosts(state, 'tillage');
+    getCosts(state, 'tillageFall');
+    getCosts(state, 'tillageElimination');
+    getCosts(state, 'tillageOther');
+    getCosts(state, 'herbicideAdditional');
+    getCosts(state, 'herbicideReduced');
+    getCosts(state, 'herbicideFall');
+  },
+  map: (state) => {
+    state.mapFeatures.zoom = 16;
+  },
 };
+
+afterChange.$diesel = afterChange.$labor;
 
 const reducers = {
   resize: (state) => {
@@ -498,128 +640,6 @@ const reducers = {
 };
 
 export const store = createStore(initialState, { afterChange, reducers });
-
-const getCosts = (state, current) => {
-  ['implements', 'power'].forEach((type) => {
-    state[current][`$${type}`].total = 0;
-
-    [
-      'Fuel',
-      'Depreciation',
-      'Interest',
-      'Repairs',
-      'Taxes',
-      'Insurance',
-      'Storage',
-      'Labor',
-    ].forEach((parm) => {
-      if (!state[current][`${type}Cost`] || !state[current][parm]) {
-        state[current][`$${type}`][parm] = 0;
-        return;
-      }
-
-      const section = state[current];
-      const o = type === 'implements' ? section.implement : section.power;
-
-      const { acresHour } = state[current];
-
-      const divisor = type === 'implements'
-        ? section.annualUseAcres
-        : section.annualUseHours * acresHour;
-
-      const p = db[type][o] || {};
-
-      const ASABE = db.coefficients[p['default ASABE category']] || {};
-
-      const RF1 = ASABE.RF1 || 0;
-      const RF2 = ASABE.RF2 || 0;
-      const RV1 = ASABE.RV1 || 0;
-      const RV2 = ASABE.RV2 || 0;
-      const RV3 = ASABE.RV3 || 0;
-      const RV4 = ASABE.RV4 || 0;
-      const RV5 = ASABE.RV5 || 0;
-      // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
-
-      // console.log(p['default ASABE category']);
-      const tradein = (
-        RV1
-        - RV2 * p['expected life (years)'] ** 0.5
-        - RV3 * p['expected use (hr/yr)'] ** 0.5
-        + RV4 * db.rates.projected.value
-      ) ** 2
-        + 0.25 * RV5;
-      const listprice = p['purchase price 2020'] / (1 - p['list discount']);
-      const $tradein = tradein * listprice;
-      const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
-      const accumulatedrepairs = listprice * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
-      const annualrepairs = accumulatedrepairs / p['expected life (years)'];
-
-      // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
-
-      let value;
-
-      switch (parm) {
-        case 'Fuel':
-          value = +(
-            p.HP
-            * p['fuel use (gal/PTO hp/hr)']
-            * (1 + +db.rates.lubrication.value)
-            * state.$diesel
-          ) / acresHour;
-          break;
-        case 'Depreciation':
-          value = annualdepreciation / divisor;
-          break;
-        case 'Interest':
-          value = (
-            (
-              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
-            )
-            * db.rates.interest.value
-          ) / divisor;
-          break;
-        case 'Repairs':
-          value = annualrepairs / divisor;
-          break;
-        case 'Taxes':
-          value = (
-            (
-              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
-            )
-            * db.rates.property.value
-          ) / divisor;
-          break;
-        case 'Insurance':
-          value = (
-            (
-              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
-            )
-            * db.rates.insurance.value
-          ) / divisor;
-          break;
-        case 'Storage':
-          value = (db.rates.storage.value * p['shed (ft^2)']) / divisor;
-          break;
-        case 'Labor':
-          value = ((p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour)
-          * state.$labor;
-          break;
-        default:
-          value = p[parm];
-      }
-
-      value = value || 0;
-
-      state[current][`$${type}`][parm] = value;
-      state[current][`$${type}`].total += value;
-    });
-
-    state[current].estimated = +(
-      state[current].$implements.total + state[current].$power.total
-    ).toFixed(2);
-    state[current].total = state[current].estimated;
-  });
-}; // getCosts
 
 [
   'seedbed',
@@ -689,7 +709,7 @@ const getCosts = (state, current) => {
     const obj = state[section];
 
     if (obj.power) {
-      obj.annualUseHours = db.power[obj.power]['expected use (hr/yr)'];
+      obj.annualUseHours = db.power[obj.power]?.['expected use (hr/yr)'];
       getCosts(state, section);
 
       if (/tillage[1-3]/.test(section)) {
@@ -700,22 +720,6 @@ const getCosts = (state, current) => {
     }
   };
 });
-
-afterChange.$labor = (state) => {
-  getCosts(state, 'seedbed');
-  getCosts(state, 'planting');
-  getCosts(state, 'chemical');
-  getCosts(state, 'roller');
-  getCosts(state, 'tillage');
-  getCosts(state, 'tillageFall');
-  getCosts(state, 'tillageElimination');
-  getCosts(state, 'tillageOther');
-  getCosts(state, 'herbicideAdditional');
-  getCosts(state, 'herbicideReduced');
-  getCosts(state, 'herbicideFall');
-};
-
-afterChange.$diesel = afterChange.$labor;
 
 const loaded = () => {
   store.dispatch(set.screen('Field'));
@@ -885,7 +889,11 @@ export const getDefaults = (parms) => {
 
 export const clearInputs = (defaults, exclude = []) => {
   Object.keys(defaults).forEach((key) => {
-    if (!exclude.includes(key)) {
+    if (key === '$labor') {
+      store.dispatch(set.$labor(db.rates?.skilled?.value));
+    } else if (key === '$diesel') {
+      store.dispatch(set.$diesel(db.rates?.fuel?.value));
+    } else if (!exclude.includes(key)) {
       try {
         let s = set;
         key.split('.').forEach((k) => {

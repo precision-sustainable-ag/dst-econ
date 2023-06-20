@@ -117,8 +117,10 @@ const OtherHerbicides = ({ state, prop, description }) => (
       <tr>
         <td colSpan="3" style={{ textAlign: 'right', background: 'yellow' }}>
           Total
+          {' '}
           {prop === 'additional' ? 'Costs' : 'Benefits'}
           :
+          {' '}
           {dollars(state[`${prop}Total`])}
         </td>
       </tr>
@@ -273,10 +275,10 @@ const Termination = () => {
         </p>
         <form>
           <div className="mobile-table-div">
-            <table className={`${current} inputs mobile-table`}>
+            <table className={`${current} inputs mobile-table power`}>
               <thead>
                 <tr>
-                  <th colSpan="2">
+                  <th colSpan="3">
                     Termination
                     <ClearInputs defaults={defaults} />
                   </th>

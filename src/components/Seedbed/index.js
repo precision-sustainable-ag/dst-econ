@@ -43,10 +43,10 @@ const Seedbed = () => {
       <strong>Cover Crop Establishment</strong>
       <form>
         <div className="mobile-table-div">
-          <table className="seedbed inputs mobile-table">
+          <table className="seedbed inputs power mobile-table">
             <tbody>
               <tr>
-                <th colSpan="2">
+                <th colSpan="3">
                   Seedbed preparation
                   <ClearInputs defaults={defaults} />
                 </th>

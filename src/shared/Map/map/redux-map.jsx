@@ -32,7 +32,6 @@ const ReduxMap = ({
   initHeight = '400px',
   initFeatures = [],
   mapLocation = getters.map ? useSelector(getters.map) : { lat: 40, lon: -75, address: { fullAddress: '' } },
-  mapFeatures = getters.mapFeatures ? useSelector(getters.mapFeatures) : {},
   initAddress = mapLocation.address?.fullAddress || '',
   initLon = mapLocation.lon,
   initLat = mapLocation.lat,
@@ -273,6 +272,7 @@ const ReduxMap = ({
         latitude: lngLat.lat,
       }));
     }
+
     const handleGeolocate = (e) => {
       const lngLat = e.target._userLocationDotMarker._lngLat;
       setFlyToOptions(fastFly);
@@ -288,11 +288,8 @@ const ReduxMap = ({
       if (hasDrawing && drawerRef.current) {
         drawerRef.current.deleteAll();
         setPolygonArea(0);
-        if (setters.mapFeatures) {
-          dispatch(setters.mapFeatures({
-            ...mapFeatures,
-            area: 0,
-          }));
+        if (setters?.mapFeatures?.area) {
+          dispatch(setters.mapFeatures.area(0));
         }
       }
     };
@@ -327,10 +324,9 @@ const ReduxMap = ({
 
       setPolygonArea(totalArea);
 
-      dispatch(setters.mapFeatures({
-        ...mapFeatures,
-        area: totalArea.toFixed(2),
-      }));
+      if (setters?.mapFeatures?.area) {
+        dispatch(setters.mapFeatures.area(totalArea.toFixed(2)));
+      }
 
       handlePolyCentCalc(e);
     };
@@ -341,12 +337,14 @@ const ReduxMap = ({
         newPolygon = false;
       }, 100);
     };
+
     const handleDrawDelete = (e) => {
       setIsDrawActive(false);
       handlePolyAreaCalc(e);
 
       document.querySelector('.mapbox-gl-draw_trash').style.display = 'none';
     };
+
     const handleDrawUpdate = (e) => {
       handlePolyAreaCalc(e);
     };
@@ -368,6 +366,13 @@ const ReduxMap = ({
 
     /// / EVENTS
     Geolocate.on('geolocate', handleGeolocate);
+
+    Geolocate.on('error', (error) => {
+      if (error.code === error.PERMISSION_DENIED) {
+        alert('Geolocation access denied. Please enable location services.');
+      }
+    });
+
     Geocoder.on('result', (e) => {
       if (e && e.result) {
         setGeocodeResult(e.result);
@@ -398,6 +403,7 @@ const ReduxMap = ({
         }
       }
     });
+
     if (hasMarkerMovable) {
       map.current.on('dblclick', (e) => {
         if (newPolygon) return;
@@ -406,8 +412,10 @@ const ReduxMap = ({
           longitude: e.lngLat.lng,
           latitude: e.lngLat.lat,
         }));
+        e.preventDefault(); // doubleClickZoom.disable() doesn't seem to work
       });
     }
+
     map.current.on('mousemove', (e) => {
       const lnglat = e.lngLat.wrap();
       setCursorLoc({
@@ -446,7 +454,9 @@ const ReduxMap = ({
           fetch(polygon)
             .then((response) => response.json())
             .then((data) => {
-              map.current.addPolygon(id, data[0].polygonarray[0], options);
+              if (data.length) {
+                map.current.addPolygon(id, data[0].polygonarray[0], options);
+              }
             });
           return;
         }
@@ -563,11 +573,8 @@ const ReduxMap = ({
 
     map.current.on('zoom', () => {
       const currentZoom = map.current.getZoom();
-      if (setters.mapFeatures) {
-        dispatch(setters.mapFeatures({
-          ...mapFeatures,
-          zoom: currentZoom,
-        }));
+      if (setters?.mapFeatures?.zoom) {
+        dispatch(setters.mapFeatures.zoom(currentZoom));
       }
     });
 

@@ -35,7 +35,7 @@ import Resources from './components/Resources';
 import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Data from './components/Data';
-import Activity, { Summary } from './components/Activity';
+import { Summary } from './components/Activity';
 
 const MyModal = () => {
   const modalData = useSelector(get.modalData);
@@ -48,7 +48,6 @@ const MyModal = () => {
 
   return (
     <Modal
-      onClick={() => dispatch(set.modalData(''))}
       open
     >
       <Popover
@@ -114,8 +113,8 @@ const paths = {
   Fertility,
   Herbicide,
   Erosion,
-  Additional,
   Grazing,
+  Additional,
   Yield,
   Practices,
   Revenue,
@@ -191,8 +190,8 @@ const App = () => {
     7: 'Fertility',
     8: 'Herbicide',
     9: 'Erosion',
-    10: 'Additional',
-    11: 'Grazing',
+    10: 'Grazing',
+    11: 'Additional',
     12: 'Yield',
     13: 'Practices',
     14: 'Revenue',
@@ -365,10 +364,6 @@ const App = () => {
         </div>
       </nav>
 
-      {
-        db[screen] ? null : <Activity />
-      }
-
       <Summary />
 
       <div id="Main">
@@ -382,8 +377,8 @@ const App = () => {
           <Route path="Fertility" element={<Fertility />} />
           <Route path="Herbicide" element={<Herbicide />} />
           <Route path="Erosion" element={<Erosion />} />
-          <Route path="Additional" element={<Additional />} />
           <Route path="Grazing" element={<Grazing />} />
+          <Route path="Additional" element={<Additional />} />
           <Route path="Yield" element={<Yield />} />
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />

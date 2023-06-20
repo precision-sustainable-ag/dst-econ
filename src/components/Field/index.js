@@ -8,9 +8,16 @@ import {
 } from '../../store/Store';
 import './styles.scss';
 
-const defaults = getDefaults(
-  'location|farm|field|mapFeatures.area|$labor|$diesel|cashCrop|otherCashCrop',
-);
+const defaults = getDefaults([
+  'location',
+  'farm',
+  'field',
+  'mapFeatures.area',
+  '$labor',
+  '$diesel',
+  'cashCrop',
+  'otherCashCrop',
+]);
 
 const Field = () => {
   const dispatch = useDispatch();

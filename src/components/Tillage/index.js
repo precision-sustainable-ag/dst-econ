@@ -50,7 +50,6 @@ const Costs = ({
         property="q2"
         q={q2}
         a={['Yes', 'No']}
-        style={{ borderTop: '2px solid #444' }}
         onChange={onChange}
       />
 
@@ -91,7 +90,9 @@ const Tillage = () => {
         <h1>Tillage</h1>
         <p>
           As a reminder to the user, the
+          {' '}
           <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
+          {' '}
           considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
           Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
           For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
@@ -106,10 +107,10 @@ const Tillage = () => {
 
         <form>
           <div className="mobile-table-div">
-            <table className="tillage1 inputs mobile-table">
+            <table className="tillage1 inputs mobile-table power">
               <tbody>
                 <tr>
-                  <th colSpan="2">
+                  <th colSpan="3">
                     Tillage
                     <ClearInputs defaults={defaults} />
                   </th>
@@ -126,7 +127,7 @@ const Tillage = () => {
                 {state.q1 === 'No' && (
                   <>
                     <tr>
-                      <th colSpan="2">Fall Tillage</th>
+                      <th colSpan="3">Fall Tillage</th>
                     </tr>
                     <Costs
                       current="tillageFall"
@@ -143,11 +144,10 @@ const Tillage = () => {
                           property="q5"
                           q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
                           a={['Yes', 'No']}
-                          style={{ borderTop: '2px solid #444' }}
                         />
 
                         <tr>
-                          <th colSpan="2">Tillage Elimination</th>
+                          <th colSpan="3">Tillage Elimination</th>
                         </tr>
                         <Costs
                           current="tillageElimination"
@@ -162,7 +162,7 @@ const Tillage = () => {
                 )}
 
                 <tr>
-                  <th colSpan="2">Other Tillage</th>
+                  <th colSpan="3">Other Tillage</th>
                 </tr>
                 <Costs
                   current="tillageOther"
@@ -176,7 +176,7 @@ const Tillage = () => {
                   current="tillage1"
                   q="Tillage cost reductions due to adopting cover crop"
                   a={dollars(tillage1.costReductions)}
-                  style={{ background: 'lightyellow', borderTop: '2px solid #444' }}
+                  style={{ background: 'lightyellow' }}
                 />
 
                 <Logic

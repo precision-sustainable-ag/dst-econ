@@ -42,28 +42,26 @@ const Herbicide = () => {
     <div className="Herbicide">
       <h1>Herbicide</h1>
       <p>
-        This module will address reductions or additional herbicide costs associated with
-        integrating cover crops into your rotation. As a reminder, the
+        This module will address reductions or additional herbicide costs associated with integrating cover crops into your rotation.
+        As a reminder, the
         {' '}
         <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
         {' '}
-        considers changes to
-        your crop management system specific to the inclusion of cover crops. Therefore, this
-        module only considers changes to your herbicide program specific to post emerge or fall
-        herbicide applications. For example, some users have found the allelopathic effects of
-        using cereal rye have enabled them to reduce the amount of herbicide used in their
-        spray program. Some growers that have historically used multiple post emerge spray
-        applications have found they can eliminate a herbicide pass when using cover crops. You
-        can also read case studies linked to the right to gain more insight of how cover crops
-        have changed management practices for growers.
+        considers changes to your crop management system specific to the inclusion of cover crops.
+        Therefore, this module only considers changes to your herbicide program specific to post emerge or fall herbicide applications.
+        For example, some users have found the allelopathic effects of using cereal rye have enabled them
+        to reduce the amount of herbicide used in their spray program.
+        Some growers that have historically used multiple post emerge spray applications have found
+        they can eliminate a herbicide pass when using cover crops.
+        You can also read case studies linked to the right to gain more insight of how cover crops have changed management practices for growers.
       </p>
 
       <form>
         <div className="mobile-table-div">
-          <table className="herbicide inputs mobile-table">
+          <table className="herbicide inputs mobile-table power">
             <tbody>
               <tr>
-                <th colSpan="2">
+                <th colSpan="3">
                   Herbicides
                   <ClearInputs defaults={defaults} />
                 </th>
