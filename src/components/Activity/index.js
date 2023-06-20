@@ -184,7 +184,12 @@ const CostsBenefits = ({ type }) => {
   const erosionTotal = -useSelector(get.erosion.total) || 0;
   const yieldTotal = -useSelector(get.yield.total) || 0;
   const herbicideTotal = useSelector(get.herbicide.total) || 0;
-  // console.log({type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal, yieldTotal});
+  const additionalTotal = -useSelector(get.additional.total) || 0;
+
+  // console.log({
+  //   type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal, yieldTotal, herbicideTotal,
+  // });
+
   if (
     (type === 'Costs' && (
       coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0
@@ -192,7 +197,7 @@ const CostsBenefits = ({ type }) => {
     )
     || (type === 'Benefits' && (
       coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || herbicideTotal < 0 || erosionTotal < 0
-      || terminationTotal < 0 || tillageAllTotal < 0 || yieldTotal < 0)
+      || terminationTotal < 0 || tillageAllTotal < 0 || yieldTotal < 0 || additionalTotal < 0)
     )
   ) {
     return (
@@ -213,6 +218,7 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={herbicideTotal} desc="Herbicides" />
           <SummaryRow type={type} parm={erosionTotal} desc="Erosion" />
           <SummaryRow type={type} parm={yieldTotal} desc="Yield impact" />
+          <SummaryRow type={type} parm={additionalTotal} desc="Additional considerations" />
         </tbody>
       </>
     );
@@ -230,9 +236,10 @@ export const Summary = () => {
   const erosionTotal = -useSelector(get.erosion.total) || 0;
   const yieldTotal = -useSelector(get.yield.total) || 0;
   const herbicideTotal = useSelector(get.herbicide.total) || 0;
+  const additionalTotal = -useSelector(get.additional.total) || 0;
 
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal
-                + +yieldTotal + +herbicideTotal;
+                + +yieldTotal + +herbicideTotal + +additionalTotal;
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);

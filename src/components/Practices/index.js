@@ -581,6 +581,62 @@ const YieldSummary = () => {
   );
 }; // YieldSummary
 
+const AdditionalSummary = () => {
+  const sel = useSelector(get.additional);
+
+  return (
+    <>
+      <tr>
+        <td colSpan={2}>
+          <NavLink to="/Additional">Additional considerations</NavLink>
+        </td>
+        <td className="hidden" />
+        <td />
+        <td />
+        <td />
+        <td />
+        <td>{dollars(sel.total)}</td>
+      </tr>
+      <tr>
+        <td />
+        <td>Estimated cash contribution from rent</td>
+        <td />
+        <td />
+        <td />
+        <td>{dollars(sel.$landowner)}</td>
+        <td />
+      </tr>
+      <tr>
+        <td />
+        <td>State or federal financial assistance</td>
+        <td />
+        <td />
+        <td />
+        <td>{dollars(sel.$costShare)}</td>
+        <td />
+      </tr>
+      <tr>
+        <td />
+        <td>Voluntary carbon offset program</td>
+        <td />
+        <td />
+        <td />
+        <td>{dollars(sel.$carbonOffset)}</td>
+        <td />
+      </tr>
+      <tr>
+        <td />
+        <td>Insurance discount</td>
+        <td />
+        <td />
+        <td />
+        <td>{dollars(sel.$insuranceDiscount)}</td>
+        <td />
+      </tr>
+    </>
+  );
+}; // AdditionalSummary
+
 const Practices = () => {
   const dispatch = useDispatch();
   const dev = useSelector(get.dev);
@@ -599,6 +655,7 @@ const Practices = () => {
     useSelector(get.herbicide.total) || 0,
     -useSelector(get.erosion.total) || 0,
     -useSelector(get.yield.total) || 0,
+    -useSelector(get.additional.total) || 0,
   ];
 
   const totalCosts = totals.reduce((previous, value) => previous + Math.max(value, 0), 0);
@@ -654,6 +711,7 @@ const Practices = () => {
             <HerbicideSummary />
             <ErosionSummary />
             <YieldSummary />
+            <AdditionalSummary />
             <tr className="total">
               <td colSpan={2}>Total</td>
               <td className="hidden" />

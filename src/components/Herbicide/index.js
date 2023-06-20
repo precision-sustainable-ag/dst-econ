@@ -323,7 +323,7 @@ const Herbicide = () => {
       {dev && (
         <div className="test-buttons">
           <button type="button" onClick={exampleHerbicides}>
-            Test
+            Test data
           </button>
         </div>
       )}

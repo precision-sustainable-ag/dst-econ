@@ -268,11 +268,13 @@ const initialState = {
     total: (state) => state.$fertCredit + state.$fertCost,
   },
   additional: {
-    $landowner: '0.00',
+    $landowner: 0,
     nrcs: '',
-    $costShare: '0.00',
-    $carbonOffset: '0.00',
-    $insuranceDiscount: '0.00',
+    $costShare: 0,
+    $carbonOffset: 0,
+    $insuranceDiscount: 0,
+    total: (state) => +state.additional.$landowner + +state.additional.$costShare
+      + +state.additional.$carbonOffset + +state.additional.$insuranceDiscount,
   },
   grazing: {
     grazing: '',

@@ -38,14 +38,6 @@ button img {
   margin: 0.5rem;
 }
 
-.Additional table {
-  width: 50rem;
-}
-
-.Additional td:nth-child(1) {
-  width: 30rem;
-}
-
 #Menu {
   padding-left: 130px;
 
@@ -651,6 +643,11 @@ body.debug #AirTables {
 }
 
 .test-buttons {
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
   @media screen and (max-width: 1045px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
