@@ -252,9 +252,9 @@ const Seeds = () => {
 
 Seeds.menu = (
   <span>
-    See
-    <u>d</u>
-    s
+    S
+    <u>e</u>
+    eds
   </span>
 );
 

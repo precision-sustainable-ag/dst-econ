@@ -50,7 +50,6 @@ const Field = () => {
             <div className="test-buttons">
               <button
                 type="button"
-                style={{ position: 'absolute', zIndex: 1 }}
                 onClick={() => {
                   dispatch(set.location('123 Main Street, Athens, GA, USA'));
                   dispatch(set.farm('My farm'));

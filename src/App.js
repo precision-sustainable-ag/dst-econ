@@ -413,7 +413,7 @@ document.addEventListener('dblclick', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.altKey && e.key === 'd') {
+  if (e.altKey && e.key === 'e') {
     // Seeds accesskey
     e.preventDefault();
   }

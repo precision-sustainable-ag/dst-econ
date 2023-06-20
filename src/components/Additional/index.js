@@ -6,6 +6,7 @@ import Help from '../../shared/Help';
 import ClearInputs from '../ClearInputs';
 
 import { get, getDefaults } from '../../store/Store';
+import './styles.scss';
 
 const Considerations = () => {
   const context = useSelector(get.additional);
@@ -15,15 +16,13 @@ const Considerations = () => {
     <div className="mobile-table-div">
       <div className="grid2">
         <header>
-          Additional considerations
+          Financial assistance or incentives
           <ClearInputs defaults={defaults} />
         </header>
 
         <div>
-          <p>
-            If you cash rent this field, will the landowner contribute to seed costs or other costs associated with planting cover crops?
-          </p>
-          <p>If yes, please enter the estimated cash contribution ($/acre)</p>
+          If you rent this field and the landowner contribute to costs associated with planting cover crops,
+          please enter the estimated cash contribution ($/acre).
         </div>
         <div>
           <Input id="additional.$landowner" />
@@ -102,7 +101,7 @@ const Considerations = () => {
 }; // Considerations
 
 const Additional = () => (
-  <div className="Additional">
+  <div id="Additional">
     <h1>Additional Considerations</h1>
     <p>
       This portion of the
