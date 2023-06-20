@@ -273,6 +273,8 @@ const initialState = {
     $costShare: '0.00',
     $carbonOffset: '0.00',
     $insuranceDiscount: '0.00',
+  },
+  grazing: {
     grazing: '',
     lease: '',
     $lease: undefined,

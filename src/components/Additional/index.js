@@ -1,13 +1,11 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Input from '../../shared/Inputs';
 import Help from '../../shared/Help';
 import ClearInputs from '../ClearInputs';
 
-import {
-  get, set, test, getDefaults,
-} from '../../store/Store';
+import { get, getDefaults } from '../../store/Store';
 
 const Considerations = () => {
   const context = useSelector(get.additional);
@@ -23,8 +21,7 @@ const Considerations = () => {
 
         <div>
           <p>
-            If you cash rent this field, will the landowner contribute to seed costs or
-            other costs associated with planting cover crops?
+            If you cash rent this field, will the landowner contribute to seed costs or other costs associated with planting cover crops?
           </p>
           <p>If yes, please enter the estimated cash contribution ($/acre)</p>
         </div>
@@ -34,28 +31,24 @@ const Considerations = () => {
 
         <div>
           <p>
-            Do you plan to participate in a state or federal program (e.g. USDA EQIP or
-            USDA CSP) that provides financial assistance for using cover crops?
+            Do you plan to participate in a state or federal program (e.g. USDA EQIP or USDA CSP)
+            that provides financial assistance for using cover crops?
           </p>
           <p>
-            If you click yes, an estimate of the NRCS EQIP state program (Practice 340)
-            rate for your location and seeding mix is shown in the input box. You can
-            change this financial assistance estimate to represent your specific
-            opportunities.
+            If you click yes, an estimate of the NRCS EQIP state program (Practice 340) rate for your location and seeding mix
+            is shown in the input box.
+            You can change this financial assistance estimate to represent your specific opportunities.
             <Help>
               <p>
-                The USDA NRCS provides financial assistance to some farms planting cover
-                crops under Practice 340. The amount of financial assistance varies by
-                state, cover crop practice and specific priorities.
+                The USDA NRCS provides financial assistance to some farms planting cover crops under Practice 340.
+                The amount of financial assistance varies by state, cover crop practice and specific priorities.
               </p>
               <p>
-                Priority programs include helping historically underserved audiences and
-                water source protection. Financial assistance for planting multiple species
-                is often greater than when planting a single species.
+                Priority programs include helping historically underserved audiences and water source protection.
+                Financial assistance for planting multiple species is often greater than when planting a single species.
               </p>
               <p>
-                The number of years that farms can receive cover crop financial assistance
-                is usually limited.
+                The number of years that farms can receive cover crop financial assistance is usually limited.
               </p>
             </Help>
           </p>
@@ -85,20 +78,17 @@ const Considerations = () => {
         <div>
           <p>Will you participate in a cover crop insurance discount program?</p>
           <p>
-            If yes, please enter the estimated cash savings on your crop insurance premium
-            ($/acre).
+            If yes, please enter the estimated cash savings on your crop insurance premium ($/acre).
             <Help>
               <p>
-                Growers may be eligible for discounts on their crop insurance premiums by
-                planting cover crops.
+                Growers may be eligible for discounts on their crop insurance premiums by planting cover crops.
               </p>
               <p>
-                For example, the State of Iowa has offered a $5 per acre crop insurance
-                discount program administered by the Iowa Department of Agriculture and
-                Land Stewardship and the USDA Risk Management Agency (RMA) when growers
-                planted a fall seeded cover crop. Similar programs have been available in
-                Illinois. Note that some insurance policies may be excluded (e.g.
-                Whole-Farm Revenue Protection or written agreements).
+                For example, the State of Iowa has offered a $5 per acre crop insurance discount program administered
+                by the Iowa Department of Agriculture and Land Stewardship and the USDA Risk Management Agency (RMA) when growers
+                planted a fall seeded cover crop.
+                Similar programs have been available in Illinois.
+                Note that some insurance policies may be excluded (e.g. Whole-Farm Revenue Protection or written agreements).
               </p>
             </Help>
           </p>
@@ -111,86 +101,46 @@ const Considerations = () => {
   );
 }; // Considerations
 
-const Additional = () => {
-  const dispatch = useDispatch();
-  const dev = useSelector(get.dev);
+const Additional = () => (
+  <div className="Additional">
+    <h1>Additional Considerations</h1>
+    <p>
+      This portion of the
+      {' '}
+      <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
+      {' '}
+      will address additional considerations that may impact the profitability of using cover crops in your operation.
+      Please respond to questions for each of the sections below.
+    </p>
 
-  return (
-    <div className="Additional">
-      <h1>Additional Considerations</h1>
-      <p>
-        This portion of the
-        {' '}
-        <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
-        {' '}
-        will address additional considerations that may impact the profitability of using cover
-        crops in your operation. Please respond to questions for each of the sections below.
-      </p>
+    <h4>Cost-Share or Other Financial Incentives</h4>
+    <p>
+      As you consider the financial impacts of using cover crops in your operation,
+      there are a number of programs that may provide cost share or financial support for your farm.
+      Types of support could include cost-sharing of seed expense from landowners (if you cash rent),
+      state program such as Soil &amp; Water Conservation Programs,
+      federal programs such as EQIP (Environmental Quality Incentives Program)
+      or CSP (Conservation Stewardship Program),
+      or payments from companies aggregated voluntary carbon offsets.
+      If you are not familiar with these types of programs, please refer to the
+      {' '}
+      <NavLink className="link" to="/Resources">
+        Resources page
+      </NavLink>
+      .
+      You will find a number of resources links to explore potential programs for your operation.
+    </p>
 
-      <h4>Cost-Share or Other Financial Incentives</h4>
-      <p>
-        As you consider the financial impacts of using cover crops in your operation, there are
-        a number of programs that may provide cost share or financial support for your farm.
-        Types of support could include cost-sharing of seed expense from landowners (if you
-        cash rent), state program such as Soil &amp; Water Conservation Programs, federal
-        programs such as EQIP (Environmental Quality Incentives Program) or CSP (Conservation
-        Stewardship Program), or payments from companies aggregated voluntary carbon offsets.
-        If you are not familiar with these types of programs, please refer to the
-        {' '}
-        <NavLink className="link" to="/Resources">
-          Resources page
-        </NavLink>
-        . You will find a number of resources links to explore potential programs for your
-        operation.
-      </p>
-
-      <Considerations />
-
-      {/* <Grazing /> */}
-
-      {dev && (
-        <div className="test-buttons">
-          <button
-            type="button"
-            onClick={() => {
-              dispatch(set.additional.grazing('Yes'));
-              dispatch(set.additional.lease('No'));
-              dispatch(set.additional.fallGraze('Yes'));
-              dispatch(set.additional.springGraze('Yes'));
-              dispatch(set.additional.fallDryMatter(500));
-              dispatch(set.additional.fallWaste(0.4));
-              test('additional.fallDryMatter', 500);
-              test('additional.fallWaste', 0.4);
-              dispatch(set.additional.fallGraze('No'));
-              test('additional.fallWaste', 0.5);
-
-              dispatch(set.additional.fallGraze('Yes'));
-
-              dispatch(set.additional.fallDryMatter(500));
-              dispatch(set.additional.fallWaste(0.5));
-              dispatch(set.additional.springDryMatter(1000));
-              dispatch(set.additional.springWaste(0.5));
-              dispatch(set.additional.dryMatter(0.88));
-              dispatch(set.additional.wasted(0.22));
-              dispatch(set.additional.$hay(80));
-              dispatch(set.additional.baleSize(1800));
-            }}
-          >
-            Test data
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}; // Additional
+    <Considerations />
+  </div>
+); // Additional
 
 Additional.menu = (
   <span>
     Addi
     <u>t</u>
-    ional
+    ional Considerations
   </span>
 );
-// Additional.menu = <span>Additional Considerationss</span> ;
 
 export default Additional;

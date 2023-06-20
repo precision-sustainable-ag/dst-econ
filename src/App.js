@@ -113,8 +113,8 @@ const paths = {
   Fertility,
   Herbicide,
   Erosion,
-  Additional,
   Grazing,
+  Additional,
   Yield,
   Practices,
   Revenue,
@@ -190,8 +190,8 @@ const App = () => {
     7: 'Fertility',
     8: 'Herbicide',
     9: 'Erosion',
-    10: 'Additional',
-    11: 'Grazing',
+    10: 'Grazing',
+    11: 'Additional',
     12: 'Yield',
     13: 'Practices',
     14: 'Revenue',
@@ -377,8 +377,8 @@ const App = () => {
           <Route path="Fertility" element={<Fertility />} />
           <Route path="Herbicide" element={<Herbicide />} />
           <Route path="Erosion" element={<Erosion />} />
-          <Route path="Additional" element={<Additional />} />
           <Route path="Grazing" element={<Grazing />} />
+          <Route path="Additional" element={<Additional />} />
           <Route path="Yield" element={<Yield />} />
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />

@@ -14,6 +14,10 @@ const Logic = ({
   const currentImplement = useSelector(get[current].implement);
   const acresHour = useSelector(get[current].acresHour).toString();
 
+  if (!style && property === 'implement') {
+    style = { borderTop: '1px solid black' };
+  }
+
   const iscustom = [
     'Hire custom operator', 'I will not reduce my post emerge spray applications',
   ].includes(currentImplement);

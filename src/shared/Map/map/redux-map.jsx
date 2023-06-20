@@ -337,12 +337,14 @@ const ReduxMap = ({
         newPolygon = false;
       }, 100);
     };
+
     const handleDrawDelete = (e) => {
       setIsDrawActive(false);
       handlePolyAreaCalc(e);
 
       document.querySelector('.mapbox-gl-draw_trash').style.display = 'none';
     };
+
     const handleDrawUpdate = (e) => {
       handlePolyAreaCalc(e);
     };
@@ -401,6 +403,7 @@ const ReduxMap = ({
         }
       }
     });
+
     if (hasMarkerMovable) {
       map.current.on('dblclick', (e) => {
         if (newPolygon) return;
@@ -412,6 +415,7 @@ const ReduxMap = ({
         e.preventDefault(); // doubleClickZoom.disable() doesn't seem to work
       });
     }
+
     map.current.on('mousemove', (e) => {
       const lnglat = e.lngLat.wrap();
       setCursorLoc({

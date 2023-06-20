@@ -721,7 +721,7 @@ table.power {
   td:nth-child(2) {width: 30%;}
   td:nth-child(3) {width: 30%;}
 
-  th[colspan] {
+  > tbody > tr > th[colspan] {
     border-top: 2px solid #444;
   }
 }
