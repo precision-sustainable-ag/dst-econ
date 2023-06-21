@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+
 // import {current} from '@reduxjs/toolkit';
 
 import React from 'react';
@@ -64,6 +65,24 @@ const shared = {
 };
 
 const dev = /(localhost|dev)/i.test(window.location);
+
+const terminationTotal = (state) => (
+  (+state.termination.productCost || 0)
+  + (+state.chemical.total || 0)
+  + (+state.roller.total || 0)
+  + (+state.tillage.total || 0)
+  + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
+);
+
+const tillageTotal = (state) => (state.tillage1.costReductions || 0) + (state.tillageOther.total || 0) + (state.tillageFall.total || 0);
+
+const herbicideTotal = (state) => (
+  (state.herbicideAdditional.cost || 0)
+  + (state.herbicideAdditional.total || 0)
+  + (state.herbicideFall.total || 0)
+  + (state.herbicideFall.savings || 0)
+  - ((state.herbicideReduced.cost || 0) + (state.herbicideReduced.total || 0))
+);
 
 const initialState = {
   focus: null,
@@ -136,12 +155,7 @@ const initialState = {
   unused: { ...shared },
   herbicide: {
     ...shared,
-    total: (state) => (state.herbicideAdditional.cost || 0)
-    + (state.herbicideAdditional.total || 0)
-    + (state.herbicideFall.total || 0)
-    + (state.herbicideFall.savings || 0)
-    - ((state.herbicideReduced.cost || 0)
-    + (state.herbicideReduced.total || 0)),
+    total: herbicideTotal,
   },
   herbicideAdditional: {
     ...shared,
@@ -218,7 +232,7 @@ const initialState = {
   tillageOther: { ...shared },
   tillageAll: {
     ...shared,
-    total: (state) => (state.tillage1.costReductions || 0) + (state.tillageOther.total || 0),
+    total: tillageTotal,
   },
   termination: {
     ...shared,
@@ -248,20 +262,14 @@ const initialState = {
 
       state.termination.reducedHerbicides.forEach((s, n) => {
         if (s) {
-          total
-          += (state.termination.reducedRates[n] || 0)
-          * (state.termination.reducedPrices[n] || 0);
+          total += (state.termination.reducedRates[n] || 0)
+                   * (state.termination.reducedPrices[n] || 0);
         }
       });
 
       return total;
     },
-    total: (state) => (+state.termination.productCost || 0)
-      + (+state.chemical.total || 0)
-      + (+state.roller.total || 0)
-      + (+state.tillage.total || 0)
-      + ((+state.termination.additionalTotal || 0)
-      - (+state.termination.reducedTotal || 0)),
+    total: terminationTotal,
   },
   fertility: {
     ...shared,
@@ -424,7 +432,12 @@ const getCosts = (state, current) => {
     state[current].estimated = +(
       state[current].$implements.total + state[current].$power.total
     ).toFixed(2);
+
     state[current].total = state[current].estimated;
+
+    state.termination.total = terminationTotal(state);
+    state.tillageAll.total = tillageTotal(state);
+    state.herbicide.total = herbicideTotal(state);
   });
 }; // getCosts
 
