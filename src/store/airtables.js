@@ -582,87 +582,104 @@ const ATrates = {
   "conversion": {
     "key": "conversion",
     "description": "Acres Conversion factor (=43560 ft2/ac * mi/5280ft)",
-    "value": 8.25
+    "value": 8.25,
+    "Notes": ""
   },
   "deflator": {
     "key": "deflator",
     "description": "GDP implicit price deflator, 2020 4th quarter",
-    "value": 114.4
+    "value": 114.4,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "deflator1996": {
     "key": "deflator1996",
     "description": "GDP implicit price deflator, 1996",
-    "value": 76.783
+    "value": 76.783,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "forecast": {
     "key": "forecast",
     "description": "2020 U.S. net farm income forecast ($ billions)",
-    "value": 111.4
+    "value": 111.4,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "fuel": {
     "key": "fuel",
     "description": "Fuel price, $/gallon",
-    "value": 3.5
+    "value": 3.5,
+    "Notes": "verified 6/1/23"
   },
   "horsepower": {
     "key": "horsepower",
     "description": "Self propelled assumed horsepower (for fuel calcs)",
-    "value": 80
+    "value": 80,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "inflation": {
     "key": "inflation",
     "description": "Inflation Rate, % per year",
-    "value": 0
+    "value": 0,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "insurance": {
     "key": "insurance",
     "description": "Insurance Rate",
-    "value": 0.0085
+    "value": 0.0085,
+    "Notes": "verified 6/1/23"
   },
   "interest": {
     "key": "interest",
     "description": "Interest Rate, % of average investment",
-    "value": 0.08
+    "value": 0.08,
+    "Notes": "verified 6/1/23"
   },
   "K2O": {
     "key": "K2O",
     "description": "$ per pound of K2O",
-    "value": 0.53
+    "value": 0.53,
+    "Notes": "Average Midwest values 6/1/23"
   },
   "lubrication": {
     "key": "lubrication",
     "description": "Lubrication cost, % of fuel",
-    "value": 0.1
+    "value": 0.1,
+    "Notes": "verified 6/1/23"
   },
   "Nitrogen": {
     "key": "Nitrogen",
     "description": "$ per pound of N",
-    "value": 0.61
+    "value": 0.55,
+    "Notes": "Average Midwest values 6/1/23"
   },
   "P2O5": {
     "key": "P2O5",
     "description": "$ per pound of P2O5",
-    "value": 0.69
+    "value": 0.69,
+    "Notes": "Average Midwest values 6/1/23"
   },
   "projected": {
     "key": "projected",
     "description": "Real Net Farm Income projected at trade-in, in $ billion 1996 dollars",
-    "value": 74.76945979
+    "value": 74.76945979,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "property": {
     "key": "property",
     "description": "Property taxes",
-    "value": 0.005
+    "value": 0.005,
+    "Notes": ""
   },
   "skilled": {
     "key": "skilled",
     "description": "Skilled Labor Rate $/hr.",
-    "value": 20
+    "value": 20,
+    "Notes": "verified 6/1/23"
   },
   "storage": {
     "key": "storage",
     "description": "Storage Cost/Sq. Foot of Space",
-    "value": 0.969218963
+    "value": 0.969218963,
+    "Notes": "Source: MachData2021  from Lazarus"
   }
 };
 
@@ -701,6 +718,11 @@ const ATcostDefaults = {
     "key": "Herbicide application",
     "cost": 8,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
+  },
+  "Herbicide product": {
+    "key": "Herbicide product",
+    "cost": 21,
+    "Notes": "placeholder number"
   },
   "Liquid fertilizer application": {
     "key": "Liquid fertilizer application",
@@ -781,6 +803,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 270,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -802,6 +825,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.25,
     "labortype": "Skilled",
     "shed (ft^2)": 400,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -823,6 +847,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.25,
     "labortype": "Skilled",
     "shed (ft^2)": 200,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -844,6 +869,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -865,6 +891,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -886,6 +913,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -907,6 +935,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 250,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -928,6 +957,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 370,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -949,6 +979,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 370,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -970,6 +1001,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 75,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -992,7 +1024,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 160
+    "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Chopping Corn Hd; 12 Row; 22 Ft": {
     "key": "Combine Chopping Corn Hd; 12 Row; 22 Ft",
@@ -1013,7 +1046,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 160
+    "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Chopping Corn Hd; 12 Row; 30 Ft": {
     "key": "Combine Chopping Corn Hd; 12 Row; 30 Ft",
@@ -1034,7 +1068,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 160
+    "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Corn Hd; 6 Row; 15 Ft": {
     "key": "Combine Corn Hd; 6 Row; 15 Ft",
@@ -1055,7 +1090,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 120
+    "shed (ft^2)": 120,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Corn Hd; 8 Row; 20 Ft": {
     "key": "Combine Corn Hd; 8 Row; 20 Ft",
@@ -1076,7 +1112,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 160
+    "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Corn Hd; 12 Row; 22 Ft": {
     "key": "Combine Corn Hd; 12 Row; 22 Ft",
@@ -1097,7 +1134,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 160
+    "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Corn Hd; 12 Row; 30 Ft": {
     "key": "Combine Corn Hd; 12 Row; 30 Ft",
@@ -1118,7 +1156,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 160
+    "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Combine Flex Platform; 20 Ft": {
     "key": "Combine Flex Platform; 20 Ft",
@@ -1138,6 +1177,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 108,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1159,6 +1199,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 108,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1180,6 +1221,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 108,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1201,6 +1243,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 130,
+    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1222,6 +1265,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
+    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1243,6 +1287,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
+    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1264,6 +1309,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 300,
+    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1285,6 +1331,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1306,6 +1353,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 400,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1327,6 +1375,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 400,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1349,7 +1398,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 140
+    "shed (ft^2)": 140,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Forage Harvester, Pull-Type w/Pickup Head; 12 Ft": {
     "key": "Forage Harvester, Pull-Type w/Pickup Head; 12 Ft",
@@ -1369,6 +1419,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 140,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1391,7 +1442,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 300
+    "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Forage Harvester, Self-Prop Corn Head; 8 Row; 20 Ft": {
     "key": "Forage Harvester, Self-Prop Corn Head; 8 Row; 20 Ft",
@@ -1412,7 +1464,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
-    "shed (ft^2)": 300
+    "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Forage Harvester, Self-Prop Pickup Head (2X windrows); 24 Ft": {
     "key": "Forage Harvester, Self-Prop Pickup Head (2X windrows); 24 Ft",
@@ -1432,6 +1485,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1453,6 +1507,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1474,6 +1529,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Unskilled",
     "shed (ft^2)": 0,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1495,6 +1551,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 345,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1516,6 +1573,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 184,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1537,6 +1595,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 250,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1559,6 +1618,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 250,
+    "Notes": "Source: MachData2021  from Lazarus",
     "unit2": ""
   },
   "Large Rectangular Baler; 4x3 ; 20 Ft": {
@@ -1580,6 +1640,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 250,
+    "Notes": "Source: MachData2021  from Lazarus",
     "unit2": ""
   },
   "Moldboard Plow; 6 Bottom; 9 Ft": {
@@ -1601,7 +1662,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
-    "shed (ft^2)": 132
+    "shed (ft^2)": 132,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Moldboard Plow; 8 Bottom; 12 Ft": {
     "key": "Moldboard Plow; 8 Bottom; 12 Ft",
@@ -1622,7 +1684,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
-    "shed (ft^2)": 150
+    "shed (ft^2)": 150,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "No-Till Drill ; 15 Ft": {
     "key": "No-Till Drill ; 15 Ft",
@@ -1642,6 +1705,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1663,6 +1727,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 185,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1684,6 +1749,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 230,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1705,6 +1771,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 250,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1726,6 +1793,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1747,6 +1815,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1768,6 +1837,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 150,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1789,6 +1859,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 185,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1810,6 +1881,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 230,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1831,6 +1903,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 240,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1852,6 +1925,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1873,6 +1947,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 240,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1894,6 +1969,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 250,
+    "Notes": "Modified by Drew Kientzy, 2023;Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1915,6 +1991,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 240,
+    "Notes": "Modified by Drew Kientzy, 2023;Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1936,6 +2013,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 100,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1958,6 +2036,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 60,
+    "Notes": "Source: MachData2021  from Lazarus",
     "unit2": ""
   },
   "Round Baler; 4x5 ; 20 Ft": {
@@ -1979,6 +2058,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 60,
+    "Notes": "Source: MachData2021  from Lazarus",
     "unit2": ""
   },
   "Round Baler; 5x6 ; 20 Ft": {
@@ -2000,6 +2080,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 60,
+    "Notes": "Source: MachData2021  from Lazarus",
     "unit2": ""
   },
   "Row Crop Planter; 6 Row; 15 Ft": {
@@ -2021,7 +2102,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
-    "shed (ft^2)": 200
+    "shed (ft^2)": 200,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Row Crop Planter; 8 Row; 20 Ft": {
     "key": "Row Crop Planter; 8 Row; 20 Ft",
@@ -2042,7 +2124,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
-    "shed (ft^2)": 200
+    "shed (ft^2)": 200,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Row Crop Planter; 12 Row; 30 Ft": {
     "key": "Row Crop Planter; 12 Row; 30 Ft",
@@ -2063,7 +2146,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
-    "shed (ft^2)": 300
+    "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Row Crop Planter; 16 Row; 40 Ft": {
     "key": "Row Crop Planter; 16 Row; 40 Ft",
@@ -2084,7 +2168,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
-    "shed (ft^2)": 300
+    "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Row Crop Planter; 24 Row; 60 Ft": {
     "key": "Row Crop Planter; 24 Row; 60 Ft",
@@ -2105,7 +2190,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
-    "shed (ft^2)": 300
+    "shed (ft^2)": 300,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Row Cultivator; 12 Row; 30 Ft": {
     "key": "Row Cultivator; 12 Row; 30 Ft",
@@ -2126,7 +2212,8 @@ const ATimplements = {
     "tractor (hr/impl)": 1,
     "labor (hr/trac)": 1.04,
     "labortype": "Unskilled",
-    "shed (ft^2)": 140
+    "shed (ft^2)": 140,
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "Stalk Shredder; 20 Ft": {
     "key": "Stalk Shredder; 20 Ft",
@@ -2146,6 +2233,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.1,
     "labortype": "Unskilled",
     "shed (ft^2)": 231,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2167,6 +2255,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 260,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2188,6 +2277,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 280,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2209,6 +2299,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
+    "Notes": "Source: MachData2021  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2230,6 +2321,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 180,
+    "Notes": "Drew Kientzy research 2023",
     "size2": "",
     "unit2": ""
   },
@@ -2251,6 +2343,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
+    "Notes": "Drew Kientzy research 2023",
     "size2": "",
     "unit2": ""
   },
@@ -2272,6 +2365,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
+    "Notes": "Drew Kientzy research 2023",
     "size2": "",
     "unit2": ""
   },
@@ -2293,6 +2387,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
+    "Notes": "Drew Kientzy research 2023",
     "size2": "",
     "unit2": ""
   }
@@ -2309,7 +2404,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 92,
-    "default ASABE category": "Two wheel drive tractors, under 80 HP"
+    "default ASABE category": "Two wheel drive tractors, under 80 HP",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "60 HP Tractor": {
     "key": "60 HP Tractor",
@@ -2321,7 +2417,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 104,
-    "default ASABE category": "Two wheel drive tractors, under 80 HP"
+    "default ASABE category": "Two wheel drive tractors, under 80 HP",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "75 HP Tractor": {
     "key": "75 HP Tractor",
@@ -2333,7 +2430,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 115,
-    "default ASABE category": "Two wheel drive tractors, under 80 HP"
+    "default ASABE category": "Two wheel drive tractors, under 80 HP",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "105 HP MFWD Tractor": {
     "key": "105 HP MFWD Tractor",
@@ -2345,7 +2443,8 @@ const ATpower = {
     "expected use (hr/yr)": 450,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 127,
-    "default ASABE category": "Mech. front wheel drive tractors"
+    "default ASABE category": "Mech. front wheel drive tractors",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "130 HP MFWD Tractor": {
     "key": "130 HP MFWD Tractor",
@@ -2357,15 +2456,17 @@ const ATpower = {
     "expected use (hr/yr)": 450,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 130,
-    "default ASABE category": "Mech. front wheel drive tractors"
+    "default ASABE category": "Mech. front wheel drive tractors",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
-  "130 Self Propelled": {
-    "key": "130 Self Propelled",
+  "130 HP Self Propelled": {
+    "key": "130 HP Self Propelled",
     "Description": "130 Self Propelled",
     "HP": 130,
     "expected use (hr/yr)": 200,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "default ASABE category": "None",
+    "Notes": "Source: MachData2021  from Lazarus",
     "purchase price 2020": "",
     "list discount": "",
     "expected life (years)": "",
@@ -2381,7 +2482,8 @@ const ATpower = {
     "expected use (hr/yr)": 500,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 200,
-    "default ASABE category": "Mech. front wheel drive tractors"
+    "default ASABE category": "Mech. front wheel drive tractors",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "200 HP MFWD Tractor": {
     "key": "200 HP MFWD Tractor",
@@ -2393,7 +2495,8 @@ const ATpower = {
     "expected use (hr/yr)": 500,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 230,
-    "default ASABE category": "Mech. front wheel drive tractors"
+    "default ASABE category": "Mech. front wheel drive tractors",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "225 HP MFWD Tractor": {
     "key": "225 HP MFWD Tractor",
@@ -2405,7 +2508,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 230,
-    "default ASABE category": "Mech. front wheel drive tractors"
+    "default ASABE category": "Mech. front wheel drive tractors",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "260 HP MFWD Tractor": {
     "key": "260 HP MFWD Tractor",
@@ -2417,7 +2521,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 230,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "260 HP Tracked Tractor": {
     "key": "260 HP Tracked Tractor",
@@ -2429,7 +2534,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "275 HP Combine": {
     "key": "275 HP Combine",
@@ -2441,7 +2547,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 400,
-    "default ASABE category": "Combine (self propelled)"
+    "default ASABE category": "Combine (self propelled)",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "310 HP 4WD Tractor": {
     "key": "310 HP 4WD Tractor",
@@ -2453,7 +2560,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "350 HP Tracked Tractor": {
     "key": "350 HP Tracked Tractor",
@@ -2465,7 +2573,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "360 HP 4WD Tractor": {
     "key": "360 HP 4WD Tractor",
@@ -2477,7 +2586,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "375 HP Combine": {
     "key": "375 HP Combine",
@@ -2489,7 +2599,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 500,
-    "default ASABE category": "Combine (self propelled)"
+    "default ASABE category": "Combine (self propelled)",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "400 HP SP Forage Harvester Base Unit": {
     "key": "400 HP SP Forage Harvester Base Unit",
@@ -2501,7 +2612,8 @@ const ATpower = {
     "expected use (hr/yr)": 350,
     "fuel use (gal/PTO hp/hr)": 0.024,
     "shed (ft^2)": 500,
-    "default ASABE category": "Forage harvester (SP)"
+    "default ASABE category": "Forage harvester (SP)",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "425 HP 4WD Tractor": {
     "key": "425 HP 4WD Tractor",
@@ -2513,7 +2625,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "440 HP Combine": {
     "key": "440 HP Combine",
@@ -2525,7 +2638,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.038305882,
     "shed (ft^2)": 500,
-    "default ASABE category": "Combine (self propelled)"
+    "default ASABE category": "Combine (self propelled)",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "550 HP 4WD Tractor": {
     "key": "550 HP 4WD Tractor",
@@ -2537,7 +2651,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 300,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "550 HP Tracked Tractor": {
     "key": "550 HP Tracked Tractor",
@@ -2549,7 +2664,8 @@ const ATpower = {
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers"
+    "default ASABE category": "Four wheel drive tractors & crawlers",
+    "Notes": "Source: MachData2021  from Lazarus"
   },
   "625 HP SP Forage Harvester Base Unit": {
     "key": "625 HP SP Forage Harvester Base Unit",
@@ -2561,7 +2677,8 @@ const ATpower = {
     "expected use (hr/yr)": 350,
     "fuel use (gal/PTO hp/hr)": 0.024,
     "shed (ft^2)": 500,
-    "default ASABE category": "Forage harvester (SP)"
+    "default ASABE category": "Forage harvester (SP)",
+    "Notes": "Source: MachData2021  from Lazarus"
   }
 };
 
@@ -3284,7 +3401,8 @@ const ATcommodities = {
     "three year": 0.0176,
     "five year": 0.03,
     "Notes": "Price is 2023 RMA springtime price; % change is from SARE publication by Myers.",
-    "order": 1
+    "order": 1,
+    "yield": "160"
   },
   "Soybeans": {
     "key": "Soybeans",
@@ -3293,7 +3411,8 @@ const ATcommodities = {
     "three year": 0.0354,
     "five year": 0.0496,
     "Notes": "Price is 2023 RMA springtime price; % change is from SARE publication by Myers.",
-    "order": 2
+    "order": 2,
+    "yield": "50"
   },
   "Wheat": {
     "key": "Wheat",
@@ -3302,7 +3421,8 @@ const ATcommodities = {
     "order": 3,
     "one year": "",
     "three year": "",
-    "five year": ""
+    "five year": "",
+    "yield": ""
   },
   "Grain Sorghum (milo)": {
     "key": "Grain Sorghum (milo)",
@@ -3311,7 +3431,8 @@ const ATcommodities = {
     "order": 4,
     "one year": "",
     "three year": "",
-    "five year": ""
+    "five year": "",
+    "yield": ""
   },
   "Cotton": {
     "key": "Cotton",
@@ -3320,7 +3441,8 @@ const ATcommodities = {
     "order": 5,
     "one year": "",
     "three year": "",
-    "five year": ""
+    "five year": "",
+    "yield": ""
   },
   "Rice": {
     "key": "Rice",
@@ -3329,7 +3451,8 @@ const ATcommodities = {
     "order": 6,
     "one year": "",
     "three year": "",
-    "five year": ""
+    "five year": "",
+    "yield": ""
   },
   "Sunflower": {
     "key": "Sunflower",
@@ -3338,7 +3461,8 @@ const ATcommodities = {
     "order": 7,
     "one year": "",
     "three year": "",
-    "five year": ""
+    "five year": "",
+    "yield": ""
   },
   "Canola": {
     "key": "Canola",
@@ -3347,7 +3471,8 @@ const ATcommodities = {
     "order": 8,
     "one year": "",
     "three year": "",
-    "five year": ""
+    "five year": "",
+    "yield": ""
   }
 };
 
@@ -3355,162 +3480,194 @@ const ATeqip = {
   "AL": {
     "key": "AL",
     "basic": 52.36,
-    "multiple": 64.02
+    "multiple": 64.02,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "AR": {
     "key": "AR",
     "basic": 40.43,
-    "multiple": 49.76
+    "multiple": 49.76,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "CT": {
     "key": "CT",
     "basic": 52.44,
-    "multiple": 64.1
+    "multiple": 64.1,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "DC": {
     "key": "DC",
     "basic": 35.92,
-    "multiple": 47.45
+    "multiple": 47.45,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "DE": {
     "key": "DE",
     "basic": 56.28,
-    "multiple": 67.94
+    "multiple": 67.94,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "FL": {
     "key": "FL",
     "basic": 52.02,
-    "multiple": 63.68
+    "multiple": 63.68,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "GA": {
     "key": "GA",
     "basic": 51.36,
-    "multiple": 63.01
+    "multiple": 63.01,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "IA": {
     "key": "IA",
     "multiple": 42.45,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
     "basic": ""
   },
   "IL": {
     "key": "IL",
     "basic": 52.6,
-    "multiple": 64.26
+    "multiple": 64.26,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "IN": {
     "key": "IN",
     "basic": 52.13,
-    "multiple": 63.79
+    "multiple": 63.79,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "KY": {
     "key": "KY",
     "basic": 52.81,
-    "multiple": 64.47
+    "multiple": 64.47,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "LA": {
     "key": "LA",
     "basic": 50.05,
-    "multiple": 61.71
+    "multiple": 61.71,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "MA": {
     "key": "MA",
     "basic": 52.29,
-    "multiple": 63.94
+    "multiple": 63.94,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "MD": {
     "key": "MD",
     "basic": 52.33,
-    "multiple": 63.99
+    "multiple": 63.99,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "ME": {
     "key": "ME",
     "basic": 52.16,
-    "multiple": 63.81
+    "multiple": 63.81,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "MI": {
     "key": "MI",
     "basic": 52.63,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
     "multiple": ""
   },
   "MN": {
     "key": "MN",
     "basic": 34.9,
-    "multiple": 42.67
+    "multiple": 42.67,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "MO": {
     "key": "MO",
     "basic": 52.97,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
     "multiple": ""
   },
   "MS": {
     "key": "MS",
     "basic": 52.17,
-    "multiple": 63.82
+    "multiple": 63.82,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "NC": {
     "key": "NC",
     "basic": 52.43,
-    "multiple": 64.09
+    "multiple": 64.09,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "NH": {
     "key": "NH",
     "basic": 52.18,
-    "multiple": 63.83
+    "multiple": 63.83,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "NJ": {
     "key": "NJ",
     "basic": 51.94,
-    "multiple": 63.59
+    "multiple": 63.59,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "NY": {
     "key": "NY",
     "basic": 54.65,
-    "multiple": 66.3
+    "multiple": 66.3,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "OH": {
     "key": "OH",
     "basic": 51.05,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
     "multiple": ""
   },
   "PA": {
     "key": "PA",
     "basic": 54.73,
-    "multiple": 66.38
+    "multiple": 66.38,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "RI": {
     "key": "RI",
     "basic": 52.64,
-    "multiple": 64.29
+    "multiple": 64.29,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "SC": {
     "key": "SC",
     "basic": 52.47,
-    "multiple": 64.12
+    "multiple": 64.12,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "TN": {
     "key": "TN",
     "basic": 52.14,
-    "multiple": 63.79
+    "multiple": 63.79,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "VA": {
     "key": "VA",
     "basic": 52.86,
-    "multiple": 64.51
+    "multiple": 64.51,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "VT": {
     "key": "VT",
     "basic": 52.18,
-    "multiple": 63.84
+    "multiple": 63.84,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "WI": {
     "key": "WI",
     "basic": 52.37,
-    "multiple": 64.03
+    "multiple": 64.03,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   },
   "WV": {
     "key": "WV",
     "basic": 52.55,
-    "multiple": 64.2
+    "multiple": 64.2,
+    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
   }
 };
 

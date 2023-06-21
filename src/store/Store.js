@@ -820,6 +820,9 @@ export const db = {
 };
 `;
     store.dispatch(set.airTables(airTables));
+    if (dev) {
+      console.log(airTables);
+    }
     loaded();
   }
 }; // loadAirtables
