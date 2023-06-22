@@ -76,7 +76,7 @@ const Revenue = () => {
         if (planting[type]) {
           det.push({
             desc: type,
-            cash: planting.$implements[type] + planting.$power[type],
+            cash: -(planting.$implements[type] + planting.$power[type]),
           });
         }
       });
@@ -86,7 +86,7 @@ const Revenue = () => {
         if (planting[type]) {
           det2.push({
             desc: type,
-            non: planting.$implements[type] + planting.$power[type],
+            non: -(planting.$implements[type] + planting.$power[type]),
           });
         }
       });
@@ -95,7 +95,7 @@ const Revenue = () => {
         if (planting[type]) {
           det2.push({
             desc: type,
-            cash: planting.$implements[type] + planting.$power[type],
+            cash: -(planting.$implements[type] + planting.$power[type]),
           });
         }
       });

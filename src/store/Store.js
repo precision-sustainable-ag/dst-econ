@@ -862,9 +862,8 @@ export const dollars = (n) => {
   if (+n < 0) {
     return (
       <span style={{ color: 'red' }}>
-        ($
+        $
         {(-n).toFixed(2)}
-        )
       </span>
     );
   }
