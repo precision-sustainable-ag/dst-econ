@@ -29,10 +29,6 @@ const Revenue = () => {
   const prices = useSelector(get.prices);
   const planting = useSelector(get.planting);
   const erosion = useSelector(get.erosion);
-  console.log({
-    planting,
-    erosion,
-  });
 
   const dispatch = useDispatch();
   const revenueOpen = useSelector(get.revenueOpen);
@@ -195,7 +191,7 @@ const Revenue = () => {
     });
   }
 
-  console.log(data);
+  // console.log(JSON.stringify(data, null, 2));
 
   if (!decreasedDetails.length && !increasedDetails.length) {
     return (

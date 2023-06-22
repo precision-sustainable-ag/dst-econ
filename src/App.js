@@ -18,6 +18,7 @@ import { renderToString } from 'react-dom/server';
 
 import { get, set, db } from './store/Store';
 
+import Home from './components/Home';
 import Field from './components/Field';
 import Seeds from './components/Seeds';
 import Seedbed from './components/Seedbed';
@@ -104,6 +105,7 @@ const MyButton = ({ screen, ...otherProps }) => {
 }; // MyButton
 
 const paths = {
+  Home,
   Field,
   Seeds,
   Seedbed,
@@ -132,7 +134,7 @@ const Navigation = ({ current, mobile }) => {
   return (
     <div id="Navigation">
       {back && (
-        <NavLink to={`/${back.replace('Field', '')}`}>
+        <NavLink to={`/${back.replace('Home', '')}`}>
           <Button variant="contained" color="primary" tabIndex={-1}>
             {!mobile ? (
               <div>
@@ -181,21 +183,22 @@ const App = () => {
   const [screenIndex, setScreenIndex] = useState(0);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const screenNums = {
-    1: 'Field',
-    2: 'Seeds',
-    3: 'Seedbed',
-    4: 'Planting',
-    5: 'Termination',
-    6: 'Tillage',
-    7: 'Fertility',
-    8: 'Herbicide',
-    9: 'Erosion',
-    10: 'Grazing',
-    11: 'Additional',
-    12: 'Yield',
-    13: 'Practices',
-    14: 'Revenue',
-    15: 'Resources',
+    1: 'Home',
+    2: 'Field',
+    3: 'Seeds',
+    4: 'Seedbed',
+    5: 'Planting',
+    6: 'Termination',
+    7: 'Tillage',
+    8: 'Fertility',
+    9: 'Herbicide',
+    10: 'Erosion',
+    11: 'Grazing',
+    12: 'Additional',
+    13: 'Yield',
+    14: 'Practices',
+    15: 'Revenue',
+    16: 'Resources',
   };
 
   const acres = useSelector(get.mapFeatures.area);
@@ -213,7 +216,7 @@ const App = () => {
 
   useEffect(() => {
     if (screen !== 'Loading') {
-      dispatch(set.screen(location.pathname.slice(1) || 'Field'));
+      dispatch(set.screen(location.pathname.slice(1) || 'Home'));
     }
   }, [dispatch, location.pathname, screen]);
 
@@ -318,10 +321,13 @@ const App = () => {
         <div style={{ marginLeft: 130 }} className="menu-items">
           {keys.map((path) => {
             let cname = path === screen ? 'selected' : '';
+            const dis = disabled && !/Home|Field/.test(path);
+
             if (/Practices|Revenue|Resources/.test(path)) {
               cname += ' summary';
             }
-            if (disabled) {
+
+            if (dis) {
               cname += ' disabled';
             }
 
@@ -331,7 +337,7 @@ const App = () => {
                 {path === 'Practices' && <hr />}
                 <NavLink
                   key={path}
-                  to={disabled || path === 'Field' ? '/' : path}
+                  to={dis || path === 'Home' ? '/' : path}
                   accessKey={accessKey}
                   tabIndex={-1}
                   onFocus={(e) => e.target.blur()}
@@ -369,7 +375,8 @@ const App = () => {
 
       <div id="Main">
         <Routes>
-          <Route path="" element={<Field />} />
+          <Route path="" element={<Home />} />
+          <Route path="Field" element={<Field />} />
           <Route path="Seeds" element={<Seeds />} />
           <Route path="Seedbed" element={<Seedbed />} />
           <Route path="Planting" element={<Planting />} />
@@ -392,7 +399,7 @@ const App = () => {
       </div>
 
       {
-        disabled ? null : <Navigation current={screen} mobile={windowSize.width <= 1045} />
+        disabled && screen !== 'Home' ? null : <Navigation current={screen} mobile={windowSize.width <= 1045} />
       }
 
       <div id="AirTables">
