@@ -324,6 +324,7 @@ const App = () => {
             if (disabled) {
               cname += ' disabled';
             }
+
             const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
             return (
               <>

@@ -1,0 +1,23 @@
+#Revenue {
+  .level0 td {
+    border-top: 1px solid #666;
+  }
+
+  .level0, .level1 {
+    font-weight: bold;
+  }
+  
+  td:nth-child(1) {
+    width: 20rem;
+  }
+
+  td:nth-child(n + 2) {
+    text-align: right;
+    width: 8rem;
+  }
+
+  tr > :nth-child(1),
+  tr > :nth-child(3) {
+    border-right: 3px solid #666;
+  }
+}

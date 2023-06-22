@@ -118,6 +118,7 @@ const initialState = {
   species: [],
   rates: [],
   prices: [],
+  revenueOpen: {},
   coverCropTotal: (state) => {
     let total = 0;
 
@@ -129,7 +130,6 @@ const initialState = {
 
     return total;
   },
-  plantingTotal: 0,
   species3: '',
   species4: '',
   current: 'seedbed',
@@ -613,7 +613,7 @@ const afterChange = {
   },
   'erosion.q1': (state, { payload }) => {
     if (payload === 'No') {
-      state.newScreen = 'Additional';
+      state.newScreen = 'Grazing';
     }
   },
   'erosion.q2': (state, { payload }) => {
