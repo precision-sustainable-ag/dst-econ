@@ -85,6 +85,9 @@ const herbicideTotal = (state) => (
 );
 
 const initialState = {
+  name: '',
+  email: '',
+  feedback: '',
   focus: null,
   focused: null,
   modalData: '',

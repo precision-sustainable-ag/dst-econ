@@ -36,6 +36,7 @@ import Resources from './components/Resources';
 import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Data from './components/Data';
+import Feedback from './components/Feedback';
 import { Summary } from './components/Activity';
 
 const MyModal = () => {
@@ -121,6 +122,7 @@ const paths = {
   Practices,
   Revenue,
   Resources,
+  Feedback,
 };
 
 const keys = Object.keys(paths);
@@ -199,6 +201,7 @@ const App = () => {
     14: 'Practices',
     15: 'Revenue',
     16: 'Resources',
+    17: 'Feedback',
   };
 
   const acres = useSelector(get.mapFeatures.area);
@@ -321,7 +324,7 @@ const App = () => {
         <div style={{ marginLeft: 130 }} className="menu-items">
           {keys.map((path) => {
             let cname = path === screen ? 'selected' : '';
-            const dis = disabled && !/Home|Field/.test(path);
+            const dis = disabled && !/Home|Field|Feedback/.test(path);
 
             if (/Practices|Revenue|Resources/.test(path)) {
               cname += ' summary';
@@ -344,7 +347,7 @@ const App = () => {
                 >
                   <MyButton
                     screen={path}
-                    className={cname}
+                    className={`${cname} ${path}`}
                     tabIndex={-1}
                   >
                     {paths[path].menu}
@@ -392,6 +395,7 @@ const App = () => {
           <Route path="Revenue" element={<Revenue />} />
           <Route path="Resources" element={<Resources />} />
           <Route path="Data" element={<Data />} />
+          <Route path="Feedback" element={<Feedback />} />
           {Object.keys(airTables).map((key) => (
             <Route path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}
