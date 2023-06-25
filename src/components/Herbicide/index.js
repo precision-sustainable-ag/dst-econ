@@ -53,7 +53,9 @@ const Herbicide = () => {
         to reduce the amount of herbicide used in their spray program.
         Some growers that have historically used multiple post emerge spray applications have found
         they can eliminate a herbicide pass when using cover crops.
-        You can also read case studies linked to the right to gain more insight of how cover crops have changed management practices for growers.
+        {/*
+          You can also read case studies linked to the right to gain more insight of how cover crops have changed management practices for growers.
+        */}
       </p>
 
       <form>

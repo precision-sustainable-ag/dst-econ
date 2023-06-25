@@ -10,6 +10,8 @@ const defaults = getDefaults('rates|species|prices');
 
 const SpeciesRow = ({ n }) => {
   const species = useSelector(get.species);
+  const rates = useSelector(get.rates);
+  const prices = useSelector(get.prices);
 
   const speciesList = {
     Other: ['Commercial mix'],
@@ -108,6 +110,9 @@ const SpeciesRow = ({ n }) => {
       <td>
         <Input type="dollar" id="prices" index={n} />
       </td>
+      <td>
+        {dollars(rates[n] * prices[n])}
+      </td>
     </tr>
   );
 }; // SpeciesRow
@@ -141,8 +146,9 @@ const Seeds = () => {
 
           <div id="About">
             <p>
-              In the User box below, select your cover crop seed(s). Default seeding rates and
-              prices will appear. You are encouraged to adjust these to fit your farming plan.
+              In the User box below, select your cover crop species.
+              Default seeding rates and prices will appear.
+              You are encouraged to adjust these to fit your farming plan.
             </p>
           </div>
 
@@ -150,7 +156,7 @@ const Seeds = () => {
             <table className="mobile-table">
               <thead>
                 <tr>
-                  <th colSpan="3">
+                  <th colSpan="4">
                     User Input
                     <ClearInputs defaults={defaults} />
                   </th>
@@ -169,13 +175,18 @@ const Seeds = () => {
                     <br />
                     ($/lb)
                   </th>
+                  <th>
+                    Total
+                    <br />
+                    ($)
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {species.map((s, n) => s && <SpeciesRow key={n} n={n} />)}
                 <SpeciesRow key={species.length} n={species.length} />
                 <tr>
-                  <td colSpan="2">
+                  <td colSpan="3">
                     <strong>Cost of Cover crop seed ($/acre)</strong>
                   </td>
                   <td className="hidden" />
@@ -188,13 +199,12 @@ const Seeds = () => {
           </div>
           <p>
             A common strategy for selecting a cover crop is to base your decision upon the need
-            for a specific change you wish to make in a field or farm. For example, if you wish
-            to build soil organic matter you may want to select a cover crop with high levels
-            of biomass and a fibrous root structure. Options exist to mitigate soil erosion,
-            create grazing opportunities, and to decrease weed pressure. If you already know
-            which cover crop you wish to consider, please select from the drop-down menu. If
-            you are new to the use of cover crops or still have questions, please consider
-            using the
+            for a specific change you wish to make in a field or farm.
+            For example, if you wish to build soil organic matter you may want to select a cover crop
+            with high levels of biomass and a fibrous root structure.
+            Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.
+            If you already know which cover crop you wish to consider, please select from the drop-down menu.
+            If you are new to the use of cover crops or still have questions, please consider using the
             {' '}
             <a href={link} target="_blank" rel="noreferrer">
               {region}
@@ -205,26 +215,30 @@ const Seeds = () => {
           </p>
 
           <p>
-            After selecting a cover crop species, please select a seeding rate. Seeding rate
-            selection will depend upon whether you are using a single species or a mix. In
-            addition, you may adjust seeding rates even for single species based upon your
-            intended purpose. For example, you may use a lower seeding rate of cereal rye if
-            you only seek help with erosion control, but may plant a higher rate if you seek to
-            maximize grazing potential. You may use the common rate listed in the green shaded
-            boxes or input your own rate. If you wish to learn more about possible seeding
-            rates, consider using the
+            After selecting a cover crop species, please select a seeding rate.
+            Seeding rate selection will depend upon whether you are using a single species or a mix.
+            In addition, you may adjust seeding rates even for single species based upon your intended purpose.
+            For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
+            but may plant a higher rate if you seek to maximize grazing potential.
+            You may use the common rate listed in the green shaded boxes or input your own rate.
+          </p>
+
+          {/* <p>
+            If you wish to learn more about possible seeding rates, consider using the
             {' '}
             <strong>
               <a target="_blank" rel="noreferrer" href="https://covercrop-seedcalc.org/">Cover Crop Seeding Rate Calculator</a>
             </strong>
             .
-          </p>
+          </p> */}
 
           <p>
-            Prices for cover crops may vary widely based upon your geography and availability
-            from season to season. You may utilize the default value or enter specific pricing
-            from your region. Growers planning to plant a cover crop
+            Prices for cover crops may vary widely based upon your geography and availability from season to season.
+            You may utilize the default value or enter specific pricing from your region.
+            Growers planning to plant a cover crop
+            {' '}
             <em>mix</em>
+            {' '}
             can either
             &apos;build&apos; their mix by selecting multiple cover crop species and an
             {' '}
@@ -232,9 +246,8 @@ const Seeds = () => {
               <strong>appropriate</strong>
             </em>
             {' '}
-            seeding rate (i.e. seeding rate may be lower in a mix relative to seeding as a
-            stand-alone) or by selecting commercial mix and entering a seed rate and price for
-            the commercial mix you chose.
+            seeding rate (i.e. seeding rate may be lower in a mix relative to seeding as a stand-alone)
+            or by selecting commercial mix and entering a seed rate and price for the commercial mix you chose.
           </p>
         </div>
       </form>

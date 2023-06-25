@@ -85,6 +85,11 @@ const herbicideTotal = (state) => (
 );
 
 const initialState = {
+  revenueColor: false,
+  revenuePadding: false,
+  name: '',
+  email: '',
+  feedback: '',
   focus: null,
   focused: null,
   modalData: '',
@@ -118,6 +123,7 @@ const initialState = {
   species: [],
   rates: [],
   prices: [],
+  revenueOpen: {},
   coverCropTotal: (state) => {
     let total = 0;
 
@@ -129,7 +135,6 @@ const initialState = {
 
     return total;
   },
-  plantingTotal: 0,
   species3: '',
   species4: '',
   current: 'seedbed',
@@ -613,7 +618,7 @@ const afterChange = {
   },
   'erosion.q1': (state, { payload }) => {
     if (payload === 'No') {
-      state.newScreen = 'Additional';
+      state.newScreen = 'Grazing';
     }
   },
   'erosion.q2': (state, { payload }) => {
@@ -703,10 +708,14 @@ export const store = createStore(initialState, { afterChange, reducers });
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[def].cost;
       obj.total = db.costDefaults[def].cost;
+    } else if (Object.keys(db.costDefaults).includes(payload)) {
+      state.focus = `${section}.total`;
+      obj.estimated = db.costDefaults[payload].cost;
+      obj.total = db.costDefaults[payload].cost;
     } else if (payload === 'I will not reduce my post emerge spray applications') {
       // empty
     } else if (payload) {
-      const p = db.implements[payload];
+      const p = db.implements[payload] || {};
 
       obj.power = p['default power unit'];
       obj.acresHour = +(
@@ -820,6 +829,9 @@ export const db = {
 };
 `;
     store.dispatch(set.airTables(airTables));
+    if (dev) {
+      console.log(airTables);
+    }
     loaded();
   }
 }; // loadAirtables
@@ -859,9 +871,8 @@ export const dollars = (n) => {
   if (+n < 0) {
     return (
       <span style={{ color: 'red' }}>
-        ($
+        $
         {(-n).toFixed(2)}
-        )
       </span>
     );
   }

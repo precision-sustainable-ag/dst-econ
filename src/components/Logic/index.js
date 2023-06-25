@@ -9,7 +9,26 @@ const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
   onChange, onInput, value, estimated, total, warning, style, custom = ['Hire custom operator'],
 }) => {
-  // console.log('Render: Logic ' + property);
+  const sortPower = () => {
+    let result = Object.keys(db.power)
+      .sort((k1, k2) => {
+        const key1 = k1.match(/(^\d+) (.+)/);
+        const key2 = k2.match(/(^\d+) (.+)/);
+
+        if (key1[2] === key2[2] || /seedbed/.test(current)) {
+          return key1[1] - key2[1];
+        }
+
+        return key1[2].localeCompare(key2[2]);
+      });
+
+    if (current === 'seedbed') {
+      result = result.filter((power) => power.includes('Tractor'));
+    }
+
+    return ['', ...result];
+  }; // doSort
+
   const context = useSelector(get[current]);
   const currentImplement = useSelector(get[current].implement);
   const acresHour = useSelector(get[current].acresHour).toString();
@@ -19,7 +38,9 @@ const Logic = ({
   }
 
   const iscustom = [
-    'Hire custom operator', 'I will not reduce my post emerge spray applications',
+    'Hire custom operator',
+    'I will not reduce my post emerge spray applications',
+    ...Object.keys(db.costDefaults),
   ].includes(currentImplement);
 
   let info = '';
@@ -27,7 +48,11 @@ const Logic = ({
   let td = true;
 
   if (property === 'implement') {
-    a = [...custom, ...Object.keys(db.implements).filter((key) => db.implements[key].type === type).sort()];
+    a = [
+      ...custom,
+      ...Object.keys(db.costDefaults).filter((key) => db.costDefaults[key].screen === type).sort(),
+      ...Object.keys(db.implements).filter((key) => db.implements[key].type === type).sort(),
+    ];
   }
 
   switch (question) {
@@ -37,7 +62,7 @@ const Logic = ({
       info = (
         <>
           <p>Costs associated with tractor and implement use are based upon annual use.</p>
-          <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
+          <p>Users can insert the estimated number of acres of annual use to more accurately represent their operation.</p>
         </>
       );
 
@@ -70,7 +95,7 @@ const Logic = ({
       td = false;
       property = 'power';
       q = q || 'What power will be used?';
-      a = ['', ...Object.keys(db.power).sort((a2, b) => a2.replace(/^\d+/, '').localeCompare(b.replace(/^\d+/, '')))];
+      a = sortPower();
       shown = currentImplement && !iscustom;
       break;
     case 'Estimated':
@@ -78,7 +103,7 @@ const Logic = ({
       property = 'total';
       estimated = context.estimated;
       q = (
-        iscustom ? `Estimated custom cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`
+        iscustom ? `Estimated cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`
           : q || (
           <div>
             Estimated relevant cost (
@@ -93,7 +118,7 @@ const Logic = ({
         currentImplement && currentImplement !== 'I will not reduce my post emerge spray applications'
       );
       warning = (
-        (iscustom || context.q3 === 'Custom Operator') && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
+        iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
           ? (
             <div className="warning">
               Warning:
@@ -183,7 +208,7 @@ const Logic = ({
             <td style={style}>{q}</td>
             <td style={style}>{result}</td>
             {
-              property === 'implement' ? (
+              property === 'implement' && !iscustom ? (
                 <td
                   style={{ padding: 0, border: '1px solid black' }}
                   rowSpan="6"
