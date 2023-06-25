@@ -6,6 +6,26 @@
   .level0, .level1 {
     font-weight: bold;
   }
+
+  .color0 td:nth-child(2) {
+    background: #99f;
+  }
+
+  .color1 td:nth-child(2) {
+    background: #bbf;
+  }
+
+  .color2 td:nth-child(2) {
+    background: #ccf;
+  }
+
+  .color3 td:nth-child(2) {
+    background: #ddf;
+  }
+
+  .color4 td:nth-child(2) {
+    background: #eef;
+  }
   
   td:nth-child(1) {
     width: 20rem;
@@ -19,5 +39,9 @@
   tr > :nth-child(1),
   tr > :nth-child(3) {
     border-right: 3px solid #666;
+  }
+
+  .test-buttons button {
+    text-align: left;
   }
 }

@@ -85,6 +85,8 @@ const herbicideTotal = (state) => (
 );
 
 const initialState = {
+  revenueColor: false,
+  revenuePadding: false,
   name: '',
   email: '',
   feedback: '',
@@ -706,10 +708,14 @@ export const store = createStore(initialState, { afterChange, reducers });
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[def].cost;
       obj.total = db.costDefaults[def].cost;
+    } else if (Object.keys(db.costDefaults).includes(payload)) {
+      state.focus = `${section}.total`;
+      obj.estimated = db.costDefaults[payload].cost;
+      obj.total = db.costDefaults[payload].cost;
     } else if (payload === 'I will not reduce my post emerge spray applications') {
       // empty
     } else if (payload) {
-      const p = db.implements[payload];
+      const p = db.implements[payload] || {};
 
       obj.power = p['default power unit'];
       obj.acresHour = +(

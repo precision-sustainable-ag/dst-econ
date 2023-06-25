@@ -26,14 +26,12 @@ const Costs = ({ desc, type }) => {
   return (
     <tr style={style}>
       <td>
-        <label htmlFor={`${type}.${d}`}>
-          <Input
-            id={`${type}.${d}`}
-            type="checkbox"
-            tabIndex={-1}
-          />
-          {desc}
-        </label>
+        <Input
+          id={`${type}.${d}`}
+          type="checkbox"
+          tabIndex={-1}
+          label={desc}
+        />
       </td>
       <td>{iCost ? `$${iCost.toFixed(2)}` : ''}</td>
       <td>{pCost ? `$${pCost.toFixed(2)}` : ''}</td>
@@ -50,7 +48,6 @@ const Activity = ({ type }) => {
   const imp = state.implement;
   const ImplementsCost = state.implementsCost;
   const PowerCost = state.powerCost;
-  const state3 = useSelector(get[type]).q3;
 
   const heading = {
     seedbed: 'Seedbed Preparation',
@@ -75,11 +72,7 @@ const Activity = ({ type }) => {
 
   let style;
 
-  const breakdown = (
-    (state3 !== 'Custom Operator' && imp !== 'Hire custom operator')
-      && imp
-      && !edited
-  ) && (
+  const breakdown = imp && !edited && (
     <div
       className={cname}
       id="Breakdown"
@@ -89,7 +82,9 @@ const Activity = ({ type }) => {
         <thead>
           <tr>
             <th rowSpan="2" style={{ verticalAlign: 'bottom' }}>
-              Cost Description
+              Cost
+              <br />
+              Description
             </th>
             <th colSpan="3">{heading}</th>
           </tr>
@@ -102,6 +97,7 @@ const Activity = ({ type }) => {
                 Cost
                 <br />
                 ($/acre)
+                <br />
                 <Input
                   id={`${type}.implementsCost`}
                   type="checkbox"

@@ -221,13 +221,16 @@ const Seeds = () => {
             For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
             but may plant a higher rate if you seek to maximize grazing potential.
             You may use the common rate listed in the green shaded boxes or input your own rate.
+          </p>
+
+          {/* <p>
             If you wish to learn more about possible seeding rates, consider using the
             {' '}
             <strong>
               <a target="_blank" rel="noreferrer" href="https://covercrop-seedcalc.org/">Cover Crop Seeding Rate Calculator</a>
             </strong>
             .
-          </p>
+          </p> */}
 
           <p>
             Prices for cover crops may vary widely based upon your geography and availability from season to season.

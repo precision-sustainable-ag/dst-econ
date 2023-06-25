@@ -28,7 +28,7 @@ const Considerations = () => {
           <Input id="additional.$landowner" />
         </div>
 
-        <div>
+        <div style={{ borderTop: '2px solid black' }}>
           <p>
             Do you plan to participate in a state or federal program (e.g. USDA EQIP or USDA CSP)
             that provides financial assistance for using cover crops?
@@ -52,32 +52,30 @@ const Considerations = () => {
             </Help>
           </p>
         </div>
-        <div>
+        <div style={{ borderTop: '2px solid black' }}>
           <Input id="additional.nrcs" options={['Yes', 'No']} type="radio" />
         </div>
 
-        <div hidden={context.nrcs !== 'Yes'}>
+        <div hidden={context.nrcs !== 'Yes'} style={{ borderBottom: '2px solid black' }}>
           Please enter the estimated cash contribution ($/acre)
         </div>
-        <div>
+        <div style={{ borderBottom: '2px solid black' }}>
           <Input id="additional.$costShare" />
         </div>
 
         <div>
           <p>
-            Do you anticipate participation in a voluntary carbon offset program that will
-            provide a payment based on carbon reducing practices such as cover crops?
+            If you anticipate participation in a voluntary carbon offset program that will
+            provide a payment based on carbon reducing practices such as cover crops, please enter the estimated cash contribution ($/acre).
           </p>
-          <p>If yes, please enter the estimated cash contribution ($/acre)</p>
         </div>
         <div>
           <Input id="additional.$carbonOffset" />
         </div>
 
         <div>
-          <p>Will you participate in a cover crop insurance discount program?</p>
           <p>
-            If yes, please enter the estimated cash savings on your crop insurance premium ($/acre).
+            If you participate in a cover crop insurance premium discount program, enter the discount here.
             <Help>
               <p>
                 Growers may be eligible for discounts on their crop insurance premiums by planting cover crops.

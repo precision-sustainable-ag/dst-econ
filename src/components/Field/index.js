@@ -73,10 +73,10 @@ const Field = () => {
           <div className="field-grid">
             <Map />
             <div className="field-details">
-              <h2>What is the name of your Farm?</h2>
+              <h2>Farm name (or FSA farm number)</h2>
               <Input id="farm" fullWidth />
 
-              <h2>What is the name of your Field?</h2>
+              <h2>Field name (or FSA field number)</h2>
               <Input id="field" fullWidth />
 
               <h2>How many acres are in your Field?</h2>

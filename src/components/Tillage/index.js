@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import {
   get,
@@ -96,14 +95,18 @@ const Tillage = () => {
           considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
           Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
           For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
-          Other growers have switched from conventional tillage to no-till planting after making a switch to extensive use of cover crops. Review the
+          Other growers have switched from conventional tillage to no-till planting after making a switch to extensive use of cover crops.
+        </p>
+
+        {/* <p>
+          Review the
           {' '}
           <NavLink className="link" to="/Resources">
             Resources page
           </NavLink>
           {' '}
           for additional information.
-        </p>
+        </p> */}
 
         <form>
           <div className="mobile-table-div">

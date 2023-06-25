@@ -29,13 +29,13 @@
     border: none;
     font-size: 0.8rem;
 
-    span {
-      transform: scale(0.8);
-    }
-
     td {
       white-space: nowrap;
-    }    
+    }
+    
+    td:nth-child(1) {
+      padding-left: 1rem;
+    }
   }
 
   &.noImplementCost tr > :nth-child(2),

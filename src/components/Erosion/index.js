@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import Logic from '../Logic';
 import Help from '../../shared/Help';
 import {
@@ -23,13 +22,15 @@ const Erosion = () => {
     <div className="Erosion">
       <h1>Soil Erosion Control</h1>
       <p>
-        Using cover crops has been documented to provide benefits with controlling soil erosion. Select the
+        Using cover crops has been documented to provide benefits with controlling soil erosion.
+        {' '}
+        {/* Select the
         {' '}
         <NavLink className="link" to="/Resources">
           Resources page
         </NavLink>
         {' '}
-        button at the bottom of this page if you would like to read more about which cover crops can provide strong erosion control benefits.
+        button at the bottom of this page if you would like to read more about which cover crops can provide strong erosion control benefits. */}
         This portion of the Cover Crop Economic DST (Decision Support Tool) will help quantify potential cost savings.
         Please answer the following questions:
       </p>
