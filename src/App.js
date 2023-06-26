@@ -358,7 +358,7 @@ const App = () => {
           })}
         </div>
 
-        <div className="timeline-div">
+        <div className="timeline-div" style={{ display: 'none' }}>
           <div className="timeline">
             {Object.keys(screenNums).map((num) => (
               <div

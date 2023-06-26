@@ -41,16 +41,16 @@ button img {
 #Menu {
   padding-left: 130px;
 
-  @media screen and (max-width: 1045px) {
-    height: 10px;
-  }
+  // @media screen and (max-width: 1045px) {
+  //   height: 10px;
+  // }
 }
 
-.menu-items {
-  @media screen and (max-width: 1045px) {
-    display: none;
-  }
-}
+// .menu-items {
+//   @media screen and (max-width: 1045px) {
+//     display: none;
+//   }
+// }
 
 nav {
   color: #eee;
@@ -400,9 +400,9 @@ button.selected u {
   left: 0.25rem;
   width: 8rem;
 
-  @media screen and (max-width: 1045px) {
-    display: none;
-  }
+  // @media screen and (max-width: 1045px) {
+  //   display: none;
+  // }
 }
 
 summary {

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-// import {current} from '@reduxjs/toolkit';
+// import { current as showCurrent } from '@reduxjs/toolkit';
 
 import React from 'react';
 import { createStore, set, get } from './redux-autosetters';
@@ -579,7 +579,7 @@ const afterChange = {
   'additional.nrcs': (state, { payload }) => {
     if (payload === 'Yes') {
       state.focus = 'additional.$costShare';
-      const data = db.eqip[state.map.address.stateAbbreviation];
+      const data = db.eqip[state.map.address.stateCode];
       const species = state.species.filter((e) => e);
       if (species.length === 1) {
         state.additional.$costShare = data?.basic;
