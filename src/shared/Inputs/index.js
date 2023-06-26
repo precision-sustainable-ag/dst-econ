@@ -248,7 +248,11 @@ const Input = ({
           sx={{ width: max }}
           // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
           groupBy={props.groupBy}
-          getOptionLabel={props.getOptionLabel}
+          getOptionLabel={
+            props.getOptionLabel || (
+              (o) => o?.split('|')[0]
+            )
+          }
           onInputChange={props.onInputChange}
           includeInputInList={props.includeInputInList}
           filterSelectedOptions={props.filterSelectedOptions}
