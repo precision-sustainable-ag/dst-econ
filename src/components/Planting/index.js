@@ -52,6 +52,7 @@ const Planting = () => {
                 property="implement"
                 q="How will planting be done?"
                 type="Planting"
+                custom={[]}
               />
 
               <Logic current="planting" question="power" />

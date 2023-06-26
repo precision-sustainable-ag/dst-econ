@@ -9,6 +9,18 @@ const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
   onChange, onInput, value, estimated, total, warning, style, custom = ['Hire custom operator'],
 }) => {
+  const sortCosts = () => {
+    const cd = db.costDefaults;
+    return Object.keys(cd)
+      .filter((key) => cd[key].screen === type)
+      .sort((k1, k2) => {
+        if (cd[k1].order) {
+          return cd[k1].order - cd[k2].order;
+        }
+        return cd[k1].key.localeCompare(cd[k2].key);
+      });
+  }; // sortCosts
+
   const sortPower = () => {
     let result = Object.keys(db.power)
       .sort((k1, k2) => {
@@ -27,7 +39,7 @@ const Logic = ({
     }
 
     return ['', ...result];
-  }; // doSort
+  }; // sortPower
 
   const context = useSelector(get[current]);
   const currentImplement = useSelector(get[current].implement);
@@ -50,7 +62,7 @@ const Logic = ({
   if (property === 'implement') {
     a = [
       ...custom,
-      ...Object.keys(db.costDefaults).filter((key) => db.costDefaults[key].screen === type).sort(),
+      ...sortCosts(),
       ...Object.keys(db.implements).filter((key) => db.implements[key].type === type).sort(),
     ];
   }

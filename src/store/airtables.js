@@ -684,65 +684,89 @@ const ATrates = {
 };
 
 const ATcostDefaults = {
-  "Aerial seeding": {
-    "key": "Aerial seeding",
-    "cost": 14,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
-  },
-  "aerial spraying": {
-    "key": "aerial spraying",
-    "cost": 11,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
+  "Herbicide application": {
+    "key": "Herbicide application",
+    "cost": 8,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "",
+    "order": ""
   },
   "Anhydrous ammonia injection": {
     "key": "Anhydrous ammonia injection",
     "cost": 14.75,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
-  },
-  "drone seeding": {
-    "key": "drone seeding",
-    "cost": 16,
-    "Notes": "placeholder number"
-  },
-  "drone spraying": {
-    "key": "drone spraying",
-    "cost": 15,
-    "Notes": "placeholder number"
-  },
-  "Dry Fertilizer application": {
-    "key": "Dry Fertilizer application",
-    "cost": 6.75,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
-  },
-  "Herbicide application": {
-    "key": "Herbicide application",
-    "cost": 8,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
-  },
-  "Herbicide product": {
-    "key": "Herbicide product",
-    "cost": 21,
-    "Notes": "placeholder number"
-  },
-  "Liquid fertilizer application": {
-    "key": "Liquid fertilizer application",
-    "cost": 8,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
-  },
-  "Planting": {
-    "key": "Planting",
-    "cost": 20,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
-  },
-  "Roller": {
-    "key": "Roller",
-    "cost": 15,
-    "Notes": "Calculated full cost of 6 row CC roller in CC DST mockup 7-20-22"
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "",
+    "order": ""
   },
   "Seedbed preparation": {
     "key": "Seedbed preparation",
     "cost": 18,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data"
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "",
+    "order": ""
+  },
+  "Roller": {
+    "key": "Roller",
+    "cost": 15,
+    "Notes": "Calculated full cost of 6 row CC roller in CC DST mockup 7-20-22",
+    "screen": "",
+    "order": ""
+  },
+  "Dry Fertilizer application": {
+    "key": "Dry Fertilizer application",
+    "cost": 6.75,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "",
+    "order": ""
+  },
+  "Liquid fertilizer application": {
+    "key": "Liquid fertilizer application",
+    "cost": 8,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "",
+    "order": ""
+  },
+  "Aerial spraying": {
+    "key": "Aerial spraying",
+    "cost": 11,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "",
+    "order": ""
+  },
+  "Drone spraying": {
+    "key": "Drone spraying",
+    "cost": 15,
+    "Notes": "placeholder number",
+    "screen": "",
+    "order": ""
+  },
+  "Herbicide product": {
+    "key": "Herbicide product",
+    "cost": 21,
+    "Notes": "placeholder number",
+    "screen": "",
+    "order": ""
+  },
+  "Hire custom operator|Planting": {
+    "key": "Hire custom operator",
+    "cost": 20,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "Planting",
+    "order": 1
+  },
+  "Aerial seeding|Planting": {
+    "key": "Aerial seeding",
+    "cost": 14,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "Planting",
+    "order": 2
+  },
+  "Drone seeding|Planting": {
+    "key": "Drone seeding",
+    "cost": 16,
+    "Notes": "placeholder number",
+    "screen": "Planting",
+    "order": 3
   }
 };
 
@@ -1687,8 +1711,8 @@ const ATimplements = {
     "shed (ft^2)": 150,
     "Notes": "Source: MachData2021  from Lazarus"
   },
-  "No-Till Drill ; 15 Ft": {
-    "key": "No-Till Drill ; 15 Ft",
+  "No-Till Drill; 15 Ft": {
+    "key": "No-Till Drill; 15 Ft",
     "type": "Planting",
     "name": "No-Till Drill ",
     "size1": 15,

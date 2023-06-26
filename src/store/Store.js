@@ -768,7 +768,7 @@ const loadAirtables = async (tables) => {
 
   const table = tables.shift();
 
-  const order = table === 'commodities' ? 'order' : 'key';
+  const order = /commodities|costDefaults/.test(table) ? 'order' : 'key';
 
   const response = await fetch(
     `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2&sort%5B0%5D%5Bfield%5D=${order}`,
@@ -783,8 +783,12 @@ const loadAirtables = async (tables) => {
 
   data.forEach((rec2) => {
     const cols = Object.keys(rec2);
-    db[table][rec2.key] = {};
-    const obj = db[table][rec2.key];
+    let { key } = rec2;
+    if (rec2.screen) {
+      key += `|${rec2.screen}`;
+    }
+    db[table][key] = {};
+    const obj = db[table][key];
     cols.forEach((col) => {
       obj[alias(col)] = rec2[col];
     });
