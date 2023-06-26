@@ -14,7 +14,12 @@ async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude })
           const value = (parm) => (
             data.features.filter((feature) => feature.id.includes(parm))[0]?.text
           );
-          
+
+          const stateCode = () => {
+            const f = data.features.filter((feature) => feature.id.includes('region'))[0];
+            return f.properties?.short_code?.split('-')[1];
+          };
+
           const newVal = {
             ...prevVal,
             fullAddress: data.features[0].place_name,
@@ -23,6 +28,7 @@ async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude })
             city: value('place'),
             county: value('district'),
             state: value('region'),
+            stateCode: stateCode(),
             zoom,
           }
           return newVal
