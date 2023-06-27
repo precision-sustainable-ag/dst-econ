@@ -85,6 +85,7 @@ const herbicideTotal = (state) => (
 );
 
 const initialState = {
+  calculated: {},
   revenueColor: false,
   revenuePadding: false,
   name: '',
@@ -582,8 +583,10 @@ const afterChange = {
       const species = state.species.filter((e) => e);
       if (species.length === 1) {
         state.additional.$costShare = data?.basic;
+        state.calculated['additional.$costShare'] = data?.basic;
       } else if (species.length > 1) {
         state.additional.$costShare = data?.multiple || data?.basic;
+        state.calculated['additional.$costShare'] = data?.multiple || data?.basic;
       }
     } else {
       state.additional.$costShare = 0;
@@ -622,6 +625,7 @@ const afterChange = {
   },
   'erosion.q2': (state, { payload }) => {
     state.erosion.q3 = db.erosionControl[payload].cost;
+    state.calculated['erosion.q3'] = state.erosion.q3;
   },
   $labor: (state) => {
     getCosts(state, 'seedbed');

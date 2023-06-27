@@ -37,7 +37,6 @@ import Revenue from './components/Revenue';
 import Resources from './components/Resources';
 import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
-import Data from './components/Data';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
@@ -401,7 +400,6 @@ const App = () => {
           <Route path="Practices" element={<Practices />} />
           <Route path="Revenue" element={<Revenue />} />
           <Route path="Resources" element={<Resources />} />
-          <Route path="Data" element={<Data />} />
           <Route path="Feedback" element={<Feedback />} />
           <Route path="AT" element={<AT />} />
           {Object.keys(airTables).map((key) => (
