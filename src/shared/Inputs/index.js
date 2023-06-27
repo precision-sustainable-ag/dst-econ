@@ -43,7 +43,13 @@ const keyPress = (event) => {
 }; // keyPress
 
 const equals = (v1, v2) => {
-  if (typeof v1 === 'undefined') return true;
+  if (typeof v1 === 'undefined') {
+    return true;
+  }
+
+  if (typeof v2 === 'undefined') {
+    return false;
+  }
 
   const stringsEqual = v1.toString() === v2.toString();
 
@@ -71,6 +77,8 @@ const Input = ({
 
   if (calculated[id]) {
     focusRef?.current?.parentNode?.parentNode?.classList.add('default');
+  } else {
+    focusRef?.current?.parentNode?.parentNode?.classList.remove('default');
   }
 
   const sel = id.split('.').reduce((acc, k) => acc[k], get);
