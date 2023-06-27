@@ -1,0 +1,40 @@
+#Yield {
+  margin-bottom: 2rem;
+  table.sare {
+    margin: auto;
+    width: 40rem;
+    outline: 1px solid #888;
+    margin-bottom: 1rem;
+    border: none;
+
+    * {
+      border: none;
+    }
+
+    caption {
+      padding: 0.5rem;
+    }
+
+    td:nth-child(n + 2) {
+      text-align: center;
+    }
+
+    th {color: white;}
+    th:nth-child(n + 2) {
+      width: 11rem;
+    }
+
+    th:nth-child(2) {background: #48742c;}
+    th:nth-child(3) {background: #688cd4;}
+    th:nth-child(4) {background: #c85c14;}
+
+    td:nth-child(2) {background: #c8e4b4;}
+    td:nth-child(3) {background: #b8c4e4;}
+    td:nth-child(4) {background: #ffccac;}
+
+    tfoot {
+      font-style: italic;
+      font-size: 90%;
+    }
+  }
+}
