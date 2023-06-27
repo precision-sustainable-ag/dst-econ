@@ -590,6 +590,7 @@ const afterChange = {
       }
     } else {
       state.additional.$costShare = 0;
+      delete state.calculated['additional.$costShare'];
     }
   },
   'additional.grazing': (state, { payload }) => {
@@ -624,8 +625,12 @@ const afterChange = {
     }
   },
   'erosion.q2': (state, { payload }) => {
-    state.erosion.q3 = db.erosionControl[payload].cost;
-    state.calculated['erosion.q3'] = state.erosion.q3;
+    state.erosion.q3 = db.erosionControl?.[payload]?.cost;
+    if (state.erosion.q3) {
+      state.calculated['erosion.q3'] = state.erosion.q3;
+    } else {
+      delete state.calculated['erosion.q3'];
+    }
   },
   $labor: (state) => {
     getCosts(state, 'seedbed');
