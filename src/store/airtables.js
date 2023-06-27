@@ -747,22 +747,22 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Hire custom operator|Planting": {
-    "key": "Hire custom operator",
+  "Hire custom operator: Ground planting|Planting": {
+    "key": "Hire custom operator: Ground planting",
     "cost": 20,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
     "screen": "Planting",
     "order": 1
   },
-  "Aerial seeding|Planting": {
-    "key": "Aerial seeding",
+  "Hire custom operator: Aerial seeding|Planting": {
+    "key": "Hire custom operator: Aerial seeding",
     "cost": 14,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
     "screen": "Planting",
     "order": 2
   },
-  "Drone seeding|Planting": {
-    "key": "Drone seeding",
+  "Hire custom operator: Drone seeding|Planting": {
+    "key": "Hire custom operator: Drone seeding",
     "cost": 16,
     "Notes": "placeholder number",
     "screen": "Planting",
