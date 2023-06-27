@@ -386,7 +386,7 @@ const Input = ({
           <button
             type="button"
             tabIndex={-1}
-            style={{ float: 'right' }}
+            style={{ float: 'right', fontSize: '0.7rem', color: 'gray' }}
             onClick={() => {
               change(calculated[id]);
               dispatch(set.focus(id));

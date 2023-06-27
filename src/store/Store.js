@@ -439,6 +439,7 @@ const getCosts = (state, current) => {
     ).toFixed(2);
 
     state[current].total = state[current].estimated;
+    state.calculated[`${current}.total`] = state[current].total;
 
     state.termination.total = terminationTotal(state);
     state.tillageAll.total = tillageTotal(state);
@@ -716,10 +717,12 @@ export const store = createStore(initialState, { afterChange, reducers });
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[def].cost;
       obj.total = db.costDefaults[def].cost;
+      state.calculated[`${section}.total`] = obj.total;
     } else if (Object.keys(db.costDefaults).includes(payload)) {
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[payload].cost;
       obj.total = db.costDefaults[payload].cost;
+      state.calculated[`${section}.total`] = obj.total;
     } else if (payload === 'I will not reduce my post emerge spray applications') {
       // empty
     } else if (payload) {
@@ -731,6 +734,7 @@ export const store = createStore(initialState, { afterChange, reducers });
         / db.rates.conversion.value
       ).toFixed(2);
       obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
+      state.calculated[`${section}.annualUseAcres`] = obj.annualUseAcres;
 
       return [`${section}.power`];
     }
@@ -742,6 +746,7 @@ export const store = createStore(initialState, { afterChange, reducers });
 
     if (obj.power) {
       obj.annualUseHours = db.power[obj.power]?.['expected use (hr/yr)'];
+      state.calculated[`${section}.annualUseHours`] = obj.annualUseHours;
       getCosts(state, section);
 
       if (/tillage[1-3]/.test(section)) {
