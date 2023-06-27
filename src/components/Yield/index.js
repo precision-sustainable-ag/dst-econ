@@ -14,6 +14,8 @@ import Logic from '../Logic';
 import Help from '../../shared/Help';
 import ClearInputs from '../ClearInputs';
 
+import './styles.scss';
+
 const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
 
 const Yield = () => {
@@ -97,7 +99,7 @@ const Yield = () => {
       ? {
         position: 'absolute',
         bottom: '2%',
-        left: '1000px',
+        left: '1040px',
         background: '#eee',
         boxShadow: '2px 3px rgb(20 20 20 / 70%)',
         width,
@@ -108,7 +110,7 @@ const Yield = () => {
   );
 
   return (
-    <div className="Yield">
+    <div id="Yield">
       <h1>Yield</h1>
       <p>
         When using cover crops in your rotation, yields of your cash crops may be affected.
@@ -140,9 +142,47 @@ const Yield = () => {
         the number of years of consecutive use of cover crops in fields and the impact on yield.
         The following table is regression analysis results of those surveys (approximately 500 farmers each year for two years)
       </p>
-      <div className="yield-img-div">
-        <img alt="yield" src="yield.png" className="yield-img" />
-      </div>
+
+      <table className="sare">
+        <caption>
+          Percent increase in corn and soybean yields after one, three and five years of consecutive cover crop use on a field,
+          based on a regression analysis of data for crop years 2015 and 2016
+          {' '}
+          <sup>1</sup>
+        </caption>
+        <thead>
+          <tr>
+            <td />
+            <th>ONE YEAR</th>
+            <th>THREE YEARS</th>
+            <th>FIVE YEARS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Corn</td>
+            <td>0.52%</td>
+            <td>1.76%</td>
+            <td>3.00%</td>
+          </tr>
+          <tr>
+            <td>Soybeans</td>
+            <td>2.12%</td>
+            <td>3.54%</td>
+            <td>4.96%</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={4}>
+              <sup>1</sup>
+              {' '}
+              Figures shown are an average of yields from the 2015 and 2016 growing seasons,
+              with yield data obtained from about 500 farmers each year through the SARE/CTIC National Cover Crop Survey.
+            </td>
+          </tr>
+        </tfoot>
+      </table>
 
       <div className="mobile-table-div">
         <table style={{ maxWidth: 900 }} className="mobile-table">
