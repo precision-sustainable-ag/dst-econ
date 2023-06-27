@@ -42,11 +42,24 @@ const keyPress = (event) => {
   }
 }; // keyPress
 
+const equals = (v1, v2) => {
+  if (typeof v1 === 'undefined') return true;
+
+  const stringsEqual = v1.toString() === v2.toString();
+
+  const n1 = Number(v1);
+  const n2 = Number(v2);
+  const numericsEqual = !Number.isNaN(n1) && !Number.isNaN(n2) && n1 === n2;
+
+  return stringsEqual || numericsEqual;
+}; // equals
+
 const Input = ({
   type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, suffix,
   ...props
 }) => {
   const dispatch = useDispatch();
+  const calculated = useSelector(get.calculated);
 
   let obj = id;
   if (Number.isFinite(index)) {
@@ -55,6 +68,10 @@ const Input = ({
 
   const focus = useSelector(get.focus) === obj;
   const focusRef = useRef(null);
+
+  if (calculated[id]) {
+    focusRef?.current?.parentNode?.parentNode?.classList.add('default');
+  }
 
   const sel = id.split('.').reduce((acc, k) => acc[k], get);
 
@@ -356,6 +373,23 @@ const Input = ({
           }
         }}
       />
+      {
+        !equals(calculated[id], v) && (
+          <button
+            type="button"
+            tabIndex={-1}
+            style={{ float: 'right' }}
+            onClick={() => {
+              change(calculated[id]);
+              dispatch(set.focus(id));
+            }}
+          >
+            default
+            <br />
+            {calculated[id]}
+          </button>
+        )
+      }
 
       {props.info && <Help>{props.info}</Help>}
 
