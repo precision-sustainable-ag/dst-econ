@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import {
+  dev,
   get,
   set,
   test,
@@ -99,7 +100,6 @@ const GrazingHelper = () => {
 
 const Grazing = () => {
   const dispatch = useDispatch();
-  const dev = useSelector(get.dev);
 
   return (
     <div className="Grazing">

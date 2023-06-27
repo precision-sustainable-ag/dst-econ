@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import {
+  dev,
   get,
   getDefaults,
   dollars,
@@ -75,8 +76,6 @@ const Costs = ({
 }; // Costs
 
 const Tillage = () => {
-  const dev = useSelector(get.dev);
-
   const state = useSelector(get.tillage1);
   const tillage1 = useSelector(get.tillage1);
   const tillageFall = useSelector(get.tillageFall);

@@ -4,6 +4,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  dev,
   dollars,
   exampleErosion,
   examplePlanting,
@@ -56,7 +57,6 @@ const Tests = () => (
 );
 
 const Revenue = () => {
-  const dev = useSelector(get.dev);
   const species = useSelector(get.species);
   const planting = useSelector(get.planting);
   const seedbed = useSelector(get.seedbed);

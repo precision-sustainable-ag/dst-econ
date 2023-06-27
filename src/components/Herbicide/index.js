@@ -5,7 +5,7 @@ import ClearInputs from '../ClearInputs';
 // import Input from '../../shared/Inputs';
 
 import {
-  get, set, db, getDefaults, clearInputs, exampleHerbicides,
+  dev, get, set, db, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -35,8 +35,6 @@ const Herbicide = () => {
   const additionalCost = useSelector(get.herbicideAdditional.cost);
   const reducedProduct = useSelector(get.herbicideReduced.product);
   const reducedCost = useSelector(get.herbicideReduced.cost);
-
-  const dev = useSelector(get.dev);
 
   return (
     <div className="Herbicide">

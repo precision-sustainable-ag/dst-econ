@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Logic from '../Logic';
 import Help from '../../shared/Help';
 import {
-  get, dollars, exampleErosion, getDefaults, db,
+  dev, get, dollars, exampleErosion, getDefaults, db,
 } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
 
@@ -16,7 +16,6 @@ const defaults = getDefaults([
 
 const Erosion = () => {
   const state = useSelector(get.erosion);
-  const dev = useSelector(get.dev);
 
   return (
     <div className="Erosion">

@@ -1,11 +1,13 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Input from '../../shared/Inputs';
 import Help from '../../shared/Help';
 import ClearInputs from '../ClearInputs';
 
-import { get, set, getDefaults } from '../../store/Store';
+import {
+  dev, get, getDefaults, exampleAdditional,
+} from '../../store/Store';
 import './styles.scss';
 
 const Considerations = () => {
@@ -98,68 +100,56 @@ const Considerations = () => {
   );
 }; // Considerations
 
-const Additional = () => {
-  const dispatch = useDispatch();
-  const dev = useSelector(get.dev);
+const Additional = () => (
+  <div id="Additional">
+    <h1>Additional Considerations</h1>
+    <p>
+      This portion of the
+      {' '}
+      <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
+      {' '}
+      will address additional considerations that may impact the profitability of using cover crops in your operation.
+      Please respond to questions for each of the sections below.
+    </p>
 
-  return (
-    <div id="Additional">
-      <h1>Additional Considerations</h1>
-      <p>
-        This portion of the
-        {' '}
-        <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
-        {' '}
-        will address additional considerations that may impact the profitability of using cover crops in your operation.
-        Please respond to questions for each of the sections below.
-      </p>
+    <h4>Cost-Share or Other Financial Incentives</h4>
+    <p>
+      As you consider the financial impacts of using cover crops in your operation,
+      there are a number of programs that may provide cost share or financial support for your farm.
+      Types of support could include cost-sharing of seed expense from landowners (if you cash rent),
+      state program such as Soil &amp; Water Conservation Programs,
+      federal programs such as EQIP (Environmental Quality Incentives Program)
+      or CSP (Conservation Stewardship Program),
+      or payments from companies aggregated voluntary carbon offsets.
+      If you are not familiar with these types of programs, please refer to the
+      {' '}
+      <NavLink className="link" to="/Resources">
+        Resources page
+      </NavLink>
+      .
+      You will find a number of resources links to explore potential programs for your operation.
+    </p>
 
-      <h4>Cost-Share or Other Financial Incentives</h4>
-      <p>
-        As you consider the financial impacts of using cover crops in your operation,
-        there are a number of programs that may provide cost share or financial support for your farm.
-        Types of support could include cost-sharing of seed expense from landowners (if you cash rent),
-        state program such as Soil &amp; Water Conservation Programs,
-        federal programs such as EQIP (Environmental Quality Incentives Program)
-        or CSP (Conservation Stewardship Program),
-        or payments from companies aggregated voluntary carbon offsets.
-        If you are not familiar with these types of programs, please refer to the
-        {' '}
-        <NavLink className="link" to="/Resources">
-          Resources page
-        </NavLink>
-        .
-        You will find a number of resources links to explore potential programs for your operation.
-      </p>
+    <Considerations />
 
-      <Considerations />
+    {dev && (
+      <div className="test-buttons">
+        <button
+          type="button"
+          onClick={exampleAdditional}
+        >
+          Test data
+        </button>
+      </div>
+    )}
 
-      {dev && (
-        <div className="test-buttons">
-          <button
-            type="button"
-            onClick={() => {
-              dispatch(set.additional.$landowner(200));
-              dispatch(set.additional.nrcs('Yes'));
-              dispatch(set.additional.$costShare(100));
-              dispatch(set.additional.$carbonOffset(150));
-              dispatch(set.additional.$insuranceDiscount(500));
-            }}
-          >
-            Test data
-          </button>
-        </div>
-      )}
-
-    </div>
-  );
-}; // Additional
+  </div>
+); // Additional
 
 Additional.menu = (
   <span>
-    Addi
-    <u>t</u>
-    ional Considerations
+    <u>A</u>
+    dditional Considerations
   </span>
 );
 

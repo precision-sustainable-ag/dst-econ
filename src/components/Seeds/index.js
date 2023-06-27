@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import {
-  get, dollars, db, getDefaults, exampleSeeds,
+  dev, get, dollars, db, getDefaults, exampleSeeds,
 } from '../../store/Store';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
@@ -118,7 +118,6 @@ const SpeciesRow = ({ n }) => {
 }; // SpeciesRow
 
 const Seeds = () => {
-  const dev = useSelector(get.dev);
   const species = useSelector(get.species);
   const address = useSelector(get.map.address);
   const total = useSelector(get.coverCropTotal);

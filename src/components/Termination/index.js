@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
+  dev,
   get,
   getDefaults,
   db,
@@ -247,7 +248,6 @@ const Tillage = () => (
 
 const Termination = () => {
   const current = 'termination';
-  const dev = useSelector(get.dev);
   const method = useSelector(get.termination.method);
   const state = useSelector(get[current]);
   const navigate = useNavigate();

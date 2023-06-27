@@ -1,0 +1,10 @@
+#AT {
+  textarea {
+    white-space: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    height: calc(100vh - 17rem);
+    padding: 0.5rem;
+    background: lightyellow;
+  }
+}

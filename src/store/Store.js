@@ -64,7 +64,7 @@ const shared = {
   },
 };
 
-const dev = /(localhost|dev)/i.test(window.location);
+export const dev = /(localhost|dev)/i.test(window.location);
 
 const terminationTotal = (state) => (
   (+state.termination.productCost || 0)
@@ -96,7 +96,6 @@ const initialState = {
   anchor: '',
   scrollTop: 0,
   airTables: '',
-  dev,
   screen: 'Loading',
   newScreen: '',
   screenWidth: window.innerWidth,
@@ -833,9 +832,6 @@ export const db = {
 };
 `;
     store.dispatch(set.airTables(airTables));
-    if (dev) {
-      console.log(airTables);
-    }
     loaded();
   }
 }; // loadAirtables
@@ -894,8 +890,8 @@ export const test = (key, result) => {
 
     if (value?.toString() !== result.toString()) {
       // I'd prefer console.error, but that requires showing all react_devtools_backend.js
-      console.info(`${key} should be ${result} instead of ${value}`);
-      console.info(get[key]?.(store.getState()));
+      console.log(`ERROR: ${key} should be ${result} instead of ${value}`);
+      // console.log(get[key]?.(store.getState()));
     }
   }
 }; // test
@@ -1215,3 +1211,15 @@ export const exampleYield2 = () => {
   store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates'));
   store.dispatch(set.yield.q4('5'));
 }; // exampleYield2
+
+export const exampleAdditional = () => {
+  exampleSeeds();
+  store.dispatch(set.map.address({ stateCode: 'GA' }));
+  store.dispatch(set.additional.$landowner(200));
+  store.dispatch(set.additional.nrcs('Yes'));
+  store.dispatch(set.additional.$carbonOffset(150));
+  store.dispatch(set.additional.$insuranceDiscount(500));
+
+  test('additional.$costShare', 63.01);
+  test('additional.total', 913.01);
+}; // exampleAdditional

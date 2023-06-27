@@ -4,7 +4,7 @@ import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import {
-  get, set, getDefaults, db,
+  dev, get, set, getDefaults, db,
 } from '../../store/Store';
 import './styles.scss';
 
@@ -22,7 +22,6 @@ const defaults = getDefaults([
 const Field = () => {
   const dispatch = useDispatch();
   const cashCrop = useSelector(get.cashCrop);
-  const dev = useSelector(get.dev);
 
   return (
     <div id="Field">

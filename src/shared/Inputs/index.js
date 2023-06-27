@@ -43,7 +43,8 @@ const keyPress = (event) => {
 }; // keyPress
 
 const Input = ({
-  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, suffix, ...props
+  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, suffix,
+  ...props
 }) => {
   const dispatch = useDispatch();
 
@@ -55,10 +56,8 @@ const Input = ({
   const focus = useSelector(get.focus) === obj;
   const focusRef = useRef(null);
 
-  let sel = get;
-  id.split('.').forEach((k) => {
-    sel = sel[k];
-  });
+  const sel = id.split('.').reduce((acc, k) => acc[k], get);
+
   if (!sel) {
     console.warn(`Unknown Input: ${id}`);
     alert(`Unknown Input: ${id}`);
@@ -76,12 +75,10 @@ const Input = ({
 
   const isArray = Array.isArray(sel2) && !props.multiple; // TODO
 
-  if (!type && /\$/.test(id)) {
-    type = 'dollar';
-  }
-
   if (!type) {
-    if (sel2 === undefined || /number|dollar|percent/.test(typeof sel2)) {
+    if (id.includes('$')) {
+      type = 'dollar';
+    } else if (sel2 === undefined || typeof sel2 === 'number') {
       type = 'number';
     } else if (typeof sel2 === 'boolean') {
       type = 'checkbox';

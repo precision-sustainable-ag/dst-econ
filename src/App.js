@@ -16,7 +16,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 
-import { get, set, db } from './store/Store';
+import {
+  dev, get, set, db,
+} from './store/Store';
 
 import Home from './components/Home';
 import Field from './components/Field';
@@ -37,6 +39,7 @@ import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Data from './components/Data';
 import Feedback from './components/Feedback';
+import AT from './components/AT';
 import { Summary } from './components/Activity';
 
 const MyModal = () => {
@@ -124,6 +127,10 @@ const paths = {
   Resources,
   Feedback,
 };
+
+if (dev) {
+  paths.AT = AT;
+}
 
 const keys = Object.keys(paths);
 
@@ -324,7 +331,7 @@ const App = () => {
         <div style={{ marginLeft: 130 }} className="menu-items">
           {keys.map((path) => {
             let cname = path === screen ? 'selected' : '';
-            const dis = disabled && !/Home|Field|Feedback/.test(path);
+            const dis = disabled && !/Home|Field|Feedback|AT/.test(path);
 
             if (/Practices|Revenue|Resources/.test(path)) {
               cname += ' summary';
@@ -396,6 +403,7 @@ const App = () => {
           <Route path="Resources" element={<Resources />} />
           <Route path="Data" element={<Data />} />
           <Route path="Feedback" element={<Feedback />} />
+          <Route path="AT" element={<AT />} />
           {Object.keys(airTables).map((key) => (
             <Route path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}
