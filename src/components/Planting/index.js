@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
 
-import { get, getDefaults, examplePlanting } from '../../store/Store';
+import {
+  dev, get, getDefaults, examplePlanting,
+} from '../../store/Store';
 
 const defaults = getDefaults(Object.keys(get.planting).map((parm) => `planting.${parm}`));
 
 const Planting = () => {
-  const dev = useSelector(get.dev);
   const estimated = useSelector(get.planting.estimated);
 
   const state = useSelector(get.planting);

@@ -7,7 +7,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import {
-  get, getDefaults, dollars, exampleYield1, exampleYield2,
+  dev, get, getDefaults, dollars, exampleYield1, exampleYield2,
 } from '../../store/Store';
 
 import Logic from '../Logic';
@@ -33,7 +33,6 @@ const Yield = () => {
     }
   }, []);
 
-  const dev = useSelector(get.dev);
   const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
 
   const width = screenWidth > 1400 ? 400 : 700;

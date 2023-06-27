@@ -1,11 +1,10 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { get, set } from '../../store/Store';
+import { useDispatch } from 'react-redux';
+import { dev, set } from '../../store/Store';
 
 import './styles.scss';
 
 const Home = () => {
-  const dev = useSelector(get.dev);
   const dispatch = useDispatch();
   return (
     <div id="Home">

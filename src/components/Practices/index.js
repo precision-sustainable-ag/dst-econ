@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { get, set } from '../../store/redux-autosetters';
 import {
+  dev,
   exampleSeeds,
   exampleHerbicides,
   exampleSeedbed,
@@ -639,7 +640,6 @@ const AdditionalSummary = () => {
 
 const Practices = () => {
   const dispatch = useDispatch();
-  const dev = useSelector(get.dev);
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
   const lat = useSelector(get.map.lat).toFixed(4);

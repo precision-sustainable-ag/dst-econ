@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import {
-  get, getDefaults, exampleSeedbed, clearInputs,
+  dev, get, getDefaults, exampleSeedbed, clearInputs,
 } from '../../store/Store';
 import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
@@ -10,8 +10,6 @@ import ClearInputs from '../ClearInputs';
 const defaults = getDefaults(Object.keys(get.seedbed).map((parm) => `seedbed.${parm}`));
 
 const Seedbed = () => {
-  // console.log('Render: Seedbed');
-  const dev = useSelector(get.dev);
   const estimated = useSelector(get.seedbed.estimated);
 
   const state = useSelector(get.seedbed);

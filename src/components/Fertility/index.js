@@ -4,6 +4,7 @@ import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import Help from '../../shared/Help';
 import {
+  dev,
   get,
   dollars,
   getDefaults,
@@ -30,8 +31,6 @@ const defaults = getDefaults([
 ]);
 
 const Fertility = () => {
-  const dev = useSelector(get.dev);
-
   const useFertilizer = useSelector(get.useFertilizer) === 'Yes';
   const $fertN = useSelector(get.$fertN);
   const dfertN = db.rates.Nitrogen.value;
