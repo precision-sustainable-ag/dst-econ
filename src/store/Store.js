@@ -699,6 +699,7 @@ export const store = createStore(initialState, { afterChange, reducers });
   afterChange[`${section}.implement`] = (state, { payload }) => {
     const obj = state[section];
 
+    payload = payload.replace('HIRE ', '');
     if (payload === 'Hire custom operator') {
       const def = {
         seedbed: 'Seedbed preparation',

@@ -147,6 +147,8 @@ const Input = ({
     setValue(value2);
   }; // change
 
+  const setter = id.split('.').reduce((acc, k) => acc[k], set);
+
   const update = useCallback((e, newValue) => {
     // eslint-disable-next-line
     if (newValue == value && sel2 !== undefined) return;  // == in case numeric
@@ -161,21 +163,16 @@ const Input = ({
       }
     }
 
-    let s = set;
-    id.split('.').forEach((k) => {
-      s = s[k];
-    });
-
     if (type === 'percent') {
       newValue /= 100;
     }
 
     if (isArray) {
       if (sel2[index] !== newValue) {
-        dispatch(s({ index, value: newValue }));
+        dispatch(setter({ index, value: newValue }));
       }
     } else if (sel2 !== newValue) {
-      dispatch(s(newValue));
+      dispatch(setter(newValue));
     }
 
     if (onChange) {
@@ -388,7 +385,7 @@ const Input = ({
             tabIndex={-1}
             style={{ float: 'right', fontSize: '0.7rem', color: 'gray' }}
             onClick={() => {
-              change(calculated[id]);
+              dispatch(setter(calculated[id]));
               dispatch(set.focus(id));
             }}
           >
