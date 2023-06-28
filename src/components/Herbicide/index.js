@@ -80,7 +80,6 @@ const Herbicide = () => {
                     property="q2"
                     q="Do you plan on adding additional herbicides or making additional spray applications when adding cover crops to your rotation?"
                     a={['Yes', 'No']}
-                    onChange={() => clearInputs(additionalDefaults)}
                   />
                 </>
               )}

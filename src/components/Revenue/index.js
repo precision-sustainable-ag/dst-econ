@@ -79,7 +79,8 @@ const Revenue = () => {
     return item2.details.reduce((total, item3) => total + cashTotal(item3), 0);
   };
 
-  const add = (desc, data) => {
+  const increasedCost = (desc, data) => {
+    if (!data.total) return;
     const det = [];
     ['Labor', 'Fuel'].forEach((type) => {
       if (data[type]) {
@@ -131,17 +132,9 @@ const Revenue = () => {
     });
   }
 
-  if (planting.total) {
-    add('Planting', planting);
-  }
-
-  if (seedbed.total) {
-    add('Seedbed', seedbed);
-  }
-
-  if (herbicide.total) {
-    add('Herbicide', herbicide);
-  }
+  increasedCost('Planting', planting);
+  increasedCost('Seedbed', seedbed);
+  increasedCost('Herbicide', herbicide);
 
   const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
     if (!details) return null;
