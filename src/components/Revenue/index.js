@@ -60,6 +60,7 @@ const Revenue = () => {
   const species = useSelector(get.species);
   const planting = useSelector(get.planting);
   const seedbed = useSelector(get.seedbed);
+  const herbicide = useSelector(get.herbicide);
   const erosion = useSelector(get.erosion);
   const revenuePadding = useSelector(get.revenuePadding);
   const revenueColor = useSelector(get.revenueColor);
@@ -136,6 +137,10 @@ const Revenue = () => {
 
   if (seedbed.total) {
     add('Seedbed', seedbed);
+  }
+
+  if (herbicide.total) {
+    add('Herbicide', herbicide);
   }
 
   const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
