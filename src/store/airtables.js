@@ -747,8 +747,8 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Hire custom operator|Planting": {
-    "key": "Hire custom operator",
+  "Ground planting|Planting": {
+    "key": "Ground planting",
     "cost": 20,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
     "screen": "Planting",

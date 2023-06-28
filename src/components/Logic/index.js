@@ -18,7 +18,8 @@ const Logic = ({
           return cd[k1].order - cd[k2].order;
         }
         return cd[k1].key.localeCompare(cd[k2].key);
-      });
+      })
+      .map((s) => `HIRE ${s}`);
   }; // sortCosts
 
   const sortPower = () => {
@@ -53,7 +54,7 @@ const Logic = ({
     'Hire custom operator',
     'I will not reduce my post emerge spray applications',
     ...Object.keys(db.costDefaults),
-  ].includes(currentImplement);
+  ].includes(currentImplement.replace('HIRE ', ''));
 
   let info = '';
   let shown = true;
@@ -63,7 +64,9 @@ const Logic = ({
     a = [
       ...custom,
       ...sortCosts(),
-      ...Object.keys(db.implements).filter((key) => db.implements[key].type === type).sort(),
+      ...Object.keys(db.implements)
+        .filter((key) => db.implements[key].type === type)
+        .sort(),
     ];
   }
 
@@ -182,6 +185,16 @@ const Logic = ({
           onChange={onChange}
           options={a}
           suffix={suffix}
+          groupBy={(option) => {
+            if (option.includes('HIRE ')) {
+              return 'Hire custom operator';
+            }
+            if (a.filter((s) => s.includes('HIRE ')).length) {
+              return 'Equipment';
+            }
+            return null;
+          }}
+          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: /, '')}
         />
       );
     }
