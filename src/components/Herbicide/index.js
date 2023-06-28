@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
-// import Input from '../../shared/Inputs';
+import Input from '../../shared/Inputs';
 
 import {
-  dev, get, set, db, getDefaults, clearInputs, exampleHerbicides,
+  dev, get, db, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -29,10 +29,7 @@ const defaults = {
 };
 
 const Herbicide = () => {
-  const dispatch = useDispatch();
   const state = useSelector(get.herbicide);
-  const additionalProduct = useSelector(get.herbicideAdditional.product);
-  const additionalCost = useSelector(get.herbicideAdditional.cost);
   const reducedProduct = useSelector(get.herbicideReduced.product);
   const reducedCost = useSelector(get.herbicideReduced.cost);
 
@@ -95,36 +92,48 @@ const Herbicide = () => {
                       What is the estimated cost of the additional herbicide?
                     </th>
                   </tr>
-                  <Logic
-                    current="herbicideAdditional"
-                    property="product"
-                    q="Product"
-                    a={[...Object.keys(db.herbicides).sort(), 'Other']}
-                  />
 
-                  {additionalProduct === 'Other' && (
-                    <tr>
-                      <td>Product Name</td>
-                      <td>
-                        <input
-                          type="text"
-                          style={{
-                            height: '38px',
-                            width: '100%',
-                            borderColor: '#BBBBBB',
-                            borderRadius: '5px',
-                            outline: 'none',
-                            borderWidth: '1px',
-                            fontSize: '1rem',
-                            padding: '7.5px 4px 7.5px 6px',
-                          }}
-                          onChange={(e) => {
-                            dispatch(set.herbicideAdditional.product(e.target.value));
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  )}
+                  <tr>
+                    <td>Product</td>
+                    <td><Input id="herbicideAdditional.product" /></td>
+                  </tr>
+
+                  <tr>
+                    <td>Product cost</td>
+                    <td><Input id="herbicideAdditional.cost" type="dollar" /></td>
+                  </tr>
+
+                  {/* // Version 2:
+                    <Logic
+                      current="herbicideAdditional"
+                      property="product"
+                      q="Product"
+                      a={[...Object.keys(db.herbicides).sort(), 'Other']}
+                    />
+
+                    {additionalProduct === 'Other' && (
+                      <tr>
+                        <td>Product Name</td>
+                        <td>
+                          <input
+                            type="text"
+                            style={{
+                              height: '38px',
+                              width: '100%',
+                              borderColor: '#BBBBBB',
+                              borderRadius: '5px',
+                              outline: 'none',
+                              borderWidth: '1px',
+                              fontSize: '1rem',
+                              padding: '7.5px 4px 7.5px 6px',
+                            }}
+                            onChange={(e) => {
+                              dispatch(set.herbicideAdditional.product(e.target.value));
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    )}
 
                   <Logic
                     current="herbicideAdditional"
@@ -146,7 +155,7 @@ const Herbicide = () => {
                     property="cost"
                     q="Product cost"
                     a={additionalCost}
-                  />
+                  /> */}
 
                   <Logic
                     current="herbicideAdditional"
