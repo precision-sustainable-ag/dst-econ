@@ -131,40 +131,53 @@ const OtherHerbicides = ({ state, prop, description }) => (
 
 const Herbicide = () => {
   const state = useSelector(get.termination);
+  console.log(state);
 
   return (
     <>
       <tr>
         <th colSpan="100">Product</th>
       </tr>
-      <Logic
-        current="termination"
-        property="product"
-        q="Product"
-        a={['', ...Object.keys(db.herbicides).sort()]}
-      />
+      <tr>
+        <td>Product</td>
+        <td><Input id="termination.product" /></td>
+      </tr>
 
-      <Logic
-        current="termination"
-        property="unitCost"
-        q={`Cost per ${db.herbicides[state.product]?.['Unit (cost)']} of product`}
-        a="dollar"
-      />
+      <tr>
+        <td>Product cost</td>
+        <td><Input id="termination.productCost" type="dollar" /></td>
+      </tr>
 
-      <Logic
-        current="termination"
-        property="rate"
-        q="Application rate"
-        a="number"
-        suffix={db.herbicides[state.product]?.['Unit (rate)']}
-      />
+      {/*  // Version 2:
+        <Logic
+          current="termination"
+          property="product"
+          q="Product"
+          a={['', ...Object.keys(db.herbicides).sort()]}
+        />
 
-      <Logic
-        current="termination"
-        property="productCost"
-        q="Product cost"
-        a={state.productCost}
-      />
+        <Logic
+          current="termination"
+          property="unitCost"
+          q={`Cost per ${db.herbicides[state.product]?.['Unit (cost)']} of product`}
+          a="dollar"
+        />
+
+        <Logic
+          current="termination"
+          property="rate"
+          q="Application rate"
+          a="number"
+          suffix={db.herbicides[state.product]?.['Unit (rate)']}
+        />
+
+        <Logic
+          current="termination"
+          property="productCost"
+          q="Product cost"
+          a={state.productCost}
+        />
+      */}
 
       <tr>
         <th colSpan="100">Chemical Spray Equipment</th>
@@ -301,7 +314,7 @@ const Termination = () => {
                   }}
                 />
 
-                {state.method && (
+                {state.method && !/Roller/.test(state.method) && (
                   <Logic
                     current={current}
                     property="q2"
@@ -354,10 +367,11 @@ const Termination = () => {
                   </tr>
                 )}
 
+                {/Roller/.test(method) && <Roller />}
+
                 {state.q2 === 'No' && (
                   <>
                     {/herbicide/i.test(method) && <Herbicide />}
-                    {/Roller/.test(method) && <Roller />}
                     {/Tillage/.test(method) && <Tillage />}
                   </>
                 )}
