@@ -167,8 +167,8 @@ const initialState = {
     product: '',
     unitCost: (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Cost ($)'],
     rate: (state) => db.herbicides?.[state.herbicideAdditional.product]?.Rate,
+    cost: '',
     // cost: (state) => state.herbicideAdditional.unitCost * state.herbicideAdditional.rate || 0,
-    cost: db.costDefaults?.['Herbicide product']?.cost,
   },
   herbicideReduced: {
     ...shared,
@@ -245,7 +245,7 @@ const initialState = {
     unitCost: (state) => db.herbicides?.[state.termination.product]?.['Cost ($)'],
     rate: (state) => db.herbicides?.[state.termination.product]?.Rate,
     // productCost: (state) => state.termination.unitCost * state.termination.rate || undefined,
-    productCost: db.costDefaults?.['Herbicide product']?.cost,
+    productCost: '',
     additionalHerbicides: [],
     additionalRates: [],
     additionalPrices: [],
@@ -502,9 +502,22 @@ const afterChange = {
   },
   'herbicide.q2': (state, { payload }) => {
     if (payload === 'No') {
+      state.herbicideAdditional.product = '';
+      state.herbicideAdditional.cost = 0;
       state.herbicideAdditional.estimated = 0;
       state.herbicideAdditional.total = 0;
       state.herbicideAdditional.implement = '';
+    } else if (state.herbicide.q1 === 'Yes' && payload === 'Yes') {
+      state.herbicideAdditional.cost = db.costDefaults?.['Herbicide product']?.cost;
+      state.focus = 'herbicideAdditional.product';
+    }
+  },
+  'termination.q2': (state, { payload }) => {
+    if (payload === 'No') {
+      state.termination.productCost = db.costDefaults?.['Herbicide product']?.cost;
+      state.focus = 'termination.product';
+    } else {
+      state.termination.productCost = 0;
     }
   },
   'herbicide.q5': (state, { payload }) => {

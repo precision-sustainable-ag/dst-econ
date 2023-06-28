@@ -321,7 +321,7 @@ const Termination = () => {
                     q="Would you do this field activity if you did not have a cover crop?"
                     a={['Yes', 'No']}
                     onChange={(_, value) => {
-                      clearInputs(defaults, ['termination.method', 'termination.q2']);
+                      // clearInputs(defaults, ['termination.method', 'termination.q2']);
                       if (value === 'Yes' && state.method !== 'Herbicide application') {
                         navigate('/Tillage');
                       }
