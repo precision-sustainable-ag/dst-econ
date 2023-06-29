@@ -70,9 +70,10 @@ const GrazingHelper = () => {
         <div>
           <Input
             id="grazing.hoursAcre"
+            type="number"
             warning={
               grazing.hoursAcre > 1 && (
-                <div className="warning" style={{ paddingLeft: '2rem' }}>
+                <div className="warning" style={{ paddingLeft: '1rem' }}>
                   Please confirm this number.
                   <br />
                   It seems too high.
@@ -84,7 +85,7 @@ const GrazingHelper = () => {
 
         <div className="total">Net impact of Grazing (per acre)</div>
         <div className="total" style={{ fontWeight: 'bold' }}>
-          {dollars(grazing.total)}
+          {dollars(-grazing.total)}
         </div>
       </div>
     </div>

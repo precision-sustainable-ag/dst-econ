@@ -108,6 +108,7 @@ const grazingTotal = (state) => {
   const fall = state.grazing.fall;
   const spring = state.grazing.spring;
   const $hay = state.grazing.$hay;
+  const hoursAcre = state.grazing.hoursAcre;
   const $labor = state.$labor;
   const $diesel = state.$diesel;
 
@@ -115,7 +116,7 @@ const grazingTotal = (state) => {
     return 0;
   }
 
-  if (+$hay === 0 || +$labor === 0 || +$diesel === 0) {
+  if (+$hay === 0 || +$labor === 0 || +$diesel === 0 || +hoursAcre === 0) {
     return 0;
   }
 
@@ -124,7 +125,6 @@ const grazingTotal = (state) => {
   const dryMatter = 0.88;
   const hayWasted = 0.22;
   const lbsNotFed = ((((fall * pctFallWaste) + (spring * pctSpringWaste)) / dryMatter) / (1 - hayWasted));
-  const hoursAcre = state.grazing.hoursAcre;
   const balesFed = 1800;
   const timeFed = 0.5;
   const fuelConsumption = 6;
@@ -132,8 +132,8 @@ const grazingTotal = (state) => {
   const reductionHayFed = lbsNotFed * ($hay / 2000);
   const reductionFuel = (lbsNotFed / balesFed) * (timeFed * fuelConsumption * $diesel);
   const reductionLabor = (lbsNotFed / balesFed) * timeFed * $labor;
-  return additionalLabor + reductionHayFed + reductionFuel + reductionLabor;
-};
+  return -(additionalLabor + reductionHayFed + reductionFuel + reductionLabor);
+}; // grazingTotal
 
 const initialState = {
   calculated: {},
@@ -658,7 +658,7 @@ const afterChange = {
   },
   'grazing.grazing': (state, { payload }) => {
     if (payload === 'No') {
-      state.newScreen = 'Yield';
+      state.newScreen = 'Additional';
     }
   },
   'erosion.q1': (state, { payload }) => {
