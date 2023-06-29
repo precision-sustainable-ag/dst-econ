@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-console */
 
 // import { current as showCurrent } from '@reduxjs/toolkit';
@@ -8,6 +9,21 @@ import { db } from './airtables';
 
 export { set, get } from './redux-autosetters';
 export { db } from './airtables';
+
+export const dollars = (n) => {
+  if (!Number.isFinite(n)) {
+    return '';
+  }
+  if (+n < 0) {
+    return (
+      <span style={{ color: 'red' }}>
+        $
+        {(-n).toFixed(2)}
+      </span>
+    );
+  }
+  return `$${(+n).toFixed(2)}`;
+}; // dollars
 
 const shared = {
   q1: '',
@@ -83,6 +99,32 @@ const herbicideTotal = (state) => (
   + (state.herbicideFall.savings || 0)
   - ((state.herbicideReduced.cost || 0) + (state.herbicideReduced.total || 0))
 );
+
+const grazingTotal = (state) => {
+  if (state.grazing.$lease) {
+    return -state.grazing.$lease;
+  }
+
+  const fall = state.grazing.fall;
+  const spring = state.grazing.spring;
+  const pctFallWaste = 0.50;
+  const pctSpringWaste = 0.50;
+  const dryMatter = 0.88;
+  const hayWasted = 0.22;
+  const lbsNotFed = ((((fall * pctFallWaste) + (spring * pctSpringWaste)) / dryMatter) / (1 - hayWasted));
+  const $hay = state.grazing.$hay;
+  const $labor = state.$labor;
+  const $diesel = state.$diesel;
+  const hoursAcre = state.grazing.hoursAcre;
+  const balesFed = 1800;
+  const timeFed = 0.5;
+  const fuelConsumption = 6;
+  const additionalLabor = -($labor * hoursAcre);
+  const reductionHayFed = lbsNotFed * ($hay / 2000);
+  const reductionFuel = (lbsNotFed / balesFed) * (timeFed * fuelConsumption * $diesel);
+  const reductionLabor = (lbsNotFed / balesFed) * timeFed * $labor;
+  return dollars(additionalLabor + reductionHayFed + reductionFuel + reductionLabor);
+};
 
 const initialState = {
   calculated: {},
@@ -294,28 +336,12 @@ const initialState = {
   grazing: {
     grazing: '',
     lease: '',
-    $lease: undefined,
-    fallGraze: undefined,
-    fallDryMatter: undefined,
-    fallWaste: 0.5,
-    fallGrazing: '',
-    springGraze: undefined,
-    springDryMatter: undefined,
-    springWaste: 0.5,
-    springGrazing: '',
-    dryMatter: undefined,
-    wasted: undefined,
-    $hay: undefined,
-    hoursAcre: 0.5,
-    baleSize: undefined,
-    baleTime: undefined,
-    tractor: '',
-    lbsNotFed: (state) => +(
-      (state.additional.fallDryMatter * state.additional.fallWaste
-      + state.additional.springDryMatter * state.additional.springWaste)
-      / state.additional.dryMatter
-      / (1 - state.additional.wasted)
-    ).toFixed(0) || '',
+    $lease: 0,
+    $hay: 0,
+    hoursAcre: 0,
+    fall: '0',
+    spring: '0',
+    total: grazingTotal,
   },
 };
 
@@ -493,6 +519,17 @@ const afterChange = {
       state.focus = '$fertApplication';
     }
   },
+  'grazing.lease': (state, { payload }) => {
+    if (payload === 'Yes') {
+      state.grazing.fall = '0';
+      state.grazing.spring = '0';
+      state.grazing.$hay = '';
+      state.grazing.hoursAcre = '';
+      state.grazing.total = 0;
+    } else {
+      state.grazing.$lease = '';
+    }
+  },
   'herbicide.q1': (state, { payload }) => {
     if (payload === 'No') {
       state.herbicideAdditional.estimated = 0;
@@ -609,30 +646,9 @@ const afterChange = {
       delete state.calculated['additional.$costShare'];
     }
   },
-  'additional.grazing': (state, { payload }) => {
+  'grazing.grazing': (state, { payload }) => {
     if (payload === 'No') {
       state.newScreen = 'Yield';
-    }
-  },
-  'additional.lease': (state, { payload }) => {
-    if (payload === 'Yes') {
-      state.focus = 'additional.$lease';
-    }
-  },
-  'additional.fallGraze': (state, { payload }) => {
-    if (payload === 'Yes') {
-      state.focus = 'additional.fallDryMatter';
-    } else {
-      state.focus = 'additional.springGraze';
-      state.additional.fallDryMatter = undefined;
-      state.additional.fallWaste = 0.5;
-    }
-  },
-  'additional.springGraze': (state, { payload }) => {
-    if (payload === 'Yes') {
-      state.focus = 'additional.springDryMatter';
-      state.additional.springDryMatter = undefined;
-      state.additional.springWaste = 0.5;
     }
   },
   'erosion.q1': (state, { payload }) => {
@@ -893,21 +909,6 @@ if (dev) {
 } else {
   loaded();
 }
-
-export const dollars = (n) => {
-  if (!Number.isFinite(n)) {
-    return '';
-  }
-  if (+n < 0) {
-    return (
-      <span style={{ color: 'red' }}>
-        $
-        {(-n).toFixed(2)}
-      </span>
-    );
-  }
-  return `$${(+n).toFixed(2)}`;
-}; // dollars
 
 export const test = (key, result) => {
   let value = get[key]?.(store.getState())?.toString();
@@ -1253,3 +1254,14 @@ export const exampleAdditional = () => {
   test('additional.$costShare', 63.01);
   test('additional.total', 913.01);
 }; // exampleAdditional
+
+export const exampleGrazing = () => {
+  store.dispatch(set.grazing.grazing('Yes'));
+  store.dispatch(set.grazing.lease('No'));
+  store.dispatch(set.grazing.fall(500));
+  store.dispatch(set.grazing.spring(1000));
+  store.dispatch(set.grazing.$hay(80));
+  store.dispatch(set.grazing.hoursAcre(0.05));
+  store.dispatch(set.$labor(20));
+  store.dispatch(set.$diesel(3));
+}; // exampleGrazing

@@ -269,7 +269,7 @@ const Input = ({
           groupBy={props.groupBy}
           getOptionLabel={
             props.getOptionLabel || (
-              (o) => o?.split('|')[0]
+              (o) => o?.toString().split('|')[0]
             )
           }
           onInputChange={props.onInputChange}
