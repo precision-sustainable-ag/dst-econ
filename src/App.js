@@ -21,6 +21,7 @@ import {
 } from './store/Store';
 
 import Home from './components/Home';
+import About from './components/About';
 import Field from './components/Field';
 import Seeds from './components/Seeds';
 import Seedbed from './components/Seedbed';
@@ -385,6 +386,7 @@ const App = () => {
       <div id="Main">
         <Routes>
           <Route path="" element={<Home />} />
+          <Route path="About" element={<About />} />
           <Route path="Field" element={<Field />} />
           <Route path="Seeds" element={<Seeds />} />
           <Route path="Seedbed" element={<Seedbed />} />

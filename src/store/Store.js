@@ -1275,3 +1275,15 @@ export const exampleGrazing = () => {
   store.dispatch(set.$labor(20));
   store.dispatch(set.$diesel(3));
 }; // exampleGrazing
+
+export const exampleHome = () => {
+  store.dispatch(set.location('123 Main Street, Athens, GA, USA'));
+  store.dispatch(set.farm('My farm'));
+  store.dispatch(set.field('My field'));
+  store.dispatch(set.mapFeatures.area(123));
+  store.dispatch(set.field('My field'));
+  store.dispatch(set.cashCrop('Corn'));
+  store.dispatch(set.map.lat(33.9347));
+  store.dispatch(set.map.lon(-83.3157));
+  store.dispatch(set.mapFeatures.zoom(13));
+}; // exampleHome
