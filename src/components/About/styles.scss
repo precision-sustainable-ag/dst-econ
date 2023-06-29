@@ -1,14 +1,7 @@
-#Home {
-  position: relative;
+#About {
   font-family: IBM Plex Sans;
-  font-size: 1.2rem;
-  padding: 0.5rem;
-  color: #222;
-
-  h1 {
-    font-size: 2rem;
-    font-weight: normal;
-  }
+  font-size: 1rem;
+  padding: 1rem;
 
   .home-button-container {
     display: flex;
@@ -26,12 +19,5 @@
     padding: 1em 2em;
     text-align: center;
     width: 12rem;
-  }
-  
-  .fullwidth {
-    margin-top: 3rem;
-    position: absolute;
-    left: 0;
-    width: 100%;
   }
 }
