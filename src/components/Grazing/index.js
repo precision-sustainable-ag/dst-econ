@@ -7,11 +7,12 @@ import {
   get,
   getDefaults,
   exampleGrazing,
+  dollars,
 } from '../../store/Store';
 
 import './styles.scss';
 
-const Stop = () => <div className="stop" />;
+const Stop = () => <span className="stop" />;
 
 const GrazingHelper = () => {
   const grazing = useSelector(get.grazing);
@@ -70,14 +71,20 @@ const GrazingHelper = () => {
           <Input
             id="grazing.hoursAcre"
             warning={
-              grazing.hoursAcre > 1 && <div className="warning">Please confirm this number.  It seems too high.</div>
+              grazing.hoursAcre > 1 && (
+                <div className="warning" style={{ paddingLeft: '2rem' }}>
+                  Please confirm this number.
+                  <br />
+                  It seems too high.
+                </div>
+              )
             }
           />
         </div>
 
         <div className="total">Net impact of Grazing (per acre)</div>
         <div className="total" style={{ fontWeight: 'bold' }}>
-          {grazing.total}
+          {dollars(grazing.total)}
         </div>
       </div>
     </div>

@@ -107,14 +107,23 @@ const grazingTotal = (state) => {
 
   const fall = state.grazing.fall;
   const spring = state.grazing.spring;
+  const $hay = state.grazing.$hay;
+  const $labor = state.$labor;
+  const $diesel = state.$diesel;
+
+  if (+fall + +spring === 0) {
+    return 0;
+  }
+
+  if (+$hay === 0 || +$labor === 0 || +$diesel === 0) {
+    return 0;
+  }
+
   const pctFallWaste = 0.50;
   const pctSpringWaste = 0.50;
   const dryMatter = 0.88;
   const hayWasted = 0.22;
   const lbsNotFed = ((((fall * pctFallWaste) + (spring * pctSpringWaste)) / dryMatter) / (1 - hayWasted));
-  const $hay = state.grazing.$hay;
-  const $labor = state.$labor;
-  const $diesel = state.$diesel;
   const hoursAcre = state.grazing.hoursAcre;
   const balesFed = 1800;
   const timeFed = 0.5;
@@ -123,7 +132,7 @@ const grazingTotal = (state) => {
   const reductionHayFed = lbsNotFed * ($hay / 2000);
   const reductionFuel = (lbsNotFed / balesFed) * (timeFed * fuelConsumption * $diesel);
   const reductionLabor = (lbsNotFed / balesFed) * timeFed * $labor;
-  return dollars(additionalLabor + reductionHayFed + reductionFuel + reductionLabor);
+  return additionalLabor + reductionHayFed + reductionFuel + reductionLabor;
 };
 
 const initialState = {
@@ -526,6 +535,7 @@ const afterChange = {
       state.grazing.$hay = '';
       state.grazing.hoursAcre = '';
       state.grazing.total = 0;
+      state.focus = 'grazing.$lease';
     } else {
       state.grazing.$lease = '';
     }

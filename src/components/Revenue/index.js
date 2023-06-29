@@ -10,6 +10,7 @@ import {
   examplePlanting,
   exampleSeedbed,
   exampleSeeds,
+  exampleGrazing,
   exampleHerbicides,
   exampleTermination1,
   exampleTermination2,
@@ -38,6 +39,7 @@ const Tests = () => (
     <button type="button" onClick={exampleSeedbed}>Test Seedbed</button>
     <button type="button" onClick={examplePlanting}>Test Planting</button>
     <button type="button" onClick={exampleErosion}>Test Erosion</button>
+    <button type="button" onClick={exampleGrazing}>Test Grazing</button>
     <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
     <button type="button" onClick={exampleTermination1}>Test Termination1</button>
     <button type="button" onClick={exampleTermination2}>Test Termination2</button>
