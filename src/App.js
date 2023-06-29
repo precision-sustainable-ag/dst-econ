@@ -313,7 +313,7 @@ const App = () => {
       <nav>
         <div className="mobile-menu">
           <img src="PSAlogo-only.png" className="mobile-logo" alt="mobile-logo" />
-          <div>Cover Crop Decision Support Tool</div>
+          <div>Cover Crop Economic Decision Support Tool</div>
         </div>
         <div
           style={{
@@ -324,7 +324,7 @@ const App = () => {
           }}
           className="desktop-title"
         >
-          Cover Crop Decision Support Tool
+          Cover Crop Economic Decision Support Tool
         </div>
         <img alt="logo" src="PSAlogo-text.png" id="PSALogo" />
         <div style={{ marginLeft: 130 }} className="menu-items">
