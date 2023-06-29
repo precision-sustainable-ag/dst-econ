@@ -10,6 +10,7 @@ import {
   examplePlanting,
   exampleSeedbed,
   exampleSeeds,
+  exampleGrazing,
   exampleHerbicides,
   exampleTermination1,
   exampleTermination2,
@@ -38,6 +39,7 @@ const Tests = () => (
     <button type="button" onClick={exampleSeedbed}>Test Seedbed</button>
     <button type="button" onClick={examplePlanting}>Test Planting</button>
     <button type="button" onClick={exampleErosion}>Test Erosion</button>
+    <button type="button" onClick={exampleGrazing}>Test Grazing</button>
     <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
     <button type="button" onClick={exampleTermination1}>Test Termination1</button>
     <button type="button" onClick={exampleTermination2}>Test Termination2</button>
@@ -57,6 +59,8 @@ const Tests = () => (
 );
 
 const Revenue = () => {
+  const farm = useSelector(get.farm);
+  const field = useSelector(get.field);
   const species = useSelector(get.species);
   const planting = useSelector(get.planting);
   const seedbed = useSelector(get.seedbed);
@@ -69,7 +73,7 @@ const Revenue = () => {
   const dispatch = useDispatch();
   const revenueOpen = useSelector(get.revenueOpen);
 
-  const increasedDetails = [];
+  const increasedCosts = [];
 
   const cashTotal = (item2) => {
     if (!item2.details) {
@@ -79,7 +83,7 @@ const Revenue = () => {
     return item2.details.reduce((total, item3) => total + cashTotal(item3), 0);
   };
 
-  const increasedCost = (desc, data) => {
+  const addIncreasedCost = (desc, data) => {
     if (!data.total) return;
     const det = [];
     ['Labor', 'Fuel'].forEach((type) => {
@@ -118,7 +122,7 @@ const Revenue = () => {
     }
 
     if (det.length) {
-      increasedDetails.push({
+      increasedCosts.push({
         desc,
         details: det,
       });
@@ -126,15 +130,15 @@ const Revenue = () => {
   };
 
   if (species.filter((s) => s).length) {
-    increasedDetails.push({
+    increasedCosts.push({
       desc: 'Seeds',
       cash: coverCropTotal,
     });
   }
 
-  increasedCost('Planting', planting);
-  increasedCost('Seedbed', seedbed);
-  increasedCost('Herbicide', herbicide);
+  addIncreasedCost('Planting', planting);
+  addIncreasedCost('Seedbed', seedbed);
+  addIncreasedCost('Herbicide', herbicide);
 
   const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
     if (!details) return null;
@@ -208,16 +212,16 @@ const Revenue = () => {
     });
   }
 
-  if (increasedDetails.length) {
+  if (increasedCosts.length) {
     data.push({
       desc: 'Increased Cost',
-      details: increasedDetails,
+      details: increasedCosts,
     });
   }
 
   // console.log(JSON.stringify(data, null, 2));
 
-  if (!decreasedDetails.length && !increasedDetails.length) {
+  if (!decreasedDetails.length && !increasedCosts.length) {
     return (
       <div id="Revenue">
         <h1>Revenue Impact</h1>
@@ -233,8 +237,16 @@ const Revenue = () => {
         <Input id="revenuePadding" label="padding" />
         <Input id="revenueColor" label="color" />
       </div>
-      <h1>Economic Effects of Soil Health Practices</h1>
       <table>
+        <caption>
+          Economic Effects of Cover Crops
+          {farm ? ` on ${farm} ` : ''}
+          {field ? ` - ${field} ` : ''}
+          {' '}
+          (
+          {new Date().getFullYear()}
+          )
+        </caption>
         <thead>
           <tr>
             <th>&nbsp;</th>

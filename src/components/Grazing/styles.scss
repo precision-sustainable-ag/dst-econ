@@ -1,0 +1,17 @@
+#Grazing {
+  .grid2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid2 > div * {
+    display: inline-block;
+  }
+
+  .MuiFormControlLabel-label {
+    margin-right: 0.5rem;
+  }
+
+  label.MuiFormControlLabel-root:hover {
+    background: #dfd;
+  }
+}

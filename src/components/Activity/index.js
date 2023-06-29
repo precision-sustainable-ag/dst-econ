@@ -53,6 +53,7 @@ const Activity = ({ type }) => {
     seedbed: 'Seedbed Preparation',
     planting: 'Cover Crop Planting',
     chemical: 'Chemical Spray',
+    grazing: 'Grazing',
     roller: 'Roller',
     tillage: 'Tillage',
     termination: 'Termination total',
@@ -173,6 +174,7 @@ const CostsBenefits = ({ type }) => {
   const coverCropTotal = useSelector(get.coverCropTotal) || 0;
   const seedbedTotal = useSelector(get.seedbed.total) || 0;
   const plantingTotal = useSelector(get.planting.total) || 0;
+  const grazingTotal = useSelector(get.grazing.total) || 0;
   const terminationTotal = useSelector(get.termination.total) || 0;
   const tillageAllTotal = useSelector(get.tillageAll.total) || 0;
   const fertilityTotal = -useSelector(get.fertility.total) || 0;
@@ -182,16 +184,17 @@ const CostsBenefits = ({ type }) => {
   const additionalTotal = -useSelector(get.additional.total) || 0;
 
   // console.log({
-  //   type, coverCropTotal, seedbedTotal, plantingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal, yieldTotal, herbicideTotal,
+  //   type, coverCropTotal, seedbedTotal, plantingTotal, grazingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal,
+  //   yieldTotal, herbicideTotal,
   // });
 
   if (
     (type === 'Costs' && (
-      coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0
+      coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || grazingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0
       || terminationTotal > 0 || tillageAllTotal > 0 || yieldTotal > 0)
     )
     || (type === 'Benefits' && (
-      coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || fertilityTotal < 0 || herbicideTotal < 0 || erosionTotal < 0
+      coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || grazingTotal < 0 || fertilityTotal < 0 || herbicideTotal < 0 || erosionTotal < 0
       || terminationTotal < 0 || tillageAllTotal < 0 || yieldTotal < 0 || additionalTotal < 0)
     )
   ) {
@@ -212,6 +215,7 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={fertilityTotal} desc="Fertility" />
           <SummaryRow type={type} parm={herbicideTotal} desc="Herbicides" />
           <SummaryRow type={type} parm={erosionTotal} desc="Erosion" />
+          <SummaryRow type={type} parm={grazingTotal} desc="Grazing" />
           <SummaryRow type={type} parm={yieldTotal} desc="Yield impact" />
           <SummaryRow type={type} parm={additionalTotal} desc="Additional considerations" />
         </tbody>
@@ -225,6 +229,7 @@ export const Summary = () => {
   const coverCropTotal = useSelector(get.coverCropTotal) || 0;
   const seedbedTotal = useSelector(get.seedbed.total) || 0;
   const plantingTotal = useSelector(get.planting.total) || 0;
+  const grazingTotal = useSelector(get.grazing.total) || 0;
   const terminationTotal = useSelector(get.termination.total) || 0;
   const tillageAllTotal = useSelector(get.tillageAll.total) || 0;
   const fertilityTotal = -useSelector(get.fertility.total) || 0;
@@ -233,8 +238,8 @@ export const Summary = () => {
   const herbicideTotal = useSelector(get.herbicide.total) || 0;
   const additionalTotal = -useSelector(get.additional.total) || 0;
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +fertilityTotal + +erosionTotal + +terminationTotal + +tillageAllTotal
-                + +yieldTotal + +herbicideTotal + +additionalTotal;
+  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +grazingTotal + +fertilityTotal + +erosionTotal
+                + +terminationTotal + +tillageAllTotal + +yieldTotal + +herbicideTotal + +additionalTotal;
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
@@ -253,40 +258,43 @@ export const Summary = () => {
               <strong className="cursor">Summary</strong>
               <table>
                 {(farm || field || acres || cashCrop) && (
-                  <tbody>
-                    {farm && (
+                  <>
+                    <thead />
+                    <tbody>
+                      {farm && (
+                        <tr>
+                          <td>Farm     </td>
+                          <td style={{ textAlign: 'left' }}>
+                            {farm}
+                          </td>
+                        </tr>
+                      )}
+                      {field && (
                       <tr>
-                        <td>Farm     </td>
+                        <td>Field    </td>
                         <td style={{ textAlign: 'left' }}>
-                          {farm}
+                          {field}
                         </td>
                       </tr>
-                    )}
-                    {field && (
-                    <tr>
-                      <td>Field    </td>
-                      <td style={{ textAlign: 'left' }}>
-                        {field}
-                      </td>
-                    </tr>
-                    )}
-                    {acres && (
-                      <tr>
-                        <td>Acres    </td>
-                        <td style={{ textAlign: 'left' }}>
-                          {acres}
-                        </td>
-                      </tr>
-                    )}
-                    {cashCrop && (
-                      <tr>
-                        <td>Cash crop</td>
-                        <td style={{ textAlign: 'left' }}>
-                          {cashCrop}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
+                      )}
+                      {acres && (
+                        <tr>
+                          <td>Acres    </td>
+                          <td style={{ textAlign: 'left' }}>
+                            {acres}
+                          </td>
+                        </tr>
+                      )}
+                      {cashCrop && (
+                        <tr>
+                          <td>Cash crop</td>
+                          <td style={{ textAlign: 'left' }}>
+                            {cashCrop}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </>
                 )}
                 <CostsBenefits type="Costs" />
                 <CostsBenefits type="Benefits" />
