@@ -251,7 +251,7 @@ export const Summary = () => {
 
   return (
     (total || farm || field || acres || cashCrop) && (
-      <div>
+      <div className="desktop2">
         <Draggable handle="strong">
           <Card id="Summary" variant="outlined" style={{ backgroundColor: '#eee' }}>
             <CardContent>
