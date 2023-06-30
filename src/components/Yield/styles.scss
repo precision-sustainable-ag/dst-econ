@@ -1,6 +1,44 @@
 #Yield {
   margin-bottom: 2rem;
-  
+
+  #YieldTable {
+    width: 100%;
+
+    tr {
+      vertical-align: top;
+      height: 0 !important;
+    }
+
+    @media screen and (max-width: 1050px) {
+      td {
+        width: 50%;
+      }
+    }
+
+    @media screen and (min-width: 1051px) {
+      td {
+        width: 30%;
+      }
+    }
+  }
+
+  #ChartTable {
+    width: 100%;
+    text-align: center;
+    font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+    color: #444;
+    border: 1px solid #ddd;
+
+    td {
+      width: 25% !important;
+    }
+  }
+
+  #RevenueGraph {
+    width: 400px;
+    margin: auto;
+  }
+
   table.sare {
     margin: auto;
     width: 40rem;

@@ -1,9 +1,9 @@
 #Summary {
-  position: fixed;
+  position: absolute;
   font-size: 0.8rem;
   width: 230px;
-  left: calc(1000px + 2% + 5px);
-  top: 0.8rem;
+  left: 100%;
+  top: 0;
   z-index: 9999;
 
   table {

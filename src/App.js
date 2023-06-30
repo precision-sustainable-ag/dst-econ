@@ -327,13 +327,12 @@ const App = () => {
         >
           Cover Crop Economic Decision Support Tool
         </div>
-        <img alt="logo" src="PSAlogo-text.png" id="PSALogo" />
-        <div style={{ marginLeft: 130 }} className="menu-items">
+        <div className="menu-items">
           {keys.map((path) => {
             let cname = path === screen ? 'selected' : '';
             const dis = disabled && !/Home|Field|Feedback|AT/.test(path);
 
-            if (/Practices|Revenue|Resources/.test(path)) {
+            if (/Practices|Revenue|Resources|AT|Feedback/.test(path)) {
               cname += ' summary';
             }
 

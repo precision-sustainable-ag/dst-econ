@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { useSelector } from 'react-redux';
-import Draggable from 'react-draggable';
-import { Card, CardContent } from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
@@ -10,45 +8,35 @@ import {
   dev, get, getDefaults, dollars, exampleYield1, exampleYield2,
 } from '../../store/Store';
 
-import Logic from '../Logic';
 import Help from '../../shared/Help';
 import ClearInputs from '../ClearInputs';
+import Input from '../../shared/Inputs';
 
 import './styles.scss';
 
-const defaults = getDefaults('yield.yield|yield.q2|yield.price|yield.q4');
+const defaults = getDefaults([
+  'yield.yield',
+  'yield.q2',
+  'yield.price',
+  'yield.q4',
+]);
 
-const Yield = () => {
+Highcharts.setOptions({
+  chart: {
+    animation: false,
+    width: 400,
+  },
+});
+
+const RevenueGraph = ({ className }) => {
   const state = useSelector(get.yield);
-  const { typical } = state;
-  const { adjusted } = state;
-  const { impact } = state;
-  const screenWidth = useSelector(get.screenWidth);
-
-  const [plotLeft, setPlotLeft] = useState(0);
-
-  useEffect(() => {
-    const plot = document.querySelector('.highcharts-plot-background');
-    if (plot) {
-      const plotLeft2 = plot?.x?.baseVal.value;
-      setPlotLeft(plotLeft2);
-    }
-  }, []);
-
-  const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
-
-  const width = screenWidth > 1400 ? 400 : 700;
+  const { typical, adjusted, impact } = state;
+  const width = 250;
   const width2 = width / 5;
 
-  Highcharts.setOptions({
-    chart: {
-      animation: false,
-    },
-    lang: {
-      numericSymbols: null,
-    },
-    colors: ['#058DC7', 'orange'],
-  });
+  if (!adjusted[0]) {
+    return null;
+  }
 
   const chartOptions = {
     chart: {
@@ -61,7 +49,7 @@ const Yield = () => {
       },
     },
     title: {
-      text: screenWidth > 1400 ? '' : 'Revenue',
+      text: '',
     },
     xAxis: {
       tickLength: 0,
@@ -94,20 +82,69 @@ const Yield = () => {
     ],
   };
 
-  const chartStyle = (
-    screenWidth > 1400
-      ? {
-        position: 'absolute',
-        bottom: '2%',
-        left: '1040px',
-        background: '#eee',
-        boxShadow: '2px 3px rgb(20 20 20 / 70%)',
-        width,
-      }
-      : {
-        width,
-      }
+  return (
+    <div id="RevenueGraph" className={className}>
+      <div style={{ textAlign: 'center' }}>Revenue</div>
+
+      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+
+      <div>
+        <table id="ChartTable">
+          <tbody>
+            <tr>
+              <td>Year</td>
+              <td>1</td>
+              <td>3</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: 10,
+                    height: 10,
+                    background: '#058DC7',
+                    marginRight: 4,
+                  }}
+                />
+                Cover crop yield impact
+                <br />
+                ($/acre)
+              </td>
+              <td>{dollars(impact[0])}</td>
+              <td>{dollars(impact[1])}</td>
+              <td>{dollars(impact[2])}</td>
+            </tr>
+            <tr>
+              <td>
+                Typical Yield
+                <br />
+                ($/acre)
+              </td>
+              <td>{dollars(typical)}</td>
+              <td>{dollars(typical)}</td>
+              <td>{dollars(typical)}</td>
+            </tr>
+            <tr>
+              <td>
+                Cover Crop Adjusted Yield
+                <br />
+                ($/acre)
+              </td>
+              <td>{dollars(adjusted[0])}</td>
+              <td>{dollars(adjusted[1])}</td>
+              <td>{dollars(adjusted[2])}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
+}; // RevenueGraph
+
+const Yield = () => {
+  const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
 
   return (
     <div id="Yield">
@@ -184,131 +221,56 @@ const Yield = () => {
         </tfoot>
       </table>
 
-      <div className="mobile-table-div">
-        <table style={{ maxWidth: 900 }} className="mobile-table">
+      <div>
+        <table id="YieldTable">
           <tbody>
             <tr>
-              <th colSpan="2">
+              <th colSpan="3">
                 Yield
                 <ClearInputs defaults={defaults} />
               </th>
             </tr>
 
-            <Logic
-              current="yield"
-              property="yield"
-              q={(
-                <>
-                  What is the expected yield for
-                  {' '}
-                  {cashCrop}
-                  {' '}
-                  in this field?
-                  <Help>
-                    <p>
-                      User may enter their APH, trend adjusted APH, or typical yield for this
-                      field.
-                    </p>
-                  </Help>
-                </>
-            )}
-              a="number"
-            />
+            <tr>
+              <td>
+                What is the expected yield for
+                {' '}
+                {cashCrop}
+                {' '}
+                in this field?
+                <Help>
+                  <p>
+                    You may enter your APH, trend adjusted APH, or typical yield for this field.
+                  </p>
+                </Help>
+              </td>
+              <td>
+                <Input id="yield.yield" type="number" />
+              </td>
+              <td rowSpan="4">
+                <RevenueGraph className="desktop" />
+              </td>
+            </tr>
 
-            <Logic
-              current="yield"
-              property="q2"
-              q="Do you want your financial analysis to use the typical yield estimates or the cover crop adjusted yield estimates?"
-              a={['Use typical yield estimates', 'Use cover crop adjusted yield estimates']}
-            />
+            <tr>
+              <td>Do you want your financial analysis to use the typical yield estimates or the cover crop adjusted yield estimates?</td>
+              <td><Input id="yield.q2" options={['Use typical yield estimates', 'Use cover crop adjusted yield estimates']} type="radio" /></td>
+            </tr>
 
-            <Logic current="yield" property="price" q="Commodity price" a="dollar" />
+            <tr>
+              <td>Commodity price</td>
+              <td><Input id="yield.price" type="dollar" /></td>
+            </tr>
 
-            <Logic
-              current="yield"
-              property="q4"
-              type="radio"
-              q="Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?"
-              a={['1', '3', '5']}
-            />
+            <tr>
+              <td>Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?</td>
+              <td><Input id="yield.q4" options={['1', '3', '5']} type="radio" /></td>
+            </tr>
           </tbody>
         </table>
+
+        <RevenueGraph className="mobile" />
       </div>
-
-      {adjusted[0] ? (
-        <Draggable>
-          <Card style={chartStyle}>
-            <CardContent>
-              <div>
-                {screenWidth > 1400 && <strong className="cursor">Revenue</strong>}
-
-                <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-
-                <div style={{ background: 'white' }}>
-                  <table
-                    style={{
-                      width: 'calc(100% - 12px)',
-                      textAlign: 'center',
-                      font: '12px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif',
-                      color: '#444',
-                      background: 'white',
-                      border: 'none',
-                    }}
-                  >
-                    <tbody>
-                      <tr>
-                        <td>Year</td>
-                        <td>1</td>
-                        <td>3</td>
-                        <td>5</td>
-                      </tr>
-                      <tr>
-                        <td style={{ width: plotLeft }}>
-                          <div
-                            style={{
-                              display: 'inline-block',
-                              width: 10,
-                              height: 10,
-                              background: '#058DC7',
-                              marginRight: 4,
-                            }}
-                          />
-                          Cover crop yield impact
-                          <br />
-                          ($/acre)
-                        </td>
-                        <td>{dollars(impact[0])}</td>
-                        <td>{dollars(impact[1])}</td>
-                        <td>{dollars(impact[2])}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Typical Yield
-                          <br />
-                          ($/acre)
-                        </td>
-                        <td>{dollars(typical)}</td>
-                        <td>{dollars(typical)}</td>
-                        <td>{dollars(typical)}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Cover Crop Adjusted Yield
-                          <br />
-                          ($/acre)
-                        </td>
-                        <td>{dollars(adjusted[0])}</td>
-                        <td>{dollars(adjusted[1])}</td>
-                        <td>{dollars(adjusted[2])}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Draggable>
-      ) : null}
 
       {dev && (
         <div className="test-buttons">

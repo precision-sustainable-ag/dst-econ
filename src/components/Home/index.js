@@ -7,6 +7,10 @@ import './styles.scss';
 
 const Home = () => (
   <div id="Home">
+    <a href="https://precisionsustainableag.org/">
+      <img src="PSAlogo-text.png" alt="logo" id="PSALogo" />
+    </a>
+
     <p>Welcome to the</p>
     <h1>Cover Crop Economic Decision Support Tool (CC-ECON)</h1>
     <p>This program helps growers understand the impact of cover crops on profitability when making crop management changes.</p>

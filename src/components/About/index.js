@@ -7,7 +7,12 @@ import './styles.scss';
 
 const About = () => (
   <div id="About">
-    <h1>Background</h1>
+    <a href="https://precisionsustainableag.org/">
+      <img src="PSAlogo-text.png" alt="logo" id="PSALogo" />
+    </a>
+
+    <h1>Cover Crop Economic Decision Support Tool (CC-ECON)</h1>
+    <h2>Background</h2>
 
     <p>
       The Cover Crop Economic Decision Support Tool (DST) helps users better understand the impact of incorporating cover crop species or mixtures
@@ -37,7 +42,7 @@ const About = () => (
       Check back with us for future revisions and increased user functions.
     </p>
 
-    <h1>Input Data Requirements</h1>
+    <h2>Input Data Requirements</h2>
     <p>
       The Cover Crop Economic DST has been designed to provide credible estimates of the impact of cover crops
       with a limited amount of data retrieval by growers.
