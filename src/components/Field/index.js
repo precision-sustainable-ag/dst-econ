@@ -64,7 +64,6 @@ const Field = () => {
             <ClearInputs defaults={defaults} />
           </div>
           <div className="field-grid">
-            <Map />
             <div className="field-details">
               <h2>Farm name (or FSA farm number)</h2>
               <Input id="farm" fullWidth />
@@ -90,6 +89,7 @@ const Field = () => {
               <h2>What is your diesel cost? ($/gal)</h2>
               <Input id="$diesel" />
             </div>
+            <Map />
           </div>
         </div>
       </form>

@@ -225,10 +225,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      dispatch({ type: 'resize' });
-    });
-
     document.addEventListener('focusin', ({ target }) => {
       if (target.type !== 'checkbox') {
         dispatch(set.focused(target.id)); // TODO
@@ -278,13 +274,9 @@ const App = () => {
         </h1>
 
         <div className="menu-items">
-          {keys.map((path) => {
+          {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
             let cname = path === screen ? 'selected' : '';
-            const dis = disabled && !/Home|Field|Feedback|AT/.test(path);
-
-            if (/Practices|Revenue|Resources|AT|Feedback/.test(path)) {
-              cname += ' summary';
-            }
+            const dis = disabled && !/Home|Field/.test(path);
 
             if (dis) {
               cname += ' disabled';
@@ -292,24 +284,53 @@ const App = () => {
 
             const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
             return (
-              <>
-                {path === 'Practices' && <hr />}
-                <NavLink
-                  key={path}
-                  to={dis || path === 'Home' ? '/' : path}
-                  accessKey={accessKey}
+              <NavLink
+                key={path}
+                to={dis || path === 'Home' ? '/' : path}
+                accessKey={accessKey}
+                tabIndex={-1}
+                onFocus={(e) => e.target.blur()}
+              >
+                <MyButton
+                  screen={path}
+                  className={`${cname} ${path}`}
                   tabIndex={-1}
-                  onFocus={(e) => e.target.blur()}
                 >
-                  <MyButton
-                    screen={path}
-                    className={`${cname} ${path}`}
-                    tabIndex={-1}
-                  >
-                    {paths[path].menu}
-                  </MyButton>
-                </NavLink>
-              </>
+                  {paths[path].menu}
+                </MyButton>
+              </NavLink>
+            );
+          })}
+        </div>
+
+        <hr />
+
+        <div className="menu-items">
+          {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
+            let cname = path === screen ? 'selected summary' : 'summary';
+            const dis = disabled && !/Feedback|AT/.test(path);
+
+            if (dis) {
+              cname += ' disabled';
+            }
+
+            const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
+            return (
+              <NavLink
+                key={path}
+                to={dis ? '/' : path}
+                accessKey={accessKey}
+                tabIndex={-1}
+                onFocus={(e) => e.target.blur()}
+              >
+                <MyButton
+                  screen={path}
+                  className={`${cname} ${path}`}
+                  tabIndex={-1}
+                >
+                  {paths[path].menu}
+                </MyButton>
+              </NavLink>
             );
           })}
         </div>
