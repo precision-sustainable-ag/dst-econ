@@ -4,6 +4,7 @@
 // import { current as showCurrent } from '@reduxjs/toolkit';
 
 import React from 'react';
+
 import { createStore, set, get } from './redux-autosetters';
 import { db } from './airtables';
 
@@ -1287,3 +1288,39 @@ export const exampleHome = () => {
   store.dispatch(set.map.lon(-83.3157));
   store.dispatch(set.mapFeatures.zoom(13));
 }; // exampleHome
+
+export const exampleField = () => {
+  store.dispatch(set.location('123 Main Street, Athens, GA, USA'));
+  store.dispatch(set.farm('My farm'));
+  store.dispatch(set.field('My field'));
+  store.dispatch(set.mapFeatures.area(123));
+  store.dispatch(set.field('My field'));
+  store.dispatch(set.cashCrop('Corn'));
+  store.dispatch(set.map.lat(33.9347));
+  store.dispatch(set.map.lon(-83.3157));
+  store.dispatch(set.mapFeatures.zoom(13));
+}; // exampleField
+
+if (/demo/i.test(window.location)) {
+  exampleField();
+  exampleErosion();
+  examplePlanting();
+  exampleSeedbed();
+  exampleSeeds();
+  exampleGrazing();
+  exampleHerbicides();
+  exampleTermination1();
+  exampleTermination2();
+  exampleTermination3();
+  exampleTermination4();
+  exampleTermination5();
+  exampleTillage1();
+  exampleTillage2();
+  exampleTillage3();
+  exampleTillage4();
+  exampleTillage5();
+  exampleFertilityBenefit();
+  exampleFertilityCost();
+  exampleYield1();
+  exampleYield2();
+}

@@ -3,6 +3,8 @@
 import React from 'react';
 import { db } from '../../store/Store';
 
+import './styles.scss';
+
 const Airtable = ({ name, url }) => {
   const table = db[name];
 
@@ -17,7 +19,7 @@ const Airtable = ({ name, url }) => {
   keys = Object.keys(keys).filter((k) => k !== 'key').sort();
   let first = 1;
   return (
-    <form className="airtable">
+    <form id="Airtable">
       <h2>
         <a
           target="_blank"

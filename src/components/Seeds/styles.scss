@@ -1,0 +1,33 @@
+#Seeds {
+  td:nth-child(1) {
+    width: 18rem;
+  }
+
+  td:nth-child(n + 2) {
+    text-align: right;
+    width: 8em;
+  }
+
+  th {
+    background: #eee;
+  }
+
+  tr:not(:last-child) td:nth-child(n + 2) {
+    background: #efe;
+  }
+
+  tr:last-child td {
+    border-top: 1px solid #666;
+    background: #eee;
+  }
+
+  tr > :nth-child(4) {
+    border-left: 1px solid black;
+  }
+
+  tr > td:nth-child(1),
+  tr > td:nth-child(2),
+  tr > td:nth-child(3) {
+    border-bottom: none;
+  }
+}
