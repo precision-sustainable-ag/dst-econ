@@ -117,7 +117,7 @@ const grazingTotal = (state) => {
     return 0;
   }
 
-  if (+$hay === 0 || +$labor === 0 || +$diesel === 0 || +hoursAcre === 0) {
+  if (+$hay === 0 || +$labor === 0 || +$diesel === 0) {
     return 0;
   }
 
