@@ -1,0 +1,53 @@
+#Airtable {
+  position: relative;
+  z-index: 10000;
+
+  td,
+  th {
+    border: 1px solid #ddd;
+    height: 1.8rem;
+    white-space: nowrap;
+    font: 14px arial;
+  }
+
+  td {
+    position: relative;
+    padding: 0;
+  }
+
+  th {
+    position: sticky;
+    padding: 0.3rem;
+    top: 0;
+    border-bottom: 1px solid #333;
+    z-index: 998;
+  }
+  
+  td:nth-child(1) {
+    padding: 0.3rem;
+    background: #f8f8f8;
+  }
+  
+  td > * {
+    padding: 0.5rem;
+  }
+  
+  input {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: block;
+    width: 100%;
+    border: none;
+    font: 14px arial;
+  }
+  
+  span {
+    visibility: hidden;
+    /* ensure widths match inputs */
+  }
+  
+  :focus {
+    background: yellow;
+  }
+}

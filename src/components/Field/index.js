@@ -1,11 +1,16 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import {
-  dev, get, set, getDefaults, db,
+  dev,
+  get,
+  getDefaults,
+  db,
+  exampleField,
 } from '../../store/Store';
+
 import './styles.scss';
 
 const defaults = getDefaults([
@@ -20,7 +25,6 @@ const defaults = getDefaults([
 ]);
 
 const Field = () => {
-  const dispatch = useDispatch();
   const cashCrop = useSelector(get.cashCrop);
 
   return (
@@ -49,17 +53,7 @@ const Field = () => {
             <div className="test-buttons">
               <button
                 type="button"
-                onClick={() => {
-                  dispatch(set.location('123 Main Street, Athens, GA, USA'));
-                  dispatch(set.farm('My farm'));
-                  dispatch(set.field('My field'));
-                  dispatch(set.mapFeatures.area(123));
-                  dispatch(set.field('My field'));
-                  dispatch(set.cashCrop('Corn'));
-                  dispatch(set.map.lat(33.9347));
-                  dispatch(set.map.lon(-83.3157));
-                  dispatch(set.mapFeatures.zoom(13));
-                }}
+                onClick={exampleField}
               >
                 Test data
               </button>

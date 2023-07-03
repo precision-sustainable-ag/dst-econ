@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Route, Routes, NavLink, useLocation, useNavigate,
@@ -141,7 +141,7 @@ const Navigation = ({ current, mobile }) => {
   const next = keys[keys.indexOf(current) + 1];
 
   return (
-    <div id="Navigation">
+    <div id="Navigation" className="desktop">
       {back && (
         <NavLink to={`/${back.replace('Home', '')}`}>
           <Button variant="contained" color="primary" tabIndex={-1}>
@@ -189,27 +189,6 @@ const App = () => {
   const newScreen = useSelector(get.newScreen);
   const status = useSelector(get.status);
   const navigate = useNavigate();
-  const [screenIndex, setScreenIndex] = useState(0);
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-  const screenNums = {
-    1: 'Home',
-    2: 'Field',
-    3: 'Seeds',
-    4: 'Seedbed',
-    5: 'Planting',
-    6: 'Termination',
-    7: 'Tillage',
-    8: 'Fertility',
-    9: 'Herbicide',
-    10: 'Erosion',
-    11: 'Grazing',
-    12: 'Additional',
-    13: 'Yield',
-    14: 'Practices',
-    15: 'Revenue',
-    16: 'Resources',
-    17: 'Feedback',
-  };
 
   const acres = useSelector(get.mapFeatures.area);
   const $labor = useSelector(get.$labor);
@@ -217,12 +196,6 @@ const App = () => {
   const crop = useSelector(get.cashCrop);
   const map = useSelector(get.map);
   const disabled = !map.lat || !acres || !$labor || !$diesel || !crop;
-
-  useEffect(() => {
-    const num = Object.keys(screenNums).find((key) => screenNums[key] === screen);
-
-    setScreenIndex(num - 1);
-  }, [screen]);
 
   useEffect(() => {
     if (screen !== 'Loading') {
@@ -236,19 +209,6 @@ const App = () => {
       dispatch(set.newScreen(''));
     }
   }, [newScreen]);
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     document.addEventListener('keydown', (e) => {
@@ -312,21 +272,11 @@ const App = () => {
       <MyModal />
 
       <nav>
-        <div className="mobile-menu">
-          <img src="PSAlogo-only.png" className="mobile-logo" alt="mobile-logo" />
-          <div>Cover Crop Economic Decision Support Tool</div>
-        </div>
-        <div
-          style={{
-            textAlign: 'center',
-            fontWeight: 'bold',
-            fontSize: '120%',
-            marginBottom: '0.25rem',
-          }}
-          className="desktop-title"
-        >
-          Cover Crop Economic Decision Support Tool
-        </div>
+        <h1>
+          <img src="PSAlogo-only.png" alt="logo" />
+          <span>Cover Crop Economic Decision Support Tool</span>
+        </h1>
+
         <div className="menu-items">
           {keys.map((path) => {
             let cname = path === screen ? 'selected' : '';
@@ -363,21 +313,6 @@ const App = () => {
             );
           })}
         </div>
-
-        <div className="timeline-div" style={{ display: 'none' }}>
-          <div className="timeline">
-            {Object.keys(screenNums).map((num) => (
-              <div
-                className="timeline-dot"
-                style={{
-                  backgroundColor: num - 1 <= screenIndex ? 'green' : 'grey',
-                }}
-              >
-                {num}
-              </div>
-            ))}
-          </div>
-        </div>
       </nav>
 
       <Summary />
@@ -410,7 +345,7 @@ const App = () => {
       </div>
 
       {
-        disabled && screen !== 'Home' ? null : <Navigation current={screen} mobile={windowSize.width <= 1045} />
+        disabled || /Home|About/.test(screen) ? null : <Navigation current={screen} />
       }
 
       <div id="AirTables">
