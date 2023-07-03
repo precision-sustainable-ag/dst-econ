@@ -151,8 +151,6 @@ const initialState = {
   airTables: '',
   screen: 'Loading',
   newScreen: '',
-  screenWidth: window.innerWidth,
-  screenHeight: window.innerHeight,
   status: '',
   previousScreen: 'Field',
   map: {
@@ -696,14 +694,6 @@ const afterChange = {
 afterChange.$diesel = afterChange.$labor;
 
 const reducers = {
-  resize: (state) => {
-    // Cannot perform 'set' on a proxy that has been revoked
-    // clearTimeout(resizeTimer);
-    // resizeTimer = setTimeout(() => {
-    state.screenWidth = window.innerWidth;
-    state.screenHeight = window.innerHeight;
-    // }, 100);
-  },
   updateLocation: (state, { payload }) => {
     state = { ...state, ...payload };
     return state;
@@ -974,8 +964,6 @@ export const clearInputs = (defaults, exclude = []) => {
     }
   });
 }; // clearInputs
-
-// let resizeTimer;
 
 export const exampleSeeds = () => {
   store.dispatch(set.species({ index: 0, value: 'Clover, Crimson' }));
