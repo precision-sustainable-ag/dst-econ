@@ -134,7 +134,8 @@ if (dev) {
 
 const keys = Object.keys(paths);
 
-const Navigation = ({ current, mobile }) => {
+const Navigation = ({ current }) => {
+  const mobile = useSelector(get.mobile);
   const previousScreen = useSelector(get.previousScreen);
 
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
@@ -188,6 +189,7 @@ const App = () => {
   const screen = useSelector(get.screen);
   const newScreen = useSelector(get.newScreen);
   const status = useSelector(get.status);
+  const mobile = useSelector(get.mobile);
   const navigate = useNavigate();
 
   const acres = useSelector(get.mapFeatures.area);
@@ -238,6 +240,11 @@ const App = () => {
       },
       true,
     );
+
+    window.addEventListener('resize', () => {
+      dispatch(set.mobile(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800));
+      console.log(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800);
+    });
   }, [dispatch]);
 
   const airTables = {
@@ -268,10 +275,20 @@ const App = () => {
       <MyModal />
 
       <nav>
-        <h1>
-          <img src="PSAlogo-only.png" alt="logo" />
-          <span>Cover Crop Economic Decision Support Tool</span>
-        </h1>
+        <div className="mobile">
+          <h1>
+            <img src="PSAlogo-only.png" alt="logo" />
+            Cover Crop Economic DST
+          </h1>
+        </div>
+
+        <div className="desktop">
+          <h1>
+            <img src="PSAlogo-only.png" alt="logo" />
+            Cover Crop Economic Decision Support Tool
+            <span className="mobile">Cover Crop Economic DST</span>
+          </h1>
+        </div>
 
         <div className="menu-items">
           {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
@@ -307,6 +324,8 @@ const App = () => {
 
         <div className="menu-items">
           {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
+            if (mobile && path === 'AT') return null;
+
             let cname = path === screen ? 'selected summary' : 'summary';
             const dis = disabled && !/Feedback|AT/.test(path);
 

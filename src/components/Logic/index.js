@@ -229,7 +229,7 @@ const Logic = ({
       ? (
         <>
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
-          <tr className={current} style={{ height: '4rem' }}>
+          <tr className={current}>
             <td style={style}>{q}</td>
             <td style={style}>{result}</td>
             {

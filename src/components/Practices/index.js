@@ -688,7 +688,7 @@ const Practices = () => {
           longitude
         </p>
       )}
-      <div className="practices-mobile">
+      <div>
         <table>
           <thead>
             <tr>

@@ -13,6 +13,8 @@ import {
   exampleFertilityCost,
 } from '../../store/Store';
 
+import './styles.scss';
+
 const defaults = getDefaults([
   'fertN',
   'fertP',
@@ -41,7 +43,7 @@ const Fertility = () => {
   const $fertCredit = useSelector(get.$fertCredit);
 
   return (
-    <div className="Fertility">
+    <div id="Fertility">
       <form>
         <h1>Fertility</h1>
         <p>
@@ -55,13 +57,9 @@ const Fertility = () => {
         </p>
         <div className="mobile-table-div">
           <table className="mobile-table">
-            <thead>
-              <tr>
-                <th colSpan={4}>
-                  <ClearInputs defaults={defaults} />
-                </th>
-              </tr>
-            </thead>
+            <caption>
+              <ClearInputs defaults={defaults} />
+            </caption>
             <tbody>
               <tr>
                 <td />
