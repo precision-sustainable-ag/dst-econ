@@ -1,0 +1,19 @@
+#Erosion {
+  table {
+    position: relative;
+    width: auto;
+    margin: auto;
+  }
+
+  td:nth-child(1) {
+    width: 30rem;
+  }
+
+  td:nth-child(2) {
+    width: 15rem;
+  }
+
+  td:nth-child(3) {
+    display: none;
+  }
+}

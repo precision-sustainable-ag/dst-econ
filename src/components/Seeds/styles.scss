@@ -1,15 +1,23 @@
 #Seeds {
+  table {
+    margin: auto;
+    width: auto;
+  }
+
   td:nth-child(1) {
     width: 18rem;
   }
 
   td:nth-child(n + 2) {
     text-align: right;
-    width: 8em;
   }
-
+  
   th {
     background: #eee;
+  }
+
+  td:nth-child(4) {
+    background: white !important;
   }
 
   tr:not(:last-child) td:nth-child(n + 2) {

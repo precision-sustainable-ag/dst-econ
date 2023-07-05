@@ -30,7 +30,7 @@
   .fullwidth {
     margin-top: 3rem;
     position: absolute;
-    left: 0;
-    width: 100%;
+    left: -0.5rem;
+    width: calc(100% + 1rem);
   }
 }

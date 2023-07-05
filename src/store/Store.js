@@ -117,7 +117,7 @@ const grazingTotal = (state) => {
     return 0;
   }
 
-  if (+$hay === 0 || +$labor === 0 || +$diesel === 0 || +hoursAcre === 0) {
+  if (+$hay === 0 || +$labor === 0 || +$diesel === 0) {
     return 0;
   }
 
@@ -1312,3 +1312,5 @@ if (/demo/i.test(window.location)) {
   exampleYield1();
   exampleYield2();
 }
+
+export const mobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

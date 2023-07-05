@@ -7,6 +7,8 @@ import {
 } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
 
+import './styles.scss';
+
 const defaults = getDefaults([
   'erosion.q1',
   'erosion.q2',
@@ -15,10 +17,10 @@ const defaults = getDefaults([
 ]);
 
 const Erosion = () => {
-  const state = useSelector(get.erosion);
+  const erosion = useSelector(get.erosion);
 
   return (
-    <div className="Erosion">
+    <div id="Erosion">
       <h1>Soil Erosion Control</h1>
       <p>
         Using cover crops has been documented to provide benefits with controlling soil erosion.
@@ -35,13 +37,11 @@ const Erosion = () => {
       </p>
 
       <div className="mobile-table-div">
-        <table className="mobile-table" style={{ position: 'relative' }}>
+        <table className="mobile-table">
+          <caption style={{ height: '2rem' }}>
+            <ClearInputs defaults={defaults} />
+          </caption>
           <tbody>
-            <tr style={{ height: '2rem', verticalAlign: 'top' }}>
-              <td colSpan="2">
-                <ClearInputs defaults={defaults} />
-              </td>
-            </tr>
             <Logic
               current="erosion"
               property="q1"
@@ -49,7 +49,7 @@ const Erosion = () => {
               a={['Yes', 'No']}
             />
 
-            {state.q1 === 'Yes' && (
+            {erosion.q1 === 'Yes' && (
               <>
                 <Logic
                   current="erosion"
@@ -78,7 +78,7 @@ const Erosion = () => {
                       </p>
                     </Help>
                   </td>
-                  <td>{dollars(state.total)}</td>
+                  <td>{dollars(erosion.total)}</td>
                 </tr>
               </>
             )}
