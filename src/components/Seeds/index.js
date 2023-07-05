@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import {
-  dev, get, dollars, db, getDefaults, exampleSeeds,
+  dev, get, dollars, db, getDefaults, exampleSeeds, mobile,
 } from '../../store/Store';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
@@ -101,7 +101,7 @@ const SpeciesRow = ({ n }) => {
         <Input
           id="species"
           index={n}
-          autoFocus={n === 0}
+          autoFocus={!mobile && n === 0}
           groupBy={groupByOption}
           options={options}
         />

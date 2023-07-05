@@ -20,7 +20,7 @@ import {
 
 import Help from '../Help';
 
-import { get, set } from '../../store/Store';
+import { get, set, mobile } from '../../store/Store';
 
 import './styles.scss';
 
@@ -241,7 +241,7 @@ const Input = ({
     if (!renderInput) {
       renderInput = (params) => (
         <TextField
-          autoFocus={props.autoFocus}
+          autoFocus={!mobile && props.autoFocus}
           variant={props.variant || 'outlined'}
           sx={{ background: 'white', width: max, padding: 0 }}
           {...params}

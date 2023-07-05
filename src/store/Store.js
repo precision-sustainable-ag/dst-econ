@@ -1312,3 +1312,5 @@ if (/demo/i.test(window.location)) {
   exampleYield1();
   exampleYield2();
 }
+
+export const mobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
