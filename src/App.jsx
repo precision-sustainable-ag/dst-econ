@@ -379,7 +379,7 @@ const App = () => {
           <Route path="Feedback" element={<Feedback />} />
           <Route path="AT" element={<AT />} />
           {Object.keys(airTables).map((key) => (
-            <Route path={key} element={<Airtable name={key} url={airTables[key]} />} />
+            <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}
         </Routes>
       </div>
@@ -392,7 +392,7 @@ const App = () => {
         <select onChange={(e) => navigate(e.target.value)}>
           <option>&nbsp;</option>
           {Object.keys(airTables).map((key) => (
-            <option>{key}</option>
+            <option key={key}>{key}</option>
           ))}
         </select>
       </div>

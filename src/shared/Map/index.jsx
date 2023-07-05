@@ -9,7 +9,7 @@ import Map from './map';
 import { get, set } from '../../store/Store';
 import './styles.scss';
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+// mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 const OpeningMap = () => (
   <Map

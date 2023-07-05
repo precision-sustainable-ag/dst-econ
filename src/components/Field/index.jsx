@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-// import Map from '../../shared/Map';
+import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
 import ClearInputs from '../ClearInputs';
 import {
@@ -89,7 +89,7 @@ const Field = () => {
               <h2>What is your diesel cost? ($/gal)</h2>
               <Input id="$diesel" />
             </div>
-            {/* <Map /> */}
+            <Map />
           </div>
         </div>
       </form>
