@@ -4,7 +4,6 @@ COPY package.json package.json
 COPY . .
 RUN npm install
 RUN npm install vite
-# RUN vite build
 RUN npm run build
 
 FROM nginx:1.23.1-alpine

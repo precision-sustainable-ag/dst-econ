@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { dev, exampleHome } from '../../store/Store';
@@ -37,7 +36,7 @@ const Home = () => (
 
 Home.menu = (
   <span>
-    Z<u>H</u>
+    <u>H</u>
     ome
   </span>
 );
