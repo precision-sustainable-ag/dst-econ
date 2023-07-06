@@ -37,7 +37,7 @@ const Home = () => (
 
 Home.menu = (
   <span>
-    <u>H</u>
+    Z<u>H</u>
     ome
   </span>
 );
