@@ -40,6 +40,9 @@ import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
 
+let resizeTimer;
+let firstTime = true;
+
 const MyModal = () => {
   const modalData = useSelector(get.modalData);
   const anchor = useSelector(get.anchor);
@@ -136,6 +139,7 @@ const Navigation = ({ current }) => {
   const mobile = useSelector(get.mobile);
   const previousScreen = useSelector(get.previousScreen);
 
+  console.log('here');
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
   const next = keys[keys.indexOf(current) + 1];
 
@@ -225,6 +229,9 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (!firstTime) return;
+
+    firstTime = false;
     document.addEventListener('focusin', ({ target }) => {
       if (target.type !== 'checkbox') {
         dispatch(set.focused(target.id)); // TODO
@@ -239,9 +246,23 @@ const App = () => {
       true,
     );
 
+    console.log('resize');
     window.addEventListener('resize', () => {
       dispatch(set.mobile(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800));
-      console.log(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800);
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.querySelectorAll('.menu-items button').forEach((button) => {
+          const { right } = button.getBoundingClientRect();
+          const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+          if (right > viewportWidth) {
+            button.classList.add('hidden');
+          } else {
+            console.log(Math.round(right), viewportWidth);
+            button.classList.remove('hidden');
+          }
+        });
+      }, 100);
     });
   }, [dispatch]);
 

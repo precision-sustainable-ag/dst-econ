@@ -25,9 +25,15 @@ code {
     monospace;
 }
 
-.mobile {display: block;}
-.desktop {display: none;}
-.desktop2 {display: none;}
+.mobile {
+  display: initial;
+}
+
+.desktop,
+.desktop2,
+.test-buttons {
+  display: none;
+}
 
 #Container {
   position: relative;
@@ -46,10 +52,11 @@ code {
 
 @media screen and (min-width: 1250px) {
   .desktop2 {display: initial;}
+  .test-buttons {display: flex;}
 
   #Container {
     max-width: 1000px;
-    transform: translateX(-114px);
+    left: -114px;
   }
 }
 
@@ -108,13 +115,25 @@ nav {
       width: 4rem;
     }
 
+    &.Seedbed {
+      width: 5.5rem;
+    }
+
+    &.Planting {
+      width: 5rem;
+    }
+
+    &.Erosion {
+      width: 4rem;
+    }
+
+    &.Additional {
+      width: 6.5rem;
+    }
+
     &.summary {
       height: 2rem;
       color: yellow;
-    }
-
-    &:not(.summary) {
-      max-width: 6rem;
     }
 
     &.Feedback {
@@ -131,27 +150,15 @@ nav {
       &:hover {
         &::before {
           content: "To continue, please select your location, and enter acres, crop, labor value, and diesel price.";
-          position: absolute;
-          left: calc(100% + 12px);
+          position: fixed;
+          transform: translate3d(25%, -100%, 0);
           width: 10rem;
-          display: block;
           background: lightyellow;
           color: #444;
           font-size: 80%;
           padding: 0 0.5rem;
           border-radius: 5px;
-          z-index: 999;
-          line-height: 0.9rem;
-        }
-        &::after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: calc(100% + 8px);
-          transform: translate(-50%, -50%);
-          border-style: solid;
-          border-width: 6px 6px 6px 0;
-          border-color: transparent lightyellow transparent transparent;
+          line-height: 1rem;
         }
       }
     }
@@ -212,7 +219,7 @@ label {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 li.selected,
@@ -371,10 +378,8 @@ button.selected u {
 }
 
 #PSALogo {
-  position: absolute;
+  float: right;
   filter: invert(0.3);
-  top: 0rem;
-  right: 0;
   width: 8rem;
 }
 
@@ -503,7 +508,7 @@ body.debug #AirTables {
 
 .menu-items {
   white-space: nowrap;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .menu-items button {
@@ -527,14 +532,9 @@ body.debug #AirTables {
 
 .test-buttons {
   position: fixed;
-  top: 2rem;
+  bottom: 0;
   right: 0;
-  display: flex;
   flex-direction: column;
-}
-
-body.test .test-buttons {
-  display: block;
 }
 
 table.power {

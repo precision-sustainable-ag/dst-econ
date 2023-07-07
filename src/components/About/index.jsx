@@ -11,7 +11,11 @@ const About = () => (
       <img src="PSAlogo-text.png" alt="logo" id="PSALogo" />
     </a>
 
-    <h1>Cover Crop Economic Decision Support Tool (CC-ECON)</h1>
+    <h1>
+      Cover Crop Economic Decision Support Tool
+      {' '}
+      <span style={{ whiteSpace: 'nowrap' }}>(CC-ECON)</span>
+    </h1>
     <h2>Background</h2>
 
     <p>
