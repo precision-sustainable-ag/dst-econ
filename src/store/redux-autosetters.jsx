@@ -1,6 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
-
 import { configureStore, createAction, createReducer } from '@reduxjs/toolkit';
 import axios from 'axios';
 

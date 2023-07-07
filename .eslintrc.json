@@ -12,8 +12,8 @@
         "es2021": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:react/recommended"
     ],
     "overrides": [
     ],
@@ -21,15 +21,14 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": ["react", "import", "react-hooks"],    
     "rules": {
       "global-require": 0,
       "react/prop-types": [0],
       "react/jsx-filename-extension": [0],
       "react/no-array-index-key": [0],
       "react/jsx-props-no-spreading": "off",
+      "jsx-a11y/control-has-associated-label": [0],
       "jsx-a11y/label-has-associated-control": [ 2, {
         "controlComponents": ["Input"],
         "depth": 3

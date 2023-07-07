@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import React from 'react';
 import { dev, exampleHome } from '../../store/Store';
 
 import './styles.scss';

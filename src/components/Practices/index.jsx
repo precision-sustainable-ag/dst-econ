@@ -105,7 +105,7 @@ const SeedbedSummary = () => {
       <td colSpan={2}>
         <NavLink to="/Seedbed">Cover crop seedbed preparation</NavLink>
       </td>
-      <td className="hidden" />
+      <td />
       <td>
         {implement || 'none'}
         <br />
@@ -284,7 +284,7 @@ const TillageSummary = () => {
             to normal cropping system
           </NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td>{costs(total)}</td>
@@ -440,7 +440,7 @@ const HerbicideSummary = () => {
             to normal cropping system
           </NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td>{costs(total)}</td>
@@ -518,7 +518,7 @@ const ErosionSummary = () => {
         <td colSpan={2}>
           <NavLink to="/Erosion">Erosion control</NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td />
@@ -558,7 +558,7 @@ const YieldSummary = () => {
         <td colSpan={2}>
           <NavLink to="/Yield">Yield impact</NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td />
@@ -591,7 +591,7 @@ const AdditionalSummary = () => {
         <td colSpan={2}>
           <NavLink to="/Additional">Additional considerations</NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td />
@@ -714,7 +714,7 @@ const Practices = () => {
             <AdditionalSummary />
             <tr className="total">
               <td colSpan={2}>Total</td>
-              <td className="hidden" />
+              <td />
               <td />
               <td />
               <td>{dollars(totalCosts)}</td>
@@ -723,7 +723,7 @@ const Practices = () => {
             </tr>
             <tr className="total">
               <td colSpan={2}>Net cost of cover crops</td>
-              <td className="hidden" />
+              <td />
               <td style={{ textAlign: 'right' }}>{dollars(totalBenefits - totalCosts)}</td>
               <td />
               <td />

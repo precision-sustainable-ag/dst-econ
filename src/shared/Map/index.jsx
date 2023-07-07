@@ -4,7 +4,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import mapboxgl from 'mapbox-gl';
+// import mapboxgl from 'mapbox-gl';
 import Map from './map';
 import { get, set } from '../../store/Store';
 import './styles.scss';

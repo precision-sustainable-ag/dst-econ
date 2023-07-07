@@ -1,6 +1,4 @@
-/* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/no-access-key */
-/* eslint-disable no-console */
 import './App.scss';
 
 import {
@@ -8,7 +6,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import React, { useEffect } from 'react';
+import { React, useEffect } from 'react';
 
 import {
   Route, Routes, NavLink, useLocation, useNavigate,
