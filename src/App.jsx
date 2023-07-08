@@ -266,7 +266,8 @@ const App = () => {
 
     topMenu.current.scrollLeft = movingRight ? left + distance : left - distance;
 
-    if (topMenu.current.scrollLeft !== (movingRight ? left + distance : left - distance)) return;
+    if (movingRight && topMenu.current.scrollLeft < left + distance) return;
+    if (!movingRight && topMenu.current.scrollLeft > left + distance) return;
 
     setTimeout(() => animate(goto, movingRight, Math.round(Math.max(1, distance * 0.8))), 1);
   };
