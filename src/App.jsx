@@ -200,11 +200,10 @@ const App = () => {
     if (!topMenu.current) return;
 
     const { left } = topMenu.current.firstChild.getBoundingClientRect();
-    moreLeft.current.disabled = left >= 0;
+    moreLeft.current.disabled = left >= 20;
 
     const { right } = topMenu.current.lastChild.getBoundingClientRect();
     moreRight.current.disabled = right <= topMenu.current.clientWidth + 35;
-    console.log(right, topMenu.current.clientWidth + 30);
   };
 
   const resize = () => {
@@ -271,26 +270,10 @@ const App = () => {
     window.addEventListener('resize', resize);
   }, [dispatch]);
 
-  const animate = (goto, movingRight, distance = 20) => {
-    const left = topMenu.current.scrollLeft;
-
-    if (left === goto) return;
-
-    if ((movingRight && left > goto) || (!movingRight && left < goto)) return;
-
-    topMenu.current.scrollLeft = movingRight ? left + distance : left - distance;
-
-    if (movingRight && topMenu.current.scrollLeft < left + distance) return;
-    if (!movingRight && topMenu.current.scrollLeft > left + distance) return;
-
-    setTimeout(() => animate(goto, movingRight, Math.round(Math.max(1, distance * 0.8))), 1);
-  };
-
   const scrollLeft = () => {
     const { right } = moreLeft.current.getBoundingClientRect();
     const currentLeft = topMenu.current.scrollLeft;
-    const min = moreRight.current.clientWidth * 2;
-    topMenu.current.scrollLeft = currentLeft - min;
+    topMenu.current.scrollLeft = currentLeft;
 
     const buttonToScroll = [...document.querySelectorAll('.topmenu button')].reverse().find((button) => {
       const { left } = button.getBoundingClientRect();
@@ -299,16 +282,14 @@ const App = () => {
 
     topMenu.current.scrollLeft = currentLeft;
     if (buttonToScroll) {
-      const goto = Math.round(currentLeft - (right - buttonToScroll.getBoundingClientRect().left));
-      animate(goto - 2);
+      buttonToScroll.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     const { left } = moreRight.current.getBoundingClientRect();
     const currentLeft = topMenu.current.scrollLeft;
-    const min = moreRight.current.clientWidth * 2;
-    topMenu.current.scrollLeft = currentLeft + min;
+    topMenu.current.scrollLeft = currentLeft;
 
     const buttonToScroll = [...document.querySelectorAll('.topmenu button')].find((button) => {
       const { right } = button.getBoundingClientRect();
@@ -317,8 +298,7 @@ const App = () => {
 
     topMenu.current.scrollLeft = currentLeft;
     if (buttonToScroll) {
-      const goto = Math.round(buttonToScroll.getBoundingClientRect().right - left + currentLeft);
-      animate(goto + 2, 1);
+      buttonToScroll.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
