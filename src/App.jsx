@@ -130,7 +130,6 @@ const Navigation = ({ current }) => {
   const mobile = useSelector(get.mobile);
   const previousScreen = useSelector(get.previousScreen);
 
-  console.log('here');
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
   const next = keys[keys.indexOf(current) + 1];
 
@@ -222,7 +221,7 @@ const App = () => {
       scroll();
 
       return () => {
-        topMenu.current.removeEventListener('scroll', scroll);
+        topMenu?.current?.removeEventListener('scroll', scroll);
       };
     }
     return () => {};
@@ -273,7 +272,7 @@ const App = () => {
   const scrollLeft = () => {
     const { right } = moreLeft.current.getBoundingClientRect();
     const currentLeft = topMenu.current.scrollLeft;
-    topMenu.current.scrollLeft = currentLeft;
+    topMenu.current.scrollLeft = currentLeft - 30;
 
     const buttonToScroll = [...document.querySelectorAll('.topmenu button')].reverse().find((button) => {
       const { left } = button.getBoundingClientRect();
@@ -289,7 +288,7 @@ const App = () => {
   const scrollRight = () => {
     const { left } = moreRight.current.getBoundingClientRect();
     const currentLeft = topMenu.current.scrollLeft;
-    topMenu.current.scrollLeft = currentLeft;
+    topMenu.current.scrollLeft = currentLeft + 30;
 
     const buttonToScroll = [...document.querySelectorAll('.topmenu button')].find((button) => {
       const { right } = button.getBoundingClientRect();
