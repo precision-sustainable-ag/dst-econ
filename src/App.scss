@@ -18,6 +18,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -45,9 +46,23 @@ code {
   margin: auto;
 }
 
+@media screen and (max-width: 1050px) {
+  .topmenu {
+    display: block !important;
+    padding: 0 1rem;
+  }
+}
+
 @media screen and (min-width: 1050px) {
-  .mobile {display: none;}
-  .desktop {display: initial;}
+  .mobile,
+  .moreLeft,
+  .moreRight {
+    display: none !important;
+  }
+
+  .desktop {
+    display: initial;
+  }
 }
 
 @media screen and (min-width: 1250px) {
@@ -66,7 +81,15 @@ nav {
   background-color: rgba(30, 30, 30, 0.8);
   z-index: 1;
   position: relative;
-  
+
+  .topmenu {
+    display: flex;
+
+    a {
+      flex-grow: 1;
+    }
+  }
+
   h1 {
     display: flex;
     align-items: center;
@@ -89,10 +112,88 @@ nav {
     margin-right: 0.2rem;
   }
 
-  .MuiButtonBase-root {
+  a.selected button {
+    color: rgba(3, 3, 3) !important;
+    background: #eee !important;
+  }
+
+  a:not(.selected):hover button {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  a.selected:hover button {
+    background: white;
+  }
+
+  a.Field button {width: 4rem;}
+  a.Seedbed button {width: 5.5rem;}
+  a.Planting button {width: 5rem;}
+  a.Termination button {min-width: 6rem !important;}
+  a.Herbicide button {min-width: 5rem !important;}
+  a.Erosion button {width: 4rem;}
+  a.Grazing button {min-width: 4.5rem !important;}
+  a.Additional button {width: 6.5rem;}
+  a.summary button {
+    height: 2rem;
+    color: yellow;
+  }
+
+  a.Feedback button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    float: right;
+    background: #8888aa !important;
+    color: white;
+    height: 2rem !important;
+  }
+
+  a.disabled button {
+    position: relative;
+    &:hover {
+      &::before {
+        content: "To continue, please select your location, and enter acres, crop, labor value, and diesel price.";
+        position: fixed;
+        transform: translate3d(25%, -100%, 0);
+        width: 10rem;
+        background: lightyellow;
+        color: #444;
+        font-size: 80%;
+        padding: 0 0.5rem;
+        border-radius: 5px;
+        line-height: 1rem;
+      }
+    }
+  }
+
+  .moreLeft,
+  .moreRight {
+    position: absolute;
+    z-index: 1;
+    color: #ccc;
+    background: darkgreen !important;
+    border-radius: 5px;
+    height: 3rem;
+    width: 20px;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  .moreLeft {
+    left: 0;
+  }
+
+  .moreRight {
+    right: 0;
+  }
+
+  .MuiButtonBase-root:not(.moreLeft, .moreRight) {
+    min-width: 4rem;
     background: rgba(255, 255, 255, 0.1);
     color: white;
-    margin-right: 0.4rem;
+    margin: 0 0.2rem;
     border-radius: 10px;
     padding: 0 0.5rem;
     text-transform: none;
@@ -100,68 +201,6 @@ nav {
     border: 1px solid rgba(255, 255, 255, 0.1);
     height: 3rem;
     line-height: 1.2rem;
-    min-width: 0;
-
-    &.selected {
-      color: rgba(3, 3, 3) !important;
-      background: #eee;
-    }
-
-    &:not(.selected):hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    &.Field {
-      width: 4rem;
-    }
-
-    &.Seedbed {
-      width: 5.5rem;
-    }
-
-    &.Planting {
-      width: 5rem;
-    }
-
-    &.Erosion {
-      width: 4rem;
-    }
-
-    &.Additional {
-      width: 6.5rem;
-    }
-
-    &.summary {
-      height: 2rem;
-      color: yellow;
-    }
-
-    &.Feedback {
-      position: absolute;
-      top: 0.5rem;
-      right: 0;
-      float: right;
-      background: #8888aa;
-      color: white;
-    }
-
-    &.disabled {
-      position: relative;
-      &:hover {
-        &::before {
-          content: "To continue, please select your location, and enter acres, crop, labor value, and diesel price.";
-          position: fixed;
-          transform: translate3d(25%, -100%, 0);
-          width: 10rem;
-          background: lightyellow;
-          color: #444;
-          font-size: 80%;
-          padding: 0 0.5rem;
-          border-radius: 5px;
-          line-height: 1rem;
-        }
-      }
-    }
   }
 }
 
@@ -316,6 +355,7 @@ input[type='number']::-webkit-inner-spin-button {
 
 input[type='number'] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .inputs {
@@ -508,11 +548,16 @@ body.debug #AirTables {
 
 .menu-items {
   white-space: nowrap;
-  overflow-x: hidden;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  button {
+    white-space: normal;
+  } 
 }
 
-.menu-items button {
-  white-space: normal;
+.menu-items::-webkit-scrollbar {
+  display: none; /* WebKit-based browsers */
 }
 
 .mobile-table {

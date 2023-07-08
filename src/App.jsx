@@ -1,18 +1,20 @@
+/* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/no-access-key */
 import './App.scss';
 
-import {
-  Modal, Button, IconButton, Popover,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-
-import { React, useEffect } from 'react';
+import { React, useEffect, useRef } from 'react';
 
 import {
   Route, Routes, NavLink, useLocation, useNavigate,
 } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { renderToString } from 'react-dom/server';
+
+import {
+  Modal, Button, IconButton, Popover,
+} from '@mui/material';
+
+import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
 
 import {
   dev, get, set, db,
@@ -40,7 +42,6 @@ import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
 
-let resizeTimer;
 let firstTime = true;
 
 const MyModal = () => {
@@ -201,6 +202,13 @@ const App = () => {
   const map = useSelector(get.map);
   const disabled = !map.lat || !acres || !$labor || !$diesel || !crop;
 
+  const topMenu = useRef(null);
+
+  const resize = () => {
+    const isMobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
+    dispatch(set.mobile(isMobile));
+  };
+
   useEffect(() => {
     if (screen !== 'Loading') {
       dispatch(set.screen(location.pathname.slice(1) || 'Home'));
@@ -215,6 +223,11 @@ const App = () => {
   }, [newScreen]);
 
   useEffect(() => {
+    if (!firstTime) return;
+
+    resize();
+    firstTime = false;
+
     document.addEventListener('keydown', (e) => {
       if (e.altKey) {
         document.body.classList.add('hotkeys');
@@ -226,12 +239,7 @@ const App = () => {
         document.body.classList.remove('hotkeys');
       }
     });
-  }, []);
 
-  useEffect(() => {
-    if (!firstTime) return;
-
-    firstTime = false;
     document.addEventListener('focusin', ({ target }) => {
       if (target.type !== 'checkbox') {
         dispatch(set.focused(target.id)); // TODO
@@ -246,25 +254,60 @@ const App = () => {
       true,
     );
 
-    console.log('resize');
-    window.addEventListener('resize', () => {
-      dispatch(set.mobile(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800));
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        document.querySelectorAll('.menu-items button').forEach((button) => {
-          const { right } = button.getBoundingClientRect();
-          const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-
-          if (right > viewportWidth) {
-            button.classList.add('hidden');
-          } else {
-            console.log(Math.round(right), viewportWidth);
-            button.classList.remove('hidden');
-          }
-        });
-      }, 100);
-    });
+    window.addEventListener('resize', resize);
   }, [dispatch]);
+
+  const animate = (goto, movingRight, distance = 20) => {
+    const left = topMenu.current.scrollLeft;
+
+    if (left === goto) return;
+
+    if ((movingRight && left > goto) || (!movingRight && left < goto)) return;
+
+    topMenu.current.scrollLeft = movingRight ? left + distance : left - distance;
+
+    if (topMenu.current.scrollLeft !== (movingRight ? left + distance : left - distance)) return;
+
+    setTimeout(() => animate(goto, movingRight, Math.round(Math.max(1, distance * 0.8))), 1);
+  };
+
+  const scrollRight = () => {
+    const moreRight = document.querySelector('.moreRight');
+    const { left } = moreRight.getBoundingClientRect();
+    const currentLeft = topMenu.current.scrollLeft;
+    const min = 40;
+    topMenu.current.scrollLeft = currentLeft + min;
+
+    const buttonToScroll = [...document.querySelectorAll('.topmenu button')].find((button) => {
+      const { right } = button.getBoundingClientRect();
+      return right > left;
+    });
+
+    topMenu.current.scrollLeft = currentLeft;
+    if (buttonToScroll) {
+      const goto = Math.round(buttonToScroll.getBoundingClientRect().right - left + currentLeft);
+      animate(goto, 1);
+    }
+  };
+
+  const scrollLeft = () => {
+    const moreLeft = document.querySelector('.moreLeft');
+    const { right } = moreLeft.getBoundingClientRect();
+    const currentLeft = topMenu.current.scrollLeft;
+    const min = 40;
+    topMenu.current.scrollLeft = currentLeft - min;
+
+    const buttonToScroll = [...document.querySelectorAll('.topmenu button')].reverse().find((button) => {
+      const { left } = button.getBoundingClientRect();
+      return left < right;
+    });
+
+    topMenu.current.scrollLeft = currentLeft;
+    if (buttonToScroll) {
+      const goto = Math.round(currentLeft - (right - buttonToScroll.getBoundingClientRect().left));
+      animate(goto - 2);
+    }
+  };
 
   const airTables = {
     coefficients: 'https://airtable.com/appRBt6oxz1E9v2F4/tblM7jiyovzfnB3SO/viw24NlxWP5vDLwQA',
@@ -309,7 +352,22 @@ const App = () => {
           </h1>
         </div>
 
-        <div className="menu-items">
+        <IconButton
+          className="moreLeft"
+          onClick={scrollLeft}
+        >
+          <ChevronLeft />
+        </IconButton>
+
+        <IconButton
+          className="moreRight"
+          onClick={scrollRight}
+        >
+          <ChevronRight />
+        </IconButton>
+
+        <div className="menu-items topmenu" ref={topMenu}>
+
           {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
             let cname = path === screen ? 'selected' : '';
             const dis = disabled && !/Home|Field/.test(path);
@@ -326,10 +384,10 @@ const App = () => {
                 accessKey={accessKey}
                 tabIndex={-1}
                 onFocus={(e) => e.target.blur()}
+                className={`${cname} ${path}`}
               >
                 <MyButton
                   screen={path}
-                  className={`${cname} ${path}`}
                   tabIndex={-1}
                 >
                   {paths[path].menu}
@@ -360,10 +418,10 @@ const App = () => {
                 accessKey={accessKey}
                 tabIndex={-1}
                 onFocus={(e) => e.target.blur()}
+                className={`${cname} ${path}`}
               >
                 <MyButton
                   screen={path}
-                  className={`${cname} ${path}`}
                   tabIndex={-1}
                 >
                   {paths[path].menu}
