@@ -100,16 +100,6 @@ const MyModal = () => {
   );
 };
 
-const MyButton = ({ screen, ...otherProps }) => {
-  const cashCrop = useSelector(get.cashCrop);
-
-  if (screen === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
-    return null;
-  }
-
-  return <Button {...otherProps} />;
-}; // MyButton
-
 const paths = {
   Home,
   Field,
@@ -203,17 +193,41 @@ const App = () => {
   const disabled = !map.lat || !acres || !$labor || !$diesel || !crop;
 
   const topMenu = useRef(null);
+  const moreLeft = useRef(null);
+  const moreRight = useRef(null);
+
+  const scroll = () => {
+    if (!topMenu.current) return;
+
+    const { left } = topMenu.current.firstChild.getBoundingClientRect();
+    moreLeft.current.disabled = left >= 0;
+
+    const { right } = topMenu.current.lastChild.getBoundingClientRect();
+    moreRight.current.disabled = right <= topMenu.current.clientWidth + 35;
+    console.log(right, topMenu.current.clientWidth + 30);
+  };
 
   const resize = () => {
     const isMobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
     dispatch(set.mobile(isMobile));
+    scroll();
   };
 
   useEffect(() => {
     if (screen !== 'Loading') {
       dispatch(set.screen(location.pathname.slice(1) || 'Home'));
     }
-  }, [dispatch, location.pathname, screen]);
+
+    if (topMenu.current) {
+      topMenu.current.addEventListener('scroll', scroll);
+      scroll();
+
+      return () => {
+        topMenu.current.removeEventListener('scroll', scroll);
+      };
+    }
+    return () => {};
+  }, [dispatch, location.pathname, screen, crop]);
 
   useEffect(() => {
     if (newScreen !== '') {
@@ -272,30 +286,10 @@ const App = () => {
     setTimeout(() => animate(goto, movingRight, Math.round(Math.max(1, distance * 0.8))), 1);
   };
 
-  const scrollRight = () => {
-    const moreRight = document.querySelector('.moreRight');
-    const { left } = moreRight.getBoundingClientRect();
-    const currentLeft = topMenu.current.scrollLeft;
-    const min = 40;
-    topMenu.current.scrollLeft = currentLeft + min;
-
-    const buttonToScroll = [...document.querySelectorAll('.topmenu button')].find((button) => {
-      const { right } = button.getBoundingClientRect();
-      return right > left;
-    });
-
-    topMenu.current.scrollLeft = currentLeft;
-    if (buttonToScroll) {
-      const goto = Math.round(buttonToScroll.getBoundingClientRect().right - left + currentLeft);
-      animate(goto, 1);
-    }
-  };
-
   const scrollLeft = () => {
-    const moreLeft = document.querySelector('.moreLeft');
-    const { right } = moreLeft.getBoundingClientRect();
+    const { right } = moreLeft.current.getBoundingClientRect();
     const currentLeft = topMenu.current.scrollLeft;
-    const min = 40;
+    const min = moreRight.current.clientWidth * 2;
     topMenu.current.scrollLeft = currentLeft - min;
 
     const buttonToScroll = [...document.querySelectorAll('.topmenu button')].reverse().find((button) => {
@@ -307,6 +301,24 @@ const App = () => {
     if (buttonToScroll) {
       const goto = Math.round(currentLeft - (right - buttonToScroll.getBoundingClientRect().left));
       animate(goto - 2);
+    }
+  };
+
+  const scrollRight = () => {
+    const { left } = moreRight.current.getBoundingClientRect();
+    const currentLeft = topMenu.current.scrollLeft;
+    const min = moreRight.current.clientWidth * 2;
+    topMenu.current.scrollLeft = currentLeft + min;
+
+    const buttonToScroll = [...document.querySelectorAll('.topmenu button')].find((button) => {
+      const { right } = button.getBoundingClientRect();
+      return right > left;
+    });
+
+    topMenu.current.scrollLeft = currentLeft;
+    if (buttonToScroll) {
+      const goto = Math.round(buttonToScroll.getBoundingClientRect().right - left + currentLeft);
+      animate(goto + 2, 1);
     }
   };
 
@@ -355,6 +367,7 @@ const App = () => {
 
         <IconButton
           className="moreLeft"
+          ref={moreLeft}
           onClick={scrollLeft}
         >
           <ChevronLeft />
@@ -362,6 +375,7 @@ const App = () => {
 
         <IconButton
           className="moreRight"
+          ref={moreRight}
           onClick={scrollRight}
         >
           <ChevronRight />
@@ -378,6 +392,10 @@ const App = () => {
             }
 
             const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
+            if (path === 'Yield' && !db.commodities[crop]?.['one year']) {
+              return null;
+            }
+
             return (
               <NavLink
                 key={path}
@@ -387,12 +405,12 @@ const App = () => {
                 onFocus={(e) => e.target.blur()}
                 className={`${cname} ${path}`}
               >
-                <MyButton
+                <Button
                   screen={path}
                   tabIndex={-1}
                 >
                   {paths[path].menu}
-                </MyButton>
+                </Button>
               </NavLink>
             );
           })}
@@ -421,12 +439,12 @@ const App = () => {
                 onFocus={(e) => e.target.blur()}
                 className={`${cname} ${path}`}
               >
-                <MyButton
+                <Button
                   screen={path}
                   tabIndex={-1}
                 >
                   {paths[path].menu}
-                </MyButton>
+                </Button>
               </NavLink>
             );
           })}
