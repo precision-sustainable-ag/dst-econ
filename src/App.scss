@@ -311,24 +311,21 @@ li.selected {
   background: #ccc;
   button {
     margin-right: 2rem;
-    background: #6b9333;
-
-    @media screen and (max-width: 1045px) {
-      font-size: 0.64rem;
-    }
+    background: darkgreen;
   }
 
-  // @media screen and (max-width: 1045px) {
-  //   // bottom: 0px;
-  //   // left: 0px;
-  //   // right: 0px;
-  //   // position: absolute;
-  //   // z-index: 999;
-  //   // display: flex;
-  //   // justify-content: center;
-  //   // align-items: center;
-  //   height: -webkit-fill-available;
-  // }
+  &.mobile {
+    position: absolute;
+    button {
+      position: fixed;
+      right: 0 !important;
+      top: 8rem;
+      z-index: 1;
+      text-transform: none;
+      margin-right: 0.5rem;
+      background: darkgreen;
+    }
+  }
 }
 
 .MuiSelect-root * {

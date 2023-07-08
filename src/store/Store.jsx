@@ -137,7 +137,7 @@ const shared = {
 };
 
 const initialState = {
-  mobile: !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800,
+  mobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800,
   calculated: {},
   revenueColor: false,
   revenuePadding: false,
@@ -826,6 +826,9 @@ const loadAirtables = async (tables) => {
 
   status += `${table} `;
 
+  if (!rec.records) { // don't know why this sometimes fails
+    window.location.reload();
+  }
   const data = rec.records.map((r) => r.fields);
 
   data.forEach((rec2) => {

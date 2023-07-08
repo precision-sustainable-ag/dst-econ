@@ -129,49 +129,70 @@ const keys = Object.keys(paths);
 const Navigation = ({ current }) => {
   const mobile = useSelector(get.mobile);
   const previousScreen = useSelector(get.previousScreen);
+  const cashCrop = useSelector(get.cashCrop);
 
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
-  const next = keys[keys.indexOf(current) + 1];
+  let next = keys[keys.indexOf(current) + 1];
+  if (next === 'AT') {
+    next = undefined;
+  } else if (next === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
+    next = 'Practices';
+  }
 
   return (
-    <div id="Navigation" className="desktop">
-      {back && (
-        <NavLink to={`/${back.replace('Home', '')}`}>
-          <Button variant="contained" color="primary" tabIndex={-1}>
-            {!mobile ? (
-              <div>
-                BACK: &nbsp;
-                {paths[back].menu}
-              </div>
-            ) : (
-              <div>BACK</div>
-            )}
-          </Button>
-        </NavLink>
-      )}
+    <>
       {next && (
-        <NavLink to={`/${next}`}>
-          <Button variant="contained" color="primary">
-            {!mobile ? (
+        <div id="Navigation" className="mobile">
+          <NavLink to={`/${next}`}>
+            <Button variant="contained" color="primary">
               <div>
                 NEXT: &nbsp;
                 {paths[next].menu}
               </div>
-            ) : (
-              <div>NEXT</div>
-            )}
-          </Button>
-        </NavLink>
+            </Button>
+          </NavLink>
+        </div>
       )}
 
-      {current !== 'Resources' && next !== 'Resources' && (
-        <NavLink to="/Resources">
-          <Button variant="contained" color="primary">
-            Resources
-          </Button>
-        </NavLink>
-      )}
-    </div>
+      <div id="Navigation" className="desktop">
+        {back && (
+          <NavLink to={`/${back.replace('Home', '')}`}>
+            <Button variant="contained" color="primary" tabIndex={-1}>
+              {!mobile ? (
+                <div>
+                  BACK: &nbsp;
+                  {paths[back].menu}
+                </div>
+              ) : (
+                <div>BACK</div>
+              )}
+            </Button>
+          </NavLink>
+        )}
+        {next && (
+          <NavLink to={`/${next}`}>
+            <Button variant="contained" color="primary">
+              {!mobile ? (
+                <div>
+                  NEXT: &nbsp;
+                  {paths[next].menu}
+                </div>
+              ) : (
+                <div>NEXT</div>
+              )}
+            </Button>
+          </NavLink>
+        )}
+
+        {current !== 'Resources' && next !== 'Resources' && (
+          <NavLink to="/Resources">
+            <Button variant="contained" color="primary">
+              Resources
+            </Button>
+          </NavLink>
+        )}
+      </div>
+    </>
   );
 }; // Navigation
 
@@ -206,7 +227,7 @@ const App = () => {
   };
 
   const resize = () => {
-    const isMobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
     dispatch(set.mobile(isMobile));
     scroll();
   };
