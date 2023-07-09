@@ -21,11 +21,6 @@ body {
   overflow-x: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 .mobile {
   display: block;
 }
@@ -425,20 +420,12 @@ button.selected u {
   width: 8rem;
 }
 
-summary {
-  cursor: pointer;
-}
-
 #Main {
   padding: 0 0.5rem;
   background: white;
   height: 100%;
   overflow: auto;
   z-index: 1;
-
-  // @media screen and (max-width: 1045px) {
-  //   max-height: -webkit-fill-available;
-  // }
 }
 
 h1 {
@@ -454,14 +441,6 @@ h1 {
   padding: 0.3rem;
   border: 1px solid #aaa;
   border-radius: 6px;
-}
-
-#ToggleMap {
-  position: fixed;
-  right: 0.3rem;
-  top: 0.3rem;
-  background: rgba(220, 220, 220, 0.8);
-  text-transform: none;
 }
 
 .MuiIcon-root {
@@ -517,20 +496,6 @@ div[hidden] + div,
   padding: 0.2rem;
   z-index: 1;
   cursor: pointer;
-}
-
-/* pushpin for autocomplete
-li::before {
-  content: "\1F4CC";
-  margin-right: 0.5rem;
-}
-*/
-
-.dropdown {
-  display: none;
-  // @media screen and (min-width: 1045px) {
-  //   display: none;
-  // }
 }
 
 #Container a {

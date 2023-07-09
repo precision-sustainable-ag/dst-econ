@@ -196,6 +196,38 @@ const Navigation = ({ current }) => {
   );
 }; // Navigation
 
+const selectors = {};
+
+const unusedCSS = () => {
+  // eslint-disable-next-line prefer-destructuring
+  const styleSheets = document.styleSheets;
+
+  console.clear();
+  for (let i = 0; i < styleSheets.length; i++) {
+    const sheet = styleSheets[i];
+    try {
+      if (sheet.cssRules) {
+        const rules = sheet.cssRules;
+
+        for (let j = 0; j < rules.length; j++) {
+          const rule = rules[j];
+          if (rule.type === CSSRule.STYLE_RULE) {
+            const selector = rule.selectorText;
+            // const declarations = rule.style.cssText;
+            if (!/^\.(css|Mui|mapbox)|data-shrink/.test(selector) && !selectors[selector] && !document.querySelector(selector)) {
+              console.log(selector);
+            } else {
+              selectors[selector] = true;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error accessing stylesheet:', error);
+    }
+  }
+};
+
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -448,6 +480,10 @@ const App = () => {
               </NavLink>
             );
           })}
+
+          {dev && (
+            <button type="button" style={{ float: 'right' }} onClick={unusedCSS}>Unused CSS</button>
+          )}
         </div>
       </nav>
 
