@@ -128,9 +128,14 @@ nav {
   a.Erosion button {width: 4rem;}
   a.Grazing button {min-width: 4.5rem !important;}
   a.Additional button {width: 6.5rem;}
+  
   a.summary button {
-    height: 2rem;
-    color: yellow;
+    height: 2rem !important;
+    color: yellow !important;
+  }
+
+  a.summary.selected button {
+    color: black !important;
   }
 
   a.Feedback button {
@@ -204,33 +209,6 @@ nav {
   }
 }
 
-div.table {
-  display: table;
-}
-
-div.table > div:not(.caption) {
-  display: table-row;
-}
-
-div.table > div > * {
-  display: table-cell;
-}
-
-div.caption {
-  display: table-caption;
-  text-align: center;
-}
-
-caption {
-  font-weight: bold;
-}
-
-.th,
-th {
-  text-align: center;
-  background: #eee;
-}
-
 table {
   border: 1px solid black;
   border-spacing: 0;
@@ -239,18 +217,21 @@ table {
 
   caption {
     min-height: 1.5rem;
+    font-weight: bold;
   }
-}
 
-td,
-th {
-  padding: 0.2em 0.5em;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #bbb;
-}
+  .th,
+  th {
+    text-align: center;
+    background: #eee;
+  }
 
-.Total {
-  font-weight: bold;
+  td,
+  th {
+    padding: 0.2em 0.5em;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #bbb;
+  }
 }
 
 label {
@@ -262,7 +243,7 @@ label {
 }
 
 li.selected,
-button.selected {
+a.selected button {
   color: #246;
   background: #ccc;
 }
@@ -404,7 +385,7 @@ body.hotkeys u {
   border-bottom: 1px solid #ddd;
 }
 
-button.selected u {
+a.selected button u {
   border-bottom: none;
 }
 
@@ -477,25 +458,6 @@ td > p:first-child {
 div[hidden] + div,
 .stop ~ * {
   display: none;
-}
-
-.grid2 .colspan {
-  grid-column: 1 / 3;
-  padding: 0.5rem;
-  border-bottom: 1px solid #bbb;
-}
-
-.expand {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  font-size: 25px;
-  line-height: 1.4rem;
-  background: white;
-  color: black;
-  padding: 0.2rem;
-  z-index: 1;
-  cursor: pointer;
 }
 
 #Container a {

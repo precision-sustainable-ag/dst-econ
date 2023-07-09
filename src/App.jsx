@@ -147,7 +147,7 @@ const Navigation = ({ current }) => {
             <Button variant="contained" color="primary">
               <div>
                 NEXT: &nbsp;
-                {paths[next].menu}
+                {next}
               </div>
             </Button>
           </NavLink>
@@ -198,11 +198,13 @@ const Navigation = ({ current }) => {
 
 const selectors = {};
 
-const unusedCSS = () => {
+const unusedCSS = (log = false) => {
   // eslint-disable-next-line prefer-destructuring
   const styleSheets = document.styleSheets;
 
-  console.clear();
+  if (log) {
+    console.clear();
+  }
   for (let i = 0; i < styleSheets.length; i++) {
     const sheet = styleSheets[i];
     try {
@@ -214,8 +216,14 @@ const unusedCSS = () => {
           if (rule.type === CSSRule.STYLE_RULE) {
             const selector = rule.selectorText;
             // const declarations = rule.style.cssText;
-            if (!/^\.(css|Mui|mapbox)|data-shrink/.test(selector) && !selectors[selector] && !document.querySelector(selector)) {
-              console.log(selector);
+            if (
+              !/^\.(css|Mui)|mapbox|data-shrink|_infobar/.test(selector)
+              && !selectors[selector]
+              && !document.querySelector(selector.replace(/:+(\w+)/g, ''))
+            ) {
+              if (log) {
+                console.log(selector);
+              }
             } else {
               selectors[selector] = true;
             }
@@ -223,7 +231,9 @@ const unusedCSS = () => {
         }
       }
     } catch (error) {
-      console.error('Error accessing stylesheet:', error);
+      if (log) {
+        console.error('Error accessing stylesheet:', error);
+      }
     }
   }
 };
@@ -247,6 +257,10 @@ const App = () => {
   const topMenu = useRef(null);
   const moreLeft = useRef(null);
   const moreRight = useRef(null);
+
+  if (dev) {
+    unusedCSS();
+  }
 
   const scroll = () => {
     if (!topMenu.current) return;
@@ -482,7 +496,9 @@ const App = () => {
           })}
 
           {dev && (
-            <button type="button" style={{ float: 'right' }} onClick={unusedCSS}>Unused CSS</button>
+            <div className="desktop">
+              <button type="button" style={{ float: 'right' }} onClick={() => unusedCSS(true)}>Unused CSS</button>
+            </div>
           )}
         </div>
       </nav>
