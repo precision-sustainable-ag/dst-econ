@@ -216,13 +216,14 @@ const unusedCSS = (log = false) => {
           if (rule.type === CSSRule.STYLE_RULE) {
             const selector = rule.selectorText;
             // const declarations = rule.style.cssText;
+            const re = /::[-\w]+|:hover|:focus/g;
             if (
               !/^\.(css|Mui)|mapbox|data-shrink|_infobar/.test(selector)
               && !selectors[selector]
-              && !document.querySelector(selector.replace(/:+(\w+)/g, ''))
+              && !document.querySelector(selector.replace(re, ''))
             ) {
               if (log) {
-                console.log(selector);
+                console.log(selector, selector.replace(re, ''));
               }
             } else {
               selectors[selector] = true;

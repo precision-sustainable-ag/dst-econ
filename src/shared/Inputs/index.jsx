@@ -334,7 +334,8 @@ const Input = ({
           }, 10);
         }}
         size="small"
-        type={/dollar|percent/.test(type) ? 'number' : type || 'text'}
+        type={/dollar|number|percent/.test(type) ? 'number' : type || 'text'}
+        inputmode={/dollar|number|percent/.test(type) ? 'numeric' : ''}
         sx={{
           display: props.fullWidth ? 'block' : 'span',
           boxSizing: 'border-box',

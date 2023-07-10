@@ -34,6 +34,7 @@ const defaults = getDefaults([
 
 const Fertility = () => {
   const useFertilizer = useSelector(get.useFertilizer) === 'Yes';
+  const mobile = useSelector(get.mobile);
   const $fertN = useSelector(get.$fertN);
   const dfertN = db.rates.Nitrogen.value;
   const $fertCost = useSelector(get.$fertCost);
@@ -93,7 +94,7 @@ const Fertility = () => {
               <tr>
                 <td>Expected fertilizer credit from your cover crop species (pounds/acre).</td>
                 <td>
-                  <Input id="fertN" autoFocus />
+                  <Input id="fertN" autoFocus={!mobile} />
                 </td>
                 <td>
                   <Input id="fertP" />
