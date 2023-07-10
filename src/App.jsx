@@ -147,7 +147,7 @@ const Navigation = ({ current }) => {
             <Button variant="contained" color="primary">
               <div>
                 NEXT: &nbsp;
-                {next}
+                {next.replace('Practices', 'Summary')}
               </div>
             </Button>
           </NavLink>
@@ -271,6 +271,9 @@ const App = () => {
 
     const { right } = topMenu.current.lastChild.getBoundingClientRect();
     moreRight.current.disabled = right <= topMenu.current.clientWidth + 35;
+
+    moreLeft.current.classList.toggle('hidden', moreLeft.current.disabled && moreRight.current.disabled);
+    moreRight.current.classList.toggle('hidden', moreLeft.current.disabled && moreRight.current.disabled);
   };
 
   const resize = () => {
@@ -338,32 +341,24 @@ const App = () => {
   }, [dispatch]);
 
   const scrollLeft = () => {
-    const { right } = moreLeft.current.getBoundingClientRect();
-    const currentLeft = topMenu.current.scrollLeft;
-    topMenu.current.scrollLeft = currentLeft - 30;
-
-    const buttonToScroll = [...document.querySelectorAll('.topmenu button')].reverse().find((button) => {
+    const buttonToScroll = [...topMenu.current.childNodes].reverse().find((button) => {
       const { left } = button.getBoundingClientRect();
-      return left < right;
+      return left < 0;
     });
 
-    topMenu.current.scrollLeft = currentLeft;
     if (buttonToScroll) {
       buttonToScroll.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
-    const { left } = moreRight.current.getBoundingClientRect();
-    const currentLeft = topMenu.current.scrollLeft;
-    topMenu.current.scrollLeft = currentLeft + 30;
+    const width = topMenu.current.clientWidth;
 
-    const buttonToScroll = [...document.querySelectorAll('.topmenu button')].find((button) => {
+    const buttonToScroll = [...topMenu.current.childNodes].find((button) => {
       const { right } = button.getBoundingClientRect();
-      return right > left;
+      return right > width + 40;
     });
 
-    topMenu.current.scrollLeft = currentLeft;
     if (buttonToScroll) {
       buttonToScroll.scrollIntoView({ behavior: 'smooth' });
     }
