@@ -175,6 +175,7 @@ const initialState = {
   rates: [],
   prices: [],
   revenueOpen: {},
+  practicesOpen: {},
   coverCropTotal: (state) => {
     let total = 0;
 

@@ -162,6 +162,7 @@ nav {
         padding: 0 0.5rem;
         border-radius: 5px;
         line-height: 1rem;
+        z-index: 999;
       }
     }
   }
@@ -515,4 +516,9 @@ table.power {
   > tbody > tr > th[colspan] {
     border-top: 2px solid #444;
   }
+}
+
+.Mui-expanded {
+  transform: none !important;
+  -webkit-transform: none !important;
 }

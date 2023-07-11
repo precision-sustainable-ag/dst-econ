@@ -642,6 +642,7 @@ const Practices = () => {
   const dispatch = useDispatch();
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
+  const acres = useSelector(get.mapFeatures.area);
   const lat = useSelector(get.map.lat).toFixed(4);
   const lon = useSelector(get.map.lon).toFixed(4);
 
@@ -662,32 +663,18 @@ const Practices = () => {
   const totalBenefits = -totals.reduce((previous, value) => previous + Math.min(value, 0), 0);
 
   return (
-    <div className="Practices">
-      <h1>Summary of Practices</h1>
-      {farm && (
-        <p>
-          Farm:
-          {' '}
-          {farm}
-        </p>
-      )}
-      {field && (
-        <p>
-          Field:
-          {' '}
-          {field}
-          {' '}
-          at
-          {' '}
-          {lat}
-          {' '}
-          latitude and
-          {' '}
-          {lon}
-          {' '}
-          longitude
-        </p>
-      )}
+    <div id="Practices">
+      <h1>
+        Summary of Practices
+        {farm && ` for ${farm}`}
+        {field && ` - ${field}`}
+        {acres && ` (${acres} acres)`}
+        <br />
+        latitude:
+        {` ${lat}, `}
+        longitude:
+        {` ${lon}`}
+      </h1>
       <div>
         <table>
           <thead>

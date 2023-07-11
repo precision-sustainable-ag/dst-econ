@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 
 import {
-  Modal, Button, IconButton, Popover,
+  Modal, Button, IconButton, Popover, Accordion, AccordionDetails, AccordionSummary, Typography, Box,
 } from '@mui/material';
 
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
@@ -41,6 +41,26 @@ import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
+
+const CustomExpandIcon = () => (
+  <Box
+    sx={{
+      '.Mui-expanded & > .collapseIconWrapper': {
+        display: 'none',
+      },
+      '.expandIconWrapper': {
+        display: 'none',
+      },
+      '.Mui-expanded & > .expandIconWrapper': {
+        display: 'block',
+      },
+      marginRight: '0.5rem',
+    }}
+  >
+    <div className="expandIconWrapper">&ndash;</div>
+    <div className="collapseIconWrapper">+</div>
+  </Box>
+);
 
 let firstTime = true;
 
@@ -199,43 +219,85 @@ const Navigation = ({ current }) => {
 const selectors = {};
 
 const unusedCSS = (log = false) => {
-  // eslint-disable-next-line prefer-destructuring
-  const styleSheets = document.styleSheets;
+  const unused = [];
 
   if (log) {
     console.clear();
   }
-  for (let i = 0; i < styleSheets.length; i++) {
-    const sheet = styleSheets[i];
+
+  [...document.styleSheets].forEach((sheet) => {
     try {
       if (sheet.cssRules) {
-        const rules = sheet.cssRules;
-
-        for (let j = 0; j < rules.length; j++) {
-          const rule = rules[j];
-          if (rule.type === CSSRule.STYLE_RULE) {
+        [...sheet.cssRules].forEach((rule) => {
+          if (rule.constructor.name === 'CSSStyleRule') {
             const selector = rule.selectorText;
+
+            if (/^\.(css|Mui)|mapbox|data-shrink|_infobar/.test(selector)) {
+              return;
+            }
+
             // const declarations = rule.style.cssText;
-            const re = /::[-\w]+|:hover|:focus/g;
-            if (
-              !/^\.(css|Mui)|mapbox|data-shrink|_infobar/.test(selector)
-              && !selectors[selector]
-              && !document.querySelector(selector.replace(re, ''))
-            ) {
-              if (log) {
-                console.log(selector, selector.replace(re, ''));
-              }
+            // eslint-disable-next-line no-constant-condition
+            if (log && false) {
+              [...rule.style].forEach((prop) => {
+                const value = rule.style.getPropertyValue(prop);
+                const originalValues = new Map(); // Store original property values
+
+                document.querySelectorAll(selector).forEach((obj) => {
+                  originalValues.set(obj, obj.style.getPropertyValue(prop)); // Store original value
+                  obj.style.removeProperty(prop); // Remove the inline style property
+                  const computed = getComputedStyle(obj)[prop];
+                  if (computed === value) {
+                    console.log(selector, '-', prop, '-', value);
+                  }
+                  if (/^[.|#]/.test(selector)) {
+                    const top = selector.split(' ')[0];
+                    const ancestor = obj.closest(top);
+
+                    if (!ancestor) return;
+                    if (selector[0] === '#') {
+                      ancestor.id = '';
+                    } else {
+                      ancestor.classList.remove(top);
+                    }
+                    const computed = window.getComputedStyle(obj).getPropertyValue(prop);
+                    if (computed === value) {
+                      console.log(selector, '-', prop, '-', value);
+                    }
+
+                    if (selector[0] === '#') {
+                      ancestor.id = top.slice(1);
+                    } else {
+                      ancestor.classList.add(top);
+                    }
+                  }
+                  originalValues.forEach((originalValue, obj) => {
+                    obj.style[prop] = originalValue;
+                  });
+                });
+              });
+            }
+
+            const re = /::[-\w]+/g;
+            const els = document.querySelectorAll(selector.replace(re, '') || 'EMPTY');
+            if (!selectors[selector] && !els.length) {
+              unused.push(selector);
             } else {
               selectors[selector] = true;
             }
           }
-        }
+        });
       }
     } catch (error) {
-      if (log) {
-        console.error('Error accessing stylesheet:', error);
-      }
+      console.error('Error accessing stylesheet:', error);
     }
+  });
+
+  if (log) {
+    console.log('_'.repeat(20));
+    unused
+      .sort((a, b) => a.replace(/^#/, 'ZZZ').localeCompare(b.replace(/^#/, 'ZZZ')))
+      .forEach((s) => console.log(s));
   }
 };
 
@@ -391,6 +453,30 @@ const App = () => {
     <div id="Container">
       <MyModal />
 
+      <Accordion style={{ display: 'none' }}>
+        <AccordionSummary
+          expandIcon={<CustomExpandIcon />}
+          aria-label="Expand"
+          style={{ flexDirection: 'row-reverse' }} // Reverses the order of icon and content
+        >
+          <Typography>Level 1</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<CustomExpandIcon />}
+              aria-label="Expand"
+              style={{ flexDirection: 'row-reverse' }} // Reverses the order of icon and content
+            >
+              <Typography>Level 2</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>Content for Level 2</Typography>
+            </AccordionDetails>
+          </Accordion>
+        </AccordionDetails>
+      </Accordion>
+
       <nav>
         <div className="mobile">
           <h1>
@@ -403,7 +489,6 @@ const App = () => {
           <h1>
             <img src="PSAlogo-only.png" alt="logo" />
             Cover Crop Economic Decision Support Tool
-            <span className="mobile">Cover Crop Economic DST</span>
           </h1>
         </div>
 
@@ -493,7 +578,14 @@ const App = () => {
 
           {dev && (
             <div className="desktop">
-              <button type="button" style={{ float: 'right' }} onClick={() => unusedCSS(true)}>Unused CSS</button>
+              <button
+                type="button"
+                style={{ float: 'right' }}
+                onClick={() => unusedCSS(true)}
+                accessKey="9"
+              >
+                Unused CSS
+              </button>
             </div>
           )}
         </div>
