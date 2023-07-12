@@ -1,6 +1,8 @@
 #Grazing {
   .grid2 {
     grid-template-columns: 1fr 1fr;
+    max-width: 900px;
+    margin: auto;
   }
 
   .grid2 > div * {

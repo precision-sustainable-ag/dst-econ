@@ -1,0 +1,10 @@
+#Fertility {
+  table {
+    max-width: 800px;
+    margin: auto;
+
+    td:nth-child(1) {
+      border-right: 1px solid #444;
+    }
+  }
+}

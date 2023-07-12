@@ -334,7 +334,7 @@ const Input = ({
           }, 10);
         }}
         size="small"
-        type={/dollar|percent/.test(type) ? 'number' : type || 'text'}
+        type={/dollar|number|percent/.test(type) ? 'number' : type || 'text'}
         sx={{
           display: props.fullWidth ? 'block' : 'span',
           boxSizing: 'border-box',
@@ -350,6 +350,7 @@ const Input = ({
             background: 'white',
             ...props.style,
           },
+          inputMode: /dollar|number|percent/.test(type) ? 'numeric' : '',
         }}
         ref={focusRef}
         onKeyPress={keyPress}

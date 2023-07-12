@@ -30,7 +30,9 @@ Highcharts.setOptions({
 
 const RevenueGraph = ({ className }) => {
   const state = useSelector(get.yield);
-  const { typical, adjusted, impact } = state;
+  const {
+    typical, adjusted, impact, q4,
+  } = state;
   const width = 250;
   const width2 = width / 5;
 
@@ -77,7 +79,7 @@ const RevenueGraph = ({ className }) => {
     series: [
       {
         showInLegend: false,
-        data: impact,
+        data: [...impact],
       },
     ],
   };
@@ -112,9 +114,9 @@ const RevenueGraph = ({ className }) => {
                 <br />
                 ($/acre)
               </td>
-              <td>{dollars(impact[0])}</td>
-              <td>{dollars(impact[1])}</td>
-              <td>{dollars(impact[2])}</td>
+              <td className={q4 === '1' ? 'selected' : ''}>{dollars(impact[0])}</td>
+              <td className={q4 === '3' ? 'selected' : ''}>{dollars(impact[1])}</td>
+              <td className={q4 === '5' ? 'selected' : ''}>{dollars(impact[2])}</td>
             </tr>
             <tr>
               <td>
@@ -223,14 +225,11 @@ const Yield = () => {
 
       <div>
         <table id="YieldTable">
+          <caption>
+            Yield
+            <ClearInputs defaults={defaults} />
+          </caption>
           <tbody>
-            <tr>
-              <th colSpan="3">
-                Yield
-                <ClearInputs defaults={defaults} />
-              </th>
-            </tr>
-
             <tr>
               <td>
                 What is the expected yield for
@@ -247,7 +246,7 @@ const Yield = () => {
               <td>
                 <Input id="yield.yield" type="number" />
               </td>
-              <td rowSpan="4">
+              <td rowSpan="4" className="revenue">
                 <RevenueGraph className="desktop" />
               </td>
             </tr>

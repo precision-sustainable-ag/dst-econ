@@ -21,7 +21,7 @@
 
     .field-grid {
       display: grid;
-      grid-template-columns: 60% 1fr;
+      grid-template-columns: 40% 1fr;
     
       > * {
         padding: 0 0.3rem;
@@ -34,7 +34,7 @@
   
     @media (min-width: 1051px) {
       .field-grid > .map {
-        border-right: 2px solid black;
+        border-left: 2px solid black;
       }
     }
   }

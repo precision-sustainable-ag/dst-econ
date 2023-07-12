@@ -26,61 +26,6 @@ export const dollars = (n) => {
   return `$${(+n).toFixed(2)}`;
 }; // dollars
 
-const shared = {
-  q1: '',
-  q2: '',
-  q3: '',
-  q4: '',
-  q5: '',
-  q6: '',
-  q7: '',
-  q8: '',
-  q9: '',
-  q10: '',
-  implement: '',
-  power: '',
-  method: '',
-  product: '',
-  customCost: 0,
-  acresHour: 0,
-  estimated: undefined,
-  total: undefined,
-  annualUseAcres: undefined,
-  annualUseHours: undefined,
-  implementsCost: true,
-  powerCost: true,
-  Labor: true,
-  Fuel: true,
-  Depreciation: true,
-  Interest: true,
-  Repairs: true,
-  Taxes: false,
-  Storage: false,
-  Insurance: false,
-  $implements: {
-    Labor: 0,
-    Fuel: 0,
-    Depreciation: 0,
-    Interest: 0,
-    Repairs: 0,
-    Taxes: 0,
-    Storage: 0,
-    Insurance: 0,
-    total: 0,
-  },
-  $power: {
-    Labor: 0,
-    Fuel: 0,
-    Depreciation: 0,
-    Interest: 0,
-    Repairs: 0,
-    Taxes: 0,
-    Storage: 0,
-    Insurance: 0,
-    total: 0,
-  },
-};
-
 export const dev = /(localhost|dev)/i.test(window.location);
 
 const terminationTotal = (state) => (
@@ -136,7 +81,63 @@ const grazingTotal = (state) => {
   return -(additionalLabor + reductionHayFed + reductionFuel + reductionLabor);
 }; // grazingTotal
 
+const shared = {
+  q1: '',
+  q2: '',
+  q3: '',
+  q4: '',
+  q5: '',
+  q6: '',
+  q7: '',
+  q8: '',
+  q9: '',
+  q10: '',
+  implement: '',
+  power: '',
+  method: '',
+  product: '',
+  customCost: 0,
+  acresHour: 0,
+  estimated: undefined,
+  total: undefined,
+  annualUseAcres: undefined,
+  annualUseHours: undefined,
+  implementsCost: true,
+  powerCost: true,
+  Labor: true,
+  Fuel: true,
+  Depreciation: true,
+  Interest: true,
+  Repairs: true,
+  Taxes: false,
+  Storage: false,
+  Insurance: false,
+  $implements: {
+    Labor: 0,
+    Fuel: 0,
+    Depreciation: 0,
+    Interest: 0,
+    Repairs: 0,
+    Taxes: 0,
+    Storage: 0,
+    Insurance: 0,
+    total: 0,
+  },
+  $power: {
+    Labor: 0,
+    Fuel: 0,
+    Depreciation: 0,
+    Interest: 0,
+    Repairs: 0,
+    Taxes: 0,
+    Storage: 0,
+    Insurance: 0,
+    total: 0,
+  },
+};
+
 const initialState = {
+  mobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800,
   calculated: {},
   revenueColor: false,
   revenuePadding: false,
@@ -174,6 +175,7 @@ const initialState = {
   rates: [],
   prices: [],
   revenueOpen: {},
+  practicesOpen: {},
   coverCropTotal: (state) => {
     let total = 0;
 
@@ -825,6 +827,9 @@ const loadAirtables = async (tables) => {
 
   status += `${table} `;
 
+  if (!rec.records) { // don't know why this sometimes fails
+    window.location.reload();
+  }
   const data = rec.records.map((r) => r.fields);
 
   data.forEach((rec2) => {
@@ -1313,4 +1318,4 @@ if (/demo/i.test(window.location)) {
   exampleYield2();
 }
 
-export const mobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+export const mobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;

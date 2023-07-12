@@ -105,7 +105,7 @@ const SeedbedSummary = () => {
       <td colSpan={2}>
         <NavLink to="/Seedbed">Cover crop seedbed preparation</NavLink>
       </td>
-      <td className="hidden" />
+      <td />
       <td>
         {implement || 'none'}
         <br />
@@ -284,7 +284,7 @@ const TillageSummary = () => {
             to normal cropping system
           </NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td>{costs(total)}</td>
@@ -440,7 +440,7 @@ const HerbicideSummary = () => {
             to normal cropping system
           </NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td>{costs(total)}</td>
@@ -518,7 +518,7 @@ const ErosionSummary = () => {
         <td colSpan={2}>
           <NavLink to="/Erosion">Erosion control</NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td />
@@ -558,7 +558,7 @@ const YieldSummary = () => {
         <td colSpan={2}>
           <NavLink to="/Yield">Yield impact</NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td />
@@ -591,7 +591,7 @@ const AdditionalSummary = () => {
         <td colSpan={2}>
           <NavLink to="/Additional">Additional considerations</NavLink>
         </td>
-        <td className="hidden" />
+        <td />
         <td />
         <td />
         <td />
@@ -642,6 +642,7 @@ const Practices = () => {
   const dispatch = useDispatch();
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
+  const acres = useSelector(get.mapFeatures.area);
   const lat = useSelector(get.map.lat).toFixed(4);
   const lon = useSelector(get.map.lon).toFixed(4);
 
@@ -662,33 +663,19 @@ const Practices = () => {
   const totalBenefits = -totals.reduce((previous, value) => previous + Math.min(value, 0), 0);
 
   return (
-    <div className="Practices">
-      <h1>Summary of Practices</h1>
-      {farm && (
-        <p>
-          Farm:
-          {' '}
-          {farm}
-        </p>
-      )}
-      {field && (
-        <p>
-          Field:
-          {' '}
-          {field}
-          {' '}
-          at
-          {' '}
-          {lat}
-          {' '}
-          latitude and
-          {' '}
-          {lon}
-          {' '}
-          longitude
-        </p>
-      )}
-      <div className="practices-mobile">
+    <div id="Practices">
+      <h1>
+        Summary of Practices
+        {farm && ` for ${farm}`}
+        {field && ` - ${field}`}
+        {acres && ` (${acres} acres)`}
+        <br />
+        latitude:
+        {` ${lat}, `}
+        longitude:
+        {` ${lon}`}
+      </h1>
+      <div>
         <table>
           <thead>
             <tr>
@@ -714,7 +701,7 @@ const Practices = () => {
             <AdditionalSummary />
             <tr className="total">
               <td colSpan={2}>Total</td>
-              <td className="hidden" />
+              <td />
               <td />
               <td />
               <td>{dollars(totalCosts)}</td>
@@ -723,7 +710,7 @@ const Practices = () => {
             </tr>
             <tr className="total">
               <td colSpan={2}>Net cost of cover crops</td>
-              <td className="hidden" />
+              <td />
               <td style={{ textAlign: 'right' }}>{dollars(totalBenefits - totalCosts)}</td>
               <td />
               <td />

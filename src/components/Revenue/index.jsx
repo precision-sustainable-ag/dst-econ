@@ -266,7 +266,9 @@ Revenue.menu = (
   <span>
     Re
     <u>v</u>
-    enue Impact
+    enue
+    {' '}
+    <span className="desktop">Impact</span>
   </span>
 );
 
