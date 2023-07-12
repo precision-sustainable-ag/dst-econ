@@ -218,6 +218,77 @@ const Navigation = ({ current }) => {
 
 const selectors = {};
 
+const isVisible = (element) => {
+  const computedStyle = window.getComputedStyle(element);
+  const isHidden = computedStyle.display === 'none' || computedStyle.visibility === 'hidden';
+
+  if (isHidden) {
+    return false;
+  }
+
+  if (element.parentNode instanceof Element) {
+    return isVisible(element.parentNode);
+  }
+
+  return true;
+};
+
+const normalizeCSS = (tagName, property, value) => {
+  const tempElement = document.createElement(tagName);
+
+  tempElement.style[property] = value;
+  document.body.appendChild(tempElement);
+
+  const computedValue = getComputedStyle(tempElement)[property];
+
+  document.body.removeChild(tempElement);
+
+  return computedValue;
+};
+
+const unneededCSS = () => {
+  console.clear();
+  console.log('CAREFUL:  Some styles may not apply to elements on this page, but they may on other pages.');
+  console.log('___________________________');
+  [...document.styleSheets].forEach((styleSheet) => {
+    if (styleSheet.cssRules) {
+      [...styleSheet.cssRules].forEach((rule) => {
+        if (!rule.style) return;
+
+        const selector = rule.selectorText;
+        if (/^(\.css)/.test(selector)) {
+          return;
+        }
+
+        const { cssText } = rule.style;
+        const declarationRegex = /([\w-]+)\s*:\s*([^;]+)/g;
+
+        let match = declarationRegex.exec(cssText);
+
+        while (match !== null) {
+          const property = match[1].trim();
+          const value = match[2].trim();
+          document.querySelectorAll(`${selector}`).forEach((obj) => {
+            if (/^(\*|html)$|mapbox/.test(selector) || !isVisible(obj)) return;
+            const originalValue = normalizeCSS(obj.tagName, property, value);
+            const important = rule.style.getPropertyPriority(property) === 'important';
+
+            rule.style.removeProperty(property);
+            const newValue = getComputedStyle(obj)[property];
+            rule.style.setProperty(property, value.replace(' !important', ''), important ? 'important' : '');
+
+            if (originalValue === newValue) {
+              console.log(rule.selectorText, '-', property, '-', value, '-', originalValue, '-', newValue);
+            }
+          });
+
+          match = declarationRegex.exec(cssText);
+        }
+      });
+    }
+  });
+};
+
 const unusedCSS = (log = false) => {
   const unused = [];
 
@@ -234,48 +305,6 @@ const unusedCSS = (log = false) => {
 
             if (/^\.(css|Mui)|mapbox|data-shrink|_infobar/.test(selector)) {
               return;
-            }
-
-            // const declarations = rule.style.cssText;
-            // eslint-disable-next-line no-constant-condition
-            if (log && false) {
-              [...rule.style].forEach((prop) => {
-                const value = rule.style.getPropertyValue(prop);
-                const originalValues = new Map(); // Store original property values
-
-                document.querySelectorAll(selector).forEach((obj) => {
-                  originalValues.set(obj, obj.style.getPropertyValue(prop)); // Store original value
-                  obj.style.removeProperty(prop); // Remove the inline style property
-                  const computed = getComputedStyle(obj)[prop];
-                  if (computed === value) {
-                    console.log(selector, '-', prop, '-', value);
-                  }
-                  if (/^[.|#]/.test(selector)) {
-                    const top = selector.split(' ')[0];
-                    const ancestor = obj.closest(top);
-
-                    if (!ancestor) return;
-                    if (selector[0] === '#') {
-                      ancestor.id = '';
-                    } else {
-                      ancestor.classList.remove(top);
-                    }
-                    const computed = window.getComputedStyle(obj).getPropertyValue(prop);
-                    if (computed === value) {
-                      console.log(selector, '-', prop, '-', value);
-                    }
-
-                    if (selector[0] === '#') {
-                      ancestor.id = top.slice(1);
-                    } else {
-                      ancestor.classList.add(top);
-                    }
-                  }
-                  originalValues.forEach((originalValue, obj) => {
-                    obj.style[prop] = originalValue;
-                  });
-                });
-              });
             }
 
             const re = /::[-\w]+/g;
@@ -577,16 +606,29 @@ const App = () => {
           })}
 
           {dev && (
-            <div className="desktop">
-              <button
-                type="button"
-                style={{ float: 'right' }}
-                onClick={() => unusedCSS(true)}
-                accessKey="9"
-              >
-                Unused CSS
-              </button>
-            </div>
+            <>
+              <div className="desktop">
+                <button
+                  type="button"
+                  style={{ float: 'right' }}
+                  onClick={() => unneededCSS(true)}
+                  accessKey="8"
+                >
+                  Unneeded CSS
+                </button>
+              </div>
+
+              <div className="desktop">
+                <button
+                  type="button"
+                  style={{ float: 'right' }}
+                  onClick={() => unusedCSS(true)}
+                  accessKey="9"
+                >
+                  Unused CSS
+                </button>
+              </div>
+            </>
           )}
         </div>
       </nav>

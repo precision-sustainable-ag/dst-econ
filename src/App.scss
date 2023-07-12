@@ -39,6 +39,11 @@ body {
   height: 100vh;
   max-width: 1100px;
   margin: auto;
+
+  a {
+    text-decoration: none;
+    font-weight: bold;
+  }
 }
 
 @media screen and (max-width: 1050px) {
@@ -90,7 +95,6 @@ nav {
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-weight: bold;
     font-size: 120%;
     margin: 0;
     margin-bottom: 0.5rem;
@@ -142,14 +146,12 @@ nav {
     position: absolute;
     top: 0.5rem;
     right: 0;
-    float: right;
     background: #8888aa !important;
-    color: white;
+    color: white !important;
     height: 2rem !important;
   }
 
   a.disabled button {
-    position: relative;
     &:hover {
       &::before {
         content: "To continue, please select your location, and enter acres, crop, labor value, and diesel price.";
@@ -196,7 +198,7 @@ nav {
   }
 
   .MuiButtonBase-root:not(.moreLeft, .moreRight) {
-    min-width: 4rem;
+    min-width: 3rem;
     background: rgba(255, 255, 255, 0.1);
     color: white;
     margin: 0 0.2rem;
@@ -213,7 +215,6 @@ nav {
 table {
   border: 1px solid black;
   border-spacing: 0;
-  empty-cells: show;
   position: relative;
 
   caption {
@@ -221,9 +222,7 @@ table {
     font-weight: bold;
   }
 
-  .th,
   th {
-    text-align: center;
     background: #eee;
   }
 
@@ -344,12 +343,6 @@ input[type="number"] {
   margin: 0.5rem;
 }
 
-.link {
-  color: blue;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .warning {
   color: red;
   font-size: 90%;
@@ -449,10 +442,6 @@ p:first-child {
 div[hidden] + div,
 .stop ~ * {
   display: none;
-}
-
-#Container a {
-  text-decoration: none;
 }
 
 #AirTables {
