@@ -2,12 +2,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { CardContent, Card } from '@mui/material';
 import Draggable from 'react-draggable';
-import { get, dollars } from '../../store/Store';
+import { goto, get, dollars } from '../../store/Store';
 import Input from '../../shared/Inputs';
 import './styles.scss';
 
 const Costs = ({ desc, type }) => {
-  const state = useSelector(get[type]);
+  const selector = goto(get, type);
+  const state = useSelector(selector);
   const d = desc.replace('Storage shed', 'Storage');
 
   const val = state[d];
@@ -41,7 +42,8 @@ const Costs = ({ desc, type }) => {
 }; // Costs
 
 const Activity = ({ type }) => {
-  const state = useSelector(get[type]) || {};
+  const selector = goto(get, type);
+  const state = useSelector(selector) || {};
   const { estimated } = state;
   const tot = state.total;
   const edited = estimated !== tot;
@@ -57,9 +59,6 @@ const Activity = ({ type }) => {
     roller: 'Roller',
     tillage: 'Tillage',
     termination: 'Termination total',
-    tillageFall: 'Fall tillage',
-    tillageElimination: 'Other tillage elimination',
-    tillageOther: 'Cover crop tillage',
   }[type];
 
   let cname = type;
@@ -176,7 +175,7 @@ const CostsBenefits = ({ type }) => {
   const plantingTotal = useSelector(get.planting.total) || 0;
   const grazingTotal = useSelector(get.grazing.total) || 0;
   const terminationTotal = useSelector(get.termination.total) || 0;
-  const tillageAllTotal = useSelector(get.tillageAll.total) || 0;
+  const tillageTotal = useSelector(get.tillage.total) || 0;
   const fertilityTotal = -useSelector(get.fertility.total) || 0;
   const erosionTotal = -useSelector(get.erosion.total) || 0;
   const yieldTotal = -useSelector(get.yield.total) || 0;
@@ -184,18 +183,18 @@ const CostsBenefits = ({ type }) => {
   const additionalTotal = -useSelector(get.additional.total) || 0;
 
   // console.log({
-  //   type, coverCropTotal, seedbedTotal, plantingTotal, grazingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageAllTotal,
+  //   type, coverCropTotal, seedbedTotal, plantingTotal, grazingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageTotal,
   //   yieldTotal, herbicideTotal,
   // });
 
   if (
     (type === 'Costs' && (
       coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || grazingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0
-      || terminationTotal > 0 || tillageAllTotal > 0 || yieldTotal > 0)
+      || terminationTotal > 0 || tillageTotal > 0 || yieldTotal > 0)
     )
     || (type === 'Benefits' && (
       coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || grazingTotal < 0 || fertilityTotal < 0 || herbicideTotal < 0 || erosionTotal < 0
-      || terminationTotal < 0 || tillageAllTotal < 0 || yieldTotal < 0 || additionalTotal < 0)
+      || terminationTotal < 0 || tillageTotal < 0 || yieldTotal < 0 || additionalTotal < 0)
     )
   ) {
     return (
@@ -211,7 +210,7 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={seedbedTotal} desc="Seedbed preparation" />
           <SummaryRow type={type} parm={plantingTotal} desc="Planting" />
           <SummaryRow type={type} parm={terminationTotal} desc="Termination" />
-          <SummaryRow type={type} parm={tillageAllTotal} desc="Tillage" />
+          <SummaryRow type={type} parm={tillageTotal} desc="Tillage" />
           <SummaryRow type={type} parm={fertilityTotal} desc="Fertility" />
           <SummaryRow type={type} parm={herbicideTotal} desc="Herbicides" />
           <SummaryRow type={type} parm={erosionTotal} desc="Erosion" />
@@ -231,7 +230,7 @@ export const Summary = () => {
   const plantingTotal = useSelector(get.planting.total) || 0;
   const grazingTotal = useSelector(get.grazing.total) || 0;
   const terminationTotal = useSelector(get.termination.total) || 0;
-  const tillageAllTotal = useSelector(get.tillageAll.total) || 0;
+  const tillageTotal = useSelector(get.tillage.total) || 0;
   const fertilityTotal = -useSelector(get.fertility.total) || 0;
   const erosionTotal = -useSelector(get.erosion.total) || 0;
   const yieldTotal = -useSelector(get.yield.total) || 0;
@@ -239,7 +238,7 @@ export const Summary = () => {
   const additionalTotal = -useSelector(get.additional.total) || 0;
 
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +grazingTotal + +fertilityTotal + +erosionTotal
-                + +terminationTotal + +tillageAllTotal + +yieldTotal + +herbicideTotal + +additionalTotal;
+                + +terminationTotal + +tillageTotal + +yieldTotal + +herbicideTotal + +additionalTotal;
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);

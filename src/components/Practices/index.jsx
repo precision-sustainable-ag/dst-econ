@@ -1,14 +1,20 @@
 /* eslint-disable jsx-a11y/no-access-key */
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { get, set } from '../../store/redux-autosetters';
+import {
+  Accordion, AccordionDetails, AccordionSummary, Typography, Box,
+} from '@mui/material';
+import { get } from '../../store/redux-autosetters';
+
 import {
   dev,
-  exampleSeeds,
-  exampleHerbicides,
-  exampleSeedbed,
+  exampleErosion,
   examplePlanting,
+  exampleSeedbed,
+  exampleSeeds,
+  exampleGrazing,
+  exampleHerbicides,
   exampleTermination1,
   exampleTermination2,
   exampleTermination3,
@@ -21,7 +27,6 @@ import {
   exampleTillage5,
   exampleFertilityBenefit,
   exampleFertilityCost,
-  exampleErosion,
   exampleYield1,
   exampleYield2,
   dollars,
@@ -29,13 +34,59 @@ import {
 
 import './styles.scss';
 
+const Tests = () => (
+  <div className="test-buttons">
+    <button type="button" onClick={exampleSeeds}>Test Seeds</button>
+    <button type="button" onClick={exampleSeedbed}>Test Seedbed</button>
+    <button type="button" onClick={examplePlanting}>Test Planting</button>
+    <button type="button" onClick={exampleTermination1}>Test Termination 1</button>
+    <button type="button" onClick={exampleTermination2}>Test Termination 2</button>
+    <button type="button" onClick={exampleTermination3}>Test Termination 3</button>
+    <button type="button" onClick={exampleTermination4}>Test Termination 4</button>
+    <button type="button" onClick={exampleTermination5}>Test Termination 5</button>
+    <button type="button" onClick={exampleTillage1}>Test Tillage 1</button>
+    <button type="button" onClick={exampleTillage2}>Test Tillage 2</button>
+    <button type="button" onClick={exampleTillage3}>Test Tillage 3</button>
+    <button type="button" onClick={exampleTillage4}>Test Tillage 4</button>
+    <button type="button" onClick={exampleTillage5}>Test Tillage 5</button>
+    <button type="button" onClick={exampleFertilityBenefit}>Test FertilityBenefit</button>
+    <button type="button" onClick={exampleFertilityCost}>Test FertilityCost</button>
+    <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
+    <button type="button" onClick={exampleErosion}>Test Erosion</button>
+    <button type="button" onClick={exampleGrazing}>Test Grazing</button>
+    <button type="button" onClick={exampleYield1}>Test Yield1</button>
+    <button type="button" onClick={exampleYield2}>Test Yield2</button>
+  </div>
+);
+
+const CustomExpandIcon = () => (
+  <Box
+    sx={{
+      '.Mui-expanded & > .collapseIconWrapper': {
+        display: 'none',
+      },
+      '.expandIconWrapper': {
+        display: 'none',
+      },
+      '.Mui-expanded & > .expandIconWrapper': {
+        display: 'block',
+      },
+      marginRight: '0.5rem',
+    }}
+  >
+    <div className="expandIconWrapper">&ndash;</div>
+    <div className="collapseIconWrapper">+</div>
+  </Box>
+);
+
 const costs = (n) => (n >= 0 ? dollars(n) : '');
 const benefits = (n) => (n < 0 ? dollars(-n) : '');
 
 const Implement = ({ desc, type, benefit }) => {
-  const total = useSelector(get[type].total);
-  const implement = useSelector(get[type].implement);
-  const power = useSelector(get[type].power);
+  const selector = type.split('.').reduce((acc, k) => acc[k], get);
+  const total = useSelector(selector.total);
+  const implement = useSelector(selector.implement);
+  const power = useSelector(selector.power);
   return (
     total > 0 && (
       <tr>
@@ -54,46 +105,6 @@ const Implement = ({ desc, type, benefit }) => {
     )
   );
 }; // Implement
-
-const CropSummary = () => {
-  const species = useSelector(get.species);
-  const coverCropTotal = useSelector(get.coverCropTotal);
-  const rates = useSelector(get.rates);
-  const prices = useSelector(get.prices);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Seeds">Cover crops planted</NavLink>
-        </td>
-        <td className="hidden" />
-        <td />
-        <td />
-        <td>{costs(coverCropTotal)}</td>
-        <td />
-        <td>{benefits(coverCropTotal)}</td>
-      </tr>
-      {species.map((crop, i) => (
-        <tr key={crop}>
-          <td />
-          <td>{crop}</td>
-          <td>
-            {rates[i]}
-            {' '}
-            pounds @
-            {dollars(prices[i])}
-            /acre
-          </td>
-          <td>{costs(rates[i] * prices[i])}</td>
-          <td />
-          <td>{benefits(rates[i] * prices[i])}</td>
-          <td />
-        </tr>
-      ))}
-    </>
-  );
-}; // CropSummary
 
 const SeedbedSummary = () => {
   const total = useSelector(get.seedbed.total) || 0;
@@ -144,22 +155,11 @@ const PlantingSummary = () => {
 }; // PlantingSummary
 
 const TerminationSummary = () => {
-  const total = useSelector(get.termination.total);
-  const method = useSelector(get.termination.method);
-  const product = useSelector(get.termination.product);
-  const productCost = useSelector(get.termination.productCost);
-  const rate = useSelector(get.termination.rate);
-  const unitCost = useSelector(get.termination.unitCost);
-
-  const additionalTotal = useSelector(get.termination.additionalTotal);
-  const additionalHerbicides = useSelector(get.termination.additionalHerbicides);
-  const additionalRates = useSelector(get.termination.additionalRates);
-  const additionalPrices = useSelector(get.termination.additionalPrices);
-
-  const reducedTotal = useSelector(get.termination.reducedTotal);
-  const reducedHerbicides = useSelector(get.termination.reducedHerbicides);
-  const reducedRates = useSelector(get.termination.reducedRates);
-  const reducedPrices = useSelector(get.termination.reducedPrices);
+  const {
+    total, method, product, productCost, rate, unitCost,
+    additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
+    reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
+  } = useSelector(get.termination);
 
   return (
     <>
@@ -195,9 +195,9 @@ const TerminationSummary = () => {
         </tr>
       )}
 
-      <Implement desc="Chemical spray equipment" type="chemical" />
-      <Implement desc="Roller equipment" type="roller" />
-      <Implement desc="Tillage equiment" type="tillage" />
+      <Implement desc="Chemical spray equipment" type="termination.chemical" />
+      <Implement desc="Roller equipment" type="termination.roller" />
+      <Implement desc="Tillage equiment" type="termination.tillage" />
 
       {additionalTotal ? (
         <>
@@ -272,7 +272,7 @@ const TerminationSummary = () => {
 }; // TerminationSummary
 
 const TillageSummary = () => {
-  const total = useSelector(get.tillageAll.total);
+  const total = useSelector(get.tillage.total);
 
   return (
     <>
@@ -292,9 +292,9 @@ const TillageSummary = () => {
         <td>{benefits(total)}</td>
       </tr>
 
-      <Implement desc="Fall Tillage" type="tillageFall" benefit />
-      <Implement desc="Tillage Elimination" type="tillageElimination" benefit />
-      <Implement desc="Other Tillage" type="tillageOther" />
+      <Implement desc="Fall Tillage" type="tillage.fall" benefit />
+      <Implement desc="Tillage Elimination" type="tillage.elimination" benefit />
+      <Implement desc="Other Tillage" type="tillage.other" />
     </>
   );
 }; // TillageSummary
@@ -638,20 +638,90 @@ const AdditionalSummary = () => {
   );
 }; // AdditionalSummary
 
+const NestedAccordion = ({ details, level = 0 }) => (
+  Object.entries(details).map(([title, content]) => {
+    if (typeof content === 'object') {
+      return (
+        <Accordion
+          key={title}
+          defaultExpanded
+          style={{ paddingLeft: level * 15, margin: 0 }}
+        >
+          <AccordionSummary
+            expandIcon={<CustomExpandIcon />}
+            style={{ flexDirection: 'row-reverse' }}
+          >
+            <Typography style={{ fontWeight: level === 0 ? 'bold' : 'normal' }}>
+              {title}
+            </Typography>
+          </AccordionSummary>
+          <NestedAccordion details={content} level={level + 1} />
+        </Accordion>
+      );
+    }
+
+    return (
+      <AccordionDetails
+        key={title}
+        style={{
+          paddingLeft: level * 40,
+          paddingTop: 0,
+          paddingBottom: 10,
+        }}
+      >
+        {title}
+        :
+        {' '}
+        <strong>{content}</strong>
+      </AccordionDetails>
+    );
+  })
+);
+
+const equipment = (obj, type, nest = true) => {
+  const {
+    description,
+    total,
+    implement,
+    power,
+  } = type;
+
+  if (total) {
+    if (nest) {
+      obj[description] = {
+        Equipment: `${implement}; ${power}`,
+      };
+    } else {
+      obj[description] = `${implement}; ${power}`;
+    }
+  }
+};
+
 const Practices = () => {
-  const dispatch = useDispatch();
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
   const acres = useSelector(get.mapFeatures.area);
   const lat = useSelector(get.map.lat).toFixed(4);
   const lon = useSelector(get.map.lon).toFixed(4);
+  const cashCrop = useSelector(get.cashCrop);
+  const $labor = useSelector(get.$labor);
+  const $diesel = useSelector(get.$diesel);
+
+  const species = useSelector(get.species);
+  const rates = useSelector(get.rates);
+  const prices = useSelector(get.prices);
+
+  const seedbed = useSelector(get.seedbed);
+  const planting = useSelector(get.planting);
+  const termination = useSelector(get.termination);
+  const tillage = useSelector(get.tillage);
 
   const totals = [
     useSelector(get.coverCropTotal) || 0,
     useSelector(get.seedbed.total) || 0,
     useSelector(get.planting.total) || 0,
     useSelector(get.termination.total) || 0,
-    useSelector(get.tillageAll.total) || 0,
+    useSelector(get.tillage.total) || 0,
     -useSelector(get.fertility.total) || 0,
     useSelector(get.herbicide.total) || 0,
     -useSelector(get.erosion.total) || 0,
@@ -662,11 +732,76 @@ const Practices = () => {
   const totalCosts = totals.reduce((previous, value) => previous + Math.max(value, 0), 0);
   const totalBenefits = -totals.reduce((previous, value) => previous + Math.min(value, 0), 0);
 
+  const details = {
+    'Field & Farm': {
+      'Cash crop': cashCrop,
+      'Labor value': dollars($labor),
+      'Diesel cost': dollars($diesel),
+    },
+  };
+
+  if (species.length) {
+    details['Seeds Planted'] = species.filter((s) => s).reduce((obj, s, i) => {
+      obj[s] = `${rates[i]} pounds/acre @ ${dollars(prices[i])}/pound`;
+      return obj;
+    }, {});
+  }
+
+  equipment(details, seedbed);
+  equipment(details, planting);
+
+  if (termination.total) {
+    const {
+      method,
+      product, rate, productCost,
+      additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
+      reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
+    } = termination;
+
+    const obj = {
+      Method: method,
+    };
+
+    if (additionalTotal) {
+      obj['Additional herbicides'] = additionalHerbicides.filter((s) => s).reduce((obj2, s, i) => {
+        obj2[s] = `${additionalRates[i]} pounds/acre @ ${dollars(additionalPrices[i])}/acre`;
+        return obj2;
+      }, {});
+    }
+
+    if (reducedTotal) {
+      obj['Reduced herbicides'] = reducedHerbicides.filter((s) => s).reduce((obj2, s, i) => {
+        obj2[s] = `${reducedRates[i]} pounds/acre @ ${dollars(reducedPrices[i])}/acre`;
+        return obj2;
+      }, {});
+    }
+
+    if (product) {
+      obj.Product = `${product} - ${rate} pounds @ ${dollars(productCost)}/acre`;
+    }
+
+    equipment(obj, termination.chemical, false);
+    equipment(obj, termination.roller, false);
+    equipment(obj, termination.tillage, false);
+
+    details.Termination = obj;
+  }
+
+  if (tillage.total) {
+    const obj = {};
+    equipment(obj, tillage.fall, false);
+    equipment(obj, tillage.elimination, false);
+    equipment(obj, tillage.other, false);
+
+    details['Tillage modifications to normal cropping system'] = obj;
+  }
+
   return (
     <div id="Practices">
       <h1>
-        Summary of Practices
-        {farm && ` for ${farm}`}
+        Summary of Practices for
+        <br />
+        {farm && `${farm}`}
         {field && ` - ${field}`}
         {acres && ` (${acres} acres)`}
         <br />
@@ -675,6 +810,9 @@ const Practices = () => {
         longitude:
         {` ${lon}`}
       </h1>
+
+      <NestedAccordion details={details} />
+
       <div>
         <table>
           <thead>
@@ -689,7 +827,6 @@ const Practices = () => {
             </tr>
           </thead>
           <tbody>
-            <CropSummary />
             <SeedbedSummary />
             <PlantingSummary />
             <TerminationSummary />
@@ -720,120 +857,7 @@ const Practices = () => {
           </tbody>
         </table>
       </div>
-      {dev && (
-        <div className="test-buttons" style={{ marginTop: '10px' }}>
-          <button
-            type="button"
-            accessKey="1"
-            onClick={() => {
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('NW40 of home place'));
-              dispatch(set.cashCrop('Soybeans'));
-
-              exampleSeeds();
-              exampleSeedbed();
-              examplePlanting();
-              exampleTermination1();
-              exampleTillage1();
-              exampleHerbicides();
-              exampleFertilityBenefit();
-              exampleErosion();
-              exampleYield1();
-            }}
-          >
-            Test
-            <u>1</u>
-          </button>
-          <button
-            type="button"
-            accessKey="2"
-            onClick={() => {
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('NW40 of home place'));
-              dispatch(set.cashCrop('Soybeans'));
-
-              exampleSeeds();
-              exampleSeedbed();
-              examplePlanting();
-              exampleTermination2();
-              exampleTillage2();
-              exampleHerbicides();
-              exampleFertilityCost();
-              exampleErosion();
-              exampleYield2();
-            }}
-          >
-            Test
-            <u>2</u>
-          </button>
-          <button
-            type="button"
-            accessKey="3"
-            onClick={() => {
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('NW40 of home place'));
-              dispatch(set.cashCrop('Soybeans'));
-
-              exampleSeeds();
-              exampleSeedbed();
-              examplePlanting();
-              exampleTermination3();
-              exampleTillage3();
-              exampleHerbicides();
-              exampleFertilityBenefit();
-              exampleErosion();
-              exampleYield1();
-            }}
-          >
-            Test
-            <u>3</u>
-          </button>
-          <button
-            type="button"
-            accessKey="4"
-            onClick={() => {
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('NW40 of home place'));
-              dispatch(set.cashCrop('Soybeans'));
-
-              exampleSeeds();
-              exampleSeedbed();
-              examplePlanting();
-              exampleTermination4();
-              exampleTillage4();
-              exampleHerbicides();
-              exampleFertilityCost();
-              exampleErosion();
-              exampleYield2();
-            }}
-          >
-            Test
-            <u>4</u>
-          </button>
-          <button
-            type="button"
-            accessKey="5"
-            onClick={() => {
-              dispatch(set.farm('My farm'));
-              dispatch(set.field('NW40 of home place'));
-              dispatch(set.cashCrop('Soybeans'));
-
-              exampleSeeds();
-              exampleSeedbed();
-              examplePlanting();
-              exampleTermination5();
-              exampleTillage5();
-              exampleHerbicides();
-              exampleFertilityBenefit();
-              exampleErosion();
-              exampleYield1();
-            }}
-          >
-            Test
-            <u>5</u>
-          </button>
-        </div>
-      )}
+      {dev && <Tests />}
     </div>
   );
 }; // Practices
