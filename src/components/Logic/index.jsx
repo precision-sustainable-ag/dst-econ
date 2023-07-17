@@ -3,7 +3,9 @@ import { useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
 import Activity from '../Activity';
 
-import { get, dollars, db } from '../../store/Store';
+import {
+  goto, get, dollars, db,
+} from '../../store/Store';
 
 const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
@@ -42,9 +44,10 @@ const Logic = ({
     return ['', ...result];
   }; // sortPower
 
-  const context = useSelector(get[current]);
-  const currentImplement = useSelector(get[current].implement);
-  const acresHour = useSelector(get[current].acresHour).toString();
+  const selector = goto(get, current);
+  const context = useSelector(selector);
+  const currentImplement = useSelector(selector.implement);
+  const acresHour = useSelector(selector.acresHour).toString();
 
   if (!style && property === 'implement') {
     style = { borderTop: '1px solid black' };

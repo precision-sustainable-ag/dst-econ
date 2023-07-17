@@ -12,7 +12,7 @@ export { set, get } from './redux-autosetters';
 export { db } from './airtables';
 
 export const dollars = (n) => {
-  if (!Number.isFinite(n)) {
+  if (!Number.isFinite(+n)) {
     return '';
   }
   if (+n < 0) {
@@ -30,20 +30,20 @@ export const dev = /(localhost|dev)/i.test(window.location);
 
 const terminationTotal = (state) => (
   (+state.termination.productCost || 0)
-  + (+state.chemical.total || 0)
-  + (+state.roller.total || 0)
-  + (+state.tillage.total || 0)
+  + (+state.termination.chemical.total || 0)
+  + (+state.termination.roller.total || 0)
+  + (+state.termination.tillage.total || 0)
   + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
 );
 
-const tillageTotal = (state) => (state.tillage1.costReductions || 0) + (state.tillageOther.total || 0) + (state.tillageFall.total || 0);
+const tillageTotal = (state) => (state.tillage.costReductions || 0) + (state.tillage.other.total || 0) + (state.tillage.fall.total || 0);
 
 const herbicideTotal = (state) => (
-  (state.herbicideAdditional.cost || 0)
-  + (state.herbicideAdditional.total || 0)
-  + (state.herbicideFall.total || 0)
-  + (state.herbicideFall.savings || 0)
-  - ((state.herbicideReduced.cost || 0) + (state.herbicideReduced.total || 0))
+  (state.herbicide.additional.cost || 0)
+  + (state.herbicide.additional.total || 0)
+  + (state.herbicide.fall.total || 0)
+  + (state.herbicide.fall.savings || 0)
+  - ((state.herbicide.reduced.cost || 0) + (state.herbicide.reduced.total || 0))
 );
 
 const grazingTotal = (state) => {
@@ -190,49 +190,46 @@ const initialState = {
   species3: '',
   species4: '',
   current: 'seedbed',
-  useFertilizer: '',
-  fertN: 0,
-  fertP: 0,
-  fertK: 0,
-  $fertN: undefined, // db.rates.Nitrogen.value
-  $fertP: 0,
-  $fertK: 0,
-  fertNAdded: 0,
-  fertPAdded: 0,
-  fertKAdded: 0,
-  $fertApplication: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
-  $fertCredit: (state) => state.fertN * state.$fertN + state.fertP * state.$fertP + state.fertK * state.$fertK,
-  $fertCost: (state) => -(
-    state.fertNAdded * state.$fertN
-    + state.fertPAdded * state.$fertP
-    + state.fertKAdded * state.$fertK
-  ) - (state.$fertApplication || 0),
-  seedbed: { ...shared },
-  planting: { ...shared },
+
+  seedbed: {
+    description: 'Seedbed Preparation',
+    ...shared,
+  },
+
+  planting: {
+    description: 'Planting Decisions',
+    ...shared,
+  },
+
   unused: { ...shared },
+
   herbicide: {
     ...shared,
+    additional: {
+      description: 'Additional herbicides',
+      ...shared,
+      product: '',
+      unitCost: (state) => db.herbicides?.[state.herbicide.additional.product]?.['Cost ($)'],
+      rate: (state) => db.herbicides?.[state.herbicide.additional.product]?.Rate,
+      cost: '',
+      // cost: (state) => state.herbicide.additional.unitCost * state.herbicide.additional.rate || 0,
+    },
+    reduced: {
+      description: 'Reduced herbicides',
+      ...shared,
+      product: '',
+      unitCost: (state) => db.herbicides?.[state.herbicide.reduced.product]?.['Cost ($)'],
+      rate: (state) => db.herbicides?.[state.herbicide.reduced.product]?.Rate,
+      cost: (state) => state.herbicide.reduced.unitCost * state.herbicide.reduced.rate || 0,
+    },
+    fall: {
+      description: 'Fall herbicides',
+      ...shared,
+      savings: 0,
+    },
     total: herbicideTotal,
   },
-  herbicideAdditional: {
-    ...shared,
-    product: '',
-    unitCost: (state) => db.herbicides?.[state.herbicideAdditional.product]?.['Cost ($)'],
-    rate: (state) => db.herbicides?.[state.herbicideAdditional.product]?.Rate,
-    cost: '',
-    // cost: (state) => state.herbicideAdditional.unitCost * state.herbicideAdditional.rate || 0,
-  },
-  herbicideReduced: {
-    ...shared,
-    product: '',
-    unitCost: (state) => db.herbicides?.[state.herbicideReduced.product]?.['Cost ($)'],
-    rate: (state) => db.herbicides?.[state.herbicideReduced.product]?.Rate,
-    cost: (state) => state.herbicideReduced.unitCost * state.herbicideReduced.rate || 0,
-  },
-  herbicideFall: {
-    ...shared,
-    savings: 0,
-  },
+
   yield: {
     ...shared,
     yield: undefined,
@@ -272,26 +269,12 @@ const initialState = {
     },
     impact: [],
   },
+
   erosion: {
     ...shared,
     total: (state) => (state.erosion.q3 * state.erosion.q4) / state.mapFeatures.area,
   },
-  chemical: { ...shared },
-  roller: { ...shared },
-  tillage: { ...shared },
 
-  tillage1: {
-    ...shared,
-    costReductions: (state) => (state.tillage1.q5 === 'Yes' ? -state.tillageFall.total : 0)
-    - (state.tillageElimination.total || 0),
-  },
-  tillageFall: { ...shared },
-  tillageElimination: { ...shared },
-  tillageOther: { ...shared },
-  tillageAll: {
-    ...shared,
-    total: tillageTotal,
-  },
   termination: {
     ...shared,
     unitCost: (state) => db.herbicides?.[state.termination.product]?.['Cost ($)'],
@@ -306,9 +289,7 @@ const initialState = {
 
       state.termination.additionalHerbicides.forEach((s, n) => {
         if (s) {
-          total
-          += (state.termination.additionalRates[n] || 0)
-          * (state.termination.additionalPrices[n] || 0);
+          total += (state.termination.additionalRates[n] || 0) * (state.termination.additionalPrices[n] || 0);
         }
       });
       return total;
@@ -328,12 +309,64 @@ const initialState = {
 
       return total;
     },
+    chemical: {
+      description: 'Chemical spray equipment',
+      ...shared,
+    },
+    roller: {
+      description: 'Roller equipment',
+      ...shared,
+    },
+    tillage: {
+      description: 'Tillage equipment',
+      ...shared,
+    },
     total: terminationTotal,
   },
+
+  tillage: {
+    ...shared,
+    costReductions: (state) => (
+      (state.tillage.q5 === 'Yes' ? -state.tillage.fall.total : 0)
+      - (state.tillage.elimination.total || 0)
+    ),
+    fall: {
+      description: 'Fall tillage',
+      ...shared,
+    },
+    elimination: {
+      description: 'Tillage elimination',
+      ...shared,
+    },
+    other: {
+      description: 'Other Tillage',
+      ...shared,
+    },
+    total: tillageTotal,
+  },
+
   fertility: {
     ...shared,
-    total: (state) => state.$fertCredit + state.$fertCost,
+    useFertilizer: '',
+    N: 0,
+    P: 0,
+    K: 0,
+    $N: undefined, // db.rates.Nitrogen.value
+    $P: 0,
+    $K: 0,
+    NAdded: 0,
+    PAdded: 0,
+    KAdded: 0,
+    $application: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
+    $credit: (state) => state.fertility.N * state.fertility.$N + state.fertility.P * state.fertility.$P + state.fertility.K * state.fertility.$K,
+    $cost: (state) => -(
+      state.fertility.NAdded * state.fertility.$N
+      + state.fertility.PAdded * state.fertility.$P
+      + state.fertility.KAdded * state.fertility.$K
+    ) - (state.fertility.$application || 0),
+    total: (state) => state.fertility.$credit + state.fertility.$cost,
   },
+
   additional: {
     $landowner: 0,
     nrcs: '',
@@ -341,7 +374,7 @@ const initialState = {
     $carbonOffset: 0,
     $insuranceDiscount: 0,
     total: (state) => +state.additional.$landowner + +state.additional.$costShare
-      + +state.additional.$carbonOffset + +state.additional.$insuranceDiscount,
+                      + +state.additional.$carbonOffset + +state.additional.$insuranceDiscount,
   },
   grazing: {
     grazing: '',
@@ -357,9 +390,13 @@ const initialState = {
 
 export const formulas = { ...initialState };
 
+export const goto = (object, property) => property.split('.').reduce((obj, prop) => obj[prop], object);
+
 const getCosts = (state, current) => {
   ['implements', 'power'].forEach((type) => {
-    state[current][`$${type}`].total = 0;
+    const scurrent = goto(state, current);
+
+    scurrent[`$${type}`].total = 0;
 
     [
       'Fuel',
@@ -371,15 +408,15 @@ const getCosts = (state, current) => {
       'Storage',
       'Labor',
     ].forEach((parm) => {
-      if (!state[current][`${type}Cost`] || !state[current][parm]) {
-        state[current][`$${type}`][parm] = 0;
+      if (!scurrent[`${type}Cost`] || !scurrent[parm]) {
+        scurrent[`$${type}`][parm] = 0;
         return;
       }
 
-      const section = state[current];
+      const section = scurrent;
       const o = type === 'implements' ? section.implement : section.power;
 
-      const { acresHour } = state[current];
+      const { acresHour } = scurrent;
 
       const divisor = type === 'implements'
         ? section.annualUseAcres
@@ -468,19 +505,19 @@ const getCosts = (state, current) => {
 
       value = value || 0;
 
-      state[current][`$${type}`][parm] = value;
-      state[current][`$${type}`].total += value;
+      scurrent[`$${type}`][parm] = value;
+      scurrent[`$${type}`].total += value;
     });
 
-    state[current].estimated = +(
-      state[current].$implements.total + state[current].$power.total
+    scurrent.estimated = +(
+      scurrent.$implements.total + scurrent.$power.total
     ).toFixed(2);
 
-    state[current].total = state[current].estimated;
-    state.calculated[`${current}.total`] = state[current].total;
+    scurrent.total = scurrent.estimated;
+    state.calculated[`${current}.total`] = scurrent.total;
 
     state.termination.total = terminationTotal(state);
-    state.tillageAll.total = tillageTotal(state);
+    state.tillage.total = tillageTotal(state);
     state.herbicide.total = herbicideTotal(state);
   });
 }; // getCosts
@@ -515,18 +552,18 @@ const afterChange = {
       state.focus = `rates${index}`;
       const fertN = (db.seedList[value] || {}).NCredit || '';
       if (fertN) {
-        state.fertN = fertN;
+        state.fertility.N = fertN;
       }
     }
   },
-  useFertilizer: (state, { payload }) => {
+  'fertilizer.useFertilizer': (state, { payload }) => {
     if (payload === 'Yes') {
-      state.focus = 'fertNAdded';
+      state.focus = 'fertility.NAdded';
     } else {
-      state.fertNAdded = 0;
-      state.fertPAdded = 0;
-      state.fertKAdded = 0;
-      state.focus = '$fertApplication';
+      state.fertility.NAdded = 0;
+      state.fertility.PAdded = 0;
+      state.fertility.KAdded = 0;
+      state.focus = 'fertility.$application';
     }
   },
   'grazing.lease': (state, { payload }) => {
@@ -543,21 +580,21 @@ const afterChange = {
   },
   'herbicide.q1': (state, { payload }) => {
     if (payload === 'No') {
-      state.herbicideAdditional.estimated = 0;
-      state.herbicideAdditional.total = 0;
-      state.herbicideAdditional.implement = '';
+      state.herbicide.additional.estimated = 0;
+      state.herbicide.additional.total = 0;
+      state.herbicide.additional.implement = '';
     }
   },
   'herbicide.q2': (state, { payload }) => {
     if (payload === 'No') {
-      state.herbicideAdditional.product = '';
-      state.herbicideAdditional.cost = 0;
-      state.herbicideAdditional.estimated = 0;
-      state.herbicideAdditional.total = 0;
-      state.herbicideAdditional.implement = '';
+      state.herbicide.additional.product = '';
+      state.herbicide.additional.cost = 0;
+      state.herbicide.additional.estimated = 0;
+      state.herbicide.additional.total = 0;
+      state.herbicide.additional.implement = '';
     } else if (state.herbicide.q1 === 'Yes' && payload === 'Yes') {
-      state.herbicideAdditional.cost = db.costDefaults?.['Herbicide product']?.cost;
-      state.focus = 'herbicideAdditional.product';
+      state.herbicide.additional.cost = db.costDefaults?.['Herbicide product']?.cost;
+      state.focus = 'herbicide.additional.product';
     }
   },
   'termination.q2': (state, { payload }) => {
@@ -570,14 +607,14 @@ const afterChange = {
   },
   'herbicide.q5': (state, { payload }) => {
     if (payload === 'No') {
-      state.herbicideReduced.estimated = 0;
-      state.herbicideReduced.total = 0;
+      state.herbicide.reduced.estimated = 0;
+      state.herbicide.reduced.total = 0;
     }
   },
   'herbicide.q8': (state, { payload }) => {
     if (payload === 'No') {
-      state.herbicideFall.estimated = 0;
-      state.herbicideFall.total = 0;
+      state.herbicide.fall.estimated = 0;
+      state.herbicide.fall.total = 0;
       state.newScreen = 'Erosion';
     }
   },
@@ -618,25 +655,25 @@ const afterChange = {
     }
   },
   // Tillage ___________________________________________________________________________
-  'tillageFall.q2': (state, { payload }) => {
+  'tillage.fall.q2': (state, { payload }) => {
     if (payload === 'Yes') {
-      state.focus = 'tillageFall.implement';
+      state.focus = 'tillage.fall.implement';
     }
   },
-  'tillageElimination.q2': (state, { payload }) => {
+  'tillage.elimination.q2': (state, { payload }) => {
     if (payload === 'Yes') {
-      state.focus = 'tillageElimination.implement';
+      state.focus = 'tillage.elimination.implement';
     }
   },
-  'tillageOther.q2': (state, { payload }) => {
+  'tillage.other.q2': (state, { payload }) => {
     if (payload === 'Yes') {
-      state.focus = 'tillageOther.implement';
-    } else if (state.tillage1.q1 === 'Yes') {
+      state.focus = 'tillage.other.implement';
+    } else if (state.tillage.q1 === 'Yes') {
       state.newScreen = 'Fertility';
     }
   },
-  'tillage1.q1': (state, { payload }) => {
-    if (payload === 'Yes' && state.tillageOther.q2 === 'No') {
+  'tillage.q1': (state, { payload }) => {
+    if (payload === 'Yes' && state.tillage.other.q2 === 'No') {
       state.newScreen = 'Fertility';
     }
   },
@@ -678,15 +715,15 @@ const afterChange = {
   $labor: (state) => {
     getCosts(state, 'seedbed');
     getCosts(state, 'planting');
-    getCosts(state, 'chemical');
-    getCosts(state, 'roller');
-    getCosts(state, 'tillage');
-    getCosts(state, 'tillageFall');
-    getCosts(state, 'tillageElimination');
-    getCosts(state, 'tillageOther');
-    getCosts(state, 'herbicideAdditional');
-    getCosts(state, 'herbicideReduced');
-    getCosts(state, 'herbicideFall');
+    getCosts(state, 'termination.chemical');
+    getCosts(state, 'termination.roller');
+    getCosts(state, 'termination.tillage');
+    getCosts(state, 'tillage.fall');
+    getCosts(state, 'tillage.elimination');
+    getCosts(state, 'tillage.other');
+    getCosts(state, 'herbicide.additional');
+    getCosts(state, 'herbicide.reduced');
+    getCosts(state, 'herbicide.fall');
   },
   map: (state) => {
     state.mapFeatures.zoom = 16;
@@ -707,15 +744,15 @@ export const store = createStore(initialState, { afterChange, reducers });
 [
   'seedbed',
   'planting',
-  'chemical',
-  'roller',
-  'tillage',
-  'tillageFall',
-  'tillageElimination',
-  'tillageOther',
-  'herbicideAdditional',
-  'herbicideReduced',
-  'herbicideFall',
+  'termination.chemical',
+  'termination.roller',
+  'termination.tillage',
+  'tillage.fall',
+  'tillage.elimination',
+  'tillage.other',
+  'herbicide.additional',
+  'herbicide.reduced',
+  'herbicide.fall',
 ].forEach((section) => {
   afterChange[`${section}.implementsCost`] = (state) => getCosts(state, section);
   afterChange[`${section}.powerCost`] = (state) => getCosts(state, section);
@@ -731,22 +768,22 @@ export const store = createStore(initialState, { afterChange, reducers });
   afterChange[`${section}.annualUseAcres`] = (state, { payload }) => payload && getCosts(state, section);
 
   afterChange[`${section}.implement`] = (state, { payload }) => {
-    const obj = state[section];
+    const obj = goto(state, section);
 
     payload = payload.replace('HIRE ', '');
     if (payload === 'Hire custom operator') {
       const def = {
         seedbed: 'Seedbed preparation',
         planting: 'Planting',
-        tillage: 'Seedbed preparation',
-        tillageFall: 'Seedbed preparation',
-        tillageElimination: 'Seedbed preparation',
-        tillageOther: 'Seedbed preparation',
-        chemical: 'Herbicide application',
-        roller: 'Roller',
-        herbicideAdditional: 'Herbicide application',
-        herbicideReduced: 'Herbicide application',
-        herbicideFall: 'Herbicide application',
+        'tillage.fall': 'Seedbed preparation',
+        'tillage.elimination': 'Seedbed preparation',
+        'tillage.other': 'Seedbed preparation',
+        'termination.chemical': 'Herbicide application',
+        'termination.roller': 'Roller',
+        'termination.tillage': 'Seedbed preparation',
+        'herbicide.additional': 'Herbicide application',
+        'herbicide.reduced': 'Herbicide application',
+        'herbicide.fall': 'Herbicide application',
       }[section];
 
       state.focus = `${section}.total`;
@@ -777,7 +814,7 @@ export const store = createStore(initialState, { afterChange, reducers });
   };
 
   afterChange[`${section}.power`] = (state) => {
-    const obj = state[section];
+    const obj = goto(state, section);
 
     if (obj.power) {
       obj.annualUseHours = db.power[obj.power]?.['expected use (hr/yr)'];
@@ -797,8 +834,8 @@ const loaded = () => {
   store.dispatch(set.screen('Field'));
   store.dispatch(set.$labor(db.rates?.skilled?.value));
   store.dispatch(set.$diesel(db.rates?.fuel?.value));
-  store.dispatch(set.$fertP(db.rates?.P2O5?.value));
-  store.dispatch(set.$fertK(db.rates?.K2O?.value));
+  store.dispatch(set.fertility.$P(db.rates?.P2O5?.value));
+  store.dispatch(set.fertility.$K(db.rates?.K2O?.value));
 }; // loaded
 
 let status = '';
@@ -934,21 +971,15 @@ export const test = (key, result) => {
 }; // test
 
 export const getDefaults = (parms) => {
-  const def = {};
   if (!Array.isArray(parms)) {
     parms = parms.split('|');
   }
 
-  parms.forEach((parm) => {
-    let s = initialState;
-    parm.split('.').forEach((k) => {
-      s = s[k];
-    });
-    def[parm] = s;
-  });
-
-  return def;
-}; // getDefaults
+  return parms.reduce((def, parm) => {
+    def[parm] = goto(initialState, parm);
+    return def;
+  }, {});
+};
 
 export const clearInputs = (defaults, exclude = []) => {
   Object.keys(defaults).forEach((key) => {
@@ -958,10 +989,7 @@ export const clearInputs = (defaults, exclude = []) => {
       store.dispatch(set.$diesel(db.rates?.fuel?.value));
     } else if (!exclude.includes(key)) {
       try {
-        let s = set;
-        key.split('.').forEach((k) => {
-          s = s[k];
-        });
+        const s = goto(set, key);
         store.dispatch(s(defaults[key]));
       } catch (error) {
         console.log(key, error);
@@ -980,13 +1008,13 @@ export const exampleHerbicides = () => {
     Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`),
   );
   const fallDefaults = getDefaults(
-    Object.keys(get.herbicideFall).map((parm) => `herbicideFall.${parm}`),
+    Object.keys(get.herbicide.fall).map((parm) => `herbicide.fall.${parm}`),
   );
   const additionalDefaults = getDefaults(
-    Object.keys(get.herbicideAdditional).map((parm) => `herbicideAdditional.${parm}`),
+    Object.keys(get.herbicide.additional).map((parm) => `herbicide.additional.${parm}`),
   );
   const reducedDefaults = getDefaults(
-    Object.keys(get.herbicideReduced).map((parm) => `herbicideReduced.${parm}`),
+    Object.keys(get.herbicide.reduced).map((parm) => `herbicide.reduced.${parm}`),
   );
 
   const defaults = {
@@ -1000,17 +1028,17 @@ export const exampleHerbicides = () => {
 
   store.dispatch(set.herbicide.q1('Yes'));
   store.dispatch(set.herbicide.q2('Yes'));
-  store.dispatch(set.herbicideAdditional.product('atrazine'));
+  store.dispatch(set.herbicide.additional.product('atrazine'));
 
   store.dispatch(set.herbicide.q5('Yes'));
-  store.dispatch(set.herbicideReduced.product('liberty'));
+  store.dispatch(set.herbicide.reduced.product('liberty'));
 
-  store.dispatch(set.herbicideAdditional.implement('Boom Sprayer, Pull-Type; 90 Ft'));
-  store.dispatch(set.herbicideReduced.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
+  store.dispatch(set.herbicide.additional.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+  store.dispatch(set.herbicide.reduced.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
 
   store.dispatch(set.herbicide.q8('Yes'));
-  store.dispatch(set.herbicideFall.savings(20));
-  store.dispatch(set.herbicideFall.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+  store.dispatch(set.herbicide.fall.savings(20));
+  store.dispatch(set.herbicide.fall.implement('Boom Sprayer, Pull-Type; 90 Ft'));
 }; // exampleHerbicides
 
 export const exampleSeedbed = () => {
@@ -1031,42 +1059,42 @@ const clearTermination = () => {
     'termination.reducedPrices',
     'termination.reducedRates',
     'termination.q2',
-    'chemical.implement',
-    'chemical.power',
-    'chemical.implementsCost',
-    'chemical.powerCost',
-    'chemical.Labor',
-    'chemical.Fuel',
-    'chemical.Depreciation',
-    'chemical.Interest',
-    'chemical.Repairs',
-    'chemical.Taxes',
-    'chemical.Insurance',
-    'chemical.Storage',
-    'roller.implement',
-    'roller.power',
-    'roller.implementsCost',
-    'roller.powerCost',
-    'roller.Labor',
-    'roller.Fuel',
-    'roller.Depreciation',
-    'roller.Interest',
-    'roller.Repairs',
-    'roller.Taxes',
-    'roller.Insurance',
-    'roller.Storage',
-    'tillage.implement',
-    'tillage.power',
-    'tillage.implementsCost',
-    'tillage.powerCost',
-    'tillage.Labor',
-    'tillage.Fuel',
-    'tillage.Depreciation',
-    'tillage.Interest',
-    'tillage.Repairs',
-    'tillage.Taxes',
-    'tillage.Insurance',
-    'tillage.Storage',
+    'termination.chemical.implement',
+    'termination.chemical.power',
+    'termination.chemical.implementsCost',
+    'termination.chemical.powerCost',
+    'termination.chemical.Labor',
+    'termination.chemical.Fuel',
+    'termination.chemical.Depreciation',
+    'termination.chemical.Interest',
+    'termination.chemical.Repairs',
+    'termination.chemical.Taxes',
+    'termination.chemical.Insurance',
+    'termination.chemical.Storage',
+    'termination.roller.implement',
+    'termination.roller.power',
+    'termination.roller.implementsCost',
+    'termination.roller.powerCost',
+    'termination.roller.Labor',
+    'termination.roller.Fuel',
+    'termination.roller.Depreciation',
+    'termination.roller.Interest',
+    'termination.roller.Repairs',
+    'termination.roller.Taxes',
+    'termination.roller.Insurance',
+    'termination.roller.Storage',
+    'termination.tillage.implement',
+    'termination.tillage.power',
+    'termination.tillage.implementsCost',
+    'termination.tillage.powerCost',
+    'termination.tillage.Labor',
+    'termination.tillage.Fuel',
+    'termination.tillage.Depreciation',
+    'termination.tillage.Interest',
+    'termination.tillage.Repairs',
+    'termination.tillage.Taxes',
+    'termination.tillage.Insurance',
+    'termination.tillage.Storage',
     'termination.method',
     'termination.customCost',
     'termination.product',
@@ -1081,7 +1109,7 @@ export const exampleTermination1 = () => {
   store.dispatch(set.termination.product('atrazine'));
   store.dispatch(set.termination.unitCost(333));
   store.dispatch(set.termination.product('dicamba'));
-  store.dispatch(set.chemical.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
+  store.dispatch(set.termination.chemical.implement('Boom Sprayer, Self-Propelled; 90 Ft'));
 }; // exampleTermination1
 
 export const exampleTermination2 = () => {
@@ -1107,36 +1135,36 @@ export const exampleTermination3 = () => {
   clearTermination();
   store.dispatch(set.termination.q2('No'));
   store.dispatch(set.termination.method('Roller'));
-  store.dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+  store.dispatch(set.termination.roller.implement('Cover Crop Roller; 10.5 Ft'));
 }; // exampleTermination2
 
 export const exampleTermination4 = () => {
   clearTermination();
   store.dispatch(set.termination.q2('No'));
   store.dispatch(set.termination.method('Tillage'));
-  store.dispatch(set.tillage.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.termination.tillage.implement('Chisel Plow; 23 Ft'));
 }; // exampleTermination4
 
 export const exampleTermination5 = () => {
   clearTermination();
   store.dispatch(set.termination.q2('No'));
   store.dispatch(set.termination.method('Roller with follow-up herbicide'));
-  store.dispatch(set.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
-  store.dispatch(set.roller.implement('Cover Crop Roller; 10.5 Ft'));
+  store.dispatch(set.termination.chemical.implement('Boom Sprayer, Pull-Type; 90 Ft'));
+  store.dispatch(set.termination.roller.implement('Cover Crop Roller; 10.5 Ft'));
 }; // exampleTermination5
 
 const clearTillage = () => {
   const tillageDefaults = getDefaults(
-    Object.keys(get.tillage1).map((parm) => `tillage1.${parm}`),
+    Object.keys(get.tillage).map((parm) => `tillage.${parm}`),
   );
   const fallDefaults = getDefaults(
-    Object.keys(get.tillageFall).map((parm) => `tillageFall.${parm}`),
+    Object.keys(get.tillage.fall).map((parm) => `tillage.fall.${parm}`),
   );
   const eliminationDefaults = getDefaults(
-    Object.keys(get.tillageElimination).map((parm) => `tillageElimination.${parm}`),
+    Object.keys(get.tillage.elimination).map((parm) => `tillage.elimination.${parm}`),
   );
   const otherDefaults = getDefaults(
-    Object.keys(get.tillageOther).map((parm) => `tillageOther.${parm}`),
+    Object.keys(get.tillage.other).map((parm) => `tillage.other.${parm}`),
   );
   const defaults = {
     ...tillageDefaults,
@@ -1149,79 +1177,79 @@ const clearTillage = () => {
 
 export const exampleTillage1 = () => {
   clearTillage();
-  store.dispatch(set.tillage1.q1('No'));
-  store.dispatch(set.tillageFall.q2('Yes'));
-  store.dispatch(set.tillageFall.implement('Chisel Plow; 23 Ft'));
-  store.dispatch(set.tillage1.q5('Yes'));
-  store.dispatch(set.tillageElimination.q2('No'));
-  store.dispatch(set.tillageOther.q2('Yes'));
-  store.dispatch(set.tillageOther.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
+  store.dispatch(set.tillage.q1('No'));
+  store.dispatch(set.tillage.fall.q2('Yes'));
+  store.dispatch(set.tillage.fall.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage.q5('Yes'));
+  store.dispatch(set.tillage.elimination.q2('No'));
+  store.dispatch(set.tillage.other.q2('Yes'));
+  store.dispatch(set.tillage.other.implement('Chisel Plow, Front Dsk; 16.3 Ft'));
 }; // exampleTillage1
 
 export const exampleTillage2 = () => {
   clearTillage();
-  store.dispatch(set.tillage1.q1('No'));
-  store.dispatch(set.tillageFall.q2('No'));
-  store.dispatch(set.tillageElimination.q2('No'));
-  store.dispatch(set.tillageOther.q2('No'));
+  store.dispatch(set.tillage.q1('No'));
+  store.dispatch(set.tillage.fall.q2('No'));
+  store.dispatch(set.tillage.elimination.q2('No'));
+  store.dispatch(set.tillage.other.q2('No'));
 }; // exampleTillage2
 
 export const exampleTillage3 = () => {
   clearTillage();
-  store.dispatch(set.tillage1.q1('No'));
-  store.dispatch(set.tillageFall.q2('Yes'));
-  store.dispatch(set.tillageFall.implement('Chisel Plow; 23 Ft'));
-  store.dispatch(set.tillage1.q5('Yes'));
-  store.dispatch(set.tillageElimination.q2('No'));
-  store.dispatch(set.tillageOther.q2('No'));
+  store.dispatch(set.tillage.q1('No'));
+  store.dispatch(set.tillage.fall.q2('Yes'));
+  store.dispatch(set.tillage.fall.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage.q5('Yes'));
+  store.dispatch(set.tillage.elimination.q2('No'));
+  store.dispatch(set.tillage.other.q2('No'));
 }; // exampleTillage3
 
 export const exampleTillage4 = () => {
   clearTillage();
-  store.dispatch(set.tillage1.q1('No'));
-  store.dispatch(set.tillageFall.q2('Yes'));
-  store.dispatch(set.tillageFall.implement('Chisel Plow; 23 Ft'));
-  store.dispatch(set.tillage1.q5('Yes'));
-  store.dispatch(set.tillageElimination.q2('Yes'));
-  store.dispatch(set.tillageElimination.implement('Chisel Plow; 23 Ft'));
-  store.dispatch(set.tillageOther.q2('No'));
+  store.dispatch(set.tillage.q1('No'));
+  store.dispatch(set.tillage.fall.q2('Yes'));
+  store.dispatch(set.tillage.fall.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage.q5('Yes'));
+  store.dispatch(set.tillage.elimination.q2('Yes'));
+  store.dispatch(set.tillage.elimination.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage.other.q2('No'));
 }; // exampleTillage4
 
 export const exampleTillage5 = () => {
   clearTillage();
-  store.dispatch(set.tillage1.q1('No'));
-  store.dispatch(set.tillageFall.q2('No'));
-  store.dispatch(set.tillageElimination.q2('No'));
-  store.dispatch(set.tillageOther.q2('Yes'));
-  store.dispatch(set.tillageOther.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage.q1('No'));
+  store.dispatch(set.tillage.fall.q2('No'));
+  store.dispatch(set.tillage.elimination.q2('No'));
+  store.dispatch(set.tillage.other.implement('Chisel Plow; 23 Ft'));
+  store.dispatch(set.tillage.other.q2('Yes'));
 }; // exampleTillage5
 
 export const exampleFertilityBenefit = () => {
-  store.dispatch(set.fertN(30));
-  store.dispatch(set.fertP(0));
-  store.dispatch(set.fertK(0));
-  store.dispatch(set.$fertN(0.75));
-  store.dispatch(set.$fertP(0.6));
-  store.dispatch(set.$fertK(0.5));
-  store.dispatch(set.fertNAdded(0));
-  store.dispatch(set.fertPAdded(15));
-  store.dispatch(set.fertKAdded(10));
-  store.dispatch(set.$fertApplication(8));
-  store.dispatch(set.useFertilizer('Yes'));
+  store.dispatch(set.fertility.N(30));
+  store.dispatch(set.fertility.P(0));
+  store.dispatch(set.fertility.K(0));
+  store.dispatch(set.fertility.$N(0.75));
+  store.dispatch(set.fertility.$P(0.6));
+  store.dispatch(set.fertility.$K(0.5));
+  store.dispatch(set.fertility.NAdded(0));
+  store.dispatch(set.fertility.PAdded(15));
+  store.dispatch(set.fertility.KAdded(10));
+  store.dispatch(set.fertility.$application(8));
+  store.dispatch(set.fertility.useFertilizer('Yes'));
 }; // exampleFertilityBenefit
 
 export const exampleFertilityCost = () => {
-  store.dispatch(set.fertN(5));
-  store.dispatch(set.fertP(25));
-  store.dispatch(set.fertK(10));
-  store.dispatch(set.$fertN(0.75));
-  store.dispatch(set.$fertP(0.6));
-  store.dispatch(set.$fertK(0.5));
-  store.dispatch(set.fertNAdded(30));
-  store.dispatch(set.fertPAdded(15));
-  store.dispatch(set.fertKAdded(10));
-  store.dispatch(set.$fertApplication(8));
-  store.dispatch(set.useFertilizer('Yes'));
+  store.dispatch(set.fertility.N(5));
+  store.dispatch(set.fertility.P(25));
+  store.dispatch(set.fertility.K(10));
+  store.dispatch(set.fertility.$N(0.75));
+  store.dispatch(set.fertility.$P(0.6));
+  store.dispatch(set.fertility.$K(0.5));
+  store.dispatch(set.fertility.NAdded(30));
+  store.dispatch(set.fertility.PAdded(15));
+  store.dispatch(set.fertility.KAdded(10));
+  store.dispatch(set.fertility.$application(8));
+  store.dispatch(set.fertility.useFertilizer('Yes'));
 }; // exampleFertilityCost
 
 export const exampleErosion = () => {

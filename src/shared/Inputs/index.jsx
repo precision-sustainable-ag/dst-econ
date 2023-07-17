@@ -20,7 +20,9 @@ import {
 
 import Help from '../Help';
 
-import { get, set, mobile } from '../../store/Store';
+import {
+  goto, get, set, mobile,
+} from '../../store/Store';
 
 import './styles.scss';
 
@@ -81,7 +83,7 @@ const Input = ({
     focusRef?.current?.parentNode?.parentNode?.classList.remove('default');
   }
 
-  const sel = id.split('.').reduce((acc, k) => acc[k], get);
+  const sel = goto(get, id);
 
   if (!sel) {
     console.warn(`Unknown Input: ${id}`);
@@ -147,7 +149,7 @@ const Input = ({
     setValue(value2);
   }; // change
 
-  const setter = id.split('.').reduce((acc, k) => acc[k], set);
+  const setter = goto(set, id);
 
   const update = useCallback((e, newValue) => {
     // eslint-disable-next-line

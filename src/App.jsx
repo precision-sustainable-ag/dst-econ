@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 
 import {
-  Modal, Button, IconButton, Popover, Accordion, AccordionDetails, AccordionSummary, Typography, Box,
+  Modal, Button, IconButton, Popover,
 } from '@mui/material';
 
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
@@ -41,26 +41,6 @@ import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
-
-const CustomExpandIcon = () => (
-  <Box
-    sx={{
-      '.Mui-expanded & > .collapseIconWrapper': {
-        display: 'none',
-      },
-      '.expandIconWrapper': {
-        display: 'none',
-      },
-      '.Mui-expanded & > .expandIconWrapper': {
-        display: 'block',
-      },
-      marginRight: '0.5rem',
-    }}
-  >
-    <div className="expandIconWrapper">&ndash;</div>
-    <div className="collapseIconWrapper">+</div>
-  </Box>
-);
 
 let firstTime = true;
 
@@ -481,30 +461,6 @@ const App = () => {
   return (
     <div id="Container">
       <MyModal />
-
-      <Accordion style={{ display: 'none' }}>
-        <AccordionSummary
-          expandIcon={<CustomExpandIcon />}
-          aria-label="Expand"
-          style={{ flexDirection: 'row-reverse' }} // Reverses the order of icon and content
-        >
-          <Typography>Level 1</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<CustomExpandIcon />}
-              aria-label="Expand"
-              style={{ flexDirection: 'row-reverse' }} // Reverses the order of icon and content
-            >
-              <Typography>Level 2</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>Content for Level 2</Typography>
-            </AccordionDetails>
-          </Accordion>
-        </AccordionDetails>
-      </Accordion>
 
       <nav>
         <div className="mobile">

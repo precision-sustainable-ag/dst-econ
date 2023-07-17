@@ -490,6 +490,10 @@ body.debug #AirTables {
   bottom: 0;
   right: 0;
   flex-direction: column;
+
+  button {
+    text-align: left;
+  }
 }
 
 table.power {

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 import {
   dev,
+  goto,
   get,
   getDefaults,
   dollars,
@@ -18,16 +19,16 @@ import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
 
 const tillageDefaults = getDefaults(
-  Object.keys(get.tillage1).map((parm) => `tillage1.${parm}`),
+  Object.keys(get.tillage).map((parm) => `tillage.${parm}`),
 );
 const fallDefaults = getDefaults(
-  Object.keys(get.tillageFall).map((parm) => `tillageFall.${parm}`),
+  Object.keys(get.tillage.fall).map((parm) => `tillage.fall.${parm}`),
 );
 const eliminationDefaults = getDefaults(
-  Object.keys(get.tillageElimination).map((parm) => `tillageElimination.${parm}`),
+  Object.keys(get.tillage.elimination).map((parm) => `tillage.elimination.${parm}`),
 );
 const otherDefaults = getDefaults(
-  Object.keys(get.tillageOther).map((parm) => `tillageOther.${parm}`),
+  Object.keys(get.tillage.other).map((parm) => `tillage.other.${parm}`),
 );
 
 const defaults = {
@@ -40,8 +41,8 @@ const defaults = {
 const Costs = ({
   current, q2, q3, q4, onChange,
 }) => {
-  const state = useSelector(get[current]);
-  const estimated = useSelector(get[current].estimated);
+  const state = useSelector(goto(get, current));
+  const estimated = { state };
 
   return (
     <>
@@ -76,11 +77,8 @@ const Costs = ({
 }; // Costs
 
 const Tillage = () => {
-  const state = useSelector(get.tillage1);
-  const tillage1 = useSelector(get.tillage1);
-  const tillageFall = useSelector(get.tillageFall);
-  const tillageOther = useSelector(get.tillageOther);
-  const tillageAll = useSelector(get.tillageAll);
+  const state = useSelector(get.tillage);
+  const tillage = useSelector(get.tillage);
 
   return (
     <>
@@ -109,7 +107,7 @@ const Tillage = () => {
 
         <form>
           <div className="mobile-table-div">
-            <table className="tillage1 inputs mobile-table power">
+            <table className="tillage inputs mobile-table power">
               <tbody>
                 <tr>
                   <th colSpan="3">
@@ -119,7 +117,7 @@ const Tillage = () => {
                 </tr>
 
                 <Logic
-                  current="tillage1"
+                  current="tillage"
                   property="q1"
                   q="Do you typically use no-till on this field?"
                   a={['Yes', 'No']}
@@ -132,17 +130,17 @@ const Tillage = () => {
                       <th colSpan="3">Fall Tillage</th>
                     </tr>
                     <Costs
-                      current="tillageFall"
+                      current="tillage.fall"
                       q2="Do you typically conduct fall tillage on this field?"
                       q3="How is fall tillage on this field typically done?"
                       q4="Estimated cost of fall tillage"
-                      onChange={() => clearInputs(fallDefaults, 'tillageFall.q2')}
+                      onChange={() => clearInputs(fallDefaults, 'tillage.fall.q2')}
                     />
 
-                    {tillageFall.q2 === 'Yes' && (
+                    {tillage.fall.q2 === 'Yes' && (
                       <>
                         <Logic
-                          current="tillage1"
+                          current="tillage"
                           property="q5"
                           q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
                           a={['Yes', 'No']}
@@ -152,11 +150,11 @@ const Tillage = () => {
                           <th colSpan="3">Tillage Elimination</th>
                         </tr>
                         <Costs
-                          current="tillageElimination"
+                          current="tillage.elimination"
                           q2="Will you be eliminating any other tillage than fall tillage, because of planting a cover crop?"
                           q3="What other tillage activity will be eliminated because of planting a cover crop?"
                           q4="Estimated cost of eliminated tillage activity"
-                          onChange={() => clearInputs(eliminationDefaults, 'tillageElimination.q2')}
+                          onChange={() => clearInputs(eliminationDefaults, 'tillage.elimination.q2')}
                         />
                       </>
                     )}
@@ -167,31 +165,31 @@ const Tillage = () => {
                   <th colSpan="3">Other Tillage</th>
                 </tr>
                 <Costs
-                  current="tillageOther"
+                  current="tillage.other"
                   q2="Will you be adding any tillage activities because of planting a cover crop?"
                   q3="What other tillage activity will be added because of planting a cover crop?"
                   q4="Estimated cost of added tillage activity"
-                  onChange={() => clearInputs(otherDefaults, 'tillageOther.q2')}
+                  onChange={() => clearInputs(otherDefaults, 'tillage.other.q2')}
                 />
 
                 <Logic
-                  current="tillage1"
+                  current="tillage"
                   q="Tillage cost reductions due to adopting cover crop"
-                  a={dollars(tillage1.costReductions)}
+                  a={dollars(tillage.costReductions)}
                   style={{ background: 'lightyellow' }}
                 />
 
                 <Logic
-                  current="tillage1"
+                  current="tillage"
                   q="Tillage cost increases due to adopting cover crop"
-                  a={dollars(tillageOther.total)}
+                  a={dollars(tillage.other.total)}
                   style={{ background: 'lightyellow' }}
                 />
 
                 <Logic
-                  current="tillage1"
+                  current="tillage"
                   q="Net impact of adopting cover crop on tillage costs"
-                  a={dollars(tillageAll.total)}
+                  a={dollars(tillage.total)}
                   style={{ background: 'lightyellow' }}
                 />
               </tbody>

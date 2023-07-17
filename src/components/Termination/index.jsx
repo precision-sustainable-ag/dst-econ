@@ -28,42 +28,42 @@ const defaults = getDefaults([
   'termination.reducedRates',
   'termination.q2',
   'termination.q3',
-  'chemical.implement',
-  'chemical.power',
-  'chemical.implementsCost',
-  'chemical.powerCost',
-  'chemical.Labor',
-  'chemical.Fuel',
-  'chemical.Depreciation',
-  'chemical.Interest',
-  'chemical.Repairs',
-  'chemical.Taxes',
-  'chemical.Insurance',
-  'chemical.Storage',
-  'roller.implement',
-  'roller.power',
-  'roller.implementsCost',
-  'roller.powerCost',
-  'roller.Labor',
-  'roller.Fuel',
-  'roller.Depreciation',
-  'roller.Interest',
-  'roller.Repairs',
-  'roller.Taxes',
-  'roller.Insurance',
-  'roller.Storage',
-  'tillage.implement',
-  'tillage.power',
-  'tillage.implementsCost',
-  'tillage.powerCost',
-  'tillage.Labor',
-  'tillage.Fuel',
-  'tillage.Depreciation',
-  'tillage.Interest',
-  'tillage.Repairs',
-  'tillage.Taxes',
-  'tillage.Insurance',
-  'tillage.Storage',
+  'termination.chemical.implement',
+  'termination.chemical.power',
+  'termination.chemical.implementsCost',
+  'termination.chemical.powerCost',
+  'termination.chemical.Labor',
+  'termination.chemical.Fuel',
+  'termination.chemical.Depreciation',
+  'termination.chemical.Interest',
+  'termination.chemical.Repairs',
+  'termination.chemical.Taxes',
+  'termination.chemical.Insurance',
+  'termination.chemical.Storage',
+  'termination.roller.implement',
+  'termination.roller.power',
+  'termination.roller.implementsCost',
+  'termination.roller.powerCost',
+  'termination.roller.Labor',
+  'termination.roller.Fuel',
+  'termination.roller.Depreciation',
+  'termination.roller.Interest',
+  'termination.roller.Repairs',
+  'termination.roller.Taxes',
+  'termination.roller.Insurance',
+  'termination.roller.Storage',
+  'termination.tillage.implement',
+  'termination.tillage.power',
+  'termination.tillage.implementsCost',
+  'termination.tillage.powerCost',
+  'termination.tillage.Labor',
+  'termination.tillage.Fuel',
+  'termination.tillage.Depreciation',
+  'termination.tillage.Interest',
+  'termination.tillage.Repairs',
+  'termination.tillage.Taxes',
+  'termination.tillage.Insurance',
+  'termination.tillage.Storage',
   'termination.method',
   'termination.customCost',
   'termination.product',
@@ -144,7 +144,7 @@ const Herbicide = () => {
       </tr>
 
       <tr>
-        <td>Product cost</td>
+        <td>Product cost ($/acre)</td>
         <td><Input id="termination.productCost" type="dollar" /></td>
       </tr>
 
@@ -183,20 +183,20 @@ const Herbicide = () => {
         <th colSpan="100">Chemical Spray Equipment</th>
       </tr>
       <Logic
-        current="chemical"
+        current="termination.chemical"
         property="implement"
         q="How will this herbicide application be done?"
         type="Chemical"
       />
 
-      <Logic current="chemical" question="power" />
+      <Logic current="termination.chemical" question="power" />
 
-      <Logic current="chemical" question="Annual Use (acres on implement)" />
-      <Logic current="chemical" question="Annual Use (hours on power)" />
-      <Logic current="chemical" question="Acres/hour" />
+      <Logic current="termination.chemical" question="Annual Use (acres on implement)" />
+      <Logic current="termination.chemical" question="Annual Use (hours on power)" />
+      <Logic current="termination.chemical" question="Acres/hour" />
 
       <Logic
-        current="chemical"
+        current="termination.chemical"
         question="Estimated"
         q="Chemical spray equipment cost ($/acre)"
         a="dollar"
@@ -211,20 +211,20 @@ const Roller = () => (
       <th colSpan="100">Roller Equipment</th>
     </tr>
     <Logic
-      current="roller"
+      current="termination.roller"
       property="implement"
       q="How will this roller termination be done?"
       type="Termination"
     />
 
-    <Logic current="roller" question="power" />
+    <Logic current="termination.roller" question="power" />
 
-    <Logic current="roller" question="Annual Use (acres on implement)" />
-    <Logic current="roller" question="Annual Use (hours on power)" />
-    <Logic current="roller" question="Acres/hour" />
+    <Logic current="termination.roller" question="Annual Use (acres on implement)" />
+    <Logic current="termination.roller" question="Annual Use (hours on power)" />
+    <Logic current="termination.roller" question="Acres/hour" />
 
     <Logic
-      current="roller"
+      current="termination.roller"
       question="Estimated"
       q="Roller equipment cost ($/acre)"
       a="dollar"
@@ -270,21 +270,19 @@ const Termination = () => {
       <div className="Termination">
         <h1>Termination</h1>
         <p>
-          In order to accurately evaluate the economic impact of implementing cover crops into
-          your rotation, we only want to consider management decisions directly associated with
-          the use of cover crops. In this module we will consider any activity associated with
-          termination of the cover crop, but only activities that are incurred specific to the
-          cover crop. For example, if you plan to use tillage to terminate the cover crop but
-          would normally conduct the same tillage pass if no cover crop had been planted then
-          the costs associated with tillage will not be considered in this evaluation. This
-          module has four methods of termination; herbicide, tillage, using a crop roller, and
-          using a crop roller combined with herbicide.
+          In order to accurately evaluate the economic impact of implementing cover crops into your rotation,
+          we only want to consider management decisions directly associated with the use of cover crops.
+          In this module we will consider any activity associated with termination of the cover crop,
+          but only activities that are incurred specific to the cover crop.
+          For example, if you plan to use tillage to terminate the cover crop but would normally conduct the same tillage pass
+          if no cover crop had been planted then the costs associated with tillage will not be considered in this evaluation.
+          This module has four methods of termination; herbicide, tillage, using a crop roller, and using a crop roller combined with herbicide.
         </p>
         <p>
           Also, the costs associated with machinery are dependent upon the annual hours of use.
-          In this module you can accept the default value (for hours of annual use) or
-          customize with the estimated hours associated with your operation. This will more
-          accurately represent costs in your operation.
+          In this module you can accept the default value (for hours of annual use)
+          or customize with the estimated hours associated with your operation.
+          This will more accurately represent costs in your operation.
         </p>
         <form>
           <div className="mobile-table-div">
@@ -369,7 +367,7 @@ const Termination = () => {
 
                 {/Roller/.test(method) && <Roller />}
 
-                {state.q2 === 'No' && (
+                {(state.q2 === 'No' || /Roller/.test(method)) && (
                   <>
                     {/herbicide/i.test(method) && <Herbicide />}
                     {/Tillage/.test(method) && <Tillage />}
