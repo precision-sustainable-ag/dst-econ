@@ -16,32 +16,32 @@ import {
 import './styles.scss';
 
 const defaults = getDefaults([
-  'fertN',
-  'fertP',
-  'fertK',
-  '$fertN',
-  '$fertP',
-  '$fertK',
-  'useFertilizer',
-  'fertNAdded',
-  'fertPAdded',
-  'fertKAdded',
-  '$fertApplication',
-  '$fertCredit',
-  '$fertCost',
+  'fertility.N',
+  'fertility.P',
+  'fertility.K',
+  'fertility.$N',
+  'fertility.$P',
+  'fertility.$K',
+  'fertility.useFertilizer',
+  'fertility.NAdded',
+  'fertility.PAdded',
+  'fertility.KAdded',
+  'fertility.$application',
+  'fertility.$credit',
+  'fertility.$cost',
   'fertility.total',
 ]);
 
 const Fertility = () => {
-  const useFertilizer = useSelector(get.useFertilizer) === 'Yes';
+  const useFertilizer = useSelector(get.fertility.useFertilizer) === 'Yes';
   const mobile = useSelector(get.mobile);
-  const $fertN = useSelector(get.$fertN);
+  const $N = useSelector(get.fertility.$N);
   const dfertN = db.rates.Nitrogen.value;
-  const $fertCost = useSelector(get.$fertCost);
+  const $cost = useSelector(get.fertility.$cost);
   const total = useSelector(get.fertility.total);
-  const $fertApplication = useSelector(get.$fertApplication) || 0;
+  const $application = useSelector(get.fertility.$application) || 0;
   const dFertApplication = 0; // db.costDefaults['Custom Fertilizer Appl'].cost;
-  const $fertCredit = useSelector(get.$fertCredit);
+  const $credit = useSelector(get.fertility.$credit);
 
   return (
     <div id="Fertility">
@@ -81,33 +81,33 @@ const Fertility = () => {
               <tr>
                 <td>Fertilizer value ($/pound of nutrient)</td>
                 <td>
-                  <Input id="$fertN" value={$fertN ?? dfertN} />
+                  <Input id="fertility.$N" value={$N ?? dfertN} />
                 </td>
                 <td>
-                  <Input id="$fertP" />
+                  <Input id="fertility.$P" />
                 </td>
                 <td>
-                  <Input id="$fertK" />
+                  <Input id="fertility.$K" />
                 </td>
               </tr>
 
               <tr>
                 <td>Expected fertilizer credit from your cover crop species (pounds/acre).</td>
                 <td>
-                  <Input id="fertN" autoFocus={!mobile} />
+                  <Input id="fertility.N" autoFocus={!mobile} />
                 </td>
                 <td>
-                  <Input id="fertP" />
+                  <Input id="fertility.P" />
                 </td>
                 <td>
-                  <Input id="fertK" />
+                  <Input id="fertility.K" />
                 </td>
               </tr>
 
               <tr>
                 <td>Will you add fertilizer specifically for cover crop production?</td>
                 <td colSpan={3}>
-                  <Input id="useFertilizer" options={['Yes', 'No']} type="radio" row />
+                  <Input id="fertility.useFertilizer" options={['Yes', 'No']} type="radio" row />
                 </td>
               </tr>
 
@@ -116,13 +116,13 @@ const Fertility = () => {
                   <tr>
                     <td>Fertilizer added for cover crop production (pounds/acre)</td>
                     <td>
-                      <Input id="fertNAdded" />
+                      <Input id="fertility.NAdded" />
                     </td>
                     <td>
-                      <Input id="fertPAdded" />
+                      <Input id="fertility.PAdded" />
                     </td>
                     <td>
-                      <Input id="fertKAdded" />
+                      <Input id="fertility.KAdded" />
                     </td>
                   </tr>
                   <tr>
@@ -138,7 +138,7 @@ const Fertility = () => {
                       </Help>
                     </td>
                     <td colSpan={3}>
-                      <Input id="$fertApplication" value={$fertApplication ?? dFertApplication} />
+                      <Input id="fertility.$application" value={$application ?? dFertApplication} />
                     </td>
                   </tr>
                 </>
@@ -146,11 +146,11 @@ const Fertility = () => {
 
               <tr>
                 <td>Value of fertilizer credit from cover crops ($/acre)</td>
-                <td colSpan={3}>{dollars($fertCredit)}</td>
+                <td colSpan={3}>{dollars($credit)}</td>
               </tr>
               <tr>
                 <td>Total cost of fertilizer for cover crop production ($/acre)</td>
-                <td colSpan={3}>{dollars($fertCost)}</td>
+                <td colSpan={3}>{dollars($cost)}</td>
               </tr>
               <tr>
                 <td>Net fertility impact of cover crops ($/acre)</td>

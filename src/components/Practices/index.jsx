@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-access-key */
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import {
   Accordion, AccordionDetails, AccordionSummary, Typography, Box,
 } from '@mui/material';
@@ -79,567 +79,64 @@ const CustomExpandIcon = () => (
   </Box>
 );
 
-const costs = (n) => (n >= 0 ? dollars(n) : '');
-const benefits = (n) => (n < 0 ? dollars(-n) : '');
+const isJSX = (obj) => obj && obj?.$$typeof?.toString() === 'Symbol(react.element)';
 
-const Implement = ({ desc, type, benefit }) => {
-  const selector = type.split('.').reduce((acc, k) => acc[k], get);
-  const total = useSelector(selector.total);
-  const implement = useSelector(selector.implement);
-  const power = useSelector(selector.power);
-  return (
-    total > 0 && (
-      <tr>
-        <td />
-        <td>{desc}</td>
-        <td>
-          {implement}
-          <br />
-          {power}
-        </td>
-        <td>{benefit ? '' : dollars(total)}</td>
-        <td />
-        <td>{benefit ? dollars(total) : ''}</td>
-        <td />
-      </tr>
-    )
-  );
-}; // Implement
+const getClass = (data) => {
+  if (+data || /\$/.test(data)) {
+    return 'right';
+  }
+  return '';
+};
 
-const SeedbedSummary = () => {
-  const total = useSelector(get.seedbed.total) || 0;
-  const implement = useSelector(get.seedbed.implement);
-  const power = useSelector(get.seedbed.power);
+const NestedAccordion = ({ details, level = 0 }) => {
+  if (level > 0 && Object.keys(details).length >= 1) {
+    return (
+      <table>
+        <thead>
+          {
+            Object.entries(details).filter(([title]) => title === 'th').map(([title, content]) => (
+              <tr key={title}>
+                <th />
+                {
+                  [...content].map((data) => <th key="data">{data}</th>)
+                }
+              </tr>
+            ))
+          }
+        </thead>
+        <tbody>
+          {
+            Object.entries(details)
+              .filter(([title, content]) => title !== 'th' && content !== '$0.00')
+              .map(([title, content]) => {
+                if (Array.isArray(content)) {
+                  content = content.map((data) => <td key="data" className={getClass(data)}>{data}</td>);
+                } else {
+                  content = <td className={getClass(content)}>{content}</td>;
+                }
 
-  return (
-    <tr>
-      <td colSpan={2}>
-        <NavLink to="/Seedbed">Cover crop seedbed preparation</NavLink>
-      </td>
-      <td />
-      <td>
-        {implement || 'none'}
-        <br />
-        {power}
-      </td>
-      <td />
-      <td>{costs(total)}</td>
-      <td />
-      <td>{benefits(total)}</td>
-    </tr>
-  );
-}; // SeedbedSummary
+                return (
+                  <tr key={title}>
+                    <td>{title}</td>
+                    {content}
+                  </tr>
+                );
+              })
+          }
+        </tbody>
+      </table>
+    );
+  }
 
-const PlantingSummary = () => {
-  const total = useSelector(get.planting.total) || 0;
-  const implement = useSelector(get.planting.implement);
-  const power = useSelector(get.planting.power);
+  return Object.entries(details).map(([title, content]) => {
+    // if (content === 'Fertility') {
+    //   return <NavLink key={title} to="/Fertility">Fertility</NavLink>;
+    // }
 
-  return (
-    <tr>
-      <td colSpan={2}>
-        <NavLink to="/Planting">Cover crop planting activity</NavLink>
-      </td>
-      <td className="hidden" />
-      <td>
-        {implement}
-        <br />
-        {power}
-      </td>
-      <td />
-      <td>{costs(total)}</td>
-      <td />
-      <td>{benefits(total)}</td>
-    </tr>
-  );
-}; // PlantingSummary
+    if (isJSX(content)) {
+      return content;
+    }
 
-const TerminationSummary = () => {
-  const {
-    total, method, product, productCost, rate, unitCost,
-    additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
-    reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
-  } = useSelector(get.termination);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Termination">Cover crop termination activity</NavLink>
-        </td>
-        <td className="hidden" />
-        <td>{method}</td>
-        <td />
-        <td>{costs(total)}</td>
-        <td />
-        <td>{benefits(total)}</td>
-      </tr>
-      {productCost > 0 && (
-        <tr>
-          <td />
-          <td>
-            Product:
-            {' '}
-            {product}
-          </td>
-          <td>
-            {rate}
-            {' '}
-            pounds/acre @
-            {dollars(unitCost)}
-          </td>
-          <td>{dollars(productCost)}</td>
-          <td />
-          <td />
-          <td />
-        </tr>
-      )}
-
-      <Implement desc="Chemical spray equipment" type="termination.chemical" />
-      <Implement desc="Roller equipment" type="termination.roller" />
-      <Implement desc="Tillage equiment" type="termination.tillage" />
-
-      {additionalTotal ? (
-        <>
-          <tr>
-            <td />
-            <td>Additional herbicides</td>
-            <td />
-            <td>{costs(additionalTotal)}</td>
-            <td />
-            <td>{benefits(additionalTotal)}</td>
-            <td />
-          </tr>
-          {additionalHerbicides.map((herb, i) => (
-            <tr key={herb}>
-              <td />
-              <td>
-                &nbsp;&nbsp;&nbsp;&nbsp;Product:
-                {' '}
-                {herb}
-              </td>
-              <td>
-                {additionalRates[i]}
-                {' '}
-                pounds @
-                {dollars(additionalPrices[i])}
-                /acre
-              </td>
-              <td>{dollars(additionalRates[i] * additionalPrices[i])}</td>
-              <td />
-              <td />
-              <td />
-            </tr>
-          ))}
-        </>
-      ) : null}
-      {reducedTotal ? (
-        <>
-          <tr>
-            <td />
-            <td>Reduced herbicides</td>
-            <td />
-            <td />
-            <td />
-            <td>{dollars(reducedTotal)}</td>
-            <td />
-          </tr>
-          {reducedHerbicides.map((herb, i) => (
-            <tr key={herb}>
-              <td />
-              <td>
-                &nbsp;&nbsp;&nbsp;&nbsp;Product:
-                {' '}
-                {herb}
-              </td>
-              <td>
-                {reducedRates[i]}
-                {' '}
-                pounds @
-                {dollars(reducedPrices[i])}
-                /acre
-              </td>
-              <td />
-              <td />
-              <td>{dollars(reducedRates[i] * reducedPrices[i])}</td>
-              <td />
-            </tr>
-          ))}
-        </>
-      ) : null}
-    </>
-  );
-}; // TerminationSummary
-
-const TillageSummary = () => {
-  const total = useSelector(get.tillage.total);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Tillage">
-            Tillage modifications
-            <br />
-            to normal cropping system
-          </NavLink>
-        </td>
-        <td />
-        <td />
-        <td />
-        <td>{costs(total)}</td>
-        <td />
-        <td>{benefits(total)}</td>
-      </tr>
-
-      <Implement desc="Fall Tillage" type="tillage.fall" benefit />
-      <Implement desc="Tillage Elimination" type="tillage.elimination" benefit />
-      <Implement desc="Other Tillage" type="tillage.other" />
-    </>
-  );
-}; // TillageSummary
-
-const FertilitySummary = () => {
-  const total = useSelector(get.fertility.total);
-  const fertN = useSelector(get.fertN);
-  const fertP = useSelector(get.fertP);
-  const fertK = useSelector(get.fertK);
-  const fertNAdded = useSelector(get.fertNAdded);
-  const fertPAdded = useSelector(get.fertPAdded);
-  const fertKAdded = useSelector(get.fertKAdded);
-  const $fertCredit = useSelector(get.$fertCredit);
-  const $fertCost = useSelector(get.$fertCost);
-  const $fertApplication = useSelector(get.$fertApplication);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Fertility">Fertility</NavLink>
-        </td>
-        <td className="hidden" />
-        <td />
-        <td />
-        <td>{costs(-total)}</td>
-        <td />
-        <td>{benefits(-total)}</td>
-      </tr>
-      <tr>
-        <td />
-        <td>Fertilizer credit</td>
-        <td>
-          {fertN > 0 && (
-            <>
-              {fertN}
-              {' '}
-              pound N/acre
-              <br />
-            </>
-          )}
-          {fertP > 0 && (
-            <>
-              {fertP}
-              {' '}
-              pound P
-              <sub>2</sub>
-              O
-              <sub>5</sub>
-              /acre
-              <br />
-            </>
-          )}
-          {fertK > 0 && (
-            <>
-              {fertK}
-              {' '}
-              pound K
-              <sub>2</sub>
-              O/acre
-            </>
-          )}
-        </td>
-        <td />
-        <td />
-        <td>{dollars($fertCredit)}</td>
-        <td />
-      </tr>
-      <tr>
-        <td />
-        <td>Additional fertilizer expense</td>
-        <td>
-          {fertNAdded > 0 && (
-            <>
-              {fertNAdded}
-              {' '}
-              pound N/acre
-              <br />
-            </>
-          )}
-          {fertPAdded > 0 && (
-            <>
-              {fertPAdded}
-              {' '}
-              pound P
-              <sub>2</sub>
-              O
-              <sub>5</sub>
-              /acre
-              <br />
-            </>
-          )}
-          {fertKAdded > 0 && (
-            <>
-              {fertKAdded}
-              {' '}
-              pound K
-              <sub>2</sub>
-              O/acre
-            </>
-          )}
-        </td>
-        <td>{dollars(-$fertCost - $fertApplication)}</td>
-        <td />
-        <td />
-        <td />
-      </tr>
-      <tr>
-        <td />
-        <td>Additional fertilizer application cost</td>
-        <td />
-        <td>{dollars($fertApplication)}</td>
-        <td />
-        <td />
-        <td />
-      </tr>
-    </>
-  );
-}; // FertilitySummary
-
-const HerbicideSummary = () => {
-  const total = useSelector(get.herbicide.total);
-
-  const additionalProduct = useSelector(get.herbicideAdditional.product);
-  const additionalRate = useSelector(get.herbicideAdditional.rate);
-  const additionalUnitCost = useSelector(get.herbicideAdditional.unitCost);
-  const additionalProductCost = useSelector(get.herbicideAdditional.cost);
-
-  const reducedProduct = useSelector(get.herbicideReduced.product);
-  const reducedRate = useSelector(get.herbicideReduced.rate);
-  const reducedUnitCost = useSelector(get.herbicideReduced.unitCost);
-  const reducedProductCost = useSelector(get.herbicideReduced.cost);
-
-  const fallSavings = useSelector(get.herbicideFall.savings);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Herbicide">
-            Herbicide modifications
-            <br />
-            to normal cropping system
-          </NavLink>
-        </td>
-        <td />
-        <td />
-        <td />
-        <td>{costs(total)}</td>
-        <td />
-        <td>{benefits(total)}</td>
-      </tr>
-
-      <Implement desc="Additional herbicides" type="herbicideAdditional" />
-      {additionalProductCost > 0 && (
-        <tr>
-          <td />
-          <td>
-            &nbsp;&nbsp;&nbsp;&nbsp;Product:
-            {' '}
-            {additionalProduct}
-          </td>
-          <td>
-            {additionalRate}
-            {' '}
-            pounds/acre @
-            {dollars(additionalUnitCost)}
-          </td>
-          <td>{dollars(additionalProductCost)}</td>
-          <td />
-          <td />
-          <td />
-        </tr>
-      )}
-
-      <Implement desc="Fall herbicides" type="herbicideFall" />
-      {fallSavings > 0 && (
-        <tr>
-          <td />
-          <td>&nbsp;&nbsp;&nbsp;&nbsp;Savings</td>
-          <td />
-          <td />
-          <td />
-          <td>{dollars(fallSavings)}</td>
-          <td />
-        </tr>
-      )}
-
-      <Implement desc="Reduced herbicides" type="herbicideReduced" benefit />
-      {reducedProductCost > 0 && (
-        <tr>
-          <td />
-          <td>
-            &nbsp;&nbsp;&nbsp;&nbsp;Product:
-            {' '}
-            {reducedProduct}
-          </td>
-          <td>
-            {reducedRate}
-            {' '}
-            pounds/acre @
-            {dollars(reducedUnitCost)}
-          </td>
-          <td />
-          <td />
-          <td>{dollars(reducedProductCost)}</td>
-          <td />
-        </tr>
-      )}
-    </>
-  );
-}; // HerbicideSummary
-
-const ErosionSummary = () => {
-  const total = useSelector(get.erosion.total);
-  const tool = useSelector(get.erosion.q2);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Erosion">Erosion control</NavLink>
-        </td>
-        <td />
-        <td />
-        <td />
-        <td />
-        <td />
-        <td>{dollars(total)}</td>
-      </tr>
-
-      {total > 0 && (
-        <tr>
-          <td />
-          <td>
-            Reduced hours of repairing fields with
-            {tool.toLowerCase()}
-          </td>
-          <td />
-          <td />
-          <td />
-          <td />
-          <td />
-        </tr>
-      )}
-    </>
-  );
-}; // ErosionSummary
-
-const YieldSummary = () => {
-  const total = useSelector(get.yield.total);
-  const year = {
-    1: 'first',
-    3: 'third',
-    5: 'fifth',
-  }[useSelector(get.yield.q4)];
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Yield">Yield impact</NavLink>
-        </td>
-        <td />
-        <td />
-        <td />
-        <td />
-        <td />
-        <td>{dollars(total)}</td>
-      </tr>
-      <tr>
-        <td />
-        <td>
-          Improved yield estimate in
-          {year}
-          year of cover crops
-        </td>
-        <td />
-        <td />
-        <td />
-        <td />
-        <td />
-      </tr>
-    </>
-  );
-}; // YieldSummary
-
-const AdditionalSummary = () => {
-  const sel = useSelector(get.additional);
-
-  return (
-    <>
-      <tr>
-        <td colSpan={2}>
-          <NavLink to="/Additional">Additional considerations</NavLink>
-        </td>
-        <td />
-        <td />
-        <td />
-        <td />
-        <td />
-        <td>{dollars(sel.total)}</td>
-      </tr>
-      <tr>
-        <td />
-        <td>Estimated cash contribution from rent</td>
-        <td />
-        <td />
-        <td />
-        <td>{dollars(sel.$landowner)}</td>
-        <td />
-      </tr>
-      <tr>
-        <td />
-        <td>State or federal financial assistance</td>
-        <td />
-        <td />
-        <td />
-        <td>{dollars(sel.$costShare)}</td>
-        <td />
-      </tr>
-      <tr>
-        <td />
-        <td>Voluntary carbon offset program</td>
-        <td />
-        <td />
-        <td />
-        <td>{dollars(sel.$carbonOffset)}</td>
-        <td />
-      </tr>
-      <tr>
-        <td />
-        <td>Insurance discount</td>
-        <td />
-        <td />
-        <td />
-        <td>{dollars(sel.$insuranceDiscount)}</td>
-        <td />
-      </tr>
-    </>
-  );
-}; // AdditionalSummary
-
-const NestedAccordion = ({ details, level = 0 }) => (
-  Object.entries(details).map(([title, content]) => {
     if (typeof content === 'object') {
       return (
         <Accordion
@@ -675,8 +172,8 @@ const NestedAccordion = ({ details, level = 0 }) => (
         <strong>{content}</strong>
       </AccordionDetails>
     );
-  })
-);
+  });
+};
 
 const equipment = (obj, type, nest = true) => {
   const {
@@ -715,22 +212,12 @@ const Practices = () => {
   const planting = useSelector(get.planting);
   const termination = useSelector(get.termination);
   const tillage = useSelector(get.tillage);
-
-  const totals = [
-    useSelector(get.coverCropTotal) || 0,
-    useSelector(get.seedbed.total) || 0,
-    useSelector(get.planting.total) || 0,
-    useSelector(get.termination.total) || 0,
-    useSelector(get.tillage.total) || 0,
-    -useSelector(get.fertility.total) || 0,
-    useSelector(get.herbicide.total) || 0,
-    -useSelector(get.erosion.total) || 0,
-    -useSelector(get.yield.total) || 0,
-    -useSelector(get.additional.total) || 0,
-  ];
-
-  const totalCosts = totals.reduce((previous, value) => previous + Math.max(value, 0), 0);
-  const totalBenefits = -totals.reduce((previous, value) => previous + Math.min(value, 0), 0);
+  const fertility = useSelector(get.fertility);
+  const herbicide = useSelector(get.herbicide);
+  const erosion = useSelector(get.erosion);
+  const grazing = useSelector(get.grazing);
+  const additional = useSelector(get.additional);
+  const Yield = useSelector(get.yield);
 
   const details = {
     'Field & Farm': {
@@ -796,6 +283,81 @@ const Practices = () => {
     details['Tillage modifications to normal cropping system'] = obj;
   }
 
+  if (fertility.total) {
+    details.Fertility = {
+      // eslint-disable-next-line react/jsx-one-expression-per-line
+      th: ['N', <>P<sub>2</sub>O<sub>5</sub></>, <>K<sub>2</sub>O</>],
+      'Fertilizer value ($/pound of nutrient)': [dollars(fertility.$N), dollars(fertility.$P), dollars(fertility.$K)],
+      'Expected fertilizer credit from your cover crop species (pounds/acre).': [fertility.N, fertility.P, fertility.K],
+      'Fertilizer added for cover crop production (pounds/acre)': [
+        fertility.NAdded,
+        fertility.PAdded,
+        fertility.KAdded,
+      ],
+      'Cost of fertilizer application ($/acre)': dollars(fertility.$application),
+    };
+  }
+
+  if (herbicide.total) {
+    const obj = {};
+    equipment(obj, herbicide.additional, false);
+    if (herbicide.additional.product) {
+      obj.Product = `${herbicide.additional.product} @ ${dollars(herbicide.additional.cost)} / acre`;
+    }
+    equipment(obj, herbicide.reduced, false);
+    equipment(obj, herbicide.fall, false);
+    details['Herbicide modifications to normal cropping system'] = obj;
+  }
+
+  if (erosion.total) {
+    details['Soil Erosion Control'] = {
+      'Cost per hour': dollars(erosion.q3),
+      [`Reduced hours of repairing fields with ${erosion.q2.toLowerCase()}`]: erosion.q4,
+    };
+  }
+
+  if (grazing.total) {
+    const mapping = {
+      0: 'None',
+      500: 'Low',
+      1000: 'Medium',
+      1500: 'High',
+    };
+
+    if (grazing.$lease) {
+      details.Grazing = {
+        'Value (per acre) you will receive for leasing': dollars(grazing.$lease),
+      };
+    } else {
+      details.Grazing = {
+        'Amount of forage for fall grazing': mapping[grazing.fall],
+        'Amount of forage for spring grazing': mapping[grazing.spring],
+        'Hay value ($/ton)': dollars(grazing.$hay),
+        'Additional time required for management (hours/acre)': grazing.hoursAcre,
+      };
+    }
+  }
+
+  if (additional.total) {
+    details['Additional considerations'] = {
+      'Estimated cash contribution from rent ($/acre)': dollars(additional.$landowner),
+      'State or federal financial assistance ($/acre)': dollars(additional.$costShare),
+      'Voluntary carbon offset program': dollars(additional.$carbonOffset),
+      'Insurance discount': dollars(additional.$insuranceDiscount),
+    };
+  }
+
+  if (Yield.total) {
+    const year = {
+      1: 'first',
+      3: 'third',
+      5: 'fifth',
+    }[Yield.q4];
+
+    details.Yield = {
+      [`Improved yield estimate in ${year} year of cover crops`]: dollars(Yield.total),
+    };
+  }
   return (
     <div id="Practices">
       <h1>
@@ -813,50 +375,6 @@ const Practices = () => {
 
       <NestedAccordion details={details} />
 
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th colSpan={2}>&nbsp;</th>
-              <th className="hidden">&nbsp;</th>
-              <th>Description</th>
-              <th>Costs by line item</th>
-              <th>Total cost</th>
-              <th>Benefit by line item</th>
-              <th>Total Benefit</th>
-            </tr>
-          </thead>
-          <tbody>
-            <SeedbedSummary />
-            <PlantingSummary />
-            <TerminationSummary />
-            <TillageSummary />
-            <FertilitySummary />
-            <HerbicideSummary />
-            <ErosionSummary />
-            <YieldSummary />
-            <AdditionalSummary />
-            <tr className="total">
-              <td colSpan={2}>Total</td>
-              <td />
-              <td />
-              <td />
-              <td>{dollars(totalCosts)}</td>
-              <td />
-              <td>{dollars(totalBenefits)}</td>
-            </tr>
-            <tr className="total">
-              <td colSpan={2}>Net cost of cover crops</td>
-              <td />
-              <td style={{ textAlign: 'right' }}>{dollars(totalBenefits - totalCosts)}</td>
-              <td />
-              <td />
-              <td />
-              <td />
-            </tr>
-          </tbody>
-        </table>
-      </div>
       {dev && <Tests />}
     </div>
   );

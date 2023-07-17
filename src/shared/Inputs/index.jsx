@@ -20,7 +20,9 @@ import {
 
 import Help from '../Help';
 
-import { goto, get, set, mobile } from '../../store/Store';
+import {
+  goto, get, set, mobile,
+} from '../../store/Store';
 
 import './styles.scss';
 

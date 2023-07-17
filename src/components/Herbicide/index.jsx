@@ -12,13 +12,13 @@ const herbicideDefaults = getDefaults(
   Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`),
 );
 const fallDefaults = getDefaults(
-  Object.keys(get.herbicideFall).map((parm) => `herbicideFall.${parm}`),
+  Object.keys(get.herbicide.fall).map((parm) => `herbicide.fall.${parm}`),
 );
 const additionalDefaults = getDefaults(
-  Object.keys(get.herbicideAdditional).map((parm) => `herbicideAdditional.${parm}`),
+  Object.keys(get.herbicide.additional).map((parm) => `herbicide.additional.${parm}`),
 );
 const reducedDefaults = getDefaults(
-  Object.keys(get.herbicideReduced).map((parm) => `herbicideReduced.${parm}`),
+  Object.keys(get.herbicide.reduced).map((parm) => `herbicide.reduced.${parm}`),
 );
 
 const defaults = {
@@ -30,8 +30,8 @@ const defaults = {
 
 const Herbicide = () => {
   const state = useSelector(get.herbicide);
-  const reducedProduct = useSelector(get.herbicideReduced.product);
-  const reducedCost = useSelector(get.herbicideReduced.cost);
+  const reducedProduct = useSelector(get.herbicide.reduced.product);
+  const reducedCost = useSelector(get.herbicide.reduced.cost);
 
   return (
     <div className="Herbicide">
@@ -94,17 +94,17 @@ const Herbicide = () => {
 
                   <tr>
                     <td>Product</td>
-                    <td><Input id="herbicideAdditional.product" /></td>
+                    <td><Input id="herbicide.additional.product" /></td>
                   </tr>
 
                   <tr>
                     <td>Product cost</td>
-                    <td><Input id="herbicideAdditional.cost" type="dollar" /></td>
+                    <td><Input id="herbicide.additional.cost" type="dollar" /></td>
                   </tr>
 
                   {/* // Version 2:
                     <Logic
-                      current="herbicideAdditional"
+                      current="herbicide.additional"
                       property="product"
                       q="Product"
                       a={[...Object.keys(db.herbicides).sort(), 'Other']}
@@ -127,7 +127,7 @@ const Herbicide = () => {
                               padding: '7.5px 4px 7.5px 6px',
                             }}
                             onChange={(e) => {
-                              dispatch(set.herbicideAdditional.product(e.target.value));
+                              dispatch(set.herbicide.additional.product(e.target.value));
                             }}
                           />
                         </td>
@@ -135,14 +135,14 @@ const Herbicide = () => {
                     )}
 
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     property="unitCost"
                     q={`Cost per ${db.herbicides[additionalProduct]?.['Unit (cost)']} of product`}
                     a="dollar"
                   />
 
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     property="rate"
                     q="Application rate"
                     a="number"
@@ -150,14 +150,14 @@ const Herbicide = () => {
                   />
 
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     property="cost"
                     q="Product cost"
                     a={additionalCost}
                   /> */}
 
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     property="implement"
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
@@ -167,20 +167,20 @@ const Herbicide = () => {
                     ]}
                   />
 
-                  <Logic current="herbicideAdditional" question="power" />
+                  <Logic current="herbicide.additional" question="power" />
 
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     question="Annual Use (acres on implement)"
                   />
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     question="Annual Use (hours on power)"
                   />
-                  <Logic current="herbicideAdditional" question="Acres/hour" />
+                  <Logic current="herbicide.additional" question="Acres/hour" />
 
                   <Logic
-                    current="herbicideAdditional"
+                    current="herbicide.additional"
                     question="Estimated"
                     q="Chemical spray equipment cost ($/acre)"
                     a="dollar"
@@ -214,21 +214,21 @@ const Herbicide = () => {
                   </tr>
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     property="product"
                     q="Product"
                     a={['', ...Object.keys(db.herbicides).sort()]}
                   />
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     property="unitCost"
                     q={`Cost per ${db.herbicides[reducedProduct]?.['Unit (cost)']} of product`}
                     a="dollar"
                   />
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     property="rate"
                     q="Application rate"
                     a="number"
@@ -236,14 +236,14 @@ const Herbicide = () => {
                   />
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     property="cost"
                     q="Product cost"
                     a={reducedCost}
                   />
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     property="implement"
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
@@ -253,20 +253,20 @@ const Herbicide = () => {
                     ]}
                   />
 
-                  <Logic current="herbicideReduced" question="power" />
+                  <Logic current="herbicide.reduced" question="power" />
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     question="Annual Use (acres on implement)"
                   />
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     question="Annual Use (hours on power)"
                   />
-                  <Logic current="herbicideReduced" question="Acres/hour" />
+                  <Logic current="herbicide.reduced" question="Acres/hour" />
 
                   <Logic
-                    current="herbicideReduced"
+                    current="herbicide.reduced"
                     question="Estimated"
                     q="Chemical spray equipment cost ($/acre)"
                     a="dollar"
@@ -292,7 +292,7 @@ const Herbicide = () => {
               {state.q8 === 'Yes' && (
                 <>
                   <Logic
-                    current="herbicideFall"
+                    current="herbicide.fall"
                     property="savings"
                     q="Implementing cover crops will allow you to forgo a fall herbicide application.
                        What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
@@ -300,23 +300,23 @@ const Herbicide = () => {
                   />
 
                   <Logic
-                    current="herbicideFall"
+                    current="herbicide.fall"
                     property="implement"
                     q="How would you have conducted your fall herbicide program?"
                     type="Chemical"
                   />
 
-                  <Logic current="herbicideFall" question="power" />
+                  <Logic current="herbicide.fall" question="power" />
 
                   <Logic
-                    current="herbicideFall"
+                    current="herbicide.fall"
                     question="Annual Use (acres on implement)"
                   />
-                  <Logic current="herbicideFall" question="Annual Use (hours on power)" />
-                  <Logic current="herbicideFall" question="Acres/hour" />
+                  <Logic current="herbicide.fall" question="Annual Use (hours on power)" />
+                  <Logic current="herbicide.fall" question="Acres/hour" />
 
                   <Logic
-                    current="herbicideFall"
+                    current="herbicide.fall"
                     question="Estimated"
                     q="Chemical spray equipment cost ($/acre)"
                     a="dollar"
