@@ -220,6 +220,7 @@ const Revenue = () => {
   }
 
   // console.log(JSON.stringify(data, null, 2));
+  // console.log(increasedCosts);
 
   if (!decreasedDetails.length && !increasedCosts.length) {
     return (
@@ -237,6 +238,48 @@ const Revenue = () => {
         <Input id="revenuePadding" label="padding" />
         <Input id="revenueColor" label="color" />
       </div>
+      <table style={{ float: 'left' }}>
+        <caption>Increases in Net Income</caption>
+        <thead>
+          <tr><th colSpan="3">Increase in Income</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+
+        <thead>
+          <tr><th colSpan="3">Decrease in Cost</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+      </table>
+
+      <table>
+        <caption>Decreases in Net Income</caption>
+        <thead>
+          <tr><th colSpan="3">Decrease in Income</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+
+        <thead>
+          <tr><th colSpan="3">Increase in Cost</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+      </table>
+
       <table>
         <caption>
           Economic Effects of Cover Crops

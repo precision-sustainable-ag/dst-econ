@@ -42,7 +42,7 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
   const builders = (builder) => {
     const recurse = (obj, set2, get2, parents = []) => {
       if (!obj) { // TODO dst-econ
-        console.log(set2);
+        // console.log(set2);
         return;
       }
       Object.keys(obj).forEach((key) => {

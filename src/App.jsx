@@ -561,7 +561,7 @@ const App = () => {
             );
           })}
 
-          {dev && (
+          {/localhost/i.test(window.location) && (
             <>
               <div className="desktop">
                 <button

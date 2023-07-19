@@ -1005,14 +1005,17 @@ export const exampleSeeds = () => {
 
 export const exampleHerbicides = () => {
   const herbicideDefaults = getDefaults(
-    Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`),
+    Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`).filter((parm) => !/fall|additional|reduced/.test(parm)),
   );
+
   const fallDefaults = getDefaults(
     Object.keys(get.herbicide.fall).map((parm) => `herbicide.fall.${parm}`),
   );
+
   const additionalDefaults = getDefaults(
     Object.keys(get.herbicide.additional).map((parm) => `herbicide.additional.${parm}`),
   );
+
   const reducedDefaults = getDefaults(
     Object.keys(get.herbicide.reduced).map((parm) => `herbicide.reduced.${parm}`),
   );
@@ -1342,6 +1345,7 @@ if (/demo/i.test(window.location)) {
   exampleTillage5();
   exampleFertilityBenefit();
   exampleFertilityCost();
+  exampleAdditional();
   exampleYield1();
   exampleYield2();
 }

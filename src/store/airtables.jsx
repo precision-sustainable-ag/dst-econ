@@ -684,11 +684,11 @@ const ATrates = {
 };
 
 const ATcostDefaults = {
-  "Herbicide application": {
+  "Herbicide application|herbicide": {
     "key": "Herbicide application",
     "cost": 8,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "",
+    "screen": "herbicide",
     "order": ""
   },
   "Anhydrous ammonia injection": {
@@ -740,16 +740,23 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Herbicide product": {
+  "Herbicide product|herbicide": {
     "key": "Herbicide product",
-    "cost": 21,
+    "cost": 21.11,
     "Notes": "placeholder number",
-    "screen": "",
+    "screen": "herbicide",
     "order": ""
   },
-  "Ground planting|Planting": {
-    "key": "Ground planting",
+  "Drill or planter|Planting": {
+    "key": "Drill or planter",
     "cost": 20,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "Planting",
+    "order": ""
+  },
+  "Broadcast seeding|Planting": {
+    "key": "Broadcast seeding",
+    "cost": 12,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
     "screen": "Planting",
     "order": 1
@@ -763,8 +770,8 @@ const ATcostDefaults = {
   },
   "Drone seeding|Planting": {
     "key": "Drone seeding",
-    "cost": 16,
-    "Notes": "placeholder number",
+    "cost": 20,
+    "Notes": "popular press articles",
     "screen": "Planting",
     "order": 3
   }
@@ -2485,7 +2492,7 @@ const ATpower = {
   },
   "130 HP Self Propelled": {
     "key": "130 HP Self Propelled",
-    "Description": "130 Self Propelled",
+    "Description": "HP Self Propelled",
     "HP": 130,
     "expected use (hr/yr)": 200,
     "fuel use (gal/PTO hp/hr)": 0.044,

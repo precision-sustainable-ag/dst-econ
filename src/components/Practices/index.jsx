@@ -27,6 +27,7 @@ import {
   exampleTillage5,
   exampleFertilityBenefit,
   exampleFertilityCost,
+  exampleAdditional,
   exampleYield1,
   exampleYield2,
   dollars,
@@ -54,6 +55,7 @@ const Tests = () => (
     <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
     <button type="button" onClick={exampleErosion}>Test Erosion</button>
     <button type="button" onClick={exampleGrazing}>Test Grazing</button>
+    <button type="button" onClick={exampleAdditional}>Test Additional</button>
     <button type="button" onClick={exampleYield1}>Test Yield1</button>
     <button type="button" onClick={exampleYield2}>Test Yield2</button>
   </div>
@@ -82,7 +84,7 @@ const CustomExpandIcon = () => (
 const isJSX = (obj) => obj && obj?.$$typeof?.toString() === 'Symbol(react.element)';
 
 const getClass = (data) => {
-  if (+data || /\$/.test(data)) {
+  if (+data || /^\$/.test(data)) {
     return 'right';
   }
   return '';
