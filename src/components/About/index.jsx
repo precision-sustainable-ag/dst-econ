@@ -76,7 +76,7 @@ const About = () => (
         {' '}
         projects, please visit
         {' '}
-        <a href="https://precisionsustainableag.org/">https://precisionsustainableag.org/.</a>
+        <a href="https://precisionsustainableag.org/" target="_blank" rel="noreferrer">https://precisionsustainableag.org/.</a>
       </em>
     </p>
 
