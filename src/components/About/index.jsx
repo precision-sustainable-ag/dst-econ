@@ -51,21 +51,8 @@ const About = () => (
       The Cover Crop Economic DST has been designed to provide credible estimates of the impact of cover crops
       with a limited amount of data retrieval by growers.
       Begin by inputting ALL of the required information into the Field & Farm module
-      and then proceed to each of the following input modules (each of the input modules are buttons with white lettering).
+      and then proceed to each of the input modules (each of the input modules are buttons with white lettering).
     </p>
-
-    <ul>
-      <li>Cover Crop selection</li>
-      <li>Planting decisions</li>
-      <li>Termination</li>
-      <li>Tillage</li>
-      <li>Fertility</li>
-      <li>Herbicide</li>
-      <li>Pests</li>
-      <li>Soil erosion control</li>
-      <li>Additional considerations</li>
-      <li>Yield</li>
-    </ul>
 
     <p>
       Users can view real-time financial impacts by viewing the budget table on the right-hand side of your screen.
