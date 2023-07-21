@@ -44,6 +44,18 @@ const Logic = ({
     return ['', ...result];
   }; // sortPower
 
+  const sortRollerTerminationOptions = (options) => options.map((op) => {
+    if (op === 'Hire custom operator') {
+      return { id: 0, text: op };
+    }
+    const calculatedId = op.split('; ')[1].split(' ')[0];
+    return { id: calculatedId, text: op };
+  }).sort(
+    (a1, a2) => a1.id - a2.id,
+  ).map(
+    (op) => op.text,
+  ); // sortRollerTerminationOptions
+
   const selector = goto(get, current);
   const context = useSelector(selector);
   const currentImplement = useSelector(selector.implement);
@@ -186,7 +198,11 @@ const Logic = ({
         <Input
           id={`${current}.${property}`}
           onChange={onChange}
-          options={a}
+          options={
+            current === 'termination.roller' && property === 'implement'
+              ? sortRollerTerminationOptions(a)
+              : a
+          }
           suffix={suffix}
           groupBy={(option) => {
             if (option.includes('HIRE ')) {
