@@ -188,7 +188,7 @@ const Logic = ({
         <Input
           id={`${current}.${property}`}
           type="radio"
-          options={a}
+          options={a.filter((opt) => !opt.includes('I will not'))}
           onChange={onChange}
           suffix={suffix}
         />
