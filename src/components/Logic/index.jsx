@@ -188,7 +188,7 @@ const Logic = ({
         <Input
           id={`${current}.${property}`}
           type="radio"
-          options={a.filter((opt) => !opt.includes('I will not'))}
+          options={a}
           onChange={onChange}
           suffix={suffix}
         />
@@ -205,6 +205,9 @@ const Logic = ({
           }
           suffix={suffix}
           groupBy={(option) => {
+            if (option.includes('I will not')) {
+              return '';
+            }
             if (option.includes('HIRE ')) {
               return 'Hire custom operator';
             }
