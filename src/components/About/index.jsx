@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from '@mui/material';
 import { dev, exampleHome } from '../../store/Store';
 import './styles.scss';
-import { Icon } from '@mui/material';
 
 const About = () => (
   <div id="About">
