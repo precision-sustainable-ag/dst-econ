@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { dev, exampleHome } from '../../store/Store';
-
 import './styles.scss';
+import { Icon } from '@mui/material';
 
 const About = () => (
   <div id="About">
@@ -59,7 +58,11 @@ const About = () => (
       The DST is designed for individualized conditions.
       For example, users can select equipment similar to their operation and also have the option of determining what equipment costs
       they wish to include in the analysis.
-      Click on a green question mark (?) for additional information on the input fields.
+      Click on
+      {' '}
+      <Icon>help</Icon>
+      {' '}
+      for additional information on the input fields.
       After completing the input modules, view the summary of financial impacts.
       At any point, users can go back to specific input modules to modify their responses.
     </p>
