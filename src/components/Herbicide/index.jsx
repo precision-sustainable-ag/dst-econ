@@ -163,7 +163,6 @@ const Herbicide = () => {
                     type="Chemical"
                     custom={[
                       'I will not reduce my post emerge spray applications',
-                      'Hire custom operator',
                     ]}
                   />
 

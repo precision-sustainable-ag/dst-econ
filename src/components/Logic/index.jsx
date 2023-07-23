@@ -205,6 +205,9 @@ const Logic = ({
           }
           suffix={suffix}
           groupBy={(option) => {
+            if (option.includes('I will not')) {
+              return '';
+            }
             if (option.includes('HIRE ')) {
               return 'Hire custom operator';
             }
