@@ -23,7 +23,7 @@ const Considerations = () => {
         </header>
 
         <div>
-          If you rent this field and the landowner contribute to costs associated with planting cover crops,
+          If you rent this field and the landowner contributes to costs associated with planting cover crops,
           please enter the estimated cash contribution ($/acre).
         </div>
         <div>
