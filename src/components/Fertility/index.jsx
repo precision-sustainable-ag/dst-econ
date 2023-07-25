@@ -80,13 +80,13 @@ const Fertility = () => {
 
               <tr>
                 <td>Fertilizer value ($/pound of nutrient)</td>
-                <td>
+                <td style={{ background: '#dfd' }}>
                   <Input id="fertility.$N" value={$N ?? dfertN} />
                 </td>
-                <td>
+                <td style={{ background: '#dfd' }}>
                   <Input id="fertility.$P" />
                 </td>
-                <td>
+                <td style={{ background: '#dfd' }}>
                   <Input id="fertility.$K" />
                 </td>
               </tr>
