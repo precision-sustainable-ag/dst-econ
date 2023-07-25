@@ -223,7 +223,7 @@ const Practices = () => {
 
   const details = {
     'Field & Farm': {
-      'Cash crop': cashCrop,
+      'Cash crop following cover crop': cashCrop,
       'Labor value': dollars($labor),
       'Diesel cost': dollars($diesel),
     },

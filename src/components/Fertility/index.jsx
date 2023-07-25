@@ -80,13 +80,13 @@ const Fertility = () => {
 
               <tr>
                 <td>Fertilizer value ($/pound of nutrient)</td>
-                <td>
+                <td style={{ background: '#dfd' }}>
                   <Input id="fertility.$N" value={$N ?? dfertN} />
                 </td>
-                <td>
+                <td style={{ background: '#dfd' }}>
                   <Input id="fertility.$P" />
                 </td>
-                <td>
+                <td style={{ background: '#dfd' }}>
                   <Input id="fertility.$K" />
                 </td>
               </tr>
@@ -144,15 +144,15 @@ const Fertility = () => {
                 </>
               )}
 
-              <tr>
+              <tr style={{ background: 'lightyellow' }}>
                 <td>Value of fertilizer credit from cover crops ($/acre)</td>
                 <td colSpan={3}>{dollars($credit)}</td>
               </tr>
-              <tr>
+              <tr style={{ background: 'lightyellow' }}>
                 <td>Total cost of fertilizer for cover crop production ($/acre)</td>
                 <td colSpan={3}>{dollars($cost)}</td>
               </tr>
-              <tr>
+              <tr style={{ background: 'lightyellow' }}>
                 <td>Net fertility impact of cover crops ($/acre)</td>
                 <td colSpan={3}>{dollars(total)}</td>
               </tr>
