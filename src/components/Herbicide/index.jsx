@@ -244,7 +244,7 @@ const Herbicide = () => {
                   <Logic
                     current="herbicide.reduced"
                     property="implement"
-                    q="How would you have conducted the post emerge application?"
+                    q="What post emerge application activity is eliminated?"
                     type="Chemical"
                     custom={[
                       'No additional application activity.',
