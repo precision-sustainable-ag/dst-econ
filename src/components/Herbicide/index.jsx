@@ -247,7 +247,7 @@ const Herbicide = () => {
                     q="How would you have conducted the post emerge application?"
                     type="Chemical"
                     custom={[
-                      'I will not reduce my post emerge spray applications',
+                      'No additional application activity.',
                       'Hire custom operator',
                     ]}
                   />
