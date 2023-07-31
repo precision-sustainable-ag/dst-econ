@@ -70,7 +70,6 @@ const Logic = ({
     'No additional application activity.',
     ...Object.keys(db.costDefaults),
   ].includes(currentImplement.replace('HIRE ', ''));
-  console.log('checking: ', currentImplement);
 
   let info = '';
   let shown = true;
