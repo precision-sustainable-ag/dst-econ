@@ -145,7 +145,7 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement && currentImplement !== 'I will not reduce my post emerge spray applications'
+        currentImplement && currentImplement !== 'No additional application activity.'
       );
       warning = (
         iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
