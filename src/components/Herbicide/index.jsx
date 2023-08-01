@@ -162,7 +162,7 @@ const Herbicide = () => {
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
                     custom={[
-                      'No additional application activity.',
+                      'No additional application activity',
                     ]}
                   />
 
@@ -247,7 +247,7 @@ const Herbicide = () => {
                     q="What post emerge application activity is eliminated?"
                     type="Chemical"
                     custom={[
-                      'No additional application activity.',
+                      'No additional application activity',
                       'Hire custom operator',
                     ]}
                   />
