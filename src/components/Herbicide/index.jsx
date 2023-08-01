@@ -248,7 +248,6 @@ const Herbicide = () => {
                     type="Chemical"
                     custom={[
                       'No additional application activity',
-                      'Hire custom operator',
                     ]}
                   />
 
