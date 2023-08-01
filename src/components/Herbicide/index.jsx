@@ -212,19 +212,15 @@ const Herbicide = () => {
                     </th>
                   </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="product"
-                    q="Product"
-                    a={['', ...Object.keys(db.herbicides).sort()]}
-                  />
+                  <tr>
+                    <td>Product</td>
+                    <td><Input id="herbicide.reduced.product" /></td>
+                  </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="unitCost"
-                    q={`Cost per ${db.herbicides[reducedProduct]?.['Unit (cost)']} of product`}
-                    a="dollar"
-                  />
+                  <tr>
+                    <td>Cost per lb of product</td>
+                    <td><Input id="herbicide.reduced.unitCost" type="dollar" /></td>
+                  </tr>
 
                   <Logic
                     current="herbicide.reduced"
