@@ -162,7 +162,7 @@ const Herbicide = () => {
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
                     custom={[
-                      'I will not reduce my post emerge spray applications',
+                      'No additional application activity',
                     ]}
                   />
 
@@ -212,19 +212,15 @@ const Herbicide = () => {
                     </th>
                   </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="product"
-                    q="Product"
-                    a={['', ...Object.keys(db.herbicides).sort()]}
-                  />
+                  <tr>
+                    <td>Product</td>
+                    <td><Input id="herbicide.reduced.product" /></td>
+                  </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="unitCost"
-                    q={`Cost per ${db.herbicides[reducedProduct]?.['Unit (cost)']} of product`}
-                    a="dollar"
-                  />
+                  <tr>
+                    <td>Cost per lb of product</td>
+                    <td><Input id="herbicide.reduced.unitCost" type="dollar" /></td>
+                  </tr>
 
                   <Logic
                     current="herbicide.reduced"
@@ -244,11 +240,10 @@ const Herbicide = () => {
                   <Logic
                     current="herbicide.reduced"
                     property="implement"
-                    q="How would you have conducted the post emerge application?"
+                    q="What post emerge application activity is eliminated?"
                     type="Chemical"
                     custom={[
-                      'I will not reduce my post emerge spray applications',
-                      'Hire custom operator',
+                      'No additional application activity',
                     ]}
                   />
 

@@ -67,7 +67,7 @@ const Logic = ({
 
   const iscustom = [
     'Hire custom operator',
-    'I will not reduce my post emerge spray applications',
+    'No additional application activity',
     ...Object.keys(db.costDefaults),
   ].includes(currentImplement.replace('HIRE ', ''));
 
@@ -145,7 +145,7 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement && currentImplement !== 'I will not reduce my post emerge spray applications'
+        currentImplement && currentImplement !== 'No additional application activity'
       );
       warning = (
         iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
@@ -253,7 +253,9 @@ const Logic = ({
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
           <tr className={current}>
             <td style={style}>{q}</td>
-            <td style={style}>{result}</td>
+            <td style={style}>
+              {result}
+            </td>
             {
               property === 'implement' && !iscustom ? (
                 <td

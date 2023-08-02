@@ -795,7 +795,7 @@ export const store = createStore(initialState, { afterChange, reducers });
       obj.estimated = db.costDefaults[payload].cost;
       obj.total = db.costDefaults[payload].cost;
       state.calculated[`${section}.total`] = obj.total;
-    } else if (payload === 'I will not reduce my post emerge spray applications') {
+    } else if (payload === 'No additional application activity') {
       // empty
     } else if (payload) {
       const p = db.implements[payload] || {};
