@@ -5,7 +5,7 @@ import ClearInputs from '../ClearInputs';
 import Input from '../../shared/Inputs';
 
 import {
-  dev, get, db, getDefaults, clearInputs, exampleHerbicides,
+  dev, get, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -30,8 +30,6 @@ const defaults = {
 
 const Herbicide = () => {
   const state = useSelector(get.herbicide);
-  const reducedProduct = useSelector(get.herbicide.reduced.product);
-  const reducedCost = useSelector(get.herbicide.reduced.cost);
 
   return (
     <div className="Herbicide">
@@ -218,24 +216,9 @@ const Herbicide = () => {
                   </tr>
 
                   <tr>
-                    <td>Cost per lb of product</td>
-                    <td><Input id="herbicide.reduced.unitCost" type="dollar" /></td>
+                    <td>Product cost</td>
+                    <td><Input id="herbicide.reduced.cost" type="dollar" /></td>
                   </tr>
-
-                  <Logic
-                    current="herbicide.reduced"
-                    property="rate"
-                    q="Application rate"
-                    a="number"
-                    suffix={db.herbicides[reducedProduct]?.['Unit (rate)']}
-                  />
-
-                  <Logic
-                    current="herbicide.reduced"
-                    property="cost"
-                    q="Product cost"
-                    a={reducedCost}
-                  />
 
                   <Logic
                     current="herbicide.reduced"
