@@ -222,7 +222,7 @@ const Herbicide = () => {
                       q="What post emerge application activity is eliminated?"
                       type="Chemical"
                       custom={[
-                        'No additional application activity',
+                        'No reduced application activity',
                       ]}
                     />
 

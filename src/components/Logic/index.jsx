@@ -68,7 +68,9 @@ const Logic = ({
 
   const iscustom = [
     'Hire custom operator',
-    'No additional application activity',
+    current === 'herbicide.reduced'
+      ? 'No reduced application activity'
+      : 'No additional application activity',
     ...Object.keys(db.costDefaults),
   ].includes(currentImplement.replace('HIRE ', ''));
 
@@ -146,7 +148,11 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement && currentImplement !== 'No additional application activity'
+        currentImplement
+        && (
+          currentImplement !== 'No additional application activity'
+          || currentImplement !== 'No reduced application activity'
+        )
       );
       warning = (
         iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
