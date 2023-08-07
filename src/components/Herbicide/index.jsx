@@ -5,7 +5,7 @@ import ClearInputs from '../ClearInputs';
 import Input from '../../shared/Inputs';
 
 import {
-  dev, get, db, getDefaults, clearInputs, exampleHerbicides,
+  dev, get, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -30,8 +30,6 @@ const defaults = {
 
 const Herbicide = () => {
   const state = useSelector(get.herbicide);
-  const reducedProduct = useSelector(get.herbicide.reduced.product);
-  const reducedCost = useSelector(get.herbicide.reduced.cost);
 
   return (
     <div className="Herbicide">
@@ -81,28 +79,26 @@ const Herbicide = () => {
                     q="Do you plan on adding additional herbicides or making additional spray applications when adding cover crops to your rotation?"
                     a={['Yes', 'No']}
                   />
-                </>
-              )}
 
-              {state.q2 === 'Yes' && (
-                <>
-                  <tr>
-                    <th colSpan="100">
-                      What is the estimated cost of the additional herbicide?
-                    </th>
-                  </tr>
+                  {state.q2 === 'Yes' && (
+                  <>
+                    <tr>
+                      <th colSpan="100">
+                        What is the estimated cost of the additional herbicide?
+                      </th>
+                    </tr>
 
-                  <tr>
-                    <td>Product</td>
-                    <td><Input id="herbicide.additional.product" /></td>
-                  </tr>
+                    <tr>
+                      <td>Product</td>
+                      <td><Input id="herbicide.additional.product" /></td>
+                    </tr>
 
-                  <tr>
-                    <td>Product cost</td>
-                    <td><Input id="herbicide.additional.cost" type="dollar" /></td>
-                  </tr>
+                    <tr>
+                      <td>Product cost</td>
+                      <td><Input id="herbicide.additional.cost" type="dollar" /></td>
+                    </tr>
 
-                  {/* // Version 2:
+                    {/* // Version 2:
                     <Logic
                       current="herbicide.additional"
                       property="product"
@@ -156,115 +152,100 @@ const Herbicide = () => {
                     a={additionalCost}
                   /> */}
 
-                  <Logic
-                    current="herbicide.additional"
-                    property="implement"
-                    q="What method will be used for the additional post emerge application?"
-                    type="Chemical"
-                    custom={[
-                      'No additional application activity',
-                    ]}
-                  />
+                    <Logic
+                      current="herbicide.additional"
+                      property="implement"
+                      q="What method will be used for the additional post emerge application?"
+                      type="Chemical"
+                      custom={[
+                        'No additional application activity',
+                      ]}
+                    />
 
-                  <Logic current="herbicide.additional" question="power" />
+                    <Logic current="herbicide.additional" question="power" />
 
-                  <Logic
-                    current="herbicide.additional"
-                    question="Annual Use (acres on implement)"
-                  />
-                  <Logic
-                    current="herbicide.additional"
-                    question="Annual Use (hours on power)"
-                  />
-                  <Logic current="herbicide.additional" question="Acres/hour" />
+                    <Logic
+                      current="herbicide.additional"
+                      question="Annual Use (acres on implement)"
+                    />
+                    <Logic
+                      current="herbicide.additional"
+                      question="Annual Use (hours on power)"
+                    />
+                    <Logic current="herbicide.additional" question="Acres/hour" />
 
-                  <Logic
-                    current="herbicide.additional"
-                    question="Estimated"
-                    q="Chemical spray equipment cost ($/acre)"
-                    a="dollar"
-                  />
-                </>
-              )}
+                    <Logic
+                      current="herbicide.additional"
+                      question="Estimated"
+                      q="Chemical spray equipment cost ($/acre)"
+                      a="dollar"
+                    />
+                  </>
+                  )}
 
-              {state.q1 === 'Yes' && state.q2 && (
-                <>
-                  <tr>
-                    <th colSpan="100">Reduced Herbicides</th>
-                  </tr>
-                  <Logic
-                    current="herbicide"
-                    property="q5"
-                    q="Do you plan on reducing the amount of herbicides used
+                  <>
+                    <tr>
+                      <th colSpan="100">Reduced Herbicides</th>
+                    </tr>
+                    <Logic
+                      current="herbicide"
+                      property="q5"
+                      q="Do you plan on reducing the amount of herbicides used
                        or eliminating a post-emerge spray application with the use of cover crops?"
-                    a={['Yes', 'No']}
-                    onChange={() => clearInputs(reducedDefaults)}
-                  />
-                </>
-              )}
+                      a={['Yes', 'No']}
+                      onChange={() => clearInputs(reducedDefaults)}
+                    />
+                  </>
 
-              {state.q5 === 'Yes' && (
-                <>
-                  <tr>
-                    <th colSpan="100">
-                      What is the estimated savings from reduced herbicides (cost per
-                      acre)?
-                    </th>
-                  </tr>
+                  {state.q5 === 'Yes' && (
+                  <>
+                    <tr>
+                      <th colSpan="100">
+                        What is the estimated savings from reduced herbicides (cost per
+                        acre)?
+                      </th>
+                    </tr>
 
-                  <tr>
-                    <td>Product</td>
-                    <td><Input id="herbicide.reduced.product" /></td>
-                  </tr>
+                    <tr>
+                      <td>Product</td>
+                      <td><Input id="herbicide.reduced.product" /></td>
+                    </tr>
 
-                  <tr>
-                    <td>Cost per lb of product</td>
-                    <td><Input id="herbicide.reduced.unitCost" type="dollar" /></td>
-                  </tr>
+                    <tr>
+                      <td>Product cost</td>
+                      <td><Input id="herbicide.reduced.cost" type="dollar" /></td>
+                    </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="rate"
-                    q="Application rate"
-                    a="number"
-                    suffix={db.herbicides[reducedProduct]?.['Unit (rate)']}
-                  />
+                    <Logic
+                      current="herbicide.reduced"
+                      property="implement"
+                      q="What post emerge application activity is eliminated?"
+                      type="Chemical"
+                      custom={[
+                        'No reduced application activity',
+                      ]}
+                    />
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="cost"
-                    q="Product cost"
-                    a={reducedCost}
-                  />
+                    <Logic current="herbicide.reduced" question="power" />
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="implement"
-                    q="What post emerge application activity is eliminated?"
-                    type="Chemical"
-                    custom={[
-                      'No additional application activity',
-                    ]}
-                  />
+                    <Logic
+                      current="herbicide.reduced"
+                      question="Annual Use (acres on implement)"
+                    />
+                    <Logic
+                      current="herbicide.reduced"
+                      question="Annual Use (hours on power)"
+                    />
+                    <Logic current="herbicide.reduced" question="Acres/hour" />
 
-                  <Logic current="herbicide.reduced" question="power" />
-
-                  <Logic
-                    current="herbicide.reduced"
-                    question="Annual Use (acres on implement)"
-                  />
-                  <Logic
-                    current="herbicide.reduced"
-                    question="Annual Use (hours on power)"
-                  />
-                  <Logic current="herbicide.reduced" question="Acres/hour" />
-
-                  <Logic
-                    current="herbicide.reduced"
-                    question="Estimated"
-                    q="Chemical spray equipment cost ($/acre)"
-                    a="dollar"
-                  />
+                    <Logic
+                      current="herbicide.reduced"
+                      question="Estimated"
+                      q="Chemical spray equipment cost ($/acre)"
+                      a="dollar"
+                    />
+                  </>
+                  )}
                 </>
               )}
 
@@ -280,43 +261,44 @@ const Herbicide = () => {
                     a={['Yes', 'No']}
                     onChange={() => clearInputs(fallDefaults)}
                   />
-                </>
-              )}
 
-              {state.q8 === 'Yes' && (
-                <>
-                  <Logic
-                    current="herbicide.fall"
-                    property="savings"
-                    q="Implementing cover crops will allow you to forgo a fall herbicide application.
+                  {state.q8 === 'Yes' && (
+                  <>
+                    <Logic
+                      current="herbicide.fall"
+                      property="savings"
+                      q="Implementing cover crops will allow you to forgo a fall herbicide application.
                        What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
-                    a="dollar"
-                  />
+                      a="dollar"
+                    />
 
-                  <Logic
-                    current="herbicide.fall"
-                    property="implement"
-                    q="How would you have conducted your fall herbicide program?"
-                    type="Chemical"
-                  />
+                    <Logic
+                      current="herbicide.fall"
+                      property="implement"
+                      q="How would you have conducted your fall herbicide program?"
+                      type="Chemical"
+                    />
 
-                  <Logic current="herbicide.fall" question="power" />
+                    <Logic current="herbicide.fall" question="power" />
 
-                  <Logic
-                    current="herbicide.fall"
-                    question="Annual Use (acres on implement)"
-                  />
-                  <Logic current="herbicide.fall" question="Annual Use (hours on power)" />
-                  <Logic current="herbicide.fall" question="Acres/hour" />
+                    <Logic
+                      current="herbicide.fall"
+                      question="Annual Use (acres on implement)"
+                    />
+                    <Logic current="herbicide.fall" question="Annual Use (hours on power)" />
+                    <Logic current="herbicide.fall" question="Acres/hour" />
 
-                  <Logic
-                    current="herbicide.fall"
-                    question="Estimated"
-                    q="Chemical spray equipment cost ($/acre)"
-                    a="dollar"
-                  />
+                    <Logic
+                      current="herbicide.fall"
+                      question="Estimated"
+                      q="Chemical spray equipment cost ($/acre)"
+                      a="dollar"
+                    />
+                  </>
+                  )}
                 </>
               )}
+
             </tbody>
           </table>
         </div>

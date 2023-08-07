@@ -11,6 +11,7 @@ const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
   onChange, onInput, value, estimated, total, warning, style, custom = ['Hire custom operator'],
 }) => {
+  const stateHerbicide = useSelector(get.herbicide);
   const sortCosts = () => {
     const cd = db.costDefaults;
     return Object.keys(cd)
@@ -67,7 +68,9 @@ const Logic = ({
 
   const iscustom = [
     'Hire custom operator',
-    'No additional application activity',
+    current === 'herbicide.reduced'
+      ? 'No reduced application activity'
+      : 'No additional application activity',
     ...Object.keys(db.costDefaults),
   ].includes(currentImplement.replace('HIRE ', ''));
 
@@ -145,7 +148,11 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement && currentImplement !== 'No additional application activity'
+        currentImplement
+        && (
+          currentImplement !== 'No additional application activity'
+          || currentImplement !== 'No reduced application activity'
+        )
       );
       warning = (
         iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
@@ -257,14 +264,19 @@ const Logic = ({
               {result}
             </td>
             {
-              property === 'implement' && !iscustom ? (
+              property === 'implement'
+              && !iscustom
+              && ((current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
+                  || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
+                  || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
+              ) ? (
                 <td
                   style={{ padding: 0, border: '1px solid black' }}
                   rowSpan="6"
                 >
                   <Activity type={current} />
                 </td>
-              )
+                )
                 : (
                   td && <td />
                 )
