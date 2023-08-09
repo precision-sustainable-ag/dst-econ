@@ -36,7 +36,8 @@ const terminationTotal = (state) => (
   + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
 );
 
-const tillageTotal = (state) => (state.tillage.costReductions || 0) + (state.tillage.other.total || 0) + (state.tillage.fall.total || 0);
+const tillageTotal = (state) => (state.tillage.costReductions || 0)
+  + (state.tillage.other.total || 0);
 
 const herbicideTotal = (state) => (
   (state.herbicide.additional.cost || 0)
@@ -260,8 +261,6 @@ const initialState = {
       if (/typical/.test(state.yield.q2)) {
         state.yield.total = 0;
       } else {
-        // console.log(state.yield.impact);
-        // console.log(['1', '3', '5'].indexOf(state.yield.q4));
         state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
 
