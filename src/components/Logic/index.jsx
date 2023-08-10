@@ -201,15 +201,20 @@ const Logic = ({
         />
       );
     } else {
+      if (current === 'termination.roller' && property === 'implement') {
+        a = sortRollerTerminationOptions(a);
+      } else if (current === 'termination.chemical' && property === 'implement') {
+        a = a.filter(
+          (aValue) => !(aValue === 'Hire custom operator'
+            || aValue.includes('Herbicide product')
+          ),
+        );
+      }
       result = (
         <Input
           id={`${current}.${property}`}
           onChange={onChange}
-          options={
-            current === 'termination.roller' && property === 'implement'
-              ? sortRollerTerminationOptions(a)
-              : a
-          }
+          options={a}
           suffix={suffix}
           groupBy={(option) => {
             if (option.includes('I will not')) {
