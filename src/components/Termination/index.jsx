@@ -136,7 +136,7 @@ const Herbicide = () => {
   return (
     <>
       <tr>
-        <th colSpan="100">Product</th>
+        <th colSpan="100">Herbicide</th>
       </tr>
       <tr>
         <td>Product</td>
