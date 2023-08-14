@@ -185,13 +185,19 @@ const equipment = (obj, type, nest = true) => {
     power,
   } = type;
 
+  let updatedImplement = implement;
+
+  if (description === 'Planting Decisions') {
+    updatedImplement = updatedImplement.replace('HIRE', 'Hire');
+  }
+
   if (total) {
     if (nest) {
       obj[description] = {
-        Equipment: `${implement}; ${power}`,
+        Equipment: `${updatedImplement}; ${power}`,
       };
     } else {
-      obj[description] = `${implement}; ${power}`;
+      obj[description] = `${updatedImplement}; ${power}`;
     }
   }
 };
