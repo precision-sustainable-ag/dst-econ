@@ -188,6 +188,7 @@ const equipment = (obj, type, nest = true) => {
   let updatedImplement = implement;
 
   if (description === 'Planting Decisions') {
+    [updatedImplement] = updatedImplement.split('|');
     updatedImplement = updatedImplement.replace('HIRE', 'Hire');
   }
 
