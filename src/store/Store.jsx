@@ -593,13 +593,11 @@ const afterChange = {
       state.herbicide.additional.total = 0;
       state.herbicide.additional.implement = '';
     } else if (state.herbicide.q1 === 'Yes' && payload === 'Yes') {
-      state.herbicide.additional.cost = db.costDefaults?.['Herbicide product']?.cost;
       state.focus = 'herbicide.additional.product';
     }
   },
   'termination.q2': (state, { payload }) => {
     if (payload === 'No') {
-      state.termination.productCost = db.costDefaults?.['Herbicide product']?.cost;
       state.focus = 'termination.product';
     } else {
       state.termination.productCost = 0;

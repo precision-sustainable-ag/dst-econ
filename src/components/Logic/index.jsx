@@ -205,9 +205,7 @@ const Logic = ({
         a = sortRollerTerminationOptions(a);
       } else if (current === 'termination.chemical' && property === 'implement') {
         a = a.filter(
-          (aValue) => !(aValue === 'Hire custom operator'
-            || aValue.includes('Herbicide product')
-          ),
+          (aValue) => aValue !== 'Hire custom operator',
         );
       }
       result = (
