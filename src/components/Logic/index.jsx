@@ -22,7 +22,7 @@ const Logic = ({
         }
         return cd[k1].key.localeCompare(cd[k2].key);
       })
-      .map((s) => `HIRE ${s}`);
+      .map((s) => `Hire ${s}`);
   }; // sortCosts
 
   const sortPower = () => {
