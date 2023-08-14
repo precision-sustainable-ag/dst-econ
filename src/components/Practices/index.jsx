@@ -249,7 +249,7 @@ const Practices = () => {
   if (termination.total) {
     const {
       method,
-      product, rate, productCost,
+      product, productCost,
       additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
       reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
     } = termination;
@@ -273,7 +273,7 @@ const Practices = () => {
     }
 
     if (product) {
-      obj.Product = `${product} - ${rate} pounds @ ${dollars(productCost)}/acre`;
+      obj.Product = `${product} @ ${dollars(productCost)}/acre`;
     }
 
     equipment(obj, termination.chemical, false);
