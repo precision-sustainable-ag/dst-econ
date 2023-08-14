@@ -187,7 +187,7 @@ const equipment = (obj, type, nest = true) => {
 
   let updatedImplement = implement;
 
-  if (description === 'Planting Decisions') {
+  if (description === 'Planting Decisions' || description === 'Chemical spray equipment') {
     [updatedImplement] = updatedImplement.split('|');
     updatedImplement = updatedImplement.replace('HIRE', 'Hire');
   }
