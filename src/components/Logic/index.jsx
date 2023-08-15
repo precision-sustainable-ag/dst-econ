@@ -221,12 +221,18 @@ const Logic = ({
             if (option.includes('HIRE ')) {
               return 'Hire custom operator';
             }
+            if (option.includes('Hire ')) {
+              return 'Hire custom operator';
+            }
             if (a.filter((s) => s.includes('HIRE ')).length) {
+              return 'Equipment';
+            }
+            if (a.filter((s) => s.includes('Hire ')).length) {
               return 'Equipment';
             }
             return null;
           }}
-          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: /, '')}
+          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: |Hire/, '')}
         />
       );
     }

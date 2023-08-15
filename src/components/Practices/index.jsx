@@ -194,10 +194,10 @@ const equipment = (obj, type, nest = true) => {
   if (total) {
     if (nest) {
       obj[description] = {
-        Equipment: `${updatedImplement}; ${power}`,
+        Equipment: `${updatedImplement}${power ? `; ${power}` : ''}`,
       };
     } else {
-      obj[description] = `${updatedImplement}; ${power}`;
+      obj[description] = `${updatedImplement}${power ? `; ${power}` : ''}`;
     }
   }
 };
