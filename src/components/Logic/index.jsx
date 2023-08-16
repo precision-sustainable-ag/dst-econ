@@ -22,7 +22,7 @@ const Logic = ({
         }
         return cd[k1].key.localeCompare(cd[k2].key);
       })
-      .map((s) => `HIRE ${s}`);
+      .map((s) => `Hire ${s}`);
   }; // sortCosts
 
   const sortPower = () => {
@@ -201,15 +201,18 @@ const Logic = ({
         />
       );
     } else {
+      if (current === 'termination.roller' && property === 'implement') {
+        a = sortRollerTerminationOptions(a);
+      } else if (current === 'termination.chemical' && property === 'implement') {
+        a = a.filter(
+          (aValue) => aValue !== 'Hire custom operator',
+        );
+      }
       result = (
         <Input
           id={`${current}.${property}`}
           onChange={onChange}
-          options={
-            current === 'termination.roller' && property === 'implement'
-              ? sortRollerTerminationOptions(a)
-              : a
-          }
+          options={a}
           suffix={suffix}
           groupBy={(option) => {
             if (option.includes('I will not')) {
@@ -218,12 +221,18 @@ const Logic = ({
             if (option.includes('HIRE ')) {
               return 'Hire custom operator';
             }
+            if (option.includes('Hire ')) {
+              return 'Hire custom operator';
+            }
             if (a.filter((s) => s.includes('HIRE ')).length) {
+              return 'Equipment';
+            }
+            if (a.filter((s) => s.includes('Hire ')).length) {
               return 'Equipment';
             }
             return null;
           }}
-          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: /, '')}
+          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: |Hire/, '')}
         />
       );
     }

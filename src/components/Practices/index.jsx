@@ -185,13 +185,19 @@ const equipment = (obj, type, nest = true) => {
     power,
   } = type;
 
+  let updatedImplement = implement;
+
+  if (description === 'Planting Decisions' || description === 'Chemical spray equipment') {
+    [updatedImplement] = updatedImplement.split('|');
+  }
+
   if (total) {
     if (nest) {
       obj[description] = {
-        Equipment: `${implement}; ${power}`,
+        Equipment: `${updatedImplement}${power ? `; ${power}` : ''}`,
       };
     } else {
-      obj[description] = `${implement}; ${power}`;
+      obj[description] = `${updatedImplement}${power ? `; ${power}` : ''}`;
     }
   }
 };
@@ -242,7 +248,7 @@ const Practices = () => {
   if (termination.total) {
     const {
       method,
-      product, rate, productCost,
+      product, productCost,
       additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
       reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
     } = termination;
@@ -266,7 +272,7 @@ const Practices = () => {
     }
 
     if (product) {
-      obj.Product = `${product} - ${rate} pounds @ ${dollars(productCost)}/acre`;
+      obj.Product = `${product} @ ${dollars(productCost)}/acre`;
     }
 
     equipment(obj, termination.chemical, false);

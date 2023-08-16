@@ -684,11 +684,11 @@ const ATrates = {
 };
 
 const ATcostDefaults = {
-  "Herbicide application|herbicide": {
+  "Herbicide application|Chemical": {
     "key": "Herbicide application",
     "cost": 8,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "herbicide",
+    "screen": "Chemical",
     "order": ""
   },
   "Anhydrous ammonia injection": {
@@ -740,11 +740,11 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Herbicide product|herbicide": {
+  "Herbicide product": {
     "key": "Herbicide product",
     "cost": 21.11,
     "Notes": "placeholder number",
-    "screen": "herbicide",
+    "screen": "",
     "order": ""
   },
   "Drill or planter|Planting": {
