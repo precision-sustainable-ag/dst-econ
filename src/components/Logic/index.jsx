@@ -275,16 +275,18 @@ const Logic = ({
             {
               property === 'implement'
               && !iscustom
-              && ((current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
+              && ((current.split('.')[0] !== 'herbicide')
+                  || (current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
                   || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
                   || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
-              ) ? (
-                <td
-                  style={{ padding: 0, border: '1px solid black' }}
-                  rowSpan="6"
-                >
-                  <Activity type={current} />
-                </td>
+              )
+                ? (
+                  <td
+                    style={{ padding: 0, border: '1px solid black' }}
+                    rowSpan="6"
+                  >
+                    <Activity type={current} />
+                  </td>
                 )
                 : (
                   td && <td />
