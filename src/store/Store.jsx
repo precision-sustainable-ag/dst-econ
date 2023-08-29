@@ -221,7 +221,8 @@ const initialState = {
       product: '',
       unitCost: (state) => db.herbicides?.[state.herbicide.reduced.product]?.['Cost ($)'],
       rate: (state) => db.herbicides?.[state.herbicide.reduced.product]?.Rate,
-      cost: (state) => state.herbicide.reduced.unitCost * state.herbicide.reduced.rate || 0,
+      cost: '',
+      // cost: (state) => state.herbicide.reduced.unitCost * state.herbicide.reduced.rate || 0,
     },
     fall: {
       description: 'Fall herbicides',
