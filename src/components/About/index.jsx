@@ -36,7 +36,7 @@ const About = () => (
       Reduced soil erosion, improved soil aggregate structure, increased water infiltration, and increased soil organic matter
       are some of many impacts to our soil health that accrue with long-term use of cover crops.
       These benefits, over time, can result in increased soil resiliency and potential yield improvements.
-      The DST also enables users to consider the some of the market valued impacts of these longer-term benefits.
+      The DST also enables users to consider some of the market valued impacts of these longer-term benefits.
     </p>
 
     <p>
