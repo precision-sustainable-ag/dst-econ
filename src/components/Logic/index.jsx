@@ -49,7 +49,7 @@ const Logic = ({
     if (op === 'Hire custom operator') {
       return { id: 0, text: op };
     }
-    const calculatedId = op.split('; ')[1].split(' ')[0];
+    const calculatedId = op.includes('; ') ? op.split('; ')[1].split(' ')[0] : 0;
     return { id: calculatedId, text: op };
   }).sort(
     (a1, a2) => a1.id - a2.id,
@@ -232,7 +232,7 @@ const Logic = ({
             }
             return null;
           }}
-          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: |Hire/, '')}
+          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: |Hire (?!custom)/, '')}
         />
       );
     }
