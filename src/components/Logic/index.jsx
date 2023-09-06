@@ -66,13 +66,16 @@ const Logic = ({
     style = { borderTop: '1px solid black' };
   }
 
-  const iscustom = [
+  const updateIscustom = (options) => options.includes(currentImplement.replace('Hire ', ''))
+    || options.includes(currentImplement.replace('HIRE ', ''));
+
+  const iscustom = updateIscustom([
     'Hire custom operator',
     current === 'herbicide.reduced'
       ? 'No reduced application activity'
       : 'No additional application activity',
     ...Object.keys(db.costDefaults),
-  ].includes(currentImplement.replace('HIRE ', ''));
+  ]);
 
   let info = '';
   let shown = true;
@@ -148,8 +151,7 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement
-        && (
+        currentImplement && (
           currentImplement !== 'No additional application activity'
           || currentImplement !== 'No reduced application activity'
         )
@@ -269,9 +271,7 @@ const Logic = ({
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
           <tr className={current}>
             <td style={style}>{q}</td>
-            <td style={style}>
-              {result}
-            </td>
+            <td style={style}>{result}</td>
             {
               property === 'implement'
               && !iscustom
@@ -286,6 +286,7 @@ const Logic = ({
                     rowSpan="6"
                   >
                     <Activity type={current} />
+                    hiiiiiiii
                   </td>
                 )
                 : (
