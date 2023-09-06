@@ -286,7 +286,6 @@ const Logic = ({
                     rowSpan="6"
                   >
                     <Activity type={current} />
-                    hiiiiiiii
                   </td>
                 )
                 : (
