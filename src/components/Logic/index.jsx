@@ -72,7 +72,7 @@ const Logic = ({
       ? 'No reduced application activity'
       : 'No additional application activity',
     ...Object.keys(db.costDefaults),
-  ].includes(currentImplement.replace('HIRE ', ''));
+  ].includes(currentImplement.replace(/hire /i, ''));
 
   let info = '';
   let shown = true;
@@ -148,8 +148,7 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement
-        && (
+        currentImplement && (
           currentImplement !== 'No additional application activity'
           || currentImplement !== 'No reduced application activity'
         )
@@ -269,9 +268,7 @@ const Logic = ({
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
           <tr className={current}>
             <td style={style}>{q}</td>
-            <td style={style}>
-              {result}
-            </td>
+            <td style={style}>{result}</td>
             {
               property === 'implement'
               && !iscustom
