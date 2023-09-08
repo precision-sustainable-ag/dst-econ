@@ -66,16 +66,13 @@ const Logic = ({
     style = { borderTop: '1px solid black' };
   }
 
-  const updateIscustom = (options) => options.includes(currentImplement.replace('Hire ', ''))
-    || options.includes(currentImplement.replace('HIRE ', ''));
-
-  const iscustom = updateIscustom([
+  const iscustom = [
     'Hire custom operator',
     current === 'herbicide.reduced'
       ? 'No reduced application activity'
       : 'No additional application activity',
     ...Object.keys(db.costDefaults),
-  ]);
+  ].includes(currentImplement.replace(/hire /i, ''));
 
   let info = '';
   let shown = true;
