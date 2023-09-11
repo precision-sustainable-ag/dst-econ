@@ -277,10 +277,6 @@ const Logic = ({
               <tr className={current}>
                 <td style={style}>
                   {q}
-                  {' '}
-                  {current}
-                  {' '}
-                  {property}
                 </td>
                 <td style={style}>{result}</td>
                 {
