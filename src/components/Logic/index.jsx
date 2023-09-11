@@ -269,30 +269,43 @@ const Logic = ({
       ? (
         <>
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
-          <tr className={current}>
-            <td style={style}>{q}</td>
-            <td style={style}>{result}</td>
-            {
-              property === 'implement'
-              && !iscustom
-              && ((current.split('.')[0] !== 'herbicide')
-                  || (current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
-                  || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
-                  || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
+          {
+            !(current === 'herbicide.additional'
+              && property === 'total'
+              && stateHerbicide.additional.implement === 'No additional application activity')
+              && (
+              <tr className={current}>
+                <td style={style}>
+                  {q}
+                  {' '}
+                  {current}
+                  {' '}
+                  {property}
+                </td>
+                <td style={style}>{result}</td>
+                {
+                  property === 'implement'
+                    && !iscustom
+                    && ((current.split('.')[0] !== 'herbicide')
+                      || (current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
+                      || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
+                      || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
+                    )
+                    ? (
+                      <td
+                        style={{ padding: 0, border: '1px solid black' }}
+                        rowSpan="6"
+                      >
+                        <Activity type={current} />
+                      </td>
+                    )
+                    : (
+                      td && <td />
+                    )
+                }
+              </tr>
               )
-                ? (
-                  <td
-                    style={{ padding: 0, border: '1px solid black' }}
-                    rowSpan="6"
-                  >
-                    <Activity type={current} />
-                  </td>
-                )
-                : (
-                  td && <td />
-                )
-            }
-          </tr>
+          }
         </>
       )
       : null
