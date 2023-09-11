@@ -223,6 +223,9 @@ const Logic = ({
             if (option.includes('Hire ')) {
               return 'Hire custom operator';
             }
+            if (option === 'No additional application activity') {
+              return 'None';
+            }
             if (a.filter((s) => s.includes('HIRE ')).length) {
               return 'Equipment';
             }
