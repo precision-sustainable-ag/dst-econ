@@ -226,6 +226,9 @@ const Logic = ({
             if (option === 'No additional application activity') {
               return 'None';
             }
+            if (option === 'No reduced application activity') {
+              return 'None';
+            }
             if (a.filter((s) => s.includes('HIRE ')).length) {
               return 'Equipment';
             }
@@ -264,15 +267,23 @@ const Logic = ({
     result = a;
   }
 
+  const displayRow = (currentValue, propertyValue) => !((
+    currentValue === 'herbicide.additional'
+      || currentValue === 'herbicide.reduced'
+  )
+  && propertyValue === 'total'
+  && (
+    stateHerbicide.additional.implement === 'No additional application activity'
+    || stateHerbicide.reduced.implement === 'No reduced application activity'
+  ));
+
   return (
     current && shown
       ? (
         <>
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
           {
-            !(current === 'herbicide.additional'
-              && property === 'total'
-              && stateHerbicide.additional.implement === 'No additional application activity')
+            displayRow(current, property)
               && (
               <tr className={current}>
                 <td style={style}>
