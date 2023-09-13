@@ -249,7 +249,7 @@ const Herbicide = () => {
                 </>
               )}
 
-              {((state.q1 === 'Yes' && state.q2) || state.q1 === 'No') && (
+              {state.q5 && (
                 <>
                   <tr>
                     <th colSpan="100">Fall Herbicides</th>

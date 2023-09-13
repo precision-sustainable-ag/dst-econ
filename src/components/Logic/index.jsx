@@ -223,6 +223,12 @@ const Logic = ({
             if (option.includes('Hire ')) {
               return 'Hire custom operator';
             }
+            if (option === 'No additional application activity') {
+              return 'None';
+            }
+            if (option === 'No reduced application activity') {
+              return 'None';
+            }
             if (a.filter((s) => s.includes('HIRE ')).length) {
               return 'Equipment';
             }
@@ -261,35 +267,52 @@ const Logic = ({
     result = a;
   }
 
+  const displayRow = (currentValue, propertyValue) => !((
+    currentValue === 'herbicide.additional'
+      || currentValue === 'herbicide.reduced'
+  )
+  && propertyValue === 'total'
+  && (
+    stateHerbicide.additional.implement === 'No additional application activity'
+    || stateHerbicide.reduced.implement === 'No reduced application activity'
+  ));
+
   return (
     current && shown
       ? (
         <>
           {intro && <tr><td colSpan={2}>{intro}</td></tr>}
-          <tr className={current}>
-            <td style={style}>{q}</td>
-            <td style={style}>{result}</td>
-            {
-              property === 'implement'
-              && !iscustom
-              && ((current.split('.')[0] !== 'herbicide')
-                  || (current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
-                  || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
-                  || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
+          {
+            displayRow(current, property)
+              && (
+              <tr className={current}>
+                <td style={style}>
+                  {q}
+                </td>
+                <td style={style}>{result}</td>
+                {
+                  property === 'implement'
+                    && !iscustom
+                    && ((current.split('.')[0] !== 'herbicide')
+                      || (current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
+                      || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
+                      || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
+                    )
+                    ? (
+                      <td
+                        style={{ padding: 0, border: '1px solid black' }}
+                        rowSpan="6"
+                      >
+                        <Activity type={current} />
+                      </td>
+                    )
+                    : (
+                      td && <td />
+                    )
+                }
+              </tr>
               )
-                ? (
-                  <td
-                    style={{ padding: 0, border: '1px solid black' }}
-                    rowSpan="6"
-                  >
-                    <Activity type={current} />
-                  </td>
-                )
-                : (
-                  td && <td />
-                )
-            }
-          </tr>
+          }
         </>
       )
       : null
