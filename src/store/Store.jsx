@@ -342,6 +342,7 @@ const initialState = {
       description: 'Other Tillage',
       ...shared,
     },
+    estimated: db.costDefaults['Tillage|Termination'].cost,
     total: tillageTotal,
   },
 
@@ -738,7 +739,6 @@ const reducers = {
 };
 
 export const store = createStore(initialState, { afterChange, reducers });
-
 [
   'seedbed',
   'planting',

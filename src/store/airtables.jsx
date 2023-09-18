@@ -774,6 +774,13 @@ const ATcostDefaults = {
     "Notes": "popular press articles",
     "screen": "Planting",
     "order": 3
+  },
+  "Tillage|Termination": {
+    "key": "Tillage",
+    "cost": 23,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "Termination",
+    "order": ""
   }
 };
 
