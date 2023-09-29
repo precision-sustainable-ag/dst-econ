@@ -774,6 +774,7 @@ export const store = createStore(initialState, { afterChange, reducers });
       const def = {
         seedbed: 'Seedbed preparation',
         planting: 'Planting',
+        tillage: 'Seedbed preparation',
         'tillage.fall': 'Seedbed preparation',
         'tillage.elimination': 'Seedbed preparation',
         'tillage.other': 'Seedbed preparation',
