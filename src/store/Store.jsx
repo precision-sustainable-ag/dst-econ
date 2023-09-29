@@ -745,6 +745,7 @@ export const store = createStore(initialState, { afterChange, reducers });
   'termination.chemical',
   'termination.roller',
   'termination.tillage',
+  'tillage',
   'tillage.fall',
   'tillage.elimination',
   'tillage.other',
@@ -797,7 +798,6 @@ export const store = createStore(initialState, { afterChange, reducers });
       // empty
     } else if (payload) {
       const p = db.implements[payload] || {};
-
       obj.power = p['default power unit'];
       obj.acresHour = +(
         (p.size1 * p['field speed (m/h)'] * p['field efficiency'])

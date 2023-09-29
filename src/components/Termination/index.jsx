@@ -129,26 +129,22 @@ const OtherHerbicides = ({ state, prop, description }) => (
   </table>
 ); // OtherHerbicides
 
-const Herbicide = () => {
-  const state = useSelector(get.termination);
-  console.log(state);
+const Herbicide = () => (
+  <>
+    <tr>
+      <th colSpan="100">Herbicide</th>
+    </tr>
+    <tr>
+      <td>Product</td>
+      <td><Input id="termination.product" /></td>
+    </tr>
 
-  return (
-    <>
-      <tr>
-        <th colSpan="100">Herbicide</th>
-      </tr>
-      <tr>
-        <td>Product</td>
-        <td><Input id="termination.product" /></td>
-      </tr>
+    <tr>
+      <td>Product cost ($/acre)</td>
+      <td><Input id="termination.productCost" type="dollar" /></td>
+    </tr>
 
-      <tr>
-        <td>Product cost ($/acre)</td>
-        <td><Input id="termination.productCost" type="dollar" /></td>
-      </tr>
-
-      {/*  // Version 2:
+    {/*  // Version 2:
         <Logic
           current="termination"
           property="product"
@@ -179,31 +175,30 @@ const Herbicide = () => {
         />
       */}
 
-      <tr>
-        <th colSpan="100">Chemical Spray Equipment</th>
-      </tr>
-      <Logic
-        current="termination.chemical"
-        property="implement"
-        q="How will this herbicide application be done?"
-        type="Chemical"
-      />
+    <tr>
+      <th colSpan="100">Chemical Spray Equipment</th>
+    </tr>
+    <Logic
+      current="termination.chemical"
+      property="implement"
+      q="How will this herbicide application be done?"
+      type="Chemical"
+    />
 
-      <Logic current="termination.chemical" question="power" />
+    <Logic current="termination.chemical" question="power" />
 
-      <Logic current="termination.chemical" question="Annual Use (acres on implement)" />
-      <Logic current="termination.chemical" question="Annual Use (hours on power)" />
-      <Logic current="termination.chemical" question="Acres/hour" />
+    <Logic current="termination.chemical" question="Annual Use (acres on implement)" />
+    <Logic current="termination.chemical" question="Annual Use (hours on power)" />
+    <Logic current="termination.chemical" question="Acres/hour" />
 
-      <Logic
-        current="termination.chemical"
-        question="Estimated"
-        q="Chemical spray equipment cost ($/acre)"
-        a="dollar"
-      />
-    </>
-  );
-}; // Herbicide
+    <Logic
+      current="termination.chemical"
+      question="Estimated"
+      q="Chemical spray equipment cost ($/acre)"
+      a="dollar"
+    />
+  </>
+); // Herbicide
 
 const Roller = () => (
   <>
