@@ -768,29 +768,7 @@ export const store = createStore(initialState, { afterChange, reducers });
 
   afterChange[`${section}.implement`] = (state, { payload }) => {
     const obj = goto(state, section);
-
-    payload = payload.replace(/hire (?!custom operator)/i, '');
-    if (payload === 'Hire custom operator') {
-      const def = {
-        seedbed: 'Seedbed preparation',
-        planting: 'Planting',
-        tillage: 'Tillage|Tillage',
-        'tillage.fall': 'Tillage|Tillage',
-        'tillage.elimination': 'Tillage|Tillage',
-        'tillage.other': 'Tillage|Tillage',
-        'termination.chemical': 'Herbicide application',
-        'termination.roller': 'Roller',
-        'termination.tillage': 'Tillage|Termination',
-        'herbicide.additional': 'Herbicide application',
-        'herbicide.reduced': 'Herbicide application',
-        'herbicide.fall': 'Herbicide application',
-      }[section];
-
-      state.focus = `${section}.total`;
-      obj.estimated = db.costDefaults[def].cost;
-      obj.total = db.costDefaults[def].cost;
-      state.calculated[`${section}.total`] = obj.total;
-    } else if (Object.keys(db.costDefaults).includes(payload)) {
+    if (db.costDefaults[payload]) {
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[payload].cost;
       obj.total = db.costDefaults[payload].cost;
