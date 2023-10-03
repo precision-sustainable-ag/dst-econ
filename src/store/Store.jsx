@@ -342,7 +342,7 @@ const initialState = {
       description: 'Other Tillage',
       ...shared,
     },
-    estimated: db.costDefaults['Tillage|Termination'].cost,
+    estimated: undefined, // was db.costDefaults['Tillage|termination'].cost,
     total: tillageTotal,
   },
 
