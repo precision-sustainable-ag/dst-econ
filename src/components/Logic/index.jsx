@@ -72,7 +72,7 @@ const Logic = ({
       ? 'No reduced application activity'
       : 'No additional application activity',
     ...Object.keys(db.costDefaults),
-  ].includes(currentImplement.replace(/hire /i, ''));
+  ].includes(currentImplement.replace(/hire (?!custom operator)/i, ''));
 
   let info = '';
   let shown = true;

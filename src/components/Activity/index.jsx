@@ -171,16 +171,16 @@ const SummaryRow = ({ parm, desc, type }) => {
 
 const CostsBenefits = ({ type }) => {
   const coverCropTotal = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal = useSelector(get.seedbed.total) || 0;
-  const plantingTotal = useSelector(get.planting.total) || 0;
-  const grazingTotal = useSelector(get.grazing.total) || 0;
-  const terminationTotal = useSelector(get.termination.total) || 0;
-  const tillageTotal = useSelector(get.tillage.total) || 0;
-  const fertilityTotal = -useSelector(get.fertility.total) || 0;
-  const erosionTotal = -useSelector(get.erosion.total) || 0;
-  const yieldTotal = -useSelector(get.yield.total) || 0;
-  const herbicideTotal = useSelector(get.herbicide.total) || 0;
-  const additionalTotal = -useSelector(get.additional.total) || 0;
+  const seedbedTotal = useSelector(get.seedbed).total || 0;
+  const plantingTotal = useSelector(get.planting).total || 0;
+  const grazingTotal = useSelector(get.grazing).total || 0;
+  const terminationTotal = useSelector(get.termination).total || 0;
+  const tillageTotal = useSelector(get.tillage).total || 0;
+  const fertilityTotal = -useSelector(get.fertility).total || 0;
+  const erosionTotal = -useSelector(get.erosion).total || 0;
+  const yieldTotal = -useSelector(get.yield).total || 0;
+  const herbicideTotal = useSelector(get.herbicide).total || 0;
+  const additionalTotal = -useSelector(get.additional).total || 0;
 
   // console.log({
   //   type, coverCropTotal, seedbedTotal, plantingTotal, grazingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageTotal,
@@ -226,16 +226,16 @@ const CostsBenefits = ({ type }) => {
 
 export const Summary = () => {
   const coverCropTotal = useSelector(get.coverCropTotal) || 0;
-  const seedbedTotal = useSelector(get.seedbed.total) || 0;
-  const plantingTotal = useSelector(get.planting.total) || 0;
-  const grazingTotal = useSelector(get.grazing.total) || 0;
-  const terminationTotal = useSelector(get.termination.total) || 0;
-  const tillageTotal = useSelector(get.tillage.total) || 0;
-  const fertilityTotal = -useSelector(get.fertility.total) || 0;
-  const erosionTotal = -useSelector(get.erosion.total) || 0;
-  const yieldTotal = -useSelector(get.yield.total) || 0;
-  const herbicideTotal = useSelector(get.herbicide.total) || 0;
-  const additionalTotal = -useSelector(get.additional.total) || 0;
+  const seedbedTotal = useSelector(get.seedbed).total || 0;
+  const plantingTotal = useSelector(get.planting).total || 0;
+  const grazingTotal = useSelector(get.grazing).total || 0;
+  const terminationTotal = useSelector(get.termination).total || 0;
+  const tillageTotal = useSelector(get.tillage).total || 0;
+  const fertilityTotal = -useSelector(get.fertility).total || 0;
+  const erosionTotal = -useSelector(get.erosion).total || 0;
+  const yieldTotal = -useSelector(get.yield).total || 0;
+  const herbicideTotal = useSelector(get.herbicide).total || 0;
+  const additionalTotal = -useSelector(get.additional).total || 0;
 
   const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +grazingTotal + +fertilityTotal + +erosionTotal
                 + +terminationTotal + +tillageTotal + +yieldTotal + +herbicideTotal + +additionalTotal;

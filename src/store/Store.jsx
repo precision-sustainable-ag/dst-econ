@@ -342,6 +342,7 @@ const initialState = {
       description: 'Other Tillage',
       ...shared,
     },
+    estimated: db.costDefaults['Tillage|Termination'].cost,
     total: tillageTotal,
   },
 
@@ -738,13 +739,13 @@ const reducers = {
 };
 
 export const store = createStore(initialState, { afterChange, reducers });
-
 [
   'seedbed',
   'planting',
   'termination.chemical',
   'termination.roller',
   'termination.tillage',
+  'tillage',
   'tillage.fall',
   'tillage.elimination',
   'tillage.other',
@@ -768,17 +769,18 @@ export const store = createStore(initialState, { afterChange, reducers });
   afterChange[`${section}.implement`] = (state, { payload }) => {
     const obj = goto(state, section);
 
-    payload = payload.replace(/hire /i, '');
+    payload = payload.replace(/hire (?!custom operator)/i, '');
     if (payload === 'Hire custom operator') {
       const def = {
         seedbed: 'Seedbed preparation',
         planting: 'Planting',
-        'tillage.fall': 'Seedbed preparation',
-        'tillage.elimination': 'Seedbed preparation',
-        'tillage.other': 'Seedbed preparation',
+        tillage: 'Tillage|Tillage',
+        'tillage.fall': 'Tillage|Tillage',
+        'tillage.elimination': 'Tillage|Tillage',
+        'tillage.other': 'Tillage|Tillage',
         'termination.chemical': 'Herbicide application',
         'termination.roller': 'Roller',
-        'termination.tillage': 'Seedbed preparation',
+        'termination.tillage': 'Tillage|Termination',
         'herbicide.additional': 'Herbicide application',
         'herbicide.reduced': 'Herbicide application',
         'herbicide.fall': 'Herbicide application',
@@ -797,7 +799,6 @@ export const store = createStore(initialState, { afterChange, reducers });
       // empty
     } else if (payload) {
       const p = db.implements[payload] || {};
-
       obj.power = p['default power unit'];
       obj.acresHour = +(
         (p.size1 * p['field speed (m/h)'] * p['field efficiency'])

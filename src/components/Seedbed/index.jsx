@@ -37,51 +37,49 @@ const Seedbed = () => {
       <hr />
 
       <strong>Cover Crop Establishment</strong>
-      <form>
-        <div className="mobile-table-div">
-          <table className="seedbed inputs power mobile-table">
-            <tbody>
-              <tr>
-                <th colSpan="3">
-                  Seedbed preparation
-                  <ClearInputs defaults={defaults} />
-                </th>
-              </tr>
+      <div className="mobile-table-div">
+        <table className="seedbed inputs power mobile-table">
+          <tbody>
+            <tr>
+              <th colSpan="3">
+                Seedbed preparation
+                <ClearInputs defaults={defaults} />
+              </th>
+            </tr>
 
-              <Logic
-                current="seedbed"
-                property="q1"
-                q="Will you do a field activity to prepare for cover crop planting,
-                which would not normally be done on this field without cover crops?"
-                a={['Yes', 'No']}
-                onChange={() => clearInputs(defaults, 'seedbed.q1')}
-              />
+            <Logic
+              current="seedbed"
+              property="q1"
+              q="Will you do a field activity to prepare for cover crop planting,
+              which would not normally be done on this field without cover crops?"
+              a={['Yes', 'No']}
+              onChange={() => clearInputs(defaults, 'seedbed.q1')}
+            />
 
-              {state.q1 === 'Yes' && (
-                <>
-                  <Logic
-                    current="seedbed"
-                    property="implement"
-                    q="How will seedbed preparation be done?"
-                    type="Tillage"
-                  />
+            {state.q1 === 'Yes' && (
+              <>
+                <Logic
+                  current="seedbed"
+                  property="implement"
+                  q="How will seedbed preparation be done?"
+                  type="Tillage"
+                />
 
-                  <Logic current="seedbed" question="power" />
-                  <Logic current="seedbed" question="Annual Use (acres on implement)" />
-                  <Logic current="seedbed" question="Annual Use (hours on power)" />
-                  <Logic current="seedbed" question="Acres/hour" />
-                  <Logic
-                    current="seedbed"
-                    question="Estimated"
-                    total={Number.isFinite(state.total) ? state.total : estimated}
-                    estimated={estimated}
-                  />
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </form>
+                <Logic current="seedbed" question="power" />
+                <Logic current="seedbed" question="Annual Use (acres on implement)" />
+                <Logic current="seedbed" question="Annual Use (hours on power)" />
+                <Logic current="seedbed" question="Acres/hour" />
+                <Logic
+                  current="seedbed"
+                  question="Estimated"
+                  total={Number.isFinite(state.total) ? state.total : estimated}
+                  estimated={estimated}
+                />
+              </>
+            )}
+          </tbody>
+        </table>
+      </div>
       {dev && (
         <div className="test-buttons">
           <button type="button" onClick={exampleSeedbed}>

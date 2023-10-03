@@ -105,97 +105,95 @@ const Tillage = () => {
           for additional information.
         </p> */}
 
-        <form>
-          <div className="mobile-table-div">
-            <table className="tillage inputs mobile-table power">
-              <tbody>
-                <tr>
-                  <th colSpan="3">
-                    Tillage
-                    <ClearInputs defaults={defaults} />
-                  </th>
-                </tr>
+        <div className="mobile-table-div">
+          <table className="tillage inputs mobile-table power">
+            <tbody>
+              <tr>
+                <th colSpan="3">
+                  Tillage
+                  <ClearInputs defaults={defaults} />
+                </th>
+              </tr>
 
-                <Logic
-                  current="tillage"
-                  property="q1"
-                  q="Do you typically use no-till on this field?"
-                  a={['Yes', 'No']}
-                  onChange={() => clearInputs(fallDefaults)}
-                />
+              <Logic
+                current="tillage"
+                property="q1"
+                q="Do you typically use no-till on this field?"
+                a={['Yes', 'No']}
+                onChange={() => clearInputs(fallDefaults)}
+              />
 
-                {state.q1 === 'No' && (
-                  <>
-                    <tr>
-                      <th colSpan="3">Fall Tillage</th>
-                    </tr>
-                    <Costs
-                      current="tillage.fall"
-                      q2="Do you typically conduct fall tillage on this field?"
-                      q3="How is fall tillage on this field typically done?"
-                      q4="Estimated cost of fall tillage"
-                      onChange={() => clearInputs(fallDefaults, 'tillage.fall.q2')}
-                    />
+              {state.q1 === 'No' && (
+                <>
+                  <tr>
+                    <th colSpan="3">Fall Tillage</th>
+                  </tr>
+                  <Costs
+                    current="tillage.fall"
+                    q2="Do you typically conduct fall tillage on this field?"
+                    q3="How is fall tillage on this field typically done?"
+                    q4="Estimated cost of fall tillage"
+                    onChange={() => clearInputs(fallDefaults, 'tillage.fall.q2')}
+                  />
 
-                    {tillage.fall.q2 === 'Yes' && (
-                      <>
-                        <Logic
-                          current="tillage"
-                          property="q5"
-                          q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
-                          a={['Yes', 'No']}
-                        />
+                  {tillage.fall.q2 === 'Yes' && (
+                    <>
+                      <Logic
+                        current="tillage"
+                        property="q5"
+                        q="Are you planning to forgo fall tillage on this field because of planting a cover crop?"
+                        a={['Yes', 'No']}
+                      />
 
-                        <tr>
-                          <th colSpan="3">Tillage Elimination</th>
-                        </tr>
-                        <Costs
-                          current="tillage.elimination"
-                          q2="Will you be eliminating any other tillage than fall tillage, because of planting a cover crop?"
-                          q3="What other tillage activity will be eliminated because of planting a cover crop?"
-                          q4="Estimated cost of eliminated tillage activity"
-                          onChange={() => clearInputs(eliminationDefaults, 'tillage.elimination.q2')}
-                        />
-                      </>
-                    )}
-                  </>
-                )}
+                      <tr>
+                        <th colSpan="3">Tillage Elimination</th>
+                      </tr>
+                      <Costs
+                        current="tillage.elimination"
+                        q2="Will you be eliminating any other tillage than fall tillage, because of planting a cover crop?"
+                        q3="What other tillage activity will be eliminated because of planting a cover crop?"
+                        q4="Estimated cost of eliminated tillage activity"
+                        onChange={() => clearInputs(eliminationDefaults, 'tillage.elimination.q2')}
+                      />
+                    </>
+                  )}
+                </>
+              )}
 
-                <tr>
-                  <th colSpan="3">Other Tillage</th>
-                </tr>
-                <Costs
-                  current="tillage.other"
-                  q2="Will you be adding any tillage activities because of planting a cover crop?"
-                  q3="What other tillage activity will be added because of planting a cover crop?"
-                  q4="Estimated cost of added tillage activity"
-                  onChange={() => clearInputs(otherDefaults, 'tillage.other.q2')}
-                />
+              <tr>
+                <th colSpan="3">Other Tillage</th>
+              </tr>
+              <Costs
+                current="tillage.other"
+                q2="Will you be adding any tillage activities because of planting a cover crop?"
+                q3="What other tillage activity will be added because of planting a cover crop?"
+                q4="Estimated cost of added tillage activity"
+                onChange={() => clearInputs(otherDefaults, 'tillage.other.q2')}
+              />
 
-                <Logic
-                  current="tillage"
-                  q="Tillage cost reductions due to adopting cover crop"
-                  a={dollars(tillage.costReductions)}
-                  style={{ background: 'lightyellow' }}
-                />
+              <Logic
+                current="tillage"
+                q="Tillage cost reductions due to adopting cover crop"
+                a={dollars(tillage.costReductions)}
+                style={{ background: 'lightyellow' }}
+              />
 
-                <Logic
-                  current="tillage"
-                  q="Tillage cost increases due to adopting cover crop"
-                  a={dollars(tillage.other.total)}
-                  style={{ background: 'lightyellow' }}
-                />
+              <Logic
+                current="tillage"
+                q="Tillage cost increases due to adopting cover crop"
+                a={dollars(tillage.other.total)}
+                style={{ background: 'lightyellow' }}
+              />
 
-                <Logic
-                  current="tillage"
-                  q="Net impact of adopting cover crop on tillage costs"
-                  a={dollars(tillage.total)}
-                  style={{ background: 'lightyellow' }}
-                />
-              </tbody>
-            </table>
-          </div>
-        </form>
+              <Logic
+                current="tillage"
+                q="Net impact of adopting cover crop on tillage costs"
+                a={dollars(tillage.total)}
+                style={{ background: 'lightyellow' }}
+              />
+            </tbody>
+          </table>
+        </div>
       </div>
       {dev && (
         <div className="test-buttons">

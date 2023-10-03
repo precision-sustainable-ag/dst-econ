@@ -35,39 +35,37 @@ const Planting = () => {
       <hr />
 
       <strong>Cover Crop Establishment</strong>
-      <form>
-        <div className="mobile-table-div">
-          <table className="planting inputs mobile-table power">
-            <tbody>
-              <tr>
-                <th colSpan="3">
-                  Planting
-                  <ClearInputs defaults={defaults} />
-                </th>
-              </tr>
+      <div className="mobile-table-div">
+        <table className="planting inputs mobile-table power">
+          <tbody>
+            <tr>
+              <th colSpan="3">
+                Planting
+                <ClearInputs defaults={defaults} />
+              </th>
+            </tr>
 
-              <Logic
-                current="planting"
-                property="implement"
-                q="How will planting be done?"
-                type="Planting"
-                custom={[]}
-              />
+            <Logic
+              current="planting"
+              property="implement"
+              q="How will planting be done?"
+              type="Planting"
+              custom={[]}
+            />
 
-              <Logic current="planting" question="power" />
-              <Logic current="planting" question="Annual Use (acres on implement)" />
-              <Logic current="planting" question="Annual Use (hours on power)" />
-              <Logic current="planting" question="Acres/hour" />
-              <Logic
-                current="planting"
-                question="Estimated"
-                total={state.total}
-                estimated={estimated}
-              />
-            </tbody>
-          </table>
-        </div>
-      </form>
+            <Logic current="planting" question="power" />
+            <Logic current="planting" question="Annual Use (acres on implement)" />
+            <Logic current="planting" question="Annual Use (hours on power)" />
+            <Logic current="planting" question="Acres/hour" />
+            <Logic
+              current="planting"
+              question="Estimated"
+              total={state.total}
+              estimated={estimated}
+            />
+          </tbody>
+        </table>
+      </div>
 
       {dev && (
         <div className="test-buttons">

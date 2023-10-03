@@ -44,6 +44,25 @@ import { Summary } from './components/Activity';
 
 let firstTime = true;
 
+const holdWarn = console.warn;
+console.warn = (msg, ...subst) => {
+  // Deprecation: moment
+  // Autocomplete: useless warning, which has an overcomplicated isOptionEqualTo solution (https://github.com/mui/material-ui/issues/29727)
+
+  if (!/Deprecation|Autocomplete|findDOMNode/.test([msg, ...subst])) {
+    holdWarn(msg, ...subst);
+  }
+};
+
+const holdError = console.error;
+console.error = (msg, ...subst) => {
+  // findDOMNode: MUI
+
+  if (!/findDOMNode/.test([msg, ...subst])) {
+    holdError(msg, ...subst);
+  }
+};
+
 const MyModal = () => {
   const modalData = useSelector(get.modalData);
   const anchor = useSelector(get.anchor);
