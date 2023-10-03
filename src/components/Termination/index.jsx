@@ -233,20 +233,20 @@ const Tillage = () => (
       <th colSpan="100">Tillage Equipment</th>
     </tr>
     <Logic
-      current="tillage"
+      current="termination.tillage"
       property="implement"
       q="How will this tillage be done?"
       type="Tillage"
     />
 
-    <Logic current="tillage" question="power" />
+    <Logic current="termination.tillage" question="power" />
 
-    <Logic current="tillage" question="Annual Use (acres on implement)" />
-    <Logic current="tillage" question="Annual Use (hours on power)" />
-    <Logic current="tillage" question="Acres/hour" />
+    <Logic current="termination.tillage" question="Annual Use (acres on implement)" />
+    <Logic current="termination.tillage" question="Annual Use (hours on power)" />
+    <Logic current="termination.tillage" question="Acres/hour" />
 
     <Logic
-      current="tillage"
+      current="termination.tillage"
       question="Estimated"
       q="Tillage equipment cost ($/acre)"
       a="dollar"
@@ -279,99 +279,97 @@ const Termination = () => {
           or customize with the estimated hours associated with your operation.
           This will more accurately represent costs in your operation.
         </p>
-        <form>
-          <div className="mobile-table-div">
-            <table className={`${current} inputs mobile-table power`}>
-              <thead>
-                <tr>
-                  <th colSpan="3">
-                    Termination
-                    <ClearInputs defaults={defaults} />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+        <div className="mobile-table-div">
+          <table className={`${current} inputs mobile-table power`}>
+            <thead>
+              <tr>
+                <th colSpan="3">
+                  Termination
+                  <ClearInputs defaults={defaults} />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <Logic
+                current={current}
+                property="method"
+                q="Cover Crop termination method"
+                a={[
+                  '',
+                  'Herbicide application',
+                  'Roller',
+                  'Roller with follow-up herbicide',
+                  'Tillage',
+                ]}
+                onChange={() => {
+                  clearInputs(defaults, ['termination.method']);
+                }}
+              />
+
+              {state.method && !/Roller/.test(state.method) && (
                 <Logic
                   current={current}
-                  property="method"
-                  q="Cover Crop termination method"
-                  a={[
-                    '',
-                    'Herbicide application',
-                    'Roller',
-                    'Roller with follow-up herbicide',
-                    'Tillage',
-                  ]}
-                  onChange={() => {
-                    clearInputs(defaults, ['termination.method']);
+                  property="q2"
+                  q="Would you do this field activity if you did not have a cover crop?"
+                  a={['Yes', 'No']}
+                  onChange={(_, value) => {
+                    // clearInputs(defaults, ['termination.method', 'termination.q2']);
+                    if (value === 'Yes' && state.method !== 'Herbicide application') {
+                      navigate('/Tillage');
+                    }
                   }}
                 />
+              )}
 
-                {state.method && !/Roller/.test(state.method) && (
-                  <Logic
-                    current={current}
-                    property="q2"
-                    q="Would you do this field activity if you did not have a cover crop?"
-                    a={['Yes', 'No']}
-                    onChange={(_, value) => {
-                      // clearInputs(defaults, ['termination.method', 'termination.q2']);
-                      if (value === 'Yes' && state.method !== 'Herbicide application') {
-                        navigate('/Tillage');
-                      }
-                    }}
-                  />
-                )}
-
-                {state.method === 'Herbicide application' && state.q2 === 'Yes' && (
-                  <Logic
-                    current={current}
-                    intro="
-                    Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
-                    For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
-                    Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect)
-                    allows them to reduce herbicides used in their tank mix.
+              {state.method === 'Herbicide application' && state.q2 === 'Yes' && (
+                <Logic
+                  current={current}
+                  intro="
+                  Even if you would normally spray a burn-down application, you may elect to add/remove an herbicide or change the rate applied.
+                  For example, if clover is part of your cover crop mix you may wish to include 2, 4-D to help sure adequate termination.
+                  Alternatively, some growers have found that use of cover crops (e.g. cereal rye which has an allelopathic effect)
+                  allows them to reduce herbicides used in their tank mix.
                   "
-                    property="q3"
-                    q="Will you change the herbicides use in your tank mix?"
-                    a={['Yes', 'No']}
-                    onChange={(_, value) => {
-                      // clearInputs(defaults);
-                      if (value === 'No') {
-                        navigate('/Tillage');
-                      }
-                    }}
-                  />
-                )}
+                  property="q3"
+                  q="Will you change the herbicides use in your tank mix?"
+                  a={['Yes', 'No']}
+                  onChange={(_, value) => {
+                    // clearInputs(defaults);
+                    if (value === 'No') {
+                      navigate('/Tillage');
+                    }
+                  }}
+                />
+              )}
 
-                {state.q3 === 'Yes' && (
-                  <tr>
-                    <td colSpan="3">
-                      <OtherHerbicides
-                        state={state}
-                        description="Additional Herbicides"
-                        prop="additional"
-                      />
-                      <OtherHerbicides
-                        state={state}
-                        description="Reduced Herbicides"
-                        prop="reduced"
-                      />
-                    </td>
-                  </tr>
-                )}
+              {state.q3 === 'Yes' && (
+                <tr>
+                  <td colSpan="3">
+                    <OtherHerbicides
+                      state={state}
+                      description="Additional Herbicides"
+                      prop="additional"
+                    />
+                    <OtherHerbicides
+                      state={state}
+                      description="Reduced Herbicides"
+                      prop="reduced"
+                    />
+                  </td>
+                </tr>
+              )}
 
-                {/Roller/.test(method) && <Roller />}
+              {/Roller/.test(method) && <Roller />}
 
-                {(state.q2 === 'No' || /Roller/.test(method)) && (
-                  <>
-                    {/herbicide/i.test(method) && <Herbicide />}
-                    {/Tillage/.test(method) && <Tillage />}
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </form>
+              {(state.q2 === 'No' || /Roller/.test(method)) && (
+                <>
+                  {/herbicide/i.test(method) && <Herbicide />}
+                  {/Tillage/.test(method) && <Tillage />}
+                </>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
       {dev && (
         <div className="test-buttons">

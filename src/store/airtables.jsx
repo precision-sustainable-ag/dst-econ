@@ -636,8 +636,8 @@ const ATrates = {
   "K2O": {
     "key": "K2O",
     "description": "$ per pound of K2O",
-    "value": 0.53,
-    "Notes": "Average Midwest values 6/1/23"
+    "value": 0.45,
+    "Notes": "Average Midwest values 9/1/23"
   },
   "lubrication": {
     "key": "lubrication",
@@ -648,14 +648,14 @@ const ATrates = {
   "Nitrogen": {
     "key": "Nitrogen",
     "description": "$ per pound of N",
-    "value": 0.55,
-    "Notes": "Average Midwest values 6/1/23"
+    "value": 0.38,
+    "Notes": "Average Midwest values 9/1/23"
   },
   "P2O5": {
     "key": "P2O5",
     "description": "$ per pound of P2O5",
-    "value": 0.69,
-    "Notes": "Average Midwest values 6/1/23"
+    "value": 0.65,
+    "Notes": "Average Midwest values 9/1/23"
   },
   "projected": {
     "key": "projected",
@@ -740,18 +740,25 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Herbicide product": {
-    "key": "Herbicide product",
-    "cost": 21.11,
-    "Notes": "placeholder number",
-    "screen": "",
-    "order": ""
-  },
   "Drill or planter|Planting": {
     "key": "Drill or planter",
     "cost": 20,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
     "screen": "Planting",
+    "order": ""
+  },
+  "Tillage|Termination": {
+    "key": "Tillage",
+    "cost": 23,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "Termination",
+    "order": ""
+  },
+  "Tillage|Tillage": {
+    "key": "Tillage",
+    "screen": "Tillage",
+    "cost": 23,
+    "Notes": "Rick's addition for Tillage screen",
     "order": ""
   },
   "Broadcast seeding|Planting": {
@@ -774,13 +781,6 @@ const ATcostDefaults = {
     "Notes": "popular press articles",
     "screen": "Planting",
     "order": 3
-  },
-  "Tillage|Termination": {
-    "key": "Tillage",
-    "cost": 23,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Termination",
-    "order": ""
   }
 };
 
