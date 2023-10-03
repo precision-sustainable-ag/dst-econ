@@ -113,6 +113,20 @@ const NestedAccordion = ({ details, level = 0 }) => {
               .map(([title, content]) => {
                 if (Array.isArray(content)) {
                   content = content.map((data) => <td key="data" className={getClass(data)}>{data}</td>);
+                } else if (typeof content === 'object') {
+                  content = (
+                    <td className={getClass(content)}>
+                      {
+                        Object.keys(content).map((key) => (
+                          <div key={key}>
+                            {key}
+                            :&nbsp;
+                            {content[key]}
+                          </div>
+                        ))
+                      }
+                    </td>
+                  );
                 } else {
                   content = <td className={getClass(content)}>{content}</td>;
                 }
