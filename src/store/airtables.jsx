@@ -684,11 +684,11 @@ const ATrates = {
 };
 
 const ATcostDefaults = {
-  "Herbicide application|Chemical": {
-    "key": "Herbicide application",
+  "Hire custom operator|termination.chemical": {
+    "key": "Hire custom operator",
     "cost": 8,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Chemical",
+    "screen": "termination.chemical",
     "order": ""
   },
   "Anhydrous ammonia injection": {
@@ -698,18 +698,18 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Seedbed preparation": {
-    "key": "Seedbed preparation",
+  "Hire custom operator|seedbed": {
+    "key": "Hire custom operator",
     "cost": 18,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "",
+    "screen": "seedbed",
     "order": ""
   },
-  "Roller": {
-    "key": "Roller",
+  "Hire custom operator|termination.roller": {
+    "key": "Hire custom operator",
     "cost": 15,
     "Notes": "Calculated full cost of 6 row CC roller in CC DST mockup 7-20-22",
-    "screen": "",
+    "screen": "termination.roller",
     "order": ""
   },
   "Dry Fertilizer application": {
@@ -740,46 +740,53 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Drill or planter|Planting": {
+  "Drill or planter|planting": {
     "key": "Drill or planter",
     "cost": 20,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Planting",
+    "screen": "planting",
     "order": ""
   },
-  "Tillage|Termination": {
-    "key": "Tillage",
+  "Hire custom operator|termination.tillage": {
+    "key": "Hire custom operator",
     "cost": 23,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Termination",
+    "screen": "termination.tillage",
     "order": ""
   },
-  "Tillage|Tillage": {
-    "key": "Tillage",
-    "screen": "Tillage",
+  "Hire custom operator|tillage": {
+    "key": "Hire custom operator",
     "cost": 23,
-    "Notes": "Rick's addition for Tillage screen",
+    "Notes": "Added by Rick",
+    "screen": "tillage",
     "order": ""
   },
-  "Broadcast seeding|Planting": {
+  "Hire custom operator|herbicide": {
+    "key": "Hire custom operator",
+    "screen": "herbicide",
+    "cost": 8,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "order": ""
+  },
+  "Broadcast seeding|planting": {
     "key": "Broadcast seeding",
     "cost": 12,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Planting",
+    "screen": "planting",
     "order": 1
   },
-  "Aerial seeding|Planting": {
+  "Aerial seeding|planting": {
     "key": "Aerial seeding",
     "cost": 14,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Planting",
+    "screen": "planting",
     "order": 2
   },
-  "Drone seeding|Planting": {
+  "Drone seeding|planting": {
     "key": "Drone seeding",
     "cost": 20,
     "Notes": "popular press articles",
-    "screen": "Planting",
+    "screen": "planting",
     "order": 3
   }
 };

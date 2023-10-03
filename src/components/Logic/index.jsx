@@ -9,21 +9,19 @@ import {
 
 const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
-  onChange, onInput, value, estimated, total, warning, style, custom = ['Hire custom operator'],
+  onChange, onInput, value, estimated, total, warning, style, custom = [],
 }) => {
   const stateHerbicide = useSelector(get.herbicide);
-  const sortCosts = () => {
-    const cd = db.costDefaults;
-    return Object.keys(cd)
-      .filter((key) => cd[key].screen === type)
-      .sort((k1, k2) => {
-        if (cd[k1].order) {
-          return cd[k1].order - cd[k2].order;
-        }
-        return cd[k1].key.localeCompare(cd[k2].key);
-      })
-      .map((s) => `Hire ${s}`);
-  }; // sortCosts
+
+  const cd = db.costDefaults;
+  const sortCosts = Object.keys(cd)
+    .filter((key) => cd[key].screen === current || cd[key].screen === current.split('.')[0])
+    .sort((k1, k2) => {
+      if (cd[k1].order) {
+        return cd[k1].order - cd[k2].order;
+      }
+      return cd[k1].key.localeCompare(cd[k2].key);
+    });
 
   const sortPower = () => {
     let result = Object.keys(db.power)
@@ -81,7 +79,7 @@ const Logic = ({
   if (property === 'implement') {
     a = [
       ...custom,
-      ...sortCosts(),
+      ...sortCosts,
       ...Object.keys(db.implements)
         .filter((key) => db.implements[key].type === type)
         .sort(),
@@ -217,10 +215,7 @@ const Logic = ({
             if (option.includes('I will not')) {
               return '';
             }
-            if (option.includes('HIRE ')) {
-              return 'Hire custom operator';
-            }
-            if (option.includes('Hire ')) {
+            if (sortCosts.includes(option)) {
               return 'Hire custom operator';
             }
             if (option === 'No additional application activity') {
@@ -229,15 +224,11 @@ const Logic = ({
             if (option === 'No reduced application activity') {
               return 'None';
             }
-            if (a.filter((s) => s.includes('HIRE ')).length) {
-              return 'Equipment';
-            }
-            if (a.filter((s) => s.includes('Hire ')).length) {
+            if (sortCosts.length) {
               return 'Equipment';
             }
             return null;
           }}
-          getOptionLabel={(o) => o?.split('|')[0].replace(/HIRE |Equipment: |Hire (?!custom)/, '')}
         />
       );
     }
