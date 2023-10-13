@@ -773,8 +773,14 @@ export const store = createStore(initialState, { afterChange, reducers });
       obj.estimated = db.costDefaults[payload].cost;
       obj.total = db.costDefaults[payload].cost;
       state.calculated[`${section}.total`] = obj.total;
-    } else if (payload === 'No additional application activity' || payload === 'No reduced application activity') {
-      // empty
+    } else if (
+      payload === 'No additional application activity'
+      || payload === 'No reduced application activity'
+      || payload === 'Incorporate planting with fertilizing. No CC planting cost.'
+    ) {
+      obj.estimated = 0;
+      obj.total = 0;
+      state.calculated[`${section}.total`] = 0;
     } else if (payload) {
       const p = db.implements[payload] || {};
       obj.power = p['default power unit'];
