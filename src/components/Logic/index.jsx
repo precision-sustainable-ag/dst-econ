@@ -23,8 +23,9 @@ const Logic = ({
       return cd[k1].key.localeCompare(cd[k2].key);
     });
 
-  const sortPower = () => {
-    let result = Object.keys(db.power)
+  const sortAndFilterPower = () => {
+    const filteredPowerOptions = Object.values(db.power).filter((power) => power.screen === '' || power.screen === current);
+    let result = filteredPowerOptions.map((power) => power.key)
       .sort((k1, k2) => {
         const key1 = k1.match(/(^\d+) (.+)/);
         const key2 = k2.match(/(^\d+) (.+)/);
@@ -41,7 +42,7 @@ const Logic = ({
     }
 
     return ['', ...result];
-  }; // sortPower
+  }; // sortAndFilterPower
 
   const sortRollerTerminationOptions = (options) => options.map((op) => {
     if (op === 'Hire custom operator') {
@@ -128,7 +129,7 @@ const Logic = ({
       td = false;
       property = 'power';
       q = q || 'What power will be used?';
-      a = sortPower();
+      a = sortAndFilterPower();
       shown = currentImplement && !iscustom;
       break;
     case 'Estimated':
