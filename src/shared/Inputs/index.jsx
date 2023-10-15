@@ -297,7 +297,7 @@ const Input = ({
             {...props}
             id={id}
             checked={v}
-            style={{ padding: 0, paddingRight: 3 }}
+            style={{ padding: 0, paddingRight: 3, color: '#66b366' }}
             onChange={(e) => {
               change(e.target.checked);
               update(e, e.target.checked);
@@ -314,7 +314,7 @@ const Input = ({
         {...props}
         id={id}
         checked={v}
-        style={{ padding: 0, paddingRight: 3 }}
+        style={{ padding: 0, paddingRight: 3, color: '#66b366' }}
         onChange={(e) => {
           change(e.target.checked);
           update(e, e.target.checked);

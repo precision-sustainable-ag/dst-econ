@@ -23,8 +23,9 @@ const Logic = ({
       return cd[k1].key.localeCompare(cd[k2].key);
     });
 
-  const sortPower = () => {
-    let result = Object.keys(db.power)
+  const sortAndFilterPower = () => {
+    const filteredPowerOptions = Object.values(db.power).filter((power) => power.screen === '' || power.screen === current);
+    let result = filteredPowerOptions.map((power) => power.key)
       .sort((k1, k2) => {
         const key1 = k1.match(/(^\d+) (.+)/);
         const key2 = k2.match(/(^\d+) (.+)/);
@@ -41,7 +42,7 @@ const Logic = ({
     }
 
     return ['', ...result];
-  }; // sortPower
+  }; // sortAndFilterPower
 
   const sortRollerTerminationOptions = (options) => options.map((op) => {
     if (op === 'Hire custom operator') {
@@ -64,13 +65,15 @@ const Logic = ({
     style = { borderTop: '1px solid black' };
   }
 
-  const iscustom = [
+  let iscustom = [
     'Hire custom operator',
     current === 'herbicide.reduced'
       ? 'No reduced application activity'
       : 'No additional application activity',
     ...Object.keys(db.costDefaults),
   ].includes(currentImplement.replace(/hire (?!custom operator)/i, ''));
+
+  iscustom = currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.' ? true : iscustom;
 
   let info = '';
   let shown = true;
@@ -126,7 +129,7 @@ const Logic = ({
       td = false;
       property = 'power';
       q = q || 'What power will be used?';
-      a = sortPower();
+      a = sortAndFilterPower();
       shown = currentImplement && !iscustom;
       break;
     case 'Estimated':
@@ -146,9 +149,10 @@ const Logic = ({
       a = 'dollar';
       value = total || estimated;
       shown = context.q3 || (
-        currentImplement && (
-          currentImplement !== 'No additional application activity'
-          || currentImplement !== 'No reduced application activity'
+        currentImplement && !(
+          currentImplement === 'No additional application activity'
+          || currentImplement === 'No reduced application activity'
+          || currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.'
         )
       );
       warning = (
@@ -185,7 +189,6 @@ const Logic = ({
   }
 
   let result;
-
   if (Array.isArray(a)) {
     if (a.length < 3 || type === 'radio') {
       result = (
@@ -224,6 +227,9 @@ const Logic = ({
             if (option === 'No reduced application activity') {
               return 'None';
             }
+            if (option === 'Incorporate planting with fertilizing. No CC planting cost.') {
+              return 'None';
+            }
             if (sortCosts.length) {
               return 'Equipment';
             }
@@ -258,15 +264,24 @@ const Logic = ({
     result = a;
   }
 
-  const displayRow = (currentValue, propertyValue) => !((
-    currentValue === 'herbicide.additional'
-      || currentValue === 'herbicide.reduced'
-  )
-  && propertyValue === 'total'
-  && (
-    stateHerbicide.additional.implement === 'No additional application activity'
-    || stateHerbicide.reduced.implement === 'No reduced application activity'
-  ));
+  const displayRow = (currentValue, propertyValue) => !(
+    (
+      (
+        currentValue === 'herbicide.additional'
+        || currentValue === 'herbicide.reduced'
+      )
+      && propertyValue === 'total'
+      && (
+        stateHerbicide.additional.implement === 'No additional application activity'
+        || stateHerbicide.reduced.implement === 'No reduced application activity'
+      )
+    )
+    || (
+      currentValue === 'planting'
+      && propertyValue === 'total'
+      && context.implement === 'Incorporate planting with fertilizing. No CC planting cost.'
+    )
+  );
 
   return (
     current && shown

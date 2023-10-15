@@ -2442,6 +2442,7 @@ const ATpower = {
   "40 HP Tractor": {
     "key": "40 HP Tractor",
     "Description": "HP Tractor",
+    "screen": "",
     "HP": 40,
     "purchase price 2020": 26000,
     "list discount": 0,
@@ -2455,6 +2456,7 @@ const ATpower = {
   "60 HP Tractor": {
     "key": "60 HP Tractor",
     "Description": "HP Tractor",
+    "screen": "",
     "HP": 60,
     "purchase price 2020": 33000,
     "list discount": 0,
@@ -2468,6 +2470,7 @@ const ATpower = {
   "75 HP Tractor": {
     "key": "75 HP Tractor",
     "Description": "HP Tractor",
+    "screen": "",
     "HP": 75,
     "purchase price 2020": 54000,
     "list discount": 0.05,
@@ -2481,6 +2484,7 @@ const ATpower = {
   "105 HP MFWD Tractor": {
     "key": "105 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 105,
     "purchase price 2020": 145000,
     "list discount": 0.1,
@@ -2494,6 +2498,7 @@ const ATpower = {
   "130 HP MFWD Tractor": {
     "key": "130 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 130,
     "purchase price 2020": 176000,
     "list discount": 0.1,
@@ -2507,6 +2512,7 @@ const ATpower = {
   "130 HP Self Propelled": {
     "key": "130 HP Self Propelled",
     "Description": "HP Self Propelled",
+    "screen": "termination.chemical",
     "HP": 130,
     "expected use (hr/yr)": 200,
     "fuel use (gal/PTO hp/hr)": 0.044,
@@ -2520,6 +2526,7 @@ const ATpower = {
   "160 HP MFWD Tractor": {
     "key": "160 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 160,
     "purchase price 2020": 215000,
     "list discount": 0.1,
@@ -2533,6 +2540,7 @@ const ATpower = {
   "200 HP MFWD Tractor": {
     "key": "200 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 200,
     "purchase price 2020": 277000,
     "list discount": 0.1,
@@ -2546,6 +2554,7 @@ const ATpower = {
   "225 HP MFWD Tractor": {
     "key": "225 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 225,
     "purchase price 2020": 301000,
     "list discount": 0.1,
@@ -2559,6 +2568,7 @@ const ATpower = {
   "260 HP MFWD Tractor": {
     "key": "260 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 260,
     "purchase price 2020": 345000,
     "list discount": 0.1,
@@ -2572,6 +2582,7 @@ const ATpower = {
   "260 HP Tracked Tractor": {
     "key": "260 HP Tracked Tractor",
     "Description": "HP Tracked Tractor",
+    "screen": "",
     "HP": 260,
     "purchase price 2020": 342000,
     "list discount": 0.1,
@@ -2585,6 +2596,7 @@ const ATpower = {
   "275 HP Combine": {
     "key": "275 HP Combine",
     "Description": "HP Combine",
+    "screen": "hide",
     "HP": 275,
     "purchase price 2020": 362000,
     "list discount": 0.2,
@@ -2598,6 +2610,7 @@ const ATpower = {
   "310 HP 4WD Tractor": {
     "key": "310 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 310,
     "purchase price 2020": 420000,
     "list discount": 0.1,
@@ -2611,6 +2624,7 @@ const ATpower = {
   "350 HP Tracked Tractor": {
     "key": "350 HP Tracked Tractor",
     "Description": "HP Tracked Tractor",
+    "screen": "",
     "HP": 350,
     "purchase price 2020": 460000,
     "list discount": 0.1,
@@ -2624,6 +2638,7 @@ const ATpower = {
   "360 HP 4WD Tractor": {
     "key": "360 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 360,
     "purchase price 2020": 379000,
     "list discount": 0.1,
@@ -2637,6 +2652,7 @@ const ATpower = {
   "375 HP Combine": {
     "key": "375 HP Combine",
     "Description": "HP Combine",
+    "screen": "hide",
     "HP": 375,
     "purchase price 2020": 418000,
     "list discount": 0.2,
@@ -2650,6 +2666,7 @@ const ATpower = {
   "400 HP SP Forage Harvester Base Unit": {
     "key": "400 HP SP Forage Harvester Base Unit",
     "Description": "HP SP Forage Harvester Base Unit",
+    "screen": "hide",
     "HP": 400,
     "purchase price 2020": 397000,
     "list discount": 0.1,
@@ -2663,6 +2680,7 @@ const ATpower = {
   "425 HP 4WD Tractor": {
     "key": "425 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 425,
     "purchase price 2020": 452000,
     "list discount": 0.1,
@@ -2676,6 +2694,7 @@ const ATpower = {
   "440 HP Combine": {
     "key": "440 HP Combine",
     "Description": "HP Combine",
+    "screen": "hide",
     "HP": 440,
     "purchase price 2020": 443000,
     "list discount": 0.2,
@@ -2689,6 +2708,7 @@ const ATpower = {
   "550 HP 4WD Tractor": {
     "key": "550 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 550,
     "purchase price 2020": 544000,
     "list discount": 0.05,
@@ -2702,6 +2722,7 @@ const ATpower = {
   "550 HP Tracked Tractor": {
     "key": "550 HP Tracked Tractor",
     "Description": "HP Tracked Tractor",
+    "screen": "",
     "HP": 550,
     "purchase price 2020": 677000,
     "list discount": 0.05,
@@ -2715,6 +2736,7 @@ const ATpower = {
   "625 HP SP Forage Harvester Base Unit": {
     "key": "625 HP SP Forage Harvester Base Unit",
     "Description": "HP SP Forage Harvester Base Unit",
+    "screen": "hide",
     "HP": 625,
     "purchase price 2020": 559000,
     "list discount": 0.1,
