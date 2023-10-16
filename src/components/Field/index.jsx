@@ -60,6 +60,7 @@ const Field = () => {
         )}
 
         <div className="clear">
+          <span style={{ marginLeft: '40%' }}><b>Field and Farm</b></span>
           <ClearInputs defaults={defaults} />
         </div>
         <div className="field-grid">
