@@ -59,7 +59,7 @@ const Field = () => {
           </div>
         )}
 
-        <div className="clear">
+        <div className="clear" style={{ backgroundColor: '#eeeeee' }}>
           <span style={{ marginLeft: '40%' }}><b>Field and Farm</b></span>
           <ClearInputs defaults={defaults} />
         </div>
