@@ -57,10 +57,13 @@ const Fertility = () => {
       </p>
       <div className="mobile-table-div">
         <table className="mobile-table">
-          <caption>
-            <ClearInputs defaults={defaults} />
-          </caption>
           <tbody>
+            <tr>
+              <th colSpan="4">
+                Fertility
+                <ClearInputs defaults={defaults} />
+              </th>
+            </tr>
             <tr>
               <td />
               <th>N</th>
