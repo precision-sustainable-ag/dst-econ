@@ -62,13 +62,21 @@ const Revenue = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
   const species = useSelector(get.species);
-  const planting = useSelector(get.planting);
-  const seedbed = useSelector(get.seedbed);
-  const herbicide = useSelector(get.herbicide);
-  const erosion = useSelector(get.erosion);
+
+  const coverCropTotal = { desc: 'Seed Expense', value: useSelector(get.coverCropTotal) };
+  const seedbedPreparation = { desc: 'Seedbed Preparation', value: useSelector(get.seedbed) };
+  const planting = { desc: 'Planting', value: useSelector(get.planting) };
+  const termination = { desc: 'Termination', value: useSelector(get.termination) };
+  const tillage = { desc: 'Tillage', value: useSelector(get.tillage) };
+  const fertility = { desc: 'Fertility', value: useSelector(get.fertility) };
+  const herbicide = { desc: 'Herbicides', value: useSelector(get.herbicide) };
+  const erosion = { desc: 'Erosion', value: useSelector(get.erosion) };
+  const grazing = { desc: 'Grazing', value: useSelector(get.grazing) };
+  const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
+  const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
+
   const revenuePadding = useSelector(get.revenuePadding);
   const revenueColor = useSelector(get.revenueColor);
-  const coverCropTotal = useSelector(get.coverCropTotal);
 
   const dispatch = useDispatch();
   const revenueOpen = useSelector(get.revenueOpen);
@@ -132,13 +140,13 @@ const Revenue = () => {
   if (species.filter((s) => s).length) {
     increasedCosts.push({
       desc: 'Seeds',
-      cash: coverCropTotal,
+      cash: coverCropTotal.value,
     });
   }
 
-  addIncreasedCost('Planting', planting);
-  addIncreasedCost('Seedbed', seedbed);
-  addIncreasedCost('Herbicide', herbicide);
+  addIncreasedCost('Planting', planting.value);
+  addIncreasedCost('Seedbed', seedbedPreparation.value);
+  addIncreasedCost('Herbicide', herbicide.value);
 
   const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
     if (!details) return null;
@@ -193,12 +201,12 @@ const Revenue = () => {
 
   const decreasedDetails = [];
 
-  if (erosion.total) {
+  if (erosion.value.total) {
     decreasedDetails.push({
       desc: 'Erosion Control',
       details: [{
-        desc: erosion.q2,
-        cash: erosion.total,
+        desc: erosion.value.q2,
+        cash: erosion.value.total,
       }],
     });
   }
@@ -219,9 +227,6 @@ const Revenue = () => {
     });
   }
 
-  // console.log(JSON.stringify(data, null, 2));
-  // console.log(increasedCosts);
-
   if (!decreasedDetails.length && !increasedCosts.length) {
     return (
       <div id="Revenue">
@@ -231,6 +236,38 @@ const Revenue = () => {
       </div>
     );
   }
+
+  // new code
+
+  const allItems = [
+    coverCropTotal,
+    seedbedPreparation,
+    planting,
+    termination,
+    tillage,
+    fertility,
+    herbicide,
+    erosion,
+    grazing,
+    yieldImpact,
+    additionalConsiderations,
+  ];
+
+  const negativeMultiplierItems = ['Fertility', 'Erosion', 'Yield Impact', 'Additional Considerations'];
+
+  const positiveItems = allItems.filter(
+    (item) => ((item.desc === 'Seed Expense' && item.value > 0)
+      || (negativeMultiplierItems.includes(item.desc)
+        ? (item.value.total * -1) > 0
+        : item.value.total > 0)),
+  );
+
+  const negativeItems = allItems.filter(
+    (item) => ((item.desc === 'Seed Expense' && item.value < 0)
+      || (negativeMultiplierItems.includes(item.desc)
+        ? (item.value.total * -1) < 0
+        : item.value.total < 0)),
+  );
 
   return (
     <div id="Revenue">
@@ -300,6 +337,49 @@ const Revenue = () => {
           {renderDetails(data)}
         </tbody>
       </table>
+
+      <table style={{ float: 'left', width: '50%' }}>
+        <caption style={{ backgroundColor: '#669f4d', color: '#fff' }}>Increases in Net Income</caption>
+        <thead>
+          <tr><th colSpan="3" style={{ backgroundColor: '#d7e28b' }}>Increase in Income</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+
+        <thead>
+          <tr><th colSpan="3" style={{ backgroundColor: '#d7e28b' }}>Decrease in Cost</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+      </table>
+
+      <table style={{ width: '50%' }}>
+        <caption style={{ backgroundColor: '#bb1032', color: '#fff' }}>Decreases in Net Income</caption>
+        <thead>
+          <tr><th colSpan="3" style={{ backgroundColor: '#e58167' }}>Decrease in Income</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+
+        <thead>
+          <tr><th colSpan="3" style={{ backgroundColor: '#e58167' }}>Increase in Cost</th></tr>
+          <tr>
+            <th>ITEM</th>
+            <th>PER ACRE</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+      </table>
+
       {dev && <Tests />}
     </div>
   );
