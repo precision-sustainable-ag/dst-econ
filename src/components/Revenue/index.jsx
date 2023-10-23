@@ -288,6 +288,9 @@ const Revenue = () => {
   const decreaseInCostTotal = getTotalValue(decreaseInCost);
   const decreaseInIncomeTotal = getTotalValue(decreaseInIncome);
   const increaseInCostTotal = getTotalValue(increaseInCost);
+  const benefitTotal = increaseInIncomeTotal + decreaseInCostTotal;
+  const costTotal = decreaseInIncomeTotal + increaseInCostTotal;
+  const finalTotal = benefitTotal - costTotal;
 
   return (
     <div id="Revenue">
@@ -389,12 +392,12 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInIncome.length
                     ? ''
-                    : (getValue(increaseInIncome[index]) / acres).toFixed(2)}
+                    : `$${(getValue(increaseInIncome[index]) / acres).toFixed(2)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInIncome.length
                     ? ''
-                    : (getValue(increaseInIncome[index])).toFixed(2)}
+                    : `$${(getValue(increaseInIncome[index])).toFixed(2)}`}
                 </td>
                 <td style={{ textAlign: 'left', width: '25%' }}>
                   {index >= decreaseInIncome.length
@@ -404,12 +407,12 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInIncome.length
                     ? ''
-                    : (getValue(decreaseInIncome[index]) / acres).toFixed(2)}
+                    : `$${(getValue(decreaseInIncome[index]) / acres).toFixed(2)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInIncome.length
                     ? ''
-                    : (getValue(decreaseInIncome[index])).toFixed(2)}
+                    : `$${(getValue(decreaseInIncome[index])).toFixed(2)}`}
                 </td>
               </tr>
             ))
@@ -418,12 +421,18 @@ const Revenue = () => {
           <td><b>Total Increased Income</b></td>
           <td />
           <td style={{ textAlign: 'right' }}>
-            <b>{increaseInIncomeTotal.toFixed(2)}</b>
+            <b>
+              $
+              {increaseInIncomeTotal.toFixed(2)}
+            </b>
           </td>
           <td><b>Total Decreased Income</b></td>
           <td />
           <td style={{ textAlign: 'right' }}>
-            <b>{decreaseInIncomeTotal.toFixed(2)}</b>
+            <b>
+              $
+              {decreaseInIncomeTotal.toFixed(2)}
+            </b>
           </td>
         </tr>
 
@@ -450,12 +459,12 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInCost.length
                     ? ''
-                    : (getValue(decreaseInCost[index]) / acres).toFixed(2)}
+                    : `$${(getValue(decreaseInCost[index]) / acres).toFixed(2)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInCost.length
                     ? ''
-                    : (getValue(decreaseInCost[index])).toFixed(2)}
+                    : `$${(getValue(decreaseInCost[index])).toFixed(2)}`}
                 </td>
                 <td style={{ textAlign: 'left', width: '25%' }}>
                   {index >= increaseInCost.length
@@ -465,12 +474,12 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInCost.length
                     ? ''
-                    : (getValue(increaseInCost[index]) / acres).toFixed(2)}
+                    : `$${(getValue(increaseInCost[index]) / acres).toFixed(2)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInCost.length
                     ? ''
-                    : (getValue(increaseInCost[index])).toFixed(2)}
+                    : `$${(getValue(increaseInCost[index])).toFixed(2)}`}
                 </td>
               </tr>
             ))
@@ -479,7 +488,10 @@ const Revenue = () => {
           <td><b>Total Decreased Cost</b></td>
           <td />
           <td style={{ textAlign: 'right' }}>
-            <b>{decreaseInCostTotal.toFixed(2)}</b>
+            <b>
+              $
+              {decreaseInCostTotal.toFixed(2)}
+            </b>
           </td>
           <td><b>Total Increased Cost</b></td>
           <td />
@@ -493,13 +505,15 @@ const Revenue = () => {
             Annual Total Increased Net Income
           </td>
           <td style={{ textAlign: 'right', backgroundColor: '#d7e28b' }}>
-            {(increaseInIncomeTotal + decreaseInCostTotal).toFixed(2)}
+            $
+            {benefitTotal.toFixed(2)}
           </td>
           <td colSpan="2" style={{ backgroundColor: '#e58167' }}>
             Annual Total Decreased Net Income
           </td>
           <td style={{ textAlign: 'right', backgroundColor: '#e58167' }}>
-            {(decreaseInIncomeTotal + increaseInCostTotal).toFixed(2)}
+            $
+            {costTotal.toFixed(2)}
           </td>
         </tr>
 
@@ -508,26 +522,34 @@ const Revenue = () => {
             Annual Per Acre Increased Net Income
           </td>
           <td style={{ textAlign: 'right', backgroundColor: '#d7e28b' }}>
-            {((increaseInIncomeTotal + decreaseInCostTotal) / acres).toFixed(2)}
+            $
+            {(benefitTotal / acres).toFixed(2)}
           </td>
           <td colSpan="2" style={{ backgroundColor: '#e58167' }}>
             Annual Per Acre Decreased Net Income
           </td>
           <td style={{ textAlign: 'right', backgroundColor: '#e58167' }}>
-            {((decreaseInIncomeTotal + increaseInCostTotal) / acres).toFixed(2)}
+            $
+            {(costTotal / acres).toFixed(2)}
           </td>
         </tr>
 
         <tr>
           <th colSpan="6" style={{ backgroundColor: '#669f4d', color: '#fff' }}>
-            Annual Change in Total Net Income = $
-            {(increaseInIncomeTotal + decreaseInCostTotal - decreaseInIncomeTotal - increaseInCostTotal).toFixed(2)}
+            Annual Change in Total Net Income =
+            {' '}
+            {finalTotal < 0 ? '-' : ''}
+            $
+            {Math.abs(finalTotal).toFixed(2)}
           </th>
         </tr>
         <tr>
           <th colSpan="6" style={{ backgroundColor: '#669f4d', color: '#fff' }}>
-            Annual Change in Per Acre Net Income = $
-            {((increaseInIncomeTotal + decreaseInCostTotal - decreaseInIncomeTotal - increaseInCostTotal) / acres).toFixed(2)}
+            Annual Change in Per Acre Net Income =
+            {' '}
+            {finalTotal < 0 ? '-' : ''}
+            $
+            {(Math.abs(finalTotal) / acres).toFixed(2)}
           </th>
         </tr>
 
