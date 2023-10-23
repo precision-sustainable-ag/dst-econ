@@ -255,19 +255,38 @@ const Revenue = () => {
 
   const negativeMultiplierItems = ['Fertility', 'Erosion', 'Yield Impact', 'Additional Considerations'];
 
-  const positiveItems = allItems.filter(
+  const costItems = allItems.filter(
     (item) => ((item.desc === 'Seed Expense' && item.value > 0)
       || (negativeMultiplierItems.includes(item.desc)
         ? (item.value.total * -1) > 0
         : item.value.total > 0)),
   );
 
-  const negativeItems = allItems.filter(
+  const benefitItems = allItems.filter(
     (item) => ((item.desc === 'Seed Expense' && item.value < 0)
       || (negativeMultiplierItems.includes(item.desc)
         ? (item.value.total * -1) < 0
         : item.value.total < 0)),
   );
+
+  const increaseInIncome = benefitItems.slice(0, benefitItems.length / 2);
+  const descreaseInCost = benefitItems.slice(benefitItems.length / 2, benefitItems.length);
+  const decreaseInIncome = costItems.slice(0, costItems.length / 2);
+  const increaseInCost = costItems.slice(costItems.length / 2, costItems.length);
+
+  console.log(
+    'increase in income: ',
+    increaseInIncome,
+    'decrease in cost: ',
+    descreaseInCost,
+    'descrease in income: ',
+    decreaseInIncome,
+    'increase in cost: ',
+    increaseInCost,
+  );
+
+  const countSection1 = Math.max(increaseInIncome.length, decreaseInIncome.length);
+  const countSection2 = Math.max(descreaseInCost.length, increaseInCost.length);
 
   return (
     <div id="Revenue">
