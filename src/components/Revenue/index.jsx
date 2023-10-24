@@ -76,169 +76,167 @@ const Revenue = () => {
   const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
   const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
 
-  const revenuePadding = useSelector(get.revenuePadding);
-  const revenueColor = useSelector(get.revenueColor);
+  // const revenuePadding = useSelector(get.revenuePadding);
+  // const revenueColor = useSelector(get.revenueColor);
 
-  const dispatch = useDispatch();
-  const revenueOpen = useSelector(get.revenueOpen);
+  // const dispatch = useDispatch();
+  // const revenueOpen = useSelector(get.revenueOpen);
 
-  const increasedCosts = [];
+  // const increasedCosts = [];
 
-  const cashTotal = (item2) => {
-    if (!item2.details) {
-      return +item2.cash || 0;
-    }
+  // const cashTotal = (item2) => {
+  //   if (!item2.details) {
+  //     return +item2.cash || 0;
+  //   }
 
-    return item2.details.reduce((total, item3) => total + cashTotal(item3), 0);
-  };
+  //   return item2.details.reduce((total, item3) => total + cashTotal(item3), 0);
+  // };
 
-  const addIncreasedCost = (desc, data) => {
-    if (!data.total) return;
-    const det = [];
-    ['Labor', 'Fuel'].forEach((type) => {
-      if (data[type]) {
-        det.push({
-          desc: type,
-          cash: data.$implements[type] + data.$power[type],
-        });
-      }
-    });
+  // const addIncreasedCost = (desc, data) => {
+  //   if (!data.total) return;
+  //   const det = [];
+  //   ['Labor', 'Fuel'].forEach((type) => {
+  //     if (data[type]) {
+  //       det.push({
+  //         desc: type,
+  //         cash: data.$implements[type] + data.$power[type],
+  //       });
+  //     }
+  //   });
 
-    const det2 = [];
-    ['Depreciation', 'Interest', 'Storage'].forEach((type) => {
-      if (data[type]) {
-        det2.push({
-          desc: type,
-          cash: data.$implements[type] + data.$power[type],
-        });
-      }
-    });
+  //   const det2 = [];
+  //   ['Depreciation', 'Interest', 'Storage'].forEach((type) => {
+  //     if (data[type]) {
+  //       det2.push({
+  //         desc: type,
+  //         cash: data.$implements[type] + data.$power[type],
+  //       });
+  //     }
+  //   });
 
-    ['Repairs', 'Taxes', 'Insurance'].forEach((type) => {
-      if (data[type]) {
-        det2.push({
-          desc: type,
-          cash: data.$implements[type] + data.$power[type],
-        });
-      }
-    });
+  //   ['Repairs', 'Taxes', 'Insurance'].forEach((type) => {
+  //     if (data[type]) {
+  //       det2.push({
+  //         desc: type,
+  //         cash: data.$implements[type] + data.$power[type],
+  //       });
+  //     }
+  //   });
 
-    if (det2.length) {
-      det.push({
-        desc: 'Ownership costs',
-        details: det2,
-      });
-    }
+  //   if (det2.length) {
+  //     det.push({
+  //       desc: 'Ownership costs',
+  //       details: det2,
+  //     });
+  //   }
 
-    if (det.length) {
-      increasedCosts.push({
-        desc,
-        details: det,
-      });
-    }
-  };
+  //   if (det.length) {
+  //     increasedCosts.push({
+  //       desc,
+  //       details: det,
+  //     });
+  //   }
+  // };
 
-  if (species.filter((s) => s).length) {
-    increasedCosts.push({
-      desc: 'Seeds',
-      cash: coverCropTotal.value,
-    });
-  }
+  // if (species.filter((s) => s).length) {
+  //   increasedCosts.push({
+  //     desc: 'Seeds',
+  //     cash: coverCropTotal.value,
+  //   });
+  // }
 
-  addIncreasedCost('Planting', planting.value);
-  addIncreasedCost('Seedbed', seedbedPreparation.value);
-  addIncreasedCost('Herbicide', herbicide.value);
+  // addIncreasedCost('Planting', planting.value);
+  // addIncreasedCost('Seedbed', seedbedPreparation.value);
+  // addIncreasedCost('Herbicide', herbicide.value);
 
-  const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
-    if (!details) return null;
+  // const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
+  //   if (!details) return null;
 
-    return (
-      details.map((item) => {
-        if (!item) return null;
+  //   return (
+  //     details.map((item) => {
+  //       if (!item) return null;
 
-        const open = revenueOpen[parentDesc + item.desc] || false;
-        let cname = `level${level}`;
-        if (revenueColor) {
-          cname += ` color${level}`;
-        }
+  //       const open = revenueOpen[parentDesc + item.desc] || false;
+  //       let cname = `level${level}`;
+  //       if (revenueColor) {
+  //         cname += ` color${level}`;
+  //       }
 
-        return (
-          <>
-            <tr
-              className={cname}
-              style={{ display: parentOpen ? 'table-row' : 'none' }}
-            >
-              <td
-                style={{ paddingLeft: level * 24 + 5 }}
-                onClick={() => {
-                  dispatch(set.revenueOpen({
-                    ...revenueOpen,
-                    [parentDesc + item.desc]: !open,
-                  }));
-                }}
-              >
-                {
-                  item.details ? (
-                    <button
-                      type="button"
-                      style={{ width: '1rem', marginRight: '0.3rem', padding: '0rem' }}
-                    >
-                      {open ? '-' : '+'}
-                    </button>
-                  ) : null
-                }
-                {item.desc}
-              </td>
-              <td style={revenuePadding ? { paddingRight: level * 18 + 5 } : {}}>
-                {dollars(cashTotal(item))}
-              </td>
-            </tr>
-            {renderDetails(item.details, level + 1, parentOpen && open, item.desc)}
-          </>
-        );
-      })
-    );
-  };
+  //       return (
+  //         <>
+  //           <tr
+  //             className={cname}
+  //             style={{ display: parentOpen ? 'table-row' : 'none' }}
+  //           >
+  //             <td
+  //               style={{ paddingLeft: level * 24 + 5 }}
+  //               onClick={() => {
+  //                 dispatch(set.revenueOpen({
+  //                   ...revenueOpen,
+  //                   [parentDesc + item.desc]: !open,
+  //                 }));
+  //               }}
+  //             >
+  //               {
+  //                 item.details ? (
+  //                   <button
+  //                     type="button"
+  //                     style={{ width: '1rem', marginRight: '0.3rem', padding: '0rem' }}
+  //                   >
+  //                     {open ? '-' : '+'}
+  //                   </button>
+  //                 ) : null
+  //               }
+  //               {item.desc}
+  //             </td>
+  //             <td style={revenuePadding ? { paddingRight: level * 18 + 5 } : {}}>
+  //               {dollars(cashTotal(item))}
+  //             </td>
+  //           </tr>
+  //           {renderDetails(item.details, level + 1, parentOpen && open, item.desc)}
+  //         </>
+  //       );
+  //     })
+  //   );
+  // };
 
-  const decreasedDetails = [];
+  // const decreasedDetails = [];
 
-  if (erosion.value.total) {
-    decreasedDetails.push({
-      desc: 'Erosion Control',
-      details: [{
-        desc: erosion.value.q2,
-        cash: erosion.value.total,
-      }],
-    });
-  }
+  // if (erosion.value.total) {
+  //   decreasedDetails.push({
+  //     desc: 'Erosion Control',
+  //     details: [{
+  //       desc: erosion.value.q2,
+  //       cash: erosion.value.total,
+  //     }],
+  //   });
+  // }
 
-  const data = [];
+  // const data = [];
 
-  if (decreasedDetails.length) {
-    data.push({
-      desc: 'Decreased Cost',
-      details: decreasedDetails,
-    });
-  }
+  // if (decreasedDetails.length) {
+  //   data.push({
+  //     desc: 'Decreased Cost',
+  //     details: decreasedDetails,
+  //   });
+  // }
 
-  if (increasedCosts.length) {
-    data.push({
-      desc: 'Increased Cost',
-      details: increasedCosts,
-    });
-  }
+  // if (increasedCosts.length) {
+  //   data.push({
+  //     desc: 'Increased Cost',
+  //     details: increasedCosts,
+  //   });
+  // }
 
-  if (!decreasedDetails.length && !increasedCosts.length) {
-    return (
-      <div id="Revenue">
-        <h1>Revenue Impact</h1>
-        <p>Nothing selected.</p>
-        {dev && <Tests />}
-      </div>
-    );
-  }
-
-  // new code
+  // if (!decreasedDetails.length && !increasedCosts.length) {
+  //   return (
+  //     <div id="Revenue">
+  //       <h1>Revenue Impact</h1>
+  //       <p>Nothing selected.</p>
+  //       {dev && <Tests />}
+  //     </div>
+  //   );
+  // }
 
   const allItems = [
     coverCropTotal,
@@ -294,21 +292,12 @@ const Revenue = () => {
 
   return (
     <div id="Revenue">
-      <div style={{ width: '10rem', float: 'right' }}>
+      {/* <div style={{ width: '10rem', float: 'right' }}>
         <Input id="revenuePadding" label="padding" />
         <Input id="revenueColor" label="color" />
-      </div>
+      </div> */}
 
-      <table>
-        <caption>
-          Economic Effects of Cover Crops
-          {farm ? ` on ${farm} ` : ''}
-          {field ? ` - ${field} ` : ''}
-          {' '}
-          (
-          {new Date().getFullYear()}
-          )
-        </caption>
+      {/* <table>
         <thead>
           <tr>
             <th>&nbsp;</th>
@@ -318,11 +307,12 @@ const Revenue = () => {
         <tbody>
           {renderDetails(data)}
         </tbody>
-      </table>
+      </table> */}
 
-      {/* new ui */}
-
-      <table style={{ float: 'left', width: '100%' }}>
+      <table style={{ float: 'left', width: '100%', marginTop: '2%' }}>
+        <caption>
+          {`Economic Effects of Cover Crops ${farm ? ` on ${farm} ` : ''}${field ? ` - ${field} ` : ''} ${new Date().getFullYear()}`}
+        </caption>
 
         <tr>
           <th colSpan="3" style={{ backgroundColor: '#669f4d', color: '#fff' }}>Increases in Net Income</th>
