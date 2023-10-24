@@ -56,7 +56,7 @@ const Herbicide = () => {
           <tbody>
             <tr>
               <th colSpan="3">
-                Herbicides
+                Post-emerge Herbicides
                 <ClearInputs defaults={defaults} />
               </th>
             </tr>
@@ -70,7 +70,7 @@ const Herbicide = () => {
             {state.q1 === 'Yes' && (
               <>
                 <tr>
-                  <th colSpan="100">Additional Herbicides</th>
+                  <th colSpan="100">Additional Post-emerge Herbicides</th>
                 </tr>
                 <Logic
                   current="herbicide"
@@ -184,7 +184,7 @@ const Herbicide = () => {
 
                 <>
                   <tr>
-                    <th colSpan="100">Reduced Herbicides</th>
+                    <th colSpan="100">Reduced Post-emerge Herbicides</th>
                   </tr>
                   <Logic
                     current="herbicide"

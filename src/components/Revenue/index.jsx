@@ -2,10 +2,10 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   dev,
-  dollars,
+  // dollars,
   exampleErosion,
   examplePlanting,
   exampleSeedbed,
@@ -27,9 +27,9 @@ import {
   exampleYield1,
   exampleYield2,
   get,
-  set,
+  // set,
 } from '../../store/Store';
-import Input from '../../shared/Inputs';
+// import Input from '../../shared/Inputs';
 
 import './styles.scss';
 
@@ -61,7 +61,7 @@ const Tests = () => (
 const Revenue = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const species = useSelector(get.species);
+  // const species = useSelector(get.species);
   const acres = useSelector(get.mapFeatures.area);
 
   const coverCropTotal = { desc: 'Seed Expense', value: useSelector(get.coverCropTotal) };
