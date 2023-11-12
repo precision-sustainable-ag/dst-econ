@@ -276,10 +276,13 @@ const Yield = () => {
               <td><Input id="yield.price" type="dollar" /></td>
             </tr>
 
-            <tr>
-              <td>Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?</td>
-              <td><Input id="yield.q4" options={['1', '3', '5']} type="radio" /></td>
-            </tr>
+            {!/Enter my own yield estimate/.test(state.q2)
+              && (
+              <tr>
+                <td>Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?</td>
+                <td><Input id="yield.q4" options={['1', '3', '5']} type="radio" /></td>
+              </tr>
+              )}
           </tbody>
         </table>
 
