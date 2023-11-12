@@ -235,7 +235,7 @@ const initialState = {
   yield: {
     ...shared,
     yield: undefined,
-    manualYieldEstimate: 50,
+    manualYieldEstimate: 0,
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
