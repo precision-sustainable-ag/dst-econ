@@ -363,10 +363,14 @@ const initialState = {
     KAdded: 0,
     $application: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
     $credit: (state) => state.fertility.N * state.fertility.$N + state.fertility.P * state.fertility.$P + state.fertility.K * state.fertility.$K,
-    $cost: (state) => -(
-      state.fertility.NAdded * state.fertility.$N
-      + state.fertility.PAdded * state.fertility.$P
-      + state.fertility.KAdded * state.fertility.$K
+    $cost: (state) => (
+      state.fertility.useFertilizer === 'Yes'
+        ? -(
+          state.fertility.NAdded * state.fertility.$N
+            + state.fertility.PAdded * state.fertility.$P
+            + state.fertility.KAdded * state.fertility.$K
+        )
+        : 0
     ) - (state.fertility.$application || 0),
     total: (state) => state.fertility.$credit + state.fertility.$cost,
   },
