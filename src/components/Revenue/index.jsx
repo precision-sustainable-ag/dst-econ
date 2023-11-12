@@ -76,168 +76,6 @@ const Revenue = () => {
   const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
   const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
 
-  // const revenuePadding = useSelector(get.revenuePadding);
-  // const revenueColor = useSelector(get.revenueColor);
-
-  // const dispatch = useDispatch();
-  // const revenueOpen = useSelector(get.revenueOpen);
-
-  // const increasedCosts = [];
-
-  // const cashTotal = (item2) => {
-  //   if (!item2.details) {
-  //     return +item2.cash || 0;
-  //   }
-
-  //   return item2.details.reduce((total, item3) => total + cashTotal(item3), 0);
-  // };
-
-  // const addIncreasedCost = (desc, data) => {
-  //   if (!data.total) return;
-  //   const det = [];
-  //   ['Labor', 'Fuel'].forEach((type) => {
-  //     if (data[type]) {
-  //       det.push({
-  //         desc: type,
-  //         cash: data.$implements[type] + data.$power[type],
-  //       });
-  //     }
-  //   });
-
-  //   const det2 = [];
-  //   ['Depreciation', 'Interest', 'Storage'].forEach((type) => {
-  //     if (data[type]) {
-  //       det2.push({
-  //         desc: type,
-  //         cash: data.$implements[type] + data.$power[type],
-  //       });
-  //     }
-  //   });
-
-  //   ['Repairs', 'Taxes', 'Insurance'].forEach((type) => {
-  //     if (data[type]) {
-  //       det2.push({
-  //         desc: type,
-  //         cash: data.$implements[type] + data.$power[type],
-  //       });
-  //     }
-  //   });
-
-  //   if (det2.length) {
-  //     det.push({
-  //       desc: 'Ownership costs',
-  //       details: det2,
-  //     });
-  //   }
-
-  //   if (det.length) {
-  //     increasedCosts.push({
-  //       desc,
-  //       details: det,
-  //     });
-  //   }
-  // };
-
-  // if (species.filter((s) => s).length) {
-  //   increasedCosts.push({
-  //     desc: 'Seeds',
-  //     cash: coverCropTotal.value,
-  //   });
-  // }
-
-  // addIncreasedCost('Planting', planting.value);
-  // addIncreasedCost('Seedbed', seedbedPreparation.value);
-  // addIncreasedCost('Herbicide', herbicide.value);
-
-  // const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
-  //   if (!details) return null;
-
-  //   return (
-  //     details.map((item) => {
-  //       if (!item) return null;
-
-  //       const open = revenueOpen[parentDesc + item.desc] || false;
-  //       let cname = `level${level}`;
-  //       if (revenueColor) {
-  //         cname += ` color${level}`;
-  //       }
-
-  //       return (
-  //         <>
-  //           <tr
-  //             className={cname}
-  //             style={{ display: parentOpen ? 'table-row' : 'none' }}
-  //           >
-  //             <td
-  //               style={{ paddingLeft: level * 24 + 5 }}
-  //               onClick={() => {
-  //                 dispatch(set.revenueOpen({
-  //                   ...revenueOpen,
-  //                   [parentDesc + item.desc]: !open,
-  //                 }));
-  //               }}
-  //             >
-  //               {
-  //                 item.details ? (
-  //                   <button
-  //                     type="button"
-  //                     style={{ width: '1rem', marginRight: '0.3rem', padding: '0rem' }}
-  //                   >
-  //                     {open ? '-' : '+'}
-  //                   </button>
-  //                 ) : null
-  //               }
-  //               {item.desc}
-  //             </td>
-  //             <td style={revenuePadding ? { paddingRight: level * 18 + 5 } : {}}>
-  //               {dollars(cashTotal(item))}
-  //             </td>
-  //           </tr>
-  //           {renderDetails(item.details, level + 1, parentOpen && open, item.desc)}
-  //         </>
-  //       );
-  //     })
-  //   );
-  // };
-
-  // const decreasedDetails = [];
-
-  // if (erosion.value.total) {
-  //   decreasedDetails.push({
-  //     desc: 'Erosion Control',
-  //     details: [{
-  //       desc: erosion.value.q2,
-  //       cash: erosion.value.total,
-  //     }],
-  //   });
-  // }
-
-  // const data = [];
-
-  // if (decreasedDetails.length) {
-  //   data.push({
-  //     desc: 'Decreased Cost',
-  //     details: decreasedDetails,
-  //   });
-  // }
-
-  // if (increasedCosts.length) {
-  //   data.push({
-  //     desc: 'Increased Cost',
-  //     details: increasedCosts,
-  //   });
-  // }
-
-  // if (!decreasedDetails.length && !increasedCosts.length) {
-  //   return (
-  //     <div id="Revenue">
-  //       <h1>Revenue Impact</h1>
-  //       <p>Nothing selected.</p>
-  //       {dev && <Tests />}
-  //     </div>
-  //   );
-  // }
-
   const allItems = [
     coverCropTotal,
     seedbedPreparation,
@@ -268,10 +106,13 @@ const Revenue = () => {
         : item.value.total < 0)),
   );
 
-  const increaseInIncome = benefitItems.slice(0, benefitItems.length / 2);
-  const decreaseInCost = benefitItems.slice(benefitItems.length / 2, benefitItems.length);
-  const decreaseInIncome = costItems.slice(0, costItems.length / 2);
-  const increaseInCost = costItems.slice(costItems.length / 2, costItems.length);
+  // const increaseInIncome = benefitItems.slice(0, benefitItems.length / 2);
+  const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations'].includes(item.desc));
+  const decreaseInCost = benefitItems.filter((item) => ['Erosion'].includes(item.desc));
+  const decreaseInIncome = costItems.filter((item) => [].includes(item.desc));
+  const increaseInCost = costItems.filter((item) => [
+    'Seed Expense', 'Seedbed Preparation', 'Planting', 'Termination', 'Tillage', 'Fertility', 'Herbicides',
+  ].includes(item.desc));
 
   const countSection1 = Math.max(increaseInIncome.length, decreaseInIncome.length);
   const countSection2 = Math.max(decreaseInCost.length, increaseInCost.length);
@@ -290,24 +131,16 @@ const Revenue = () => {
   const costTotal = decreaseInIncomeTotal + increaseInCostTotal;
   const finalTotal = benefitTotal - costTotal;
 
+  const formattingOptions = {
+    // style: 'decimal',
+    // minimumFractionDigits: 2,
+    // maximumFractionDigits: 2,
+    style: 'currency',
+    currency: 'USD',
+  };
+
   return (
     <div id="Revenue">
-      {/* <div style={{ width: '10rem', float: 'right' }}>
-        <Input id="revenuePadding" label="padding" />
-        <Input id="revenueColor" label="color" />
-      </div> */}
-
-      {/* <table>
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {renderDetails(data)}
-        </tbody>
-      </table> */}
 
       <table style={{ float: 'left', width: '100%', marginTop: '2%' }}>
         <caption>
@@ -341,12 +174,12 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInIncome.length
                     ? ''
-                    : `$${(getValue(increaseInIncome[index]) / acres).toFixed(2)}`}
+                    : `${(getValue(increaseInIncome[index])).toLocaleString('en-US', formattingOptions)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInIncome.length
                     ? ''
-                    : `$${(getValue(increaseInIncome[index])).toFixed(2)}`}
+                    : `${(getValue(increaseInIncome[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
                 </td>
                 <td style={{ textAlign: 'left', width: '25%' }}>
                   {index >= decreaseInIncome.length
@@ -356,31 +189,37 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInIncome.length
                     ? ''
-                    : `$${(getValue(decreaseInIncome[index]) / acres).toFixed(2)}`}
+                    : `${(getValue(decreaseInIncome[index])).toLocaleString('en-US', formattingOptions)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInIncome.length
                     ? ''
-                    : `$${(getValue(decreaseInIncome[index])).toFixed(2)}`}
+                    : `${(getValue(decreaseInIncome[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
                 </td>
               </tr>
             ))
           }
         <tr>
           <td><b>Total Increased Income</b></td>
-          <td />
           <td style={{ textAlign: 'right' }}>
             <b>
-              $
-              {increaseInIncomeTotal.toFixed(2)}
+              {increaseInIncomeTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(increaseInIncomeTotal * acres).toLocaleString('en-US', formattingOptions)}
             </b>
           </td>
           <td><b>Total Decreased Income</b></td>
-          <td />
           <td style={{ textAlign: 'right' }}>
             <b>
-              $
-              {decreaseInIncomeTotal.toFixed(2)}
+              {decreaseInIncomeTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(decreaseInIncomeTotal * acres).toLocaleString('en-US', formattingOptions)}
             </b>
           </td>
         </tr>
@@ -408,12 +247,12 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInCost.length
                     ? ''
-                    : `$${(getValue(decreaseInCost[index]) / acres).toFixed(2)}`}
+                    : `${(getValue(decreaseInCost[index])).toLocaleString('en-US', formattingOptions)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= decreaseInCost.length
                     ? ''
-                    : `$${(getValue(decreaseInCost[index])).toFixed(2)}`}
+                    : `${(getValue(decreaseInCost[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
                 </td>
                 <td style={{ textAlign: 'left', width: '25%' }}>
                   {index >= increaseInCost.length
@@ -423,63 +262,63 @@ const Revenue = () => {
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInCost.length
                     ? ''
-                    : `$${(getValue(increaseInCost[index]) / acres).toFixed(2)}`}
+                    : `${(getValue(increaseInCost[index])).toLocaleString('en-US', formattingOptions)}`}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInCost.length
                     ? ''
-                    : `$${(getValue(increaseInCost[index])).toFixed(2)}`}
+                    : `${(getValue(increaseInCost[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
                 </td>
               </tr>
             ))
           }
         <tr>
           <td><b>Total Decreased Cost</b></td>
-          <td />
           <td style={{ textAlign: 'right' }}>
             <b>
-              $
-              {decreaseInCostTotal.toFixed(2)}
+              {decreaseInCostTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(decreaseInCostTotal * acres).toLocaleString('en-US', formattingOptions)}
             </b>
           </td>
           <td><b>Total Increased Cost</b></td>
-          <td />
           <td style={{ textAlign: 'right' }}>
-            <b>{increaseInCostTotal.toFixed(2)}</b>
+            <b>{increaseInCostTotal.toLocaleString('en-US', formattingOptions)}</b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>{(increaseInCostTotal * acres).toLocaleString('en-US', formattingOptions)}</b>
           </td>
         </tr>
 
         <tr style={{ borderTop: '2px solid #666', borderBottom: '2px solid #666' }}>
-          <td colSpan="2" style={{ backgroundColor: '#d7e28b' }}>
-            Annual Total Increased Net Income
+          <td>
+            <b>Total Inceases in Net Income</b>
           </td>
-          <td style={{ textAlign: 'right', backgroundColor: '#d7e28b' }}>
-            $
-            {benefitTotal.toFixed(2)}
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {benefitTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
           </td>
-          <td colSpan="2" style={{ backgroundColor: '#e58167' }}>
-            Annual Total Decreased Net Income
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(benefitTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
           </td>
-          <td style={{ textAlign: 'right', backgroundColor: '#e58167' }}>
-            $
-            {costTotal.toFixed(2)}
+          <td>
+            <b>Total Decreases in Net Income</b>
           </td>
-        </tr>
-
-        <tr style={{ borderTop: '2px solid #666', borderBottom: '2px solid #666' }}>
-          <td colSpan="2" style={{ backgroundColor: '#d7e28b' }}>
-            Annual Per Acre Increased Net Income
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {costTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
           </td>
-          <td style={{ textAlign: 'right', backgroundColor: '#d7e28b' }}>
-            $
-            {(benefitTotal / acres).toFixed(2)}
-          </td>
-          <td colSpan="2" style={{ backgroundColor: '#e58167' }}>
-            Annual Per Acre Decreased Net Income
-          </td>
-          <td style={{ textAlign: 'right', backgroundColor: '#e58167' }}>
-            $
-            {(costTotal / acres).toFixed(2)}
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(costTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
           </td>
         </tr>
 
@@ -488,8 +327,7 @@ const Revenue = () => {
             Annual Change in Total Net Income =
             {' '}
             {finalTotal < 0 ? '-' : ''}
-            $
-            {Math.abs(finalTotal).toFixed(2)}
+            {(Math.abs(finalTotal) * acres).toLocaleString('en-US', formattingOptions)}
           </th>
         </tr>
         <tr>
@@ -497,8 +335,7 @@ const Revenue = () => {
             Annual Change in Per Acre Net Income =
             {' '}
             {finalTotal < 0 ? '-' : ''}
-            $
-            {(Math.abs(finalTotal) / acres).toFixed(2)}
+            {(Math.abs(finalTotal)).toLocaleString('en-US', formattingOptions)}
           </th>
         </tr>
 

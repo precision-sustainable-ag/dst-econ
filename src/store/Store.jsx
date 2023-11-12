@@ -42,8 +42,8 @@ const tillageTotal = (state) => (state.tillage.costReductions || 0)
 const herbicideTotal = (state) => (
   (state.herbicide.additional.cost || 0)
   + (state.herbicide.additional.total || 0)
-  + (state.herbicide.fall.total || 0)
-  + (state.herbicide.fall.savings || 0)
+  - (state.herbicide.fall.total || 0)
+  - (state.herbicide.fall.savings || 0)
   - ((state.herbicide.reduced.cost || 0) + (state.herbicide.reduced.total || 0))
 );
 
@@ -235,6 +235,7 @@ const initialState = {
   yield: {
     ...shared,
     yield: undefined,
+    manualYieldEstimate: 0,
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
@@ -259,8 +260,10 @@ const initialState = {
         r[2] - state.yield.typical,
       ];
 
-      if (/typical/.test(state.yield.q2)) {
+      if (/No change/.test(state.yield.q2)) {
         state.yield.total = 0;
+      } else if (/Enter my own yield estimate/.test(state.yield.q2)) {
+        state.yield.total = state.yield.manualYieldEstimate;
       } else {
         state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
@@ -360,10 +363,14 @@ const initialState = {
     KAdded: 0,
     $application: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
     $credit: (state) => state.fertility.N * state.fertility.$N + state.fertility.P * state.fertility.$P + state.fertility.K * state.fertility.$K,
-    $cost: (state) => -(
-      state.fertility.NAdded * state.fertility.$N
-      + state.fertility.PAdded * state.fertility.$P
-      + state.fertility.KAdded * state.fertility.$K
+    $cost: (state) => (
+      state.fertility.useFertilizer === 'Yes'
+        ? -(
+          state.fertility.NAdded * state.fertility.$N
+            + state.fertility.PAdded * state.fertility.$P
+            + state.fertility.KAdded * state.fertility.$K
+        )
+        : 0
     ) - (state.fertility.$application || 0),
     total: (state) => state.fertility.$credit + state.fertility.$cost,
   },
@@ -1264,10 +1271,10 @@ export const exampleYield2 = () => {
 export const exampleAdditional = () => {
   exampleSeeds();
   store.dispatch(set.map.address({ stateCode: 'GA' }));
-  store.dispatch(set.additional.$landowner(200));
+  store.dispatch(set.additional.$landowner(20));
   store.dispatch(set.additional.nrcs('Yes'));
-  store.dispatch(set.additional.$carbonOffset(150));
-  store.dispatch(set.additional.$insuranceDiscount(500));
+  store.dispatch(set.additional.$carbonOffset(8));
+  store.dispatch(set.additional.$insuranceDiscount(5));
 
   test('additional.$costShare', 63.01);
   test('additional.total', 913.01);
