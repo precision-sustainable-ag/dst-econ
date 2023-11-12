@@ -1264,10 +1264,10 @@ export const exampleYield2 = () => {
 export const exampleAdditional = () => {
   exampleSeeds();
   store.dispatch(set.map.address({ stateCode: 'GA' }));
-  store.dispatch(set.additional.$landowner(200));
+  store.dispatch(set.additional.$landowner(20));
   store.dispatch(set.additional.nrcs('Yes'));
-  store.dispatch(set.additional.$carbonOffset(150));
-  store.dispatch(set.additional.$insuranceDiscount(500));
+  store.dispatch(set.additional.$carbonOffset(8));
+  store.dispatch(set.additional.$insuranceDiscount(5));
 
   test('additional.$costShare', 63.01);
   test('additional.total', 913.01);
