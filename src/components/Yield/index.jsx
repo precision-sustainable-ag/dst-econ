@@ -147,6 +147,7 @@ const RevenueGraph = ({ className }) => {
 
 const Yield = () => {
   const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
+  const state = useSelector(get.yield);
 
   return (
     <div id="Yield">
@@ -252,8 +253,22 @@ const Yield = () => {
             </tr>
 
             <tr>
-              <td>Do you want your financial analysis to use the typical yield estimates or the cover crop adjusted yield estimates?</td>
-              <td><Input id="yield.q2" options={['Use typical yield estimates', 'Use cover crop adjusted yield estimates']} type="radio" /></td>
+              <td>Select the per acre yield estimate you prefer to use for this analysis</td>
+              <td>
+                <Input
+                  id="yield.q2"
+                  options={[
+                    'No change in yield estimates',
+                    'Use cover crop adjusted yield estimates from the table above',
+                    'Enter my own yield estimate',
+                  ]}
+                  type="radio"
+                />
+                {
+                  /Enter my own yield estimate/.test(state.q2)
+                  && <Input id="yield.manualYieldEstimate" type="dollar" style={{ marginLeft: '5%' }} />
+                }
+              </td>
             </tr>
 
             <tr>
