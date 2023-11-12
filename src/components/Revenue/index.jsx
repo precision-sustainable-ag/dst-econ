@@ -2,10 +2,10 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   dev,
-  dollars,
+  // dollars,
   exampleErosion,
   examplePlanting,
   exampleSeedbed,
@@ -27,9 +27,9 @@ import {
   exampleYield1,
   exampleYield2,
   get,
-  set,
+  // set,
 } from '../../store/Store';
-import Input from '../../shared/Inputs';
+// import Input from '../../shared/Inputs';
 
 import './styles.scss';
 
@@ -61,202 +61,286 @@ const Tests = () => (
 const Revenue = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const species = useSelector(get.species);
-  const planting = useSelector(get.planting);
-  const seedbed = useSelector(get.seedbed);
-  const herbicide = useSelector(get.herbicide);
-  const erosion = useSelector(get.erosion);
-  const revenuePadding = useSelector(get.revenuePadding);
-  const revenueColor = useSelector(get.revenueColor);
-  const coverCropTotal = useSelector(get.coverCropTotal);
+  // const species = useSelector(get.species);
+  const acres = useSelector(get.mapFeatures.area);
 
-  const dispatch = useDispatch();
-  const revenueOpen = useSelector(get.revenueOpen);
+  const coverCropTotal = { desc: 'Seed Expense', value: useSelector(get.coverCropTotal) };
+  const seedbedPreparation = { desc: 'Seedbed Preparation', value: useSelector(get.seedbed) };
+  const planting = { desc: 'Planting', value: useSelector(get.planting) };
+  const termination = { desc: 'Termination', value: useSelector(get.termination) };
+  const tillage = { desc: 'Tillage', value: useSelector(get.tillage) };
+  const fertility = { desc: 'Fertility', value: useSelector(get.fertility) };
+  const herbicide = { desc: 'Herbicides', value: useSelector(get.herbicide) };
+  const erosion = { desc: 'Erosion', value: useSelector(get.erosion) };
+  const grazing = { desc: 'Grazing', value: useSelector(get.grazing) };
+  const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
+  const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
 
-  const increasedCosts = [];
+  const allItems = [
+    coverCropTotal,
+    seedbedPreparation,
+    planting,
+    termination,
+    tillage,
+    fertility,
+    herbicide,
+    erosion,
+    grazing,
+    yieldImpact,
+    additionalConsiderations,
+  ];
 
-  const cashTotal = (item2) => {
-    if (!item2.details) {
-      return +item2.cash || 0;
-    }
+  const negativeMultiplierItems = ['Fertility', 'Erosion', 'Yield Impact', 'Additional Considerations'];
 
-    return item2.details.reduce((total, item3) => total + cashTotal(item3), 0);
+  const costItems = allItems.filter(
+    (item) => ((item.desc === 'Seed Expense' && item.value > 0)
+      || (negativeMultiplierItems.includes(item.desc)
+        ? (item.value.total * -1) > 0
+        : item.value.total > 0)),
+  );
+
+  const benefitItems = allItems.filter(
+    (item) => ((item.desc === 'Seed Expense' && item.value < 0)
+      || (negativeMultiplierItems.includes(item.desc)
+        ? (item.value.total * -1) < 0
+        : item.value.total < 0)),
+  );
+
+  // const increaseInIncome = benefitItems.slice(0, benefitItems.length / 2);
+  const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations'].includes(item.desc));
+  const decreaseInCost = benefitItems.filter((item) => ['Erosion'].includes(item.desc));
+  const decreaseInIncome = costItems.filter((item) => [].includes(item.desc));
+  const increaseInCost = costItems.filter((item) => [
+    'Seed Expense', 'Seedbed Preparation', 'Planting', 'Termination', 'Tillage', 'Fertility', 'Herbicides',
+  ].includes(item.desc));
+
+  const countSection1 = Math.max(increaseInIncome.length, decreaseInIncome.length);
+  const countSection2 = Math.max(decreaseInCost.length, increaseInCost.length);
+
+  const descPlaceholder = (index) => (index === 0 ? 'None identified' : '');
+
+  const getValue = (item) => (item.desc === 'Seed Expense' ? Math.abs(item.value.toFixed(2)) : Math.abs(item.value.total));
+
+  const getTotalValue = (itemList) => itemList.reduce((acc, item) => acc + getValue(item), 0);
+
+  const increaseInIncomeTotal = getTotalValue(increaseInIncome);
+  const decreaseInCostTotal = getTotalValue(decreaseInCost);
+  const decreaseInIncomeTotal = getTotalValue(decreaseInIncome);
+  const increaseInCostTotal = getTotalValue(increaseInCost);
+  const benefitTotal = increaseInIncomeTotal + decreaseInCostTotal;
+  const costTotal = decreaseInIncomeTotal + increaseInCostTotal;
+  const finalTotal = benefitTotal - costTotal;
+
+  const formattingOptions = {
+    // style: 'decimal',
+    // minimumFractionDigits: 2,
+    // maximumFractionDigits: 2,
+    style: 'currency',
+    currency: 'USD',
   };
-
-  const addIncreasedCost = (desc, data) => {
-    if (!data.total) return;
-    const det = [];
-    ['Labor', 'Fuel'].forEach((type) => {
-      if (data[type]) {
-        det.push({
-          desc: type,
-          cash: data.$implements[type] + data.$power[type],
-        });
-      }
-    });
-
-    const det2 = [];
-    ['Depreciation', 'Interest', 'Storage'].forEach((type) => {
-      if (data[type]) {
-        det2.push({
-          desc: type,
-          cash: data.$implements[type] + data.$power[type],
-        });
-      }
-    });
-
-    ['Repairs', 'Taxes', 'Insurance'].forEach((type) => {
-      if (data[type]) {
-        det2.push({
-          desc: type,
-          cash: data.$implements[type] + data.$power[type],
-        });
-      }
-    });
-
-    if (det2.length) {
-      det.push({
-        desc: 'Ownership costs',
-        details: det2,
-      });
-    }
-
-    if (det.length) {
-      increasedCosts.push({
-        desc,
-        details: det,
-      });
-    }
-  };
-
-  if (species.filter((s) => s).length) {
-    increasedCosts.push({
-      desc: 'Seeds',
-      cash: coverCropTotal,
-    });
-  }
-
-  addIncreasedCost('Planting', planting);
-  addIncreasedCost('Seedbed', seedbed);
-  addIncreasedCost('Herbicide', herbicide);
-
-  const renderDetails = (details, level = 0, parentOpen = true, parentDesc = '') => {
-    if (!details) return null;
-
-    return (
-      details.map((item) => {
-        if (!item) return null;
-
-        const open = revenueOpen[parentDesc + item.desc] || false;
-        let cname = `level${level}`;
-        if (revenueColor) {
-          cname += ` color${level}`;
-        }
-
-        return (
-          <>
-            <tr
-              className={cname}
-              style={{ display: parentOpen ? 'table-row' : 'none' }}
-            >
-              <td
-                style={{ paddingLeft: level * 24 + 5 }}
-                onClick={() => {
-                  dispatch(set.revenueOpen({
-                    ...revenueOpen,
-                    [parentDesc + item.desc]: !open,
-                  }));
-                }}
-              >
-                {
-                  item.details ? (
-                    <button
-                      type="button"
-                      style={{ width: '1rem', marginRight: '0.3rem', padding: '0rem' }}
-                    >
-                      {open ? '-' : '+'}
-                    </button>
-                  ) : null
-                }
-                {item.desc}
-              </td>
-              <td style={revenuePadding ? { paddingRight: level * 18 + 5 } : {}}>
-                {dollars(cashTotal(item))}
-              </td>
-            </tr>
-            {renderDetails(item.details, level + 1, parentOpen && open, item.desc)}
-          </>
-        );
-      })
-    );
-  };
-
-  const decreasedDetails = [];
-
-  if (erosion.total) {
-    decreasedDetails.push({
-      desc: 'Erosion Control',
-      details: [{
-        desc: erosion.q2,
-        cash: erosion.total,
-      }],
-    });
-  }
-
-  const data = [];
-
-  if (decreasedDetails.length) {
-    data.push({
-      desc: 'Decreased Cost',
-      details: decreasedDetails,
-    });
-  }
-
-  if (increasedCosts.length) {
-    data.push({
-      desc: 'Increased Cost',
-      details: increasedCosts,
-    });
-  }
-
-  // console.log(JSON.stringify(data, null, 2));
-
-  if (!decreasedDetails.length && !increasedCosts.length) {
-    return (
-      <div id="Revenue">
-        <h1>Revenue Impact</h1>
-        <p>Nothing selected.</p>
-        {dev && <Tests />}
-      </div>
-    );
-  }
 
   return (
     <div id="Revenue">
-      <div style={{ width: '10rem', float: 'right' }}>
-        <Input id="revenuePadding" label="padding" />
-        <Input id="revenueColor" label="color" />
-      </div>
-      <table>
+
+      <table style={{ float: 'left', width: '100%', marginTop: '2%' }}>
         <caption>
-          Economic Effects of Cover Crops
-          {farm ? ` on ${farm} ` : ''}
-          {field ? ` - ${field} ` : ''}
-          {' '}
-          (
-          {new Date().getFullYear()}
-          )
+          {`Economic Effects of Cover Crops ${farm ? ` on ${farm} ` : ''}${field ? ` - ${field} ` : ''} ${new Date().getFullYear()}`}
         </caption>
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {renderDetails(data)}
-        </tbody>
+
+        <tr>
+          <th colSpan="3" style={{ backgroundColor: '#669f4d', color: '#fff' }}>Increases in Net Income</th>
+          <th colSpan="3" style={{ backgroundColor: '#bb1032', color: '#fff' }}>Decreases in Net Income</th>
+        </tr>
+        <tr style={{ borderTop: '2px solid #666', borderBottom: '2px solid #666' }}>
+          <th colSpan="3" style={{ backgroundColor: '#d7e28b' }}>Increase in Income</th>
+          <th colSpan="3" style={{ backgroundColor: '#e58167' }}>Decrease in Income</th>
+        </tr>
+        <tr>
+          <th>ITEM</th>
+          <th>PER ACRE</th>
+          <th>TOTAL</th>
+          <th>ITEM</th>
+          <th>PER ACRE</th>
+          <th>TOTAL</th>
+        </tr>
+        {
+            Array(countSection1).fill(0).map((_, index) => (
+              <tr key={index}>
+                <td style={{ textAlign: 'left', width: '25%' }}>
+                  {index >= increaseInIncome.length
+                    ? descPlaceholder(index)
+                    : increaseInIncome[index].desc}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= increaseInIncome.length
+                    ? ''
+                    : `${(getValue(increaseInIncome[index])).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= increaseInIncome.length
+                    ? ''
+                    : `${(getValue(increaseInIncome[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+                <td style={{ textAlign: 'left', width: '25%' }}>
+                  {index >= decreaseInIncome.length
+                    ? descPlaceholder(index)
+                    : decreaseInIncome[index].desc}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= decreaseInIncome.length
+                    ? ''
+                    : `${(getValue(decreaseInIncome[index])).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= decreaseInIncome.length
+                    ? ''
+                    : `${(getValue(decreaseInIncome[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+              </tr>
+            ))
+          }
+        <tr>
+          <td><b>Total Increased Income</b></td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {increaseInIncomeTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(increaseInIncomeTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td><b>Total Decreased Income</b></td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {decreaseInIncomeTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(decreaseInIncomeTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+        </tr>
+
+        <tr>
+          <th colSpan="3" style={{ backgroundColor: '#d7e28b' }}>Decrease in Cost</th>
+          <th colSpan="3" style={{ backgroundColor: '#e58167' }}>Increase in Cost</th>
+        </tr>
+        <tr>
+          <th>ITEM</th>
+          <th>PER ACRE</th>
+          <th>TOTAL</th>
+          <th>ITEM</th>
+          <th>PER ACRE</th>
+          <th>TOTAL</th>
+        </tr>
+        {
+            Array(countSection2).fill(0).map((_, index) => (
+              <tr key={index}>
+                <td style={{ textAlign: 'left', width: '25%' }}>
+                  {index >= decreaseInCost.length
+                    ? descPlaceholder(index)
+                    : decreaseInCost[index].desc}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= decreaseInCost.length
+                    ? ''
+                    : `${(getValue(decreaseInCost[index])).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= decreaseInCost.length
+                    ? ''
+                    : `${(getValue(decreaseInCost[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+                <td style={{ textAlign: 'left', width: '25%' }}>
+                  {index >= increaseInCost.length
+                    ? descPlaceholder(index)
+                    : increaseInCost[index].desc}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= increaseInCost.length
+                    ? ''
+                    : `${(getValue(increaseInCost[index])).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {index >= increaseInCost.length
+                    ? ''
+                    : `${(getValue(increaseInCost[index]) * acres).toLocaleString('en-US', formattingOptions)}`}
+                </td>
+              </tr>
+            ))
+          }
+        <tr>
+          <td><b>Total Decreased Cost</b></td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {decreaseInCostTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(decreaseInCostTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td><b>Total Increased Cost</b></td>
+          <td style={{ textAlign: 'right' }}>
+            <b>{increaseInCostTotal.toLocaleString('en-US', formattingOptions)}</b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>{(increaseInCostTotal * acres).toLocaleString('en-US', formattingOptions)}</b>
+          </td>
+        </tr>
+
+        <tr style={{ borderTop: '2px solid #666', borderBottom: '2px solid #666' }}>
+          <td>
+            <b>Total Inceases in Net Income</b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {benefitTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(benefitTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td>
+            <b>Total Decreases in Net Income</b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {costTotal.toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+          <td style={{ textAlign: 'right' }}>
+            <b>
+              {(costTotal * acres).toLocaleString('en-US', formattingOptions)}
+            </b>
+          </td>
+        </tr>
+
+        <tr>
+          <th colSpan="6" style={{ backgroundColor: '#669f4d', color: '#fff' }}>
+            Annual Change in Total Net Income =
+            {' '}
+            {finalTotal < 0 ? '-' : ''}
+            {(Math.abs(finalTotal) * acres).toLocaleString('en-US', formattingOptions)}
+          </th>
+        </tr>
+        <tr>
+          <th colSpan="6" style={{ backgroundColor: '#669f4d', color: '#fff' }}>
+            Annual Change in Per Acre Net Income =
+            {' '}
+            {finalTotal < 0 ? '-' : ''}
+            {(Math.abs(finalTotal)).toLocaleString('en-US', formattingOptions)}
+          </th>
+        </tr>
+
       </table>
+
       {dev && <Tests />}
     </div>
   );

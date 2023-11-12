@@ -36,13 +36,14 @@ const terminationTotal = (state) => (
   + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
 );
 
-const tillageTotal = (state) => (state.tillage.costReductions || 0) + (state.tillage.other.total || 0) + (state.tillage.fall.total || 0);
+const tillageTotal = (state) => (state.tillage.costReductions || 0)
+  + (state.tillage.other.total || 0);
 
 const herbicideTotal = (state) => (
   (state.herbicide.additional.cost || 0)
   + (state.herbicide.additional.total || 0)
-  + (state.herbicide.fall.total || 0)
-  + (state.herbicide.fall.savings || 0)
+  - (state.herbicide.fall.total || 0)
+  - (state.herbicide.fall.savings || 0)
   - ((state.herbicide.reduced.cost || 0) + (state.herbicide.reduced.total || 0))
 );
 
@@ -220,7 +221,8 @@ const initialState = {
       product: '',
       unitCost: (state) => db.herbicides?.[state.herbicide.reduced.product]?.['Cost ($)'],
       rate: (state) => db.herbicides?.[state.herbicide.reduced.product]?.Rate,
-      cost: (state) => state.herbicide.reduced.unitCost * state.herbicide.reduced.rate || 0,
+      cost: '',
+      // cost: (state) => state.herbicide.reduced.unitCost * state.herbicide.reduced.rate || 0,
     },
     fall: {
       description: 'Fall herbicides',
@@ -233,6 +235,7 @@ const initialState = {
   yield: {
     ...shared,
     yield: undefined,
+    manualYieldEstimate: 0,
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
@@ -257,11 +260,11 @@ const initialState = {
         r[2] - state.yield.typical,
       ];
 
-      if (/typical/.test(state.yield.q2)) {
+      if (/No change/.test(state.yield.q2)) {
         state.yield.total = 0;
+      } else if (/Enter my own yield estimate/.test(state.yield.q2)) {
+        state.yield.total = state.yield.manualYieldEstimate;
       } else {
-        // console.log(state.yield.impact);
-        // console.log(['1', '3', '5'].indexOf(state.yield.q4));
         state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
 
@@ -342,6 +345,7 @@ const initialState = {
       description: 'Other Tillage',
       ...shared,
     },
+    estimated: undefined, // was db.costDefaults['Tillage|termination'].cost,
     total: tillageTotal,
   },
 
@@ -359,10 +363,14 @@ const initialState = {
     KAdded: 0,
     $application: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
     $credit: (state) => state.fertility.N * state.fertility.$N + state.fertility.P * state.fertility.$P + state.fertility.K * state.fertility.$K,
-    $cost: (state) => -(
-      state.fertility.NAdded * state.fertility.$N
-      + state.fertility.PAdded * state.fertility.$P
-      + state.fertility.KAdded * state.fertility.$K
+    $cost: (state) => (
+      state.fertility.useFertilizer === 'Yes'
+        ? -(
+          state.fertility.NAdded * state.fertility.$N
+            + state.fertility.PAdded * state.fertility.$P
+            + state.fertility.KAdded * state.fertility.$K
+        )
+        : 0
     ) - (state.fertility.$application || 0),
     total: (state) => state.fertility.$credit + state.fertility.$cost,
   },
@@ -593,13 +601,11 @@ const afterChange = {
       state.herbicide.additional.total = 0;
       state.herbicide.additional.implement = '';
     } else if (state.herbicide.q1 === 'Yes' && payload === 'Yes') {
-      state.herbicide.additional.cost = db.costDefaults?.['Herbicide product']?.cost;
       state.focus = 'herbicide.additional.product';
     }
   },
   'termination.q2': (state, { payload }) => {
     if (payload === 'No') {
-      state.termination.productCost = db.costDefaults?.['Herbicide product']?.cost;
       state.focus = 'termination.product';
     } else {
       state.termination.productCost = 0;
@@ -740,13 +746,13 @@ const reducers = {
 };
 
 export const store = createStore(initialState, { afterChange, reducers });
-
 [
   'seedbed',
   'planting',
   'termination.chemical',
   'termination.roller',
   'termination.tillage',
+  'tillage',
   'tillage.fall',
   'tillage.elimination',
   'tillage.other',
@@ -769,37 +775,21 @@ export const store = createStore(initialState, { afterChange, reducers });
 
   afterChange[`${section}.implement`] = (state, { payload }) => {
     const obj = goto(state, section);
-
-    payload = payload.replace('HIRE ', '');
-    if (payload === 'Hire custom operator') {
-      const def = {
-        seedbed: 'Seedbed preparation',
-        planting: 'Planting',
-        'tillage.fall': 'Seedbed preparation',
-        'tillage.elimination': 'Seedbed preparation',
-        'tillage.other': 'Seedbed preparation',
-        'termination.chemical': 'Herbicide application',
-        'termination.roller': 'Roller',
-        'termination.tillage': 'Seedbed preparation',
-        'herbicide.additional': 'Herbicide application',
-        'herbicide.reduced': 'Herbicide application',
-        'herbicide.fall': 'Herbicide application',
-      }[section];
-
-      state.focus = `${section}.total`;
-      obj.estimated = db.costDefaults[def].cost;
-      obj.total = db.costDefaults[def].cost;
-      state.calculated[`${section}.total`] = obj.total;
-    } else if (Object.keys(db.costDefaults).includes(payload)) {
+    if (db.costDefaults[payload]) {
       state.focus = `${section}.total`;
       obj.estimated = db.costDefaults[payload].cost;
       obj.total = db.costDefaults[payload].cost;
       state.calculated[`${section}.total`] = obj.total;
-    } else if (payload === 'I will not reduce my post emerge spray applications') {
-      // empty
+    } else if (
+      payload === 'No additional application activity'
+      || payload === 'No reduced application activity'
+      || payload === 'Incorporate planting with fertilizing. No CC planting cost.'
+    ) {
+      obj.estimated = 0;
+      obj.total = 0;
+      state.calculated[`${section}.total`] = 0;
     } else if (payload) {
       const p = db.implements[payload] || {};
-
       obj.power = p['default power unit'];
       obj.acresHour = +(
         (p.size1 * p['field speed (m/h)'] * p['field efficiency'])
@@ -1005,14 +995,17 @@ export const exampleSeeds = () => {
 
 export const exampleHerbicides = () => {
   const herbicideDefaults = getDefaults(
-    Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`),
+    Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`).filter((parm) => !/fall|additional|reduced/.test(parm)),
   );
+
   const fallDefaults = getDefaults(
     Object.keys(get.herbicide.fall).map((parm) => `herbicide.fall.${parm}`),
   );
+
   const additionalDefaults = getDefaults(
     Object.keys(get.herbicide.additional).map((parm) => `herbicide.additional.${parm}`),
   );
+
   const reducedDefaults = getDefaults(
     Object.keys(get.herbicide.reduced).map((parm) => `herbicide.reduced.${parm}`),
   );
@@ -1278,10 +1271,10 @@ export const exampleYield2 = () => {
 export const exampleAdditional = () => {
   exampleSeeds();
   store.dispatch(set.map.address({ stateCode: 'GA' }));
-  store.dispatch(set.additional.$landowner(200));
+  store.dispatch(set.additional.$landowner(20));
   store.dispatch(set.additional.nrcs('Yes'));
-  store.dispatch(set.additional.$carbonOffset(150));
-  store.dispatch(set.additional.$insuranceDiscount(500));
+  store.dispatch(set.additional.$carbonOffset(8));
+  store.dispatch(set.additional.$insuranceDiscount(5));
 
   test('additional.$costShare', 63.01);
   test('additional.total', 913.01);
@@ -1342,6 +1335,7 @@ if (/demo/i.test(window.location)) {
   exampleTillage5();
   exampleFertilityBenefit();
   exampleFertilityCost();
+  exampleAdditional();
   exampleYield1();
   exampleYield2();
 }

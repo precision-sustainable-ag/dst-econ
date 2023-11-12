@@ -195,8 +195,7 @@ const Seeds = () => {
         </table>
       </div>
       <p>
-        A common strategy for selecting a cover crop is to base your decision upon the need
-        for a specific change you wish to make in a field or farm.
+        A common strategy for selecting a cover crop is to base your decision upon a specific goal you have for a field or farm.
         For example, if you wish to build soil organic matter you may want to select a cover crop
         with high levels of biomass and a fibrous root structure.
         Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.

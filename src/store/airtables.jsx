@@ -636,8 +636,8 @@ const ATrates = {
   "K2O": {
     "key": "K2O",
     "description": "$ per pound of K2O",
-    "value": 0.53,
-    "Notes": "Average Midwest values 6/1/23"
+    "value": 0.45,
+    "Notes": "Average Midwest values 9/1/23"
   },
   "lubrication": {
     "key": "lubrication",
@@ -648,14 +648,14 @@ const ATrates = {
   "Nitrogen": {
     "key": "Nitrogen",
     "description": "$ per pound of N",
-    "value": 0.55,
-    "Notes": "Average Midwest values 6/1/23"
+    "value": 0.38,
+    "Notes": "Average Midwest values 9/1/23"
   },
   "P2O5": {
     "key": "P2O5",
     "description": "$ per pound of P2O5",
-    "value": 0.69,
-    "Notes": "Average Midwest values 6/1/23"
+    "value": 0.65,
+    "Notes": "Average Midwest values 9/1/23"
   },
   "projected": {
     "key": "projected",
@@ -684,11 +684,11 @@ const ATrates = {
 };
 
 const ATcostDefaults = {
-  "Herbicide application": {
-    "key": "Herbicide application",
+  "Hire custom operator|termination.chemical": {
+    "key": "Hire custom operator",
     "cost": 8,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "",
+    "screen": "termination.chemical",
     "order": ""
   },
   "Anhydrous ammonia injection": {
@@ -698,18 +698,18 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Seedbed preparation": {
-    "key": "Seedbed preparation",
+  "Hire custom operator|seedbed": {
+    "key": "Hire custom operator",
     "cost": 18,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "",
+    "screen": "seedbed",
     "order": ""
   },
-  "Roller": {
-    "key": "Roller",
+  "Hire custom operator|termination.roller": {
+    "key": "Hire custom operator",
     "cost": 15,
     "Notes": "Calculated full cost of 6 row CC roller in CC DST mockup 7-20-22",
-    "screen": "",
+    "screen": "termination.roller",
     "order": ""
   },
   "Dry Fertilizer application": {
@@ -740,32 +740,53 @@ const ATcostDefaults = {
     "screen": "",
     "order": ""
   },
-  "Herbicide product": {
-    "key": "Herbicide product",
-    "cost": 21,
-    "Notes": "placeholder number",
-    "screen": "",
-    "order": ""
-  },
-  "Ground planting|Planting": {
-    "key": "Ground planting",
+  "Drill or planter|planting": {
+    "key": "Drill or planter",
     "cost": 20,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Planting",
+    "screen": "planting",
+    "order": ""
+  },
+  "Hire custom operator|termination.tillage": {
+    "key": "Hire custom operator",
+    "cost": 23,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "termination.tillage",
+    "order": ""
+  },
+  "Hire custom operator|tillage": {
+    "key": "Hire custom operator",
+    "cost": 23,
+    "Notes": "Added by Rick",
+    "screen": "tillage",
+    "order": ""
+  },
+  "Hire custom operator|herbicide": {
+    "key": "Hire custom operator",
+    "screen": "herbicide",
+    "cost": 8,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "order": ""
+  },
+  "Broadcast seeding|planting": {
+    "key": "Broadcast seeding",
+    "cost": 12,
+    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "screen": "planting",
     "order": 1
   },
-  "Aerial seeding|Planting": {
+  "Aerial seeding|planting": {
     "key": "Aerial seeding",
     "cost": 14,
     "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
-    "screen": "Planting",
+    "screen": "planting",
     "order": 2
   },
-  "Drone seeding|Planting": {
+  "Drone seeding|planting": {
     "key": "Drone seeding",
-    "cost": 16,
-    "Notes": "placeholder number",
-    "screen": "Planting",
+    "cost": 20,
+    "Notes": "popular press articles",
+    "screen": "planting",
     "order": 3
   }
 };
@@ -2421,6 +2442,7 @@ const ATpower = {
   "40 HP Tractor": {
     "key": "40 HP Tractor",
     "Description": "HP Tractor",
+    "screen": "",
     "HP": 40,
     "purchase price 2020": 26000,
     "list discount": 0,
@@ -2434,6 +2456,7 @@ const ATpower = {
   "60 HP Tractor": {
     "key": "60 HP Tractor",
     "Description": "HP Tractor",
+    "screen": "",
     "HP": 60,
     "purchase price 2020": 33000,
     "list discount": 0,
@@ -2447,6 +2470,7 @@ const ATpower = {
   "75 HP Tractor": {
     "key": "75 HP Tractor",
     "Description": "HP Tractor",
+    "screen": "",
     "HP": 75,
     "purchase price 2020": 54000,
     "list discount": 0.05,
@@ -2460,6 +2484,7 @@ const ATpower = {
   "105 HP MFWD Tractor": {
     "key": "105 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 105,
     "purchase price 2020": 145000,
     "list discount": 0.1,
@@ -2473,6 +2498,7 @@ const ATpower = {
   "130 HP MFWD Tractor": {
     "key": "130 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 130,
     "purchase price 2020": 176000,
     "list discount": 0.1,
@@ -2485,7 +2511,8 @@ const ATpower = {
   },
   "130 HP Self Propelled": {
     "key": "130 HP Self Propelled",
-    "Description": "130 Self Propelled",
+    "Description": "HP Self Propelled",
+    "screen": "termination.chemical",
     "HP": 130,
     "expected use (hr/yr)": 200,
     "fuel use (gal/PTO hp/hr)": 0.044,
@@ -2499,6 +2526,7 @@ const ATpower = {
   "160 HP MFWD Tractor": {
     "key": "160 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 160,
     "purchase price 2020": 215000,
     "list discount": 0.1,
@@ -2512,6 +2540,7 @@ const ATpower = {
   "200 HP MFWD Tractor": {
     "key": "200 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 200,
     "purchase price 2020": 277000,
     "list discount": 0.1,
@@ -2525,6 +2554,7 @@ const ATpower = {
   "225 HP MFWD Tractor": {
     "key": "225 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 225,
     "purchase price 2020": 301000,
     "list discount": 0.1,
@@ -2538,6 +2568,7 @@ const ATpower = {
   "260 HP MFWD Tractor": {
     "key": "260 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
+    "screen": "",
     "HP": 260,
     "purchase price 2020": 345000,
     "list discount": 0.1,
@@ -2551,6 +2582,7 @@ const ATpower = {
   "260 HP Tracked Tractor": {
     "key": "260 HP Tracked Tractor",
     "Description": "HP Tracked Tractor",
+    "screen": "",
     "HP": 260,
     "purchase price 2020": 342000,
     "list discount": 0.1,
@@ -2564,6 +2596,7 @@ const ATpower = {
   "275 HP Combine": {
     "key": "275 HP Combine",
     "Description": "HP Combine",
+    "screen": "hide",
     "HP": 275,
     "purchase price 2020": 362000,
     "list discount": 0.2,
@@ -2577,6 +2610,7 @@ const ATpower = {
   "310 HP 4WD Tractor": {
     "key": "310 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 310,
     "purchase price 2020": 420000,
     "list discount": 0.1,
@@ -2590,6 +2624,7 @@ const ATpower = {
   "350 HP Tracked Tractor": {
     "key": "350 HP Tracked Tractor",
     "Description": "HP Tracked Tractor",
+    "screen": "",
     "HP": 350,
     "purchase price 2020": 460000,
     "list discount": 0.1,
@@ -2603,6 +2638,7 @@ const ATpower = {
   "360 HP 4WD Tractor": {
     "key": "360 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 360,
     "purchase price 2020": 379000,
     "list discount": 0.1,
@@ -2616,6 +2652,7 @@ const ATpower = {
   "375 HP Combine": {
     "key": "375 HP Combine",
     "Description": "HP Combine",
+    "screen": "hide",
     "HP": 375,
     "purchase price 2020": 418000,
     "list discount": 0.2,
@@ -2629,6 +2666,7 @@ const ATpower = {
   "400 HP SP Forage Harvester Base Unit": {
     "key": "400 HP SP Forage Harvester Base Unit",
     "Description": "HP SP Forage Harvester Base Unit",
+    "screen": "hide",
     "HP": 400,
     "purchase price 2020": 397000,
     "list discount": 0.1,
@@ -2642,6 +2680,7 @@ const ATpower = {
   "425 HP 4WD Tractor": {
     "key": "425 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 425,
     "purchase price 2020": 452000,
     "list discount": 0.1,
@@ -2655,6 +2694,7 @@ const ATpower = {
   "440 HP Combine": {
     "key": "440 HP Combine",
     "Description": "HP Combine",
+    "screen": "hide",
     "HP": 440,
     "purchase price 2020": 443000,
     "list discount": 0.2,
@@ -2668,6 +2708,7 @@ const ATpower = {
   "550 HP 4WD Tractor": {
     "key": "550 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
+    "screen": "",
     "HP": 550,
     "purchase price 2020": 544000,
     "list discount": 0.05,
@@ -2681,6 +2722,7 @@ const ATpower = {
   "550 HP Tracked Tractor": {
     "key": "550 HP Tracked Tractor",
     "Description": "HP Tracked Tractor",
+    "screen": "",
     "HP": 550,
     "purchase price 2020": 677000,
     "list discount": 0.05,
@@ -2694,6 +2736,7 @@ const ATpower = {
   "625 HP SP Forage Harvester Base Unit": {
     "key": "625 HP SP Forage Harvester Base Unit",
     "Description": "HP SP Forage Harvester Base Unit",
+    "screen": "hide",
     "HP": 625,
     "purchase price 2020": 559000,
     "list discount": 0.1,

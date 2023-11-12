@@ -38,10 +38,13 @@ const Erosion = () => {
 
       <div className="mobile-table-div">
         <table className="mobile-table">
-          <caption style={{ height: '2rem' }}>
-            <ClearInputs defaults={defaults} />
-          </caption>
           <tbody>
+            <tr>
+              <th colSpan="4">
+                Soil Erosion Control
+                <ClearInputs defaults={defaults} />
+              </th>
+            </tr>
             <Logic
               current="erosion"
               property="q1"

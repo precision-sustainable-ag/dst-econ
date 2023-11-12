@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import { Icon } from '@mui/material';
 import { dev, exampleHome } from '../../store/Store';
-
 import './styles.scss';
 
 const About = () => (
@@ -37,7 +36,7 @@ const About = () => (
       Reduced soil erosion, improved soil aggregate structure, increased water infiltration, and increased soil organic matter
       are some of many impacts to our soil health that accrue with long-term use of cover crops.
       These benefits, over time, can result in increased soil resiliency and potential yield improvements.
-      The DST also enables users to consider the some of the market valued impacts of these longer-term benefits.
+      The DST also enables users to consider some of the market valued impacts of these longer-term benefits.
     </p>
 
     <p>
@@ -51,28 +50,19 @@ const About = () => (
       The Cover Crop Economic DST has been designed to provide credible estimates of the impact of cover crops
       with a limited amount of data retrieval by growers.
       Begin by inputting ALL of the required information into the Field & Farm module
-      and then proceed to each of the following input modules (each of the input modules are buttons with white lettering).
+      and then proceed to each of the input modules (each of the input modules are buttons with white lettering).
     </p>
-
-    <ul>
-      <li>Cover Crop selection</li>
-      <li>Planting decisions</li>
-      <li>Termination</li>
-      <li>Tillage</li>
-      <li>Fertility</li>
-      <li>Herbicide</li>
-      <li>Pests</li>
-      <li>Soil erosion control</li>
-      <li>Additional considerations</li>
-      <li>Yield</li>
-    </ul>
 
     <p>
       Users can view real-time financial impacts by viewing the budget table on the right-hand side of your screen.
       The DST is designed for individualized conditions.
       For example, users can select equipment similar to their operation and also have the option of determining what equipment costs
       they wish to include in the analysis.
-      Click on a green question mark (?) for additional information on the input fields.
+      Click on
+      {' '}
+      <Icon>help</Icon>
+      {' '}
+      for additional information on the input fields.
       After completing the input modules, view the summary of financial impacts.
       At any point, users can go back to specific input modules to modify their responses.
     </p>
@@ -89,7 +79,7 @@ const About = () => (
         {' '}
         projects, please visit
         {' '}
-        <a href="https://precisionsustainableag.org/">https://precisionsustainableag.org/.</a>
+        <a href="https://precisionsustainableag.org/" target="_blank" rel="noreferrer">https://precisionsustainableag.org/.</a>
       </em>
     </p>
 

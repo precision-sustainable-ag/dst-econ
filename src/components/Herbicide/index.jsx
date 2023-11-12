@@ -5,7 +5,7 @@ import ClearInputs from '../ClearInputs';
 import Input from '../../shared/Inputs';
 
 import {
-  dev, get, db, getDefaults, clearInputs, exampleHerbicides,
+  dev, get, getDefaults, clearInputs, exampleHerbicides,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -30,8 +30,6 @@ const defaults = {
 
 const Herbicide = () => {
   const state = useSelector(get.herbicide);
-  const reducedProduct = useSelector(get.herbicide.reduced.product);
-  const reducedCost = useSelector(get.herbicide.reduced.cost);
 
   return (
     <div className="Herbicide">
@@ -53,38 +51,35 @@ const Herbicide = () => {
         */}
       </p>
 
-      <form>
-        <div className="mobile-table-div">
-          <table className="herbicide inputs mobile-table power">
-            <tbody>
-              <tr>
-                <th colSpan="3">
-                  Herbicides
-                  <ClearInputs defaults={defaults} />
-                </th>
-              </tr>
-              <Logic
-                current="herbicide"
-                property="q1"
-                q="Will you modify your post emerge spray program when using cover crops (either the herbicides used or the number of applications)?"
-                a={['Yes', 'No']}
-              />
+      <div className="mobile-table-div">
+        <table className="herbicide inputs mobile-table power">
+          <tbody>
+            <tr>
+              <th colSpan="3">
+                Post-emerge Herbicides
+                <ClearInputs defaults={defaults} />
+              </th>
+            </tr>
+            <Logic
+              current="herbicide"
+              property="q1"
+              q="Will you modify your post emerge spray program when using cover crops (either the herbicides used or the number of applications)?"
+              a={['Yes', 'No']}
+            />
 
-              {state.q1 === 'Yes' && (
-                <>
-                  <tr>
-                    <th colSpan="100">Additional Herbicides</th>
-                  </tr>
-                  <Logic
-                    current="herbicide"
-                    property="q2"
-                    q="Do you plan on adding additional herbicides or making additional spray applications when adding cover crops to your rotation?"
-                    a={['Yes', 'No']}
-                  />
-                </>
-              )}
+            {state.q1 === 'Yes' && (
+              <>
+                <tr>
+                  <th colSpan="100">Additional Post-emerge Herbicides</th>
+                </tr>
+                <Logic
+                  current="herbicide"
+                  property="q2"
+                  q="Do you plan on adding additional herbicides or making additional spray applications when adding cover crops to your rotation?"
+                  a={['Yes', 'No']}
+                />
 
-              {state.q2 === 'Yes' && (
+                {state.q2 === 'Yes' && (
                 <>
                   <tr>
                     <th colSpan="100">
@@ -103,58 +98,58 @@ const Herbicide = () => {
                   </tr>
 
                   {/* // Version 2:
-                    <Logic
-                      current="herbicide.additional"
-                      property="product"
-                      q="Product"
-                      a={[...Object.keys(db.herbicides).sort(), 'Other']}
-                    />
-
-                    {additionalProduct === 'Other' && (
-                      <tr>
-                        <td>Product Name</td>
-                        <td>
-                          <input
-                            type="text"
-                            style={{
-                              height: '38px',
-                              width: '100%',
-                              borderColor: '#BBBBBB',
-                              borderRadius: '5px',
-                              outline: 'none',
-                              borderWidth: '1px',
-                              fontSize: '1rem',
-                              padding: '7.5px 4px 7.5px 6px',
-                            }}
-                            onChange={(e) => {
-                              dispatch(set.herbicide.additional.product(e.target.value));
-                            }}
-                          />
-                        </td>
-                      </tr>
-                    )}
-
                   <Logic
                     current="herbicide.additional"
-                    property="unitCost"
-                    q={`Cost per ${db.herbicides[additionalProduct]?.['Unit (cost)']} of product`}
-                    a="dollar"
+                    property="product"
+                    q="Product"
+                    a={[...Object.keys(db.herbicides).sort(), 'Other']}
                   />
 
-                  <Logic
-                    current="herbicide.additional"
-                    property="rate"
-                    q="Application rate"
-                    a="number"
-                    suffix={db.herbicides[additionalProduct]?.['Unit (rate)']}
-                  />
+                  {additionalProduct === 'Other' && (
+                    <tr>
+                      <td>Product Name</td>
+                      <td>
+                        <input
+                          type="text"
+                          style={{
+                            height: '38px',
+                            width: '100%',
+                            borderColor: '#BBBBBB',
+                            borderRadius: '5px',
+                            outline: 'none',
+                            borderWidth: '1px',
+                            fontSize: '1rem',
+                            padding: '7.5px 4px 7.5px 6px',
+                          }}
+                          onChange={(e) => {
+                            dispatch(set.herbicide.additional.product(e.target.value));
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  )}
 
-                  <Logic
-                    current="herbicide.additional"
-                    property="cost"
-                    q="Product cost"
-                    a={additionalCost}
-                  /> */}
+                <Logic
+                  current="herbicide.additional"
+                  property="unitCost"
+                  q={`Cost per ${db.herbicides[additionalProduct]?.['Unit (cost)']} of product`}
+                  a="dollar"
+                />
+
+                <Logic
+                  current="herbicide.additional"
+                  property="rate"
+                  q="Application rate"
+                  a="number"
+                  suffix={db.herbicides[additionalProduct]?.['Unit (rate)']}
+                />
+
+                <Logic
+                  current="herbicide.additional"
+                  property="cost"
+                  q="Product cost"
+                  a={additionalCost}
+                /> */}
 
                   <Logic
                     current="herbicide.additional"
@@ -162,8 +157,7 @@ const Herbicide = () => {
                     q="What method will be used for the additional post emerge application?"
                     type="Chemical"
                     custom={[
-                      'I will not reduce my post emerge spray applications',
-                      'Hire custom operator',
+                      'No additional application activity',
                     ]}
                   />
 
@@ -186,25 +180,23 @@ const Herbicide = () => {
                     a="dollar"
                   />
                 </>
-              )}
+                )}
 
-              {state.q1 === 'Yes' && state.q2 && (
                 <>
                   <tr>
-                    <th colSpan="100">Reduced Herbicides</th>
+                    <th colSpan="100">Reduced Post-emerge Herbicides</th>
                   </tr>
                   <Logic
                     current="herbicide"
                     property="q5"
                     q="Do you plan on reducing the amount of herbicides used
-                       or eliminating a post-emerge spray application with the use of cover crops?"
+                      or eliminating a post-emerge spray application with the use of cover crops?"
                     a={['Yes', 'No']}
                     onChange={() => clearInputs(reducedDefaults)}
                   />
                 </>
-              )}
 
-              {state.q5 === 'Yes' && (
+                {state.q5 === 'Yes' && (
                 <>
                   <tr>
                     <th colSpan="100">
@@ -213,43 +205,23 @@ const Herbicide = () => {
                     </th>
                   </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="product"
-                    q="Product"
-                    a={['', ...Object.keys(db.herbicides).sort()]}
-                  />
+                  <tr>
+                    <td>Product</td>
+                    <td><Input id="herbicide.reduced.product" /></td>
+                  </tr>
 
-                  <Logic
-                    current="herbicide.reduced"
-                    property="unitCost"
-                    q={`Cost per ${db.herbicides[reducedProduct]?.['Unit (cost)']} of product`}
-                    a="dollar"
-                  />
-
-                  <Logic
-                    current="herbicide.reduced"
-                    property="rate"
-                    q="Application rate"
-                    a="number"
-                    suffix={db.herbicides[reducedProduct]?.['Unit (rate)']}
-                  />
-
-                  <Logic
-                    current="herbicide.reduced"
-                    property="cost"
-                    q="Product cost"
-                    a={reducedCost}
-                  />
+                  <tr>
+                    <td>Product cost</td>
+                    <td><Input id="herbicide.reduced.cost" type="dollar" /></td>
+                  </tr>
 
                   <Logic
                     current="herbicide.reduced"
                     property="implement"
-                    q="How would you have conducted the post emerge application?"
+                    q="What post emerge application activity is eliminated?"
                     type="Chemical"
                     custom={[
-                      'I will not reduce my post emerge spray applications',
-                      'Hire custom operator',
+                      'No reduced application activity',
                     ]}
                   />
 
@@ -272,30 +244,30 @@ const Herbicide = () => {
                     a="dollar"
                   />
                 </>
-              )}
+                )}
+              </>
+            )}
 
-              {((state.q1 === 'Yes' && state.q2) || state.q1 === 'No') && (
-                <>
-                  <tr>
-                    <th colSpan="100">Fall Herbicides</th>
-                  </tr>
-                  <Logic
-                    current="herbicide"
-                    property="q8"
-                    q="Historically, have you implemented a fall herbicide program on this field?"
-                    a={['Yes', 'No']}
-                    onChange={() => clearInputs(fallDefaults)}
-                  />
-                </>
-              )}
+            {state.q5 && (
+              <>
+                <tr>
+                  <th colSpan="100">Fall Herbicides</th>
+                </tr>
+                <Logic
+                  current="herbicide"
+                  property="q8"
+                  q="Historically, have you implemented a fall herbicide program on this field?"
+                  a={['Yes', 'No']}
+                  onChange={() => clearInputs(fallDefaults)}
+                />
 
-              {state.q8 === 'Yes' && (
+                {state.q8 === 'Yes' && (
                 <>
                   <Logic
                     current="herbicide.fall"
                     property="savings"
                     q="Implementing cover crops will allow you to forgo a fall herbicide application.
-                       What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
+                      What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
                     a="dollar"
                   />
 
@@ -322,11 +294,13 @@ const Herbicide = () => {
                     a="dollar"
                   />
                 </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </form>
+                )}
+              </>
+            )}
+
+          </tbody>
+        </table>
+      </div>
 
       {dev && (
         <div className="test-buttons">

@@ -27,6 +27,7 @@ import {
   exampleTillage5,
   exampleFertilityBenefit,
   exampleFertilityCost,
+  exampleAdditional,
   exampleYield1,
   exampleYield2,
   dollars,
@@ -54,6 +55,7 @@ const Tests = () => (
     <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
     <button type="button" onClick={exampleErosion}>Test Erosion</button>
     <button type="button" onClick={exampleGrazing}>Test Grazing</button>
+    <button type="button" onClick={exampleAdditional}>Test Additional</button>
     <button type="button" onClick={exampleYield1}>Test Yield1</button>
     <button type="button" onClick={exampleYield2}>Test Yield2</button>
   </div>
@@ -82,7 +84,7 @@ const CustomExpandIcon = () => (
 const isJSX = (obj) => obj && obj?.$$typeof?.toString() === 'Symbol(react.element)';
 
 const getClass = (data) => {
-  if (+data || /\$/.test(data)) {
+  if (+data || /^\$/.test(data)) {
     return 'right';
   }
   return '';
@@ -111,6 +113,20 @@ const NestedAccordion = ({ details, level = 0 }) => {
               .map(([title, content]) => {
                 if (Array.isArray(content)) {
                   content = content.map((data) => <td key="data" className={getClass(data)}>{data}</td>);
+                } else if (typeof content === 'object') {
+                  content = (
+                    <td className={getClass(content)}>
+                      {
+                        Object.keys(content).map((key) => (
+                          <div key={key}>
+                            {key}
+                            :&nbsp;
+                            {content[key]}
+                          </div>
+                        ))
+                      }
+                    </td>
+                  );
                 } else {
                   content = <td className={getClass(content)}>{content}</td>;
                 }
@@ -183,13 +199,19 @@ const equipment = (obj, type, nest = true) => {
     power,
   } = type;
 
+  let updatedImplement = implement;
+
+  if (description === 'Planting Decisions' || description === 'Chemical spray equipment') {
+    [updatedImplement] = updatedImplement.split('|');
+  }
+
   if (total) {
     if (nest) {
       obj[description] = {
-        Equipment: `${implement}; ${power}`,
+        Equipment: `${updatedImplement}${power ? `; ${power}` : ''}`,
       };
     } else {
-      obj[description] = `${implement}; ${power}`;
+      obj[description] = `${updatedImplement}${power ? `; ${power}` : ''}`;
     }
   }
 };
@@ -221,7 +243,7 @@ const Practices = () => {
 
   const details = {
     'Field & Farm': {
-      'Cash crop': cashCrop,
+      'Cash crop following cover crop': cashCrop,
       'Labor value': dollars($labor),
       'Diesel cost': dollars($diesel),
     },
@@ -240,7 +262,7 @@ const Practices = () => {
   if (termination.total) {
     const {
       method,
-      product, rate, productCost,
+      product, productCost,
       additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
       reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
     } = termination;
@@ -264,7 +286,7 @@ const Practices = () => {
     }
 
     if (product) {
-      obj.Product = `${product} - ${rate} pounds @ ${dollars(productCost)}/acre`;
+      obj.Product = `${product} @ ${dollars(productCost)}/acre`;
     }
 
     equipment(obj, termination.chemical, false);
