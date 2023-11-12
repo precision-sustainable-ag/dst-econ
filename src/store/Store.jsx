@@ -42,8 +42,8 @@ const tillageTotal = (state) => (state.tillage.costReductions || 0)
 const herbicideTotal = (state) => (
   (state.herbicide.additional.cost || 0)
   + (state.herbicide.additional.total || 0)
-  + (state.herbicide.fall.total || 0)
-  + (state.herbicide.fall.savings || 0)
+  - (state.herbicide.fall.total || 0)
+  - (state.herbicide.fall.savings || 0)
   - ((state.herbicide.reduced.cost || 0) + (state.herbicide.reduced.total || 0))
 );
 
