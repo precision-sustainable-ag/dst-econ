@@ -1,30 +1,78 @@
 import React from 'react';
 
-const Resources = () => (
-  <div className="Resources">
-    <h1>Resources</h1>
-    <p>
-      If you already use cover crops on your farm,
-      you know that implementing cover crops into your rotation is unique to your farm and individual perspective.
-      Multiple years of experience will be valuable to an overall farm strategy.
-      However, the resources listed below can supplement your on-farm experience and help guide your decision-making.
-    </p>
+const Resources = () => {
+  const referenceLinks = [
+    {
+      title: 'Regional Cover Crop Councils',
+      links: [
+        'https://www.midwestcovercrops.org/',
+        'https://southerncovercrops.org/',
+        'https://northeastcovercrops.com/',
+        'https://westerncovercrops.org/',
+      ],
+    },
+    {
+      title: 'Soil Health and Climate Smart Agriculture',
+      links: [
+        'https://cra.missouri.edu/',
+        'https://www.sare.org/resources/cover-crops/',
+        'https://soilhealthinstitute.org/',
+        'https://practicalfarmers.org/',
+        'https://farmland.org/',
+      ],
+    },
+    {
+      title: 'Farmer Profiles and/or Case Studies',
+      links: [
+        'https://farmland.org/soil-health-case-studies/',
+        'https://soilhealthinstitute.org/our-work/initiatives/economics-of-soil-health-systems-on-30-u-s-farms/',
+      ],
+    },
+    {
+      title: 'Economic of Cover Crops',
+      links: [
+        'https://soilhealthinstitute.org/app/uploads/2022/01/100-Farm-Fact-Sheet_9-23-2021.pdf',
+      ],
+    },
+    {
+      title: 'Carbon Markets',
+      links: [
+        'https://ilsustainableag.org/programs/ecomarkets/',
+        'https://decode6.org/',
+        'https://farmland.org/project/the-carpe-tool/',
+      ],
+    },
+  ];
 
-    <ul>
-      <li>Field and Farm</li>
-      <li>Cover Crop selection</li>
-      <li>Planting decisions</li>
-      <li>Termination</li>
-      <li>Tillage</li>
-      <li>Fertility</li>
-      <li>Herbicide</li>
-      <li>Pests</li>
-      <li>Soil erosion control</li>
-      <li>Additional considerations</li>
-      <li>Yield</li>
-    </ul>
-  </div>
-); // Resources
+  return (
+    <div className="Resources">
+      <h1>Resources</h1>
+      <p>
+        If you already use cover crops on your farm,
+        you know that implementing cover crops into your rotation is unique to your farm and individual perspective.
+        Multiple years of experience will be valuable to an overall farm strategy.
+        However, the resources listed below can supplement your on-farm experience and help guide your decision-making.
+      </p>
+
+      <ul>
+        {
+          referenceLinks.map((item) => (
+            <li key={item.title}>
+              {item.title}
+              <ul>
+                {item.links.map((linkItem) => (
+                  <li key={linkItem}>
+                    <a href={linkItem} target="_blank" rel="noreferrer">{linkItem}</a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+				}
+      </ul>
+    </div>
+  );
+}; // Resources
 
 Resources.menu = (
   <span>
