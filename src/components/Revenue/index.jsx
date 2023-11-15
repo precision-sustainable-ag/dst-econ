@@ -295,7 +295,7 @@ const Revenue = () => {
 
         <tr style={{ borderTop: '2px solid #666', borderBottom: '2px solid #666' }}>
           <td>
-            <b>Total Inceases in Net Income</b>
+            <b>Total Increases in Net Income</b>
           </td>
           <td style={{ textAlign: 'right' }}>
             <b>
