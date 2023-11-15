@@ -68,7 +68,7 @@ const Resources = () => {
               </ul>
             </li>
           ))
-				}
+        }
       </ul>
     </div>
   );
