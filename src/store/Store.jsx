@@ -647,8 +647,8 @@ const afterChange = {
     const { value } = payload;
 
     if (value) {
-      state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
-      state.termination.additionalRates[index] = db.herbicides[value]?.Rate;
+      state.termination.additionalPrices[index] = 0;
+      state.termination.additionalRates[index] = 0;
     }
   },
   'termination.reducedHerbicides': (state, { payload }) => {
@@ -656,8 +656,8 @@ const afterChange = {
     const { value } = payload;
 
     if (value) {
-      state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
-      state.termination.reducedRates[index] = db.herbicides[value]?.Rate;
+      state.termination.reducedPrices[index] = 0;
+      state.termination.reducedRates[index] = 0;
     }
   },
   // Tillage ___________________________________________________________________________
