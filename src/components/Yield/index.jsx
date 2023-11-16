@@ -267,9 +267,9 @@ const Yield = () => {
                 {
                   /Enter my own yield estimate/.test(state.q2)
                   && (
-                  <span style={{ display: 'flex' }}>
-                    <span style={{ margin: '5px 0 0 28px' }}>bushels/acre</span>
-                    <Input id="yield.manualYieldEstimate" type="number" style={{ marginLeft: '5%' }} />
+                  <span style={{ display: 'flex', marginLeft: '10%' }}>
+                    <Input id="yield.manualYieldEstimate" type="number" />
+                    <span style={{ margin: '2% 0 0 2%' }}>bushels/acre</span>
                   </span>
                   )
                 }
