@@ -182,11 +182,6 @@ const CostsBenefits = ({ type }) => {
   const herbicideTotal = useSelector(get.herbicide).total || 0;
   const additionalTotal = -useSelector(get.additional).total || 0;
 
-  // console.log({
-  //   type, coverCropTotal, seedbedTotal, plantingTotal, grazingTotal, fertilityTotal, erosionTotal, terminationTotal, tillageTotal,
-  //   yieldTotal, herbicideTotal,
-  // });
-
   if (
     (type === 'Costs' && (
       coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || grazingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0
@@ -213,7 +208,7 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={tillageTotal} desc="Tillage" />
           <SummaryRow type={type} parm={fertilityTotal} desc="Fertility" />
           <SummaryRow type={type} parm={herbicideTotal} desc="Herbicides" />
-          <SummaryRow type={type} parm={erosionTotal} desc="Erosion" />
+          <SummaryRow type={type} parm={erosionTotal} desc="Erosion Control" />
           <SummaryRow type={type} parm={grazingTotal} desc="Grazing" />
           <SummaryRow type={type} parm={yieldTotal} desc="Yield impact" />
           <SummaryRow type={type} parm={additionalTotal} desc="Additional considerations" />

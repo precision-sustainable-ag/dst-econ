@@ -38,7 +38,7 @@ const Tests = () => (
     <button type="button" onClick={exampleSeeds}>Test Seeds</button>
     <button type="button" onClick={exampleSeedbed}>Test Seedbed</button>
     <button type="button" onClick={examplePlanting}>Test Planting</button>
-    <button type="button" onClick={exampleErosion}>Test Erosion</button>
+    <button type="button" onClick={exampleErosion}>Test Erosion Control</button>
     <button type="button" onClick={exampleGrazing}>Test Grazing</button>
     <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
     <button type="button" onClick={exampleTermination1}>Test Termination1</button>
@@ -61,7 +61,6 @@ const Tests = () => (
 const Revenue = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  // const species = useSelector(get.species);
   const acres = useSelector(get.mapFeatures.area);
 
   const coverCropTotal = { desc: 'Seed Expense', value: useSelector(get.coverCropTotal) };
@@ -71,7 +70,7 @@ const Revenue = () => {
   const tillage = { desc: 'Tillage', value: useSelector(get.tillage) };
   const fertility = { desc: 'Fertility', value: useSelector(get.fertility) };
   const herbicide = { desc: 'Herbicides', value: useSelector(get.herbicide) };
-  const erosion = { desc: 'Erosion', value: useSelector(get.erosion) };
+  const erosion = { desc: 'Erosion Control', value: useSelector(get.erosion) };
   const grazing = { desc: 'Grazing', value: useSelector(get.grazing) };
   const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
   const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
@@ -90,7 +89,7 @@ const Revenue = () => {
     additionalConsiderations,
   ];
 
-  const negativeMultiplierItems = ['Fertility', 'Erosion', 'Yield Impact', 'Additional Considerations'];
+  const negativeMultiplierItems = ['Fertility', 'Erosion Control', 'Yield Impact', 'Additional Considerations'];
 
   const costItems = allItems.filter(
     (item) => ((item.desc === 'Seed Expense' && item.value > 0)
@@ -108,7 +107,7 @@ const Revenue = () => {
 
   // const increaseInIncome = benefitItems.slice(0, benefitItems.length / 2);
   const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations'].includes(item.desc));
-  const decreaseInCost = benefitItems.filter((item) => ['Erosion'].includes(item.desc));
+  const decreaseInCost = benefitItems.filter((item) => ['Erosion Control'].includes(item.desc));
   const decreaseInIncome = costItems.filter((item) => [].includes(item.desc));
   const increaseInCost = costItems.filter((item) => [
     'Seed Expense', 'Seedbed Preparation', 'Planting', 'Termination', 'Tillage', 'Fertility', 'Herbicides',
