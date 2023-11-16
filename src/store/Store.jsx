@@ -263,7 +263,7 @@ const initialState = {
       if (/No change/.test(state.yield.q2)) {
         state.yield.total = 0;
       } else if (/Enter my own yield estimate/.test(state.yield.q2)) {
-        state.yield.total = state.yield.manualYieldEstimate;
+        state.yield.total = state.yield.manualYieldEstimate * state.yield.price;
       } else {
         state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
