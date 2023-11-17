@@ -48,20 +48,18 @@ const Resources = () => {
     <div className="Resources">
       <h1>Resources</h1>
       <p>
-        If you already use cover crops on your farm,
-        you know that implementing cover crops into your rotation is unique to your farm and individual perspective.
-        Multiple years of experience will be valuable to an overall farm strategy.
-        However, the resources listed below can supplement your on-farm experience and help guide your decision-making.
+        Numerous resources exist to assist with decisions on the use of cover crops.
+        Listed below are links to groups with extensive educational resources on conservation practices, soil health, and use of cover crops.
       </p>
 
       <ul>
         {
           referenceLinks.map((item) => (
-            <li key={item.title}>
+            <li key={item.title} style={{ marginTop: '10px' }}>
               {item.title}
               <ul>
                 {item.links.map((linkItem) => (
-                  <li key={linkItem}>
+                  <li key={linkItem} style={{ marginTop: '6px' }}>
                     <a href={linkItem} target="_blank" rel="noreferrer">{linkItem}</a>
                   </li>
                 ))}
