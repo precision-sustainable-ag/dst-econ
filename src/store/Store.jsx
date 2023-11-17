@@ -36,8 +36,20 @@ const terminationTotal = (state) => (
   + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
 );
 
-const tillageTotal = (state) => (state.tillage.costReductions || 0)
-  + (state.tillage.other.total || 0);
+const tillageTotal = (state) => (
+  state.tillage.other.total || 0
+)
+- (
+  state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0
+) - (
+  state.tillage.elimination.total || 0
+);
+
+const tillageCostReductions = (state) => (
+  state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0
+) + (
+  state.tillage.elimination.total || 0
+);
 
 const herbicideTotal = (state) => (
   (state.herbicide.additional.cost || 0)
@@ -329,10 +341,11 @@ const initialState = {
 
   tillage: {
     ...shared,
-    costReductions: (state) => (
-      (state.tillage.q5 === 'Yes' ? -state.tillage.fall.total : 0)
-      - (state.tillage.elimination.total || 0)
-    ),
+    // costReductions: (state) => (
+    //   (state.tillage.q5 === 'Yes' ? -state.tillage.fall.total : 0)
+    //   - (state.tillage.elimination.total || 0)
+    // ),
+    costReductions: tillageCostReductions,
     fall: {
       description: 'Fall tillage',
       ...shared,
