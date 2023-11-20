@@ -253,7 +253,7 @@ const Yield = () => {
             </tr>
 
             <tr>
-              <td>Select the per acre yield estimate you prefer to use for this analysis</td>
+              <td>Select the change in yields you expect from adoption of cover crops</td>
               <td>
                 <Input
                   id="yield.q2"
@@ -266,14 +266,21 @@ const Yield = () => {
                 />
                 {
                   /Enter my own yield estimate/.test(state.q2)
-                  && <Input id="yield.manualYieldEstimate" type="dollar" style={{ marginLeft: '5%' }} />
+                  && (
+                  <span style={{ display: 'flex', marginLeft: '10%' }}>
+                    <Input id="yield.manualYieldEstimate" type="number" />
+                    <span style={{ margin: '2% 0 0 2%' }}>bushels/acre</span>
+                  </span>
+                  )
                 }
               </td>
             </tr>
 
             <tr>
               <td>Commodity price</td>
-              <td><Input id="yield.price" type="dollar" /></td>
+              <td>
+                <Input id="yield.price" type="dollar" />
+              </td>
             </tr>
 
             {!/Enter my own yield estimate/.test(state.q2)

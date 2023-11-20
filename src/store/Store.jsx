@@ -263,7 +263,7 @@ const initialState = {
       if (/No change/.test(state.yield.q2)) {
         state.yield.total = 0;
       } else if (/Enter my own yield estimate/.test(state.yield.q2)) {
-        state.yield.total = state.yield.manualYieldEstimate;
+        state.yield.total = state.yield.manualYieldEstimate * state.yield.price;
       } else {
         state.yield.total = state.yield.impact[['1', '3', '5'].indexOf(state.yield.q4)];
       }
@@ -647,8 +647,8 @@ const afterChange = {
     const { value } = payload;
 
     if (value) {
-      state.termination.additionalPrices[index] = db.herbicides[value]?.['Cost ($)'];
-      state.termination.additionalRates[index] = db.herbicides[value]?.Rate;
+      state.termination.additionalPrices[index] = 0;
+      state.termination.additionalRates[index] = 0;
     }
   },
   'termination.reducedHerbicides': (state, { payload }) => {
@@ -656,8 +656,8 @@ const afterChange = {
     const { value } = payload;
 
     if (value) {
-      state.termination.reducedPrices[index] = db.herbicides[value]?.['Cost ($)'];
-      state.termination.reducedRates[index] = db.herbicides[value]?.Rate;
+      state.termination.reducedPrices[index] = 0;
+      state.termination.reducedRates[index] = 0;
     }
   },
   // Tillage ___________________________________________________________________________

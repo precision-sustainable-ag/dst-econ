@@ -5,7 +5,6 @@ import {
   dev,
   get,
   getDefaults,
-  db,
   clearInputs,
   dollars,
   exampleTermination1,
@@ -69,30 +68,22 @@ const defaults = getDefaults([
   'termination.product',
 ]);
 
-const HerbicidesRow = ({ n, prop }) => {
-  const additional = useSelector(get.termination.additionalHerbicides);
-  const reduced = useSelector(get.termination.reducedHerbicides);
-  const used = [...additional, ...reduced];
-  return (
-    <tr>
-      <td>
-        <Input
-          id={`termination.${prop}Herbicides`}
-          index={n}
-          options={Object.keys(db.herbicides)
-            .filter((s) => !used.includes(s))
-            .sort()}
-        />
-      </td>
-      <td>
-        <Input type="number" id={`termination.${prop}Rates`} index={n} />
-      </td>
-      <td>
-        <Input type="dollar" id={`termination.${prop}Prices`} index={n} />
-      </td>
-    </tr>
-  );
-}; // HerbicidesRow
+const HerbicidesRow = ({ n, prop }) => (
+  <tr>
+    <td>
+      <Input
+        id={`termination.${prop}Herbicides`}
+        index={n}
+      />
+    </td>
+    <td>
+      <Input type="number" id={`termination.${prop}Rates`} index={n} />
+    </td>
+    <td>
+      <Input type="dollar" id={`termination.${prop}Prices`} index={n} />
+    </td>
+  </tr>
+); // HerbicidesRow
 
 const OtherHerbicides = ({ state, prop, description }) => (
   <table style={{ width: '100%' }}>
