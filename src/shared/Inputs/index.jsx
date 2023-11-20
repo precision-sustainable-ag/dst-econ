@@ -68,7 +68,6 @@ const Input = ({
 }) => {
   const dispatch = useDispatch();
   const calculated = useSelector(get.calculated);
-
   let obj = id;
   if (Number.isFinite(index)) {
     obj += index;
@@ -348,6 +347,8 @@ const Input = ({
             paddingLeft: 7,
             paddingTop: 5,
             paddingBottom: 5,
+            minWidth: !(/number|dollar|percent/.test(type))
+              && ['termination.additionalHerbicides', 'termination.reducedHerbicides'].includes(id) ? 300 : 'auto',
             maxWidth: /number|dollar|percent/.test(type) ? 70 : 1000,
             background: 'white',
             ...props.style,
