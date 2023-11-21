@@ -11,8 +11,6 @@ const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
   onChange, onInput, value, estimated, total, warning, style, custom = [],
 }) => {
-  const stateHerbicide = useSelector(get.herbicide);
-
   const cd = db.costDefaults;
   const sortCosts = Object.keys(cd)
     .filter((key) => cd[key].screen === current || cd[key].screen === current.split('.')[0])
@@ -266,14 +264,14 @@ const Logic = ({
 
   const displayRow = (currentValue, propertyValue) => !(
     (
-      (
-        currentValue === 'herbicide.additional'
-        || currentValue === 'herbicide.reduced'
-      )
+      [
+        'herbicide.additional',
+        'herbicide.reduced',
+      ].includes(currentValue)
       && propertyValue === 'total'
       && (
-        stateHerbicide.additional.implement === 'No additional application activity'
-        || stateHerbicide.reduced.implement === 'No reduced application activity'
+        context.implement === 'No additional application activity'
+        || context.implement === 'No reduced application activity'
       )
     )
     || (
@@ -299,11 +297,14 @@ const Logic = ({
                 {
                   property === 'implement'
                     && !iscustom
-                    && ((current.split('.')[0] !== 'herbicide')
-                      || (current === 'herbicide.additional' && stateHerbicide.additional.implement !== '')
-                      || (current === 'herbicide.reduced' && stateHerbicide.reduced.implement !== '')
-                      || (current === 'herbicide.fall' && stateHerbicide.fall.implement !== '')
-                    )
+                    && !([
+                      'herbicide.additional',
+                      'herbicide.reduced',
+                      'herbicide.fall',
+                      'tillage.elimination',
+                      'tillage.fall',
+                      'tillage.other',
+                    ].includes(current) && context.implement === '')
                     ? (
                       <td
                         style={{ padding: 0, border: '1px solid black' }}
