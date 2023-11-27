@@ -397,12 +397,15 @@ const initialState = {
     total: (state) => +state.additional.$landowner + +state.additional.$costShare
                       + +state.additional.$carbonOffset + +state.additional.$insuranceDiscount,
   },
+
   grazing: {
     grazing: '',
     lease: '',
     $lease: 0,
     $hay: 0,
-    hoursAcre: 0,
+    hoursFeeding: 0,
+    hoursGrazingFeeding: 0,
+    hoursAcre: (state) => (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.mapFeatures.area,
     fall: '0',
     spring: '0',
     total: grazingTotal,
@@ -1299,7 +1302,8 @@ export const exampleGrazing = () => {
   store.dispatch(set.grazing.fall(500));
   store.dispatch(set.grazing.spring(1000));
   store.dispatch(set.grazing.$hay(80));
-  store.dispatch(set.grazing.hoursAcre(0.05));
+  store.dispatch(set.grazing.hoursFeeding(0));
+  store.dispatch(set.grazing.hoursGrazingFeeding(0));
   store.dispatch(set.$labor(20));
   store.dispatch(set.$diesel(3));
 }; // exampleGrazing
