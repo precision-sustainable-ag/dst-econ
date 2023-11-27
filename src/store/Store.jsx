@@ -36,8 +36,20 @@ const terminationTotal = (state) => (
   + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
 );
 
-const tillageTotal = (state) => (state.tillage.costReductions || 0)
-  + (state.tillage.other.total || 0);
+const tillageTotal = (state) => (
+  state.tillage.other.total || 0
+)
+- (
+  state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0
+) - (
+  state.tillage.elimination.total || 0
+);
+
+const tillageCostReductions = (state) => (
+  state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0
+) + (
+  state.tillage.elimination.total || 0
+);
 
 const herbicideTotal = (state) => (
   (state.herbicide.additional.cost || 0)
@@ -329,10 +341,11 @@ const initialState = {
 
   tillage: {
     ...shared,
-    costReductions: (state) => (
-      (state.tillage.q5 === 'Yes' ? -state.tillage.fall.total : 0)
-      - (state.tillage.elimination.total || 0)
-    ),
+    // costReductions: (state) => (
+    //   (state.tillage.q5 === 'Yes' ? -state.tillage.fall.total : 0)
+    //   - (state.tillage.elimination.total || 0)
+    // ),
+    costReductions: tillageCostReductions,
     fall: {
       description: 'Fall tillage',
       ...shared,
@@ -384,12 +397,15 @@ const initialState = {
     total: (state) => +state.additional.$landowner + +state.additional.$costShare
                       + +state.additional.$carbonOffset + +state.additional.$insuranceDiscount,
   },
+
   grazing: {
     grazing: '',
     lease: '',
     $lease: 0,
     $hay: 0,
-    hoursAcre: 0,
+    hoursFeeding: 0,
+    hoursGrazingFeeding: 0,
+    hoursAcre: (state) => (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.mapFeatures.area,
     fall: '0',
     spring: '0',
     total: grazingTotal,
@@ -1286,7 +1302,8 @@ export const exampleGrazing = () => {
   store.dispatch(set.grazing.fall(500));
   store.dispatch(set.grazing.spring(1000));
   store.dispatch(set.grazing.$hay(80));
-  store.dispatch(set.grazing.hoursAcre(0.05));
+  store.dispatch(set.grazing.hoursFeeding(0));
+  store.dispatch(set.grazing.hoursGrazingFeeding(0));
   store.dispatch(set.$labor(20));
   store.dispatch(set.$diesel(3));
 }; // exampleGrazing
