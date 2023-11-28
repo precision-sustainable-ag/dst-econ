@@ -71,7 +71,7 @@ const GrazingHelper = () => {
           <Input id="grazing.hoursFeeding" />
         </div>
 
-        <div>Hours per season to graze and feed livestock</div>
+        <div>Hours per season to feed livestock and graze cover crops</div>
         <div>
           <Input id="grazing.hoursGrazingFeeding" />
         </div>
