@@ -131,9 +131,6 @@ const Revenue = () => {
   const finalTotal = benefitTotal - costTotal;
 
   const formattingOptions = {
-    // style: 'decimal',
-    // minimumFractionDigits: 2,
-    // maximumFractionDigits: 2,
     style: 'currency',
     currency: 'USD',
   };
