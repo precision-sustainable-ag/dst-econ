@@ -59,7 +59,7 @@ const Considerations = () => {
         </div>
 
         <div hidden={context.nrcs !== 'Yes'} style={{ borderBottom: '2px solid black' }}>
-          Please enter the estimated cash contribution ($/acre)
+          Please enter the estimated cash contribution from the state or federal proagram ($/acre)
         </div>
         <div style={{ borderBottom: '2px solid black' }}>
           <Input id="additional.$costShare" />
