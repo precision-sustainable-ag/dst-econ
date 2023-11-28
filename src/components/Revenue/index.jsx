@@ -74,7 +74,6 @@ const Revenue = () => {
   const grazing = { desc: 'Grazing', value: useSelector(get.grazing) };
   const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
   const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
-
   const allItems = [
     coverCropTotal,
     seedbedPreparation,
@@ -135,6 +134,16 @@ const Revenue = () => {
     currency: 'USD',
   };
 
+  const checkIncreaseInIcomeForYield = (description) => {
+    if (description !== 'Yield Impact') {
+      return description;
+    }
+    const yearNumber = useSelector(get.yield.q4);
+    const selectedYieldOption = useSelector(get.yield.q2);
+    const displayYear = yearNumber && selectedYieldOption === 'Use cover crop adjusted yield estimates from the table above';
+    return `${description}${displayYear ? ` (year ${yearNumber})` : ''}`;
+  };
+
   return (
     <div id="Revenue">
 
@@ -165,7 +174,7 @@ const Revenue = () => {
                 <td style={{ textAlign: 'left', width: '25%' }}>
                   {index >= increaseInIncome.length
                     ? descPlaceholder(index)
-                    : increaseInIncome[index].desc}
+                    : checkIncreaseInIcomeForYield(increaseInIncome[index].desc)}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInIncome.length
