@@ -283,7 +283,7 @@ const Yield = () => {
               </td>
             </tr>
 
-            {!/Enter my own estimated yield change/.test(state.q2)
+            {/Use cover crop adjusted yield estimates from the table above/.test(state.q2)
               && (
               <tr>
                 <td>Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?</td>
