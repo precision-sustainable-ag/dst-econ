@@ -59,6 +59,16 @@ const Logic = ({
   const currentImplement = useSelector(selector.implement);
   const acresHour = useSelector(selector.acresHour).toString();
 
+  const getDefaultEstimatedCostText = () => {
+    switch (current) {
+      case 'seedbed':
+        return 'Seedbed preparation equipment costs';
+      case 'planting':
+        return 'Planting equipment costs';
+      default: return 'Estimated relevant cost';
+    }
+  };
+
   if (!style && property === 'implement') {
     style = { borderTop: '1px solid black' };
   }
@@ -138,7 +148,9 @@ const Logic = ({
         iscustom ? `Estimated cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`
           : q || (
           <div>
-            Estimated relevant cost (
+            {getDefaultEstimatedCostText()}
+            {' '}
+            (
             {dollars(estimated)}
             /acre)
           </div>
