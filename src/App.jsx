@@ -364,13 +364,11 @@ const App = () => {
       const requestPayload = {
         repository: 'dst-feedback',
         title: 'CRASH',
-        name: 'test', // err?.message,
+        name: 'error',
         email: 'error@error.com',
-        comments: JSON.stringify(entireReduxState),
+        comments: `${err?.message} ${JSON.stringify(entireReduxState)}`,
         labels: ['crash', 'dst-econ'],
       };
-
-      alert(err?.message.length);
 
       fetch('https://feedback.covercrop-data.org/v1/issues', {
         method: 'POST',
