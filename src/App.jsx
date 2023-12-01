@@ -353,6 +353,54 @@ const App = () => {
     unusedCSS();
   }
 
+  const entireReduxState = useSelector((state) => state);
+
+  useEffect(() => {
+    let done = false;
+
+    const errorHandler = (err) => {
+      if (done) return;
+      done = true;
+      const requestPayload = {
+        repository: 'dst-feedback',
+        title: 'CRASH',
+        name: err?.message,
+        email: 'error@error.com',
+        comments: JSON.stringify(entireReduxState),
+        labels: ['crash', 'dst-econ'],
+      };
+
+      fetch('https://feedback.covercrop-data.org/v1/issues', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
+      })
+        .then((response) => response.json())
+        .then((body) => {
+          if (body?.data?.status === 'success') {
+            alert(`
+              An error occurred.
+              We have been notified and will investigate the problem.
+            `);
+          } else {
+            alert('An error occurred');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('Failed to send Feedback to Github.');
+        });
+    };
+
+    window.addEventListener('error', errorHandler);
+
+    return () => {
+      window.removeEventListener('error', errorHandler);
+    };
+  }, []);
+
   const scroll = () => {
     if (!topMenu.current) return;
 
