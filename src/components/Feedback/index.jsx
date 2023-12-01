@@ -27,15 +27,15 @@ const Feedback = () => {
     e.target.disabled = true;
 
     const requestPayload = {
-      repository: 'dst-econ',
+      repository: 'dst-feedback',
       title: 'Feedback',
       name,
       email,
       comments: feedback,
-      // labels: [],
+      labels: ['dst-econ'],
     };
 
-    fetch('https://developfeedback.covercrop-data.org/v1/issues', {
+    fetch('https://feedback.covercrop-data.org/v1/issues', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
