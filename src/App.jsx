@@ -361,6 +361,7 @@ const App = () => {
     const errorHandler = (err) => {
       if (done) return;
       done = true;
+
       const requestPayload = {
         repository: 'dst-feedback',
         title: 'CRASH',
