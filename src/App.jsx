@@ -359,18 +359,19 @@ const App = () => {
     let done = false;
 
     const errorHandler = (err) => {
-      console.log(1);
       if (done) return;
       done = true;
       const requestPayload = {
         repository: 'dst-feedback',
         title: 'CRASH',
-        name: err?.message,
+        name: 'test', // err?.message,
         email: 'error@error.com',
         comments: JSON.stringify(entireReduxState),
         labels: ['crash', 'dst-econ'],
       };
 
+      alert(err?.message.length);
+
       fetch('https://feedback.covercrop-data.org/v1/issues', {
         method: 'POST',
         headers: {
@@ -380,7 +381,6 @@ const App = () => {
       })
         .then((response) => response.json())
         .then((body) => {
-          console.log('test');
           console.log(body);
           if (body?.data?.status === 'success') {
             alert(`
@@ -395,36 +395,6 @@ const App = () => {
           console.log(error);
           alert('Failed to send Feedback to Github.');
         });
-
-      console.log(2);
-
-      requestPayload.comments = 'no state';
-      fetch('https://feedback.covercrop-data.org/v1/issues', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestPayload),
-      })
-        .then((response) => response.json())
-        .then((body) => {
-          console.log('test2');
-          console.log(body);
-          if (body?.data?.status === 'success') {
-            alert(`
-              An error occurred.
-              We have been notified and will investigate the problem.
-            `);
-          } else {
-            alert('An error occurred');
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('Failed to send Feedback to Github.');
-        });
-
-      console.log(3);
     };
 
     window.addEventListener('error', errorHandler);
