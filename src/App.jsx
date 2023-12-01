@@ -361,12 +361,13 @@ const App = () => {
     const errorHandler = (err) => {
       if (done) return;
       done = true;
+
       const requestPayload = {
         repository: 'dst-feedback',
         title: 'CRASH',
-        name: err?.message,
+        name: 'error',
         email: 'error@error.com',
-        comments: JSON.stringify(entireReduxState),
+        comments: `${err?.message} ${JSON.stringify(entireReduxState)}`,
         labels: ['crash', 'dst-econ'],
       };
 
