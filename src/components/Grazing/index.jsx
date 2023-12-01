@@ -71,13 +71,13 @@ const GrazingHelper = () => {
           <Input id="grazing.hoursFeeding" />
         </div>
 
-        <div>Hours per season to graze and feed livestock</div>
+        <div>Hours per season to feed livestock and graze cover crops</div>
         <div>
           <Input id="grazing.hoursGrazingFeeding" />
         </div>
 
-        <div className="total">Additional hours per acre per season required for grazing livestock (hours/acre)</div>
-        <div className="total" style={{ fontWeight: 'bold' }}>
+        <div style={{ background: 'lightyellow' }}>Additional hours per acre per season required for grazing livestock (hours/acre)</div>
+        <div style={{ background: 'lightyellow' }}>
           {grazing.hoursAcre.toFixed(2)}
           {grazing.hoursAcre > 1 && (
           <div className="warning" style={{ paddingLeft: '2rem', fontWeight: 'normal' }}>
@@ -88,8 +88,8 @@ const GrazingHelper = () => {
           )}
         </div>
 
-        <div className="total">Net impact of Grazing ($/acre)</div>
-        <div className="total" style={{ fontWeight: 'bold' }}>
+        <div style={{ background: 'lightyellow' }}>Net impact of Grazing ($/acre)</div>
+        <div style={{ background: 'lightyellow' }}>
           {dollars(-grazing.total)}
         </div>
       </div>

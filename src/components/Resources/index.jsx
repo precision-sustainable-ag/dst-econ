@@ -5,41 +5,86 @@ const Resources = () => {
     {
       title: 'Regional Cover Crop Councils',
       links: [
-        'https://www.midwestcovercrops.org/',
-        'https://southerncovercrops.org/',
-        'https://northeastcovercrops.com/',
-        'https://westerncovercrops.org/',
+        {
+          name: 'Midwest Cover Crop Council homepage',
+          link: 'https://www.midwestcovercrops.org/',
+        },
+        {
+          name: 'Southern Cover Crop Council homepage',
+          link: 'https://southerncovercrops.org/',
+        },
+        {
+          name: 'Northeast Cover Crop Council homepage',
+          link: 'https://northeastcovercrops.com/',
+        },
+        {
+          name: 'Western Cover Crop Council homepage',
+          link: 'https://westerncovercrops.org/',
+        },
       ],
     },
     {
       title: 'Soil Health and Climate Smart Agriculture',
       links: [
-        'https://cra.missouri.edu/',
-        'https://www.sare.org/resources/cover-crops/',
-        'https://soilhealthinstitute.org/',
-        'https://practicalfarmers.org/',
-        'https://farmland.org/',
+        {
+          name: 'Missouri CRCL Project',
+          link: 'https://cra.missouri.edu/',
+        },
+        {
+          name: 'Cover Crops for Sustainable Crop Rotations',
+          link: 'https://www.sare.org/resources/cover-crops/',
+        },
+        {
+          name: 'Soil Health Insititute homepage',
+          link: 'https://soilhealthinstitute.org/',
+        },
+        {
+          name: 'Practical Farmers homepage',
+          link: 'https://practicalfarmers.org/',
+        },
+        {
+          name: 'American Farmland Trust homepage',
+          link: 'https://farmland.org/',
+        },
       ],
     },
     {
       title: 'Farmer Profiles and/or Case Studies',
       links: [
-        'https://farmland.org/soil-health-case-studies/',
-        'https://soilhealthinstitute.org/our-work/initiatives/economics-of-soil-health-systems-on-30-u-s-farms/',
+        {
+          name: 'Soil Health Case Studies',
+          link: 'https://farmland.org/soil-health-case-studies/',
+        },
+        {
+          name: 'Economics of Soil Health Systems on 30 U.S. Farms',
+          link: 'https://soilhealthinstitute.org/our-work/initiatives/economics-of-soil-health-systems-on-30-u-s-farms/',
+        },
       ],
     },
     {
       title: 'Economic of Cover Crops',
       links: [
-        'https://soilhealthinstitute.org/app/uploads/2022/01/100-Farm-Fact-Sheet_9-23-2021.pdf',
+        {
+          name: 'Economics of Soil Health Systems on 100 Farms',
+          link: 'https://soilhealthinstitute.org/app/uploads/2022/01/100-Farm-Fact-Sheet_9-23-2021.pdf',
+        },
       ],
     },
     {
       title: 'Carbon Markets',
       links: [
-        'https://ilsustainableag.org/programs/ecomarkets/',
-        'https://decode6.org/',
-        'https://farmland.org/project/the-carpe-tool/',
+        {
+          name: 'Ecosystem Marketss - Illinois Sustainable AG Partnership',
+          link: 'https://ilsustainableag.org/programs/ecomarkets/',
+        },
+        {
+          name: 'Decode 6 Homepage',
+          link: 'https://decode6.org/',
+        },
+        {
+          name: 'CaRPE Tool',
+          link: 'https://farmland.org/project/the-carpe-tool/',
+        },
       ],
     },
   ];
@@ -60,7 +105,7 @@ const Resources = () => {
               <ul>
                 {item.links.map((linkItem) => (
                   <li key={linkItem} style={{ marginTop: '6px' }}>
-                    <a href={linkItem} target="_blank" rel="noreferrer">{linkItem}</a>
+                    <a href={linkItem.link} target="_blank" rel="noreferrer">{linkItem.name}</a>
                   </li>
                 ))}
               </ul>

@@ -79,11 +79,6 @@ const Costs = ({
 const Tillage = () => {
   const state = useSelector(get.tillage);
   const tillage = useSelector(get.tillage);
-  console.log('cost reductions: ', state.costReductions);
-  console.log('elimination total: ', state.elimination.total);
-  console.log('fall total: ', state.fall.total);
-  console.log('other total: ', state.other.total);
-  console.log('tillage total: ', state.total);
 
   return (
     <>

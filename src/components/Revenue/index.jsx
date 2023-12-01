@@ -74,7 +74,6 @@ const Revenue = () => {
   const grazing = { desc: 'Grazing', value: useSelector(get.grazing) };
   const yieldImpact = { desc: 'Yield Impact', value: useSelector(get.yield) };
   const additionalConsiderations = { desc: 'Additional Considerations', value: useSelector(get.additional) };
-
   const allItems = [
     coverCropTotal,
     seedbedPreparation,
@@ -105,9 +104,8 @@ const Revenue = () => {
         : item.value.total < 0)),
   );
 
-  // const increaseInIncome = benefitItems.slice(0, benefitItems.length / 2);
   const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations'].includes(item.desc));
-  const decreaseInCost = benefitItems.filter((item) => ['Erosion Control'].includes(item.desc));
+  const decreaseInCost = benefitItems.filter((item) => ['Erosion Control', 'Herbicides'].includes(item.desc));
   const decreaseInIncome = costItems.filter((item) => [].includes(item.desc));
   const increaseInCost = costItems.filter((item) => [
     'Seed Expense', 'Seedbed Preparation', 'Planting', 'Termination', 'Tillage', 'Fertility', 'Herbicides',
@@ -131,11 +129,18 @@ const Revenue = () => {
   const finalTotal = benefitTotal - costTotal;
 
   const formattingOptions = {
-    // style: 'decimal',
-    // minimumFractionDigits: 2,
-    // maximumFractionDigits: 2,
     style: 'currency',
     currency: 'USD',
+  };
+
+  const checkIncreaseInIcomeForYield = (description) => {
+    if (description !== 'Yield Impact') {
+      return description;
+    }
+    const yearNumber = useSelector(get.yield.q4);
+    const selectedYieldOption = useSelector(get.yield.q2);
+    const displayYear = yearNumber && selectedYieldOption === 'Use cover crop adjusted yield estimates from the table above';
+    return `${description}${displayYear ? ` (year ${yearNumber})` : ''}`;
   };
 
   return (
@@ -168,7 +173,7 @@ const Revenue = () => {
                 <td style={{ textAlign: 'left', width: '25%' }}>
                   {index >= increaseInIncome.length
                     ? descPlaceholder(index)
-                    : increaseInIncome[index].desc}
+                    : checkIncreaseInIcomeForYield(increaseInIncome[index].desc)}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {index >= increaseInIncome.length
