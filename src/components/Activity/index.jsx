@@ -160,8 +160,19 @@ const SummaryRow = ({ parm, desc, type }) => {
     || (type === 'Benefits' && parm < 0)
   ) {
     return (
-      <tr>
-        <td>{desc}</td>
+      <tr style={{
+        backgroundColor: desc === 'Total'
+          ? '#feff97'
+          : null,
+        fontWeight: desc === 'Total'
+          ? 'bold'
+          : '',
+      }}
+      >
+        <td>
+          {desc}
+          {desc === 'Total' ? ` ${type}` : ''}
+        </td>
         <td style={style}>{dollars(Math.abs(parm))}</td>
       </tr>
     );
@@ -181,6 +192,35 @@ const CostsBenefits = ({ type }) => {
   const yieldTotal = -useSelector(get.yield).total || 0;
   const herbicideTotal = useSelector(get.herbicide).total || 0;
   const additionalTotal = -useSelector(get.additional).total || 0;
+
+  const totalsArray = [
+    coverCropTotal,
+    seedbedTotal,
+    plantingTotal,
+    grazingTotal,
+    terminationTotal,
+    tillageTotal,
+    fertilityTotal,
+    erosionTotal,
+    yieldTotal,
+    herbicideTotal,
+    additionalTotal,
+  ];
+
+  const costsTotal = totalsArray.reduce((acc, current) => {
+    if (current > 0) {
+      return acc + current;
+    }
+    return acc;
+  }, 0);
+
+  const benefitsTotal = totalsArray.reduce((acc, current) => {
+    if (current < 0) {
+      console.log('current: ', current, ' and acc: ', acc);
+      return acc + current;
+    }
+    return acc;
+  }, 0);
 
   if (
     (type === 'Costs' && (
@@ -212,6 +252,7 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={grazingTotal} desc="Grazing" />
           <SummaryRow type={type} parm={yieldTotal} desc="Yield impact" />
           <SummaryRow type={type} parm={additionalTotal} desc="Additional considerations" />
+          <SummaryRow type={type} parm={type === 'Costs' ? costsTotal : benefitsTotal} desc="Total" />
         </tbody>
       </>
     );
@@ -294,8 +335,12 @@ export const Summary = () => {
                 <CostsBenefits type="Benefits" />
                 {total ? (
                   <tfoot>
-                    <tr>
-                      <td>Total</td>
+                    <tr style={{ fontWeight: 'bold' }}>
+                      <td>
+                        Total Economic
+                        {' '}
+                        {total < 0 ? 'Benefit' : 'Cost'}
+                      </td>
                       <td style={style}>{dollars(Math.abs(total))}</td>
                     </tr>
                   </tfoot>

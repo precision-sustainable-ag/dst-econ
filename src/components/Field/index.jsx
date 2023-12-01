@@ -74,7 +74,7 @@ const Field = () => {
             <h2>How many acres are in your Field?</h2>
             <Input id="mapFeatures.area" type="number" />
 
-            <h2>What is your intended Cash Crop for this Field?</h2>
+            <h2>What cash crop will follow the cover crop in this field?</h2>
             <Input
               id="cashCrop"
               options={[...Object.keys(db.commodities), 'Other']}

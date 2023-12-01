@@ -260,16 +260,16 @@ const Yield = () => {
                   options={[
                     'No change in yield estimates',
                     'Use cover crop adjusted yield estimates from the table above',
-                    'Enter my own yield estimate',
+                    'Enter my own estimated yield change',
                   ]}
                   type="radio"
                 />
                 {
-                  /Enter my own yield estimate/.test(state.q2)
+                  /Enter my own estimated yield change/.test(state.q2)
                   && (
                   <span style={{ display: 'flex', marginLeft: '10%' }}>
                     <Input id="yield.manualYieldEstimate" type="number" />
-                    <span style={{ margin: '2% 0 0 2%' }}>bushels/acre</span>
+                    <span style={{ margin: '2% 0 0 2%' }}>bushels/acre change</span>
                   </span>
                   )
                 }
@@ -283,7 +283,7 @@ const Yield = () => {
               </td>
             </tr>
 
-            {!/Enter my own yield estimate/.test(state.q2)
+            {/Use cover crop adjusted yield estimates from the table above/.test(state.q2)
               && (
               <tr>
                 <td>Do you want your financial analysis to be based on anticipated yields in years 1, 3, or 5?</td>

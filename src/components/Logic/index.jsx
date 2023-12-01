@@ -59,6 +59,16 @@ const Logic = ({
   const currentImplement = useSelector(selector.implement);
   const acresHour = useSelector(selector.acresHour).toString();
 
+  const getDefaultEstimatedCostText = () => {
+    switch (current) {
+      case 'seedbed':
+        return 'Seedbed preparation equipment costs';
+      case 'planting':
+        return 'Planting equipment costs';
+      default: return 'Estimated relevant cost';
+    }
+  };
+
   if (!style && property === 'implement') {
     style = { borderTop: '1px solid black' };
   }
@@ -138,7 +148,9 @@ const Logic = ({
         iscustom ? `Estimated cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`
           : q || (
           <div>
-            Estimated relevant cost (
+            {getDefaultEstimatedCostText()}
+            {' '}
+            (
             {dollars(estimated)}
             /acre)
           </div>
@@ -169,17 +181,25 @@ const Logic = ({
       info = iscustom ? '' : (
         <>
           <p>
-            Farmers view costs differently, so the table to the right allows you to customize the cost estimation to fit their needs.
-            The default cost estimation assumes all ownership and variable costs are relevant.
-            However, some farmers will want to focus on the cash costs of fuel and labor.
-            Removing the check from the box would allow such an analysis.
-            Others would want to ignore all costs that definitely do not change with use
-            so they would uncheck the boxes for interest, taxes, insurance and shed.
+            Farmers view costs differently.
+            The table to the right allows you to customize the cost estimation to fit your needs.
+            Three ways exist to estimate cost of this activity.
           </p>
-          <p>
-            Basically, the costs you want to count toward the cost of cover crops should have a checkmark beside it.
-            If you are not concerned with certain costs, remove the checkmark.
-          </p>
+          <ol>
+            <li>
+              Accept the default cost estimation.
+              This assumes all ownership and variable costs are relevant.
+            </li>
+            <li>
+              Select relevant costs.
+              Some farmers will want to focus on costs that change with cover crop use.
+              Removing the check from the box beside particular costs removes that cost from the estimated cost of doing that activity.
+              The costs you want to count toward the cost of cover crops should have a checkmark beside it.
+              Remove all others.
+            </li>
+            <li>Overwrite any estimated cost in this box by typing the cost you think appropriate.</li>
+          </ol>
+
         </>
       );
       break;
