@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-access-key */
 import React from 'react';
 import { useSelector } from 'react-redux';
-// import { NavLink } from 'react-router-dom';
 import {
   Accordion, AccordionDetails, AccordionSummary, Typography, Box,
 } from '@mui/material';
@@ -34,6 +33,7 @@ import {
 } from '../../store/Store';
 
 import './styles.scss';
+import Print from '../../shared/Print';
 
 const Tests = () => (
   <div className="test-buttons">
@@ -376,8 +376,13 @@ const Practices = () => {
       5: 'fifth',
     }[Yield.q4];
 
-    details.Yield = {
+    details.Yield = Yield.total >= 0 ? {
       [`Improved yield estimate in ${year} year of cover crops`]: dollars(Yield.total),
+    } : {
+      'Decreased yield estimate': Yield.total.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
     };
   }
   return (
@@ -394,6 +399,8 @@ const Practices = () => {
         longitude:
         {` ${lon}`}
       </h1>
+
+      <Print />
 
       <NestedAccordion details={details} />
 

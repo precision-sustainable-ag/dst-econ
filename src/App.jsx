@@ -17,7 +17,7 @@ import {
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
 
 import {
-  dev, get, set, db,
+  dev, get, set,
 } from './store/Store';
 
 import Home from './components/Home';
@@ -148,14 +148,11 @@ const keys = Object.keys(paths);
 const Navigation = ({ current }) => {
   const mobile = useSelector(get.mobile);
   const previousScreen = useSelector(get.previousScreen);
-  const cashCrop = useSelector(get.cashCrop);
 
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
   let next = keys[keys.indexOf(current) + 1];
   if (next === 'AT') {
     next = undefined;
-  } else if (next === 'Yield' && !db.commodities[cashCrop]?.['one year']) {
-    next = 'Practices';
   }
 
   return (
@@ -361,12 +358,13 @@ const App = () => {
     const errorHandler = (err) => {
       if (done) return;
       done = true;
+
       const requestPayload = {
         repository: 'dst-feedback',
         title: 'CRASH',
-        name: err?.message,
+        name: 'error',
         email: 'error@error.com',
-        comments: JSON.stringify(entireReduxState),
+        comments: `${err?.message} ${JSON.stringify(entireReduxState)}`,
         labels: ['crash', 'dst-econ'],
       };
 
@@ -379,6 +377,7 @@ const App = () => {
       })
         .then((response) => response.json())
         .then((body) => {
+          console.log(body);
           if (body?.data?.status === 'success') {
             alert(`
               An error occurred.
@@ -571,9 +570,6 @@ const App = () => {
             }
 
             const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
-            if (path === 'Yield' && !db.commodities[crop]?.['one year']) {
-              return null;
-            }
 
             return (
               <NavLink
