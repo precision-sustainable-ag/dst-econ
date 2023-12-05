@@ -88,10 +88,10 @@ const Resources = () => {
       ],
     },
     {
-      title: 'Machinery',
+      title: 'Machinary',
       links: [
         {
-          name: 'Mechinery Extension Guide',
+          name: 'Mechinary Extension Guide',
           link: 'https://extension.missouri.edu/publications/g1209',
         },
       ],
