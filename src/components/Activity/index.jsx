@@ -5,6 +5,7 @@ import Draggable from 'react-draggable';
 import { goto, get, dollars } from '../../store/Store';
 import Input from '../../shared/Inputs';
 import './styles.scss';
+import Print from '../../shared/Print';
 
 const Costs = ({ desc, type }) => {
   const selector = goto(get, type);
@@ -290,7 +291,12 @@ export const Summary = () => {
         <Draggable handle="strong">
           <Card id="Summary" variant="outlined" style={{ backgroundColor: '#eee' }}>
             <CardContent>
-              <strong className="cursor">Summary</strong>
+
+              <strong className="cursor">
+                Summary
+                <Print />
+              </strong>
+
               <table>
                 {(farm || field || acres || cashCrop) && (
                   <>

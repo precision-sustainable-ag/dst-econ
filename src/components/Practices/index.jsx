@@ -34,7 +34,7 @@ import {
 } from '../../store/Store';
 
 import './styles.scss';
-import Print from '../../shared/Print/Print';
+import Print from '../../shared/Print';
 
 const Tests = () => (
   <div className="test-buttons">
