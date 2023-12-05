@@ -105,7 +105,7 @@ const Revenue = () => {
         : item.value.total < 0)),
   );
 
-  const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations'].includes(item.desc));
+  const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations', 'Fertility'].includes(item.desc));
   const decreaseInCost = benefitItems.filter((item) => ['Erosion Control', 'Herbicides'].includes(item.desc));
   const decreaseInIncome = costItems.filter((item) => [].includes(item.desc));
   const increaseInCost = costItems.filter((item) => [
