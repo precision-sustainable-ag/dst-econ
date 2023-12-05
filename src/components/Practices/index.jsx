@@ -376,8 +376,13 @@ const Practices = () => {
       5: 'fifth',
     }[Yield.q4];
 
-    details.Yield = {
+    details.Yield = Yield.total >= 0 ? {
       [`Improved yield estimate in ${year} year of cover crops`]: dollars(Yield.total),
+    } : {
+      'Decreased yield estimate': Yield.total.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
     };
   }
   return (
