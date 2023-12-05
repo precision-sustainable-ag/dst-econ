@@ -32,6 +32,7 @@ import {
 // import Input from '../../shared/Inputs';
 
 import './styles.scss';
+import Print from '../../shared/Print/Print';
 
 const Tests = () => (
   <div className="test-buttons">
@@ -149,6 +150,7 @@ const Revenue = () => {
       <table style={{ float: 'left', width: '100%', marginTop: '2%' }}>
         <caption>
           {`Economic Effects of Cover Crops ${farm ? ` on ${farm} ` : ''}${field ? ` - ${field} ` : ''} ${new Date().getFullYear()}`}
+          <Print />
         </caption>
 
         <tr>
