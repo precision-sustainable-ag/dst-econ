@@ -523,9 +523,6 @@ const App = () => {
             }
 
             const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
-            if (path === 'Yield' && !db.commodities[crop]?.['one year']) {
-              return null;
-            }
 
             return (
               <NavLink

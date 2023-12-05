@@ -2,7 +2,6 @@
   margin-bottom: 2rem;
 
   #YieldTable {
-    width: 100%;
 
     caption {
       background: #eee;
@@ -14,6 +13,14 @@
       width: 400px;
       border: none;
     }
+
+		td.reducedQuestion {
+			width: 54%;
+		}
+
+		td.reducedAnswer {
+			width: 46%
+		}
 
     @media screen and (max-width: 1050px) {
       td {

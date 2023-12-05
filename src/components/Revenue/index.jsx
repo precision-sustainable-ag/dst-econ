@@ -107,7 +107,7 @@ const Revenue = () => {
 
   const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations', 'Fertility'].includes(item.desc));
   const decreaseInCost = benefitItems.filter((item) => ['Erosion Control', 'Herbicides'].includes(item.desc));
-  const decreaseInIncome = costItems.filter((item) => [].includes(item.desc));
+  const decreaseInIncome = costItems.filter((item) => ['Yield Impact'].includes(item.desc));
   const increaseInCost = costItems.filter((item) => [
     'Seed Expense', 'Seedbed Preparation', 'Planting', 'Termination', 'Tillage', 'Fertility', 'Herbicides',
   ].includes(item.desc));
