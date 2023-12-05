@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-access-key */
 import React from 'react';
 import { useSelector } from 'react-redux';
-// import { NavLink } from 'react-router-dom';
 import {
   Accordion, AccordionDetails, AccordionSummary, Typography, Box,
 } from '@mui/material';

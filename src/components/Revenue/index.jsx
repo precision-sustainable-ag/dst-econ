@@ -5,7 +5,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import {
   dev,
-  // dollars,
   exampleErosion,
   examplePlanting,
   exampleSeedbed,
@@ -27,9 +26,7 @@ import {
   exampleYield1,
   exampleYield2,
   get,
-  // set,
 } from '../../store/Store';
-// import Input from '../../shared/Inputs';
 
 import './styles.scss';
 import Print from '../../shared/Print';
@@ -105,11 +102,35 @@ const Revenue = () => {
         : item.value.total < 0)),
   );
 
-  const increaseInIncome = benefitItems.filter((item) => ['Yield Impact', 'Grazing', 'Additional Considerations', 'Fertility'].includes(item.desc));
-  const decreaseInCost = benefitItems.filter((item) => ['Erosion Control', 'Herbicides'].includes(item.desc));
-  const decreaseInIncome = costItems.filter((item) => ['Yield Impact'].includes(item.desc));
+  const increaseInIncome = benefitItems.filter((item) => [
+    'Yield Impact',
+    'Grazing',
+    'Additional Considerations',
+  ].includes(item.desc));
+  const decreaseInCost = benefitItems.filter((item) => [
+    'Seed Expense',
+    'Seedbed Preparation',
+    'Planting',
+    'Termination',
+    'Erosion Control',
+    'Herbicides',
+    'Tillage',
+    'Fertility',
+  ].includes(item.desc));
+  const decreaseInIncome = costItems.filter((item) => [
+    'Yield Impact',
+    'Additional Considerations',
+  ].includes(item.desc));
   const increaseInCost = costItems.filter((item) => [
-    'Seed Expense', 'Seedbed Preparation', 'Planting', 'Termination', 'Tillage', 'Fertility', 'Herbicides',
+    'Seed Expense',
+    'Seedbed Preparation',
+    'Planting',
+    'Termination',
+    'Tillage',
+    'Fertility',
+    'Herbicides',
+    'Grazing',
+    'Erosion Control',
   ].includes(item.desc));
 
   const countSection1 = Math.max(increaseInIncome.length, decreaseInIncome.length);
