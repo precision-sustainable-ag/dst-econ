@@ -216,7 +216,6 @@ const CostsBenefits = ({ type }) => {
 
   const benefitsTotal = totalsArray.reduce((acc, current) => {
     if (current < 0) {
-      console.log('current: ', current, ' and acc: ', acc);
       return acc + current;
     }
     return acc;
