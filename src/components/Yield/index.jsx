@@ -151,38 +151,65 @@ const Yield = () => {
 
   return (
     <div id="Yield">
-      <h1>Yield</h1>
-      <p>
-        When using cover crops in your rotation, yields of your cash crops may be affected.
-        Results from farmer surveys indicate many farmers report a yield increase when using cover crops,
-        although experiences have also resulted in decreased yields under certain conditions.
-        Survey results also indicate experience matters.
-        Growers that have utilized cover crops on their farms for more consecutive years report greater yield benefits.
-      </p>
-      <p>
-        The Sustainable Agriculture Research &amp; Education program (
-        <a target="_blank" rel="noreferrer" href="https://www.sare.org">
-          https://www.sare.org
-        </a>
-        ) aggregated survey data of farmers responding to the SARE/CTIC National Cover Crop
-        Survey in a June 2019 SARE Technical Bulletin titled, Cover Crop Economics.
-        The SARE publication notes,
-      </p>
-      <blockquote>
-        &quot;To better understand how the number of years spent planting a cover crop impacts crop yield,
-        data was collected from farmers responding to the SARE/CTIC National Cover Crop Survey.
-        Farmers who planted cover crops on some fields but not on others, and who otherwise managed those fields similarly,
-        were asked to report on respective yields.&quot;
-      </blockquote>
-      <p>
-        The authors note that yields were self-reported and yields varied from field to field,
-        with a few fields having losses and with some fields showing no difference.
-        However, the majority of growers responding reported yield benefits.
-        The SARE/CTIC survey was conducted for several years with questions in 2015 and 2016 focused on
-        the number of years of consecutive use of cover crops in fields and the impact on yield.
-        The following table is regression analysis results of those surveys (approximately 500 farmers each year for two years)
-      </p>
+      <h1>
+        Yield
+      </h1>
+      {['Corn', 'Soybeans'].includes(cashCrop) ? (
+        <>
+          <p>
+            When using cover crops in your rotation, yields of your cash crops may be affected.
+            Results from farmer surveys indicate many farmers report a yield increase when using cover crops,
+            although experiences have also resulted in decreased yields under certain conditions.
+            Survey results also indicate experience matters.
+            Growers that have utilized cover crops on their farms for more consecutive years report greater yield benefits.
+          </p>
+          <p>
+            The Sustainable Agriculture Research &amp; Education program (
+            <a target="_blank" rel="noreferrer" href="https://www.sare.org">
+              https://www.sare.org
+            </a>
+            ) aggregated survey data of farmers responding to the SARE/CTIC National Cover Crop
+            Survey in a June 2019 SARE Technical Bulletin titled, Cover Crop Economics.
+            The SARE publication notes,
+          </p>
+          <blockquote>
+            &quot;To better understand how the number of years spent planting a cover crop impacts crop yield,
+            data was collected from farmers responding to the SARE/CTIC National Cover Crop Survey.
+            Farmers who planted cover crops on some fields but not on others, and who otherwise managed those fields similarly,
+            were asked to report on respective yields.&quot;
+          </blockquote>
+          <p>
+            The authors note that yields were self-reported and yields varied from field to field,
+            with a few fields having losses and with some fields showing no difference.
+            However, the majority of growers responding reported yield benefits.
+            The SARE/CTIC survey was conducted for several years with questions in 2015 and 2016 focused on
+            the number of years of consecutive use of cover crops in fields and the impact on yield.
+            The following table is regression analysis results of those surveys (approximately 500 farmers each year for two years)
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            When using cover crops in your rotation, yields of your cash crops may be affected.
+            No reliable data exists for the impact of cover crops on
+            {' '}
+            {cashCrop}
+            .
+            Results from farmer surveys indicate many farmers report a yield increase when using cover crops,
+            although experiences have also resulted in decreased yields under certain conditions.
+            Survey results also indicate experience matters.
+            Growers that have utilized cover crops on their farms for more consecutive years report greater yield benefits.
+          </p>
+          <p>
+            Users are encouraged to talk with their local Extension professional or farmers who have experience with planting cover crops prior to
+            {' '}
+            {cashCrop}
+            .
+          </p>
+        </>
+      )}
 
+      {['Corn', 'Soybeans'].includes(cashCrop) && (
       <table className="sare">
         <caption>
           Percent increase in corn and soybean yields after one, three and five years of consecutive cover crop use on a field,
@@ -223,14 +250,23 @@ const Yield = () => {
           </tr>
         </tfoot>
       </table>
+      )}
 
       <div>
-        <table id="YieldTable">
+        <table
+          id="YieldTable"
+          style={
+            ['Corn', 'Soybeans'].includes(cashCrop)
+              ? { width: '100%' }
+              : { width: '70%', marginLeft: 'auto', marginRight: 'auto' }
+          }
+        >
           <caption>
             Yield
             <ClearInputs defaults={defaults} />
           </caption>
           <tbody>
+            {['Corn', 'Soybeans'].includes(cashCrop) && (
             <tr>
               <td>
                 What is the expected yield for
@@ -251,17 +287,31 @@ const Yield = () => {
                 <RevenueGraph className="desktop" />
               </td>
             </tr>
+            )}
 
             <tr>
-              <td>Select the change in yields you expect from adoption of cover crops</td>
-              <td>
+              {
+                ['Corn', 'Soybeans'].includes(cashCrop)
+                  ? <td>Select the change in yields you expect from adoption of cover crops</td>
+                  : (
+                    <td className="reducedQuestion">
+                      What is the expected change in
+                      {' '}
+                      {cashCrop}
+                      {' '}
+                      yield you expect following your selection of a cover crop
+                    </td>
+                  )
+                }
+
+              <td className={['Corn', 'Soybeans'].includes(cashCrop) ? '' : 'reducedAnswer'}>
                 <Input
                   id="yield.q2"
-                  options={[
+                  options={['Corn', 'Soybeans'].includes(cashCrop) ? [
                     'No change in yield estimates',
                     'Use cover crop adjusted yield estimates from the table above',
                     'Enter my own estimated yield change',
-                  ]}
+                  ] : ['Enter my own estimated yield change']}
                   type="radio"
                 />
                 {

@@ -216,7 +216,6 @@ const CostsBenefits = ({ type }) => {
 
   const benefitsTotal = totalsArray.reduce((acc, current) => {
     if (current < 0) {
-      console.log('current: ', current, ' and acc: ', acc);
       return acc + current;
     }
     return acc;
@@ -290,7 +289,11 @@ export const Summary = () => {
         <Draggable handle="strong">
           <Card id="Summary" variant="outlined" style={{ backgroundColor: '#eee' }}>
             <CardContent>
-              <strong className="cursor">Summary</strong>
+
+              <strong className="cursor">
+                Summary
+              </strong>
+
               <table>
                 {(farm || field || acres || cashCrop) && (
                   <>

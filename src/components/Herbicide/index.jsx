@@ -248,54 +248,50 @@ const Herbicide = () => {
               </>
             )}
 
-            {state.q5 && (
-              <>
-                <tr>
-                  <th colSpan="100">Fall Herbicides</th>
-                </tr>
-                <Logic
-                  current="herbicide"
-                  property="q8"
-                  q="Historically, have you implemented a fall herbicide program on this field?"
-                  a={['Yes', 'No']}
-                  onChange={() => clearInputs(fallDefaults)}
-                />
+            <tr>
+              <th colSpan="100">Fall Herbicides</th>
+            </tr>
+            <Logic
+              current="herbicide"
+              property="q8"
+              q="Historically, have you implemented a fall herbicide program on this field?"
+              a={['Yes', 'No']}
+              onChange={() => clearInputs(fallDefaults)}
+            />
 
-                {state.q8 === 'Yes' && (
-                <>
-                  <Logic
-                    current="herbicide.fall"
-                    property="savings"
-                    q="Implementing cover crops will allow you to forgo a fall herbicide application.
+            {state.q8 === 'Yes' && (
+            <>
+              <Logic
+                current="herbicide.fall"
+                property="savings"
+                q="Implementing cover crops will allow you to forgo a fall herbicide application.
                       What is the estimated reduction (savings) of herbicide cost on a per acre basis?"
-                    a="dollar"
-                  />
+                a="dollar"
+              />
 
-                  <Logic
-                    current="herbicide.fall"
-                    property="implement"
-                    q="How would you have conducted your fall herbicide program?"
-                    type="Chemical"
-                  />
+              <Logic
+                current="herbicide.fall"
+                property="implement"
+                q="How would you have conducted your fall herbicide program?"
+                type="Chemical"
+              />
 
-                  <Logic current="herbicide.fall" question="power" />
+              <Logic current="herbicide.fall" question="power" />
 
-                  <Logic
-                    current="herbicide.fall"
-                    question="Annual Use (acres on implement)"
-                  />
-                  <Logic current="herbicide.fall" question="Annual Use (hours on power)" />
-                  <Logic current="herbicide.fall" question="Acres/hour" />
+              <Logic
+                current="herbicide.fall"
+                question="Annual Use (acres on implement)"
+              />
+              <Logic current="herbicide.fall" question="Annual Use (hours on power)" />
+              <Logic current="herbicide.fall" question="Acres/hour" />
 
-                  <Logic
-                    current="herbicide.fall"
-                    question="Estimated"
-                    q="Chemical spray equipment cost ($/acre)"
-                    a="dollar"
-                  />
-                </>
-                )}
-              </>
+              <Logic
+                current="herbicide.fall"
+                question="Estimated"
+                q="Chemical spray equipment cost ($/acre)"
+                a="dollar"
+              />
+            </>
             )}
 
           </tbody>

@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-access-key */
 import React from 'react';
 import { useSelector } from 'react-redux';
-// import { NavLink } from 'react-router-dom';
 import {
   Accordion, AccordionDetails, AccordionSummary, Typography, Box,
 } from '@mui/material';
@@ -34,6 +33,7 @@ import {
 } from '../../store/Store';
 
 import './styles.scss';
+import Print from '../../shared/Print';
 
 const Tests = () => (
   <div className="test-buttons">
@@ -394,6 +394,8 @@ const Practices = () => {
         longitude:
         {` ${lon}`}
       </h1>
+
+      <Print />
 
       <NestedAccordion details={details} />
 
