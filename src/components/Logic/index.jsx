@@ -136,7 +136,7 @@ const Logic = ({
     case 'power':
       td = false;
       property = 'power';
-      q = q || 'What power will be used?';
+      q = q || 'What tractor will be used?';
       a = sortAndFilterPower();
       shown = currentImplement && !iscustom;
       break;
