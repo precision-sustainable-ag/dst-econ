@@ -87,6 +87,15 @@ const Resources = () => {
         },
       ],
     },
+    {
+      title: 'Machinery',
+      links: [
+        {
+          name: 'Mechinery Extension Guide',
+          link: 'https://extension.missouri.edu/publications/g1209',
+        },
+      ],
+    },
   ];
 
   return (
