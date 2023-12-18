@@ -96,6 +96,19 @@ const Resources = () => {
         },
       ],
     },
+    {
+      title: 'Precision Sustainable Agriculture',
+      links: [
+        {
+          name: 'Cover Crop Species Selector',
+          link: 'https://covercrop-selector.org/',
+        },
+        {
+          name: 'Cover Crop Nitrogen Calculator (CC-NCALC)',
+          link: 'https://covercrop-ncalc.org/',
+        },
+      ],
+    },
   ];
 
   return (
