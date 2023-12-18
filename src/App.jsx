@@ -41,6 +41,7 @@ import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
+import Print from './shared/Print';
 
 let firstTime = true;
 
@@ -207,6 +208,8 @@ const Navigation = ({ current }) => {
             </Button>
           </NavLink>
         )}
+
+        <Print printedComponent={} />
       </div>
     </>
   );
