@@ -16,6 +16,7 @@ import {
 
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
 
+import PrintIcon from '@mui/icons-material/Print';
 import {
   dev, get, set,
 } from './store/Store';
@@ -41,7 +42,6 @@ import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
-import Print from './shared/Print';
 
 let firstTime = true;
 
@@ -161,7 +161,7 @@ const Navigation = ({ current }) => {
       {next && (
         <div id="Navigation" className="mobile">
           <NavLink to={`/${next}`}>
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" className="mobileNext">
               <div>
                 NEXT: &nbsp;
                 {next.replace('Practices', 'Summary')}
@@ -171,8 +171,17 @@ const Navigation = ({ current }) => {
         </div>
       )}
 
-      <div id="Navigation" className="desktop">
-        {back && (
+      <div
+        className="navButtons"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: '#ccc',
+        }}
+      >
+        <div id="Navigation" className="desktop" style={{ marginLeft: 'auto' }}>
+          {back && (
           <NavLink to={`/${back.replace('Home', '')}`}>
             <Button variant="contained" color="primary" tabIndex={-1}>
               {!mobile ? (
@@ -185,8 +194,8 @@ const Navigation = ({ current }) => {
               )}
             </Button>
           </NavLink>
-        )}
-        {next && (
+          )}
+          {next && (
           <NavLink to={`/${next}`}>
             <Button variant="contained" color="primary">
               {!mobile ? (
@@ -199,17 +208,33 @@ const Navigation = ({ current }) => {
               )}
             </Button>
           </NavLink>
-        )}
+          )}
 
-        {current !== 'Resources' && next !== 'Resources' && (
+          {current !== 'Resources' && next !== 'Resources' && (
           <NavLink to="/Resources">
             <Button variant="contained" color="primary">
               Resources
             </Button>
           </NavLink>
-        )}
+          )}
 
-        <Print printedComponent={} />
+        </div>
+        <Button
+          variant="contained"
+          color="success"
+          className="printButton"
+          onClick={() => {
+            window.print();
+          }}
+          style={{
+            width: 'auto',
+            marginLeft: 'auto',
+            marginRight: '2%',
+          }}
+          startIcon={<PrintIcon />}
+        >
+          Print
+        </Button>
       </div>
     </>
   );
@@ -481,7 +506,7 @@ const App = () => {
     <div id="Container">
       <MyModal />
 
-      <nav>
+      <nav className="topnav">
         <div className="mobile">
           <h1>
             <img src="PSAlogo-only.png" alt="logo" />
@@ -544,7 +569,7 @@ const App = () => {
           })}
         </div>
 
-        <hr />
+        <hr className="horizontalline" />
 
         <div className="menu-items">
           {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
@@ -607,7 +632,7 @@ const App = () => {
 
       <Summary />
 
-      <div id="Main">
+      <div id="Main" className="mainComponent">
         <Routes>
           <Route path="" element={<Home />} />
           <Route path="About" element={<About />} />

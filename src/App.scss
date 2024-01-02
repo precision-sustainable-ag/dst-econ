@@ -515,3 +515,39 @@ table.power {
   transform: none !important;
   -webkit-transform: none !important;
 }
+
+@media print {
+	#Main {
+		visibility: visible;
+		overflow: visible;
+		height: fit-content;
+	}
+
+	body, html {
+		background: white;
+	}
+
+	.menu-items topmenu,
+	.menu-items,
+	.moreLeft,
+	.moreRight,
+	.horizontalline, 
+	.mobileNext,
+	.navButtons {
+		visibility: hidden;
+	}
+
+	.mainComponent .clear .clearInputs,
+	.mainComponent .mobile-table-div .clearInputs {
+		visibility: hidden;
+	}
+
+	.topnav {
+		height: 50px;
+	}
+
+	.mainComponent .map .mapBody {
+		page-break-before: always;
+	}
+	
+}
