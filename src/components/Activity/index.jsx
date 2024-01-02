@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { useSelector } from 'react-redux';
 import { CardContent, Card } from '@mui/material';
 import Draggable from 'react-draggable';
@@ -283,29 +283,34 @@ export const Summary = () => {
   const style = total > 0 ? { color: 'red' } : { color: 'black' };
   // const classes = useStyles();
 
+  const componentRef = createRef();
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  // });
+
   return (
     (total || farm || field || acres || cashCrop) && (
       <div className="desktop2">
         <Draggable handle="strong">
-          <Card id="Summary" variant="outlined" style={{ backgroundColor: '#eee' }}>
+          <Card id="Summary" variant="outlined" style={{ backgroundColor: '#eee' }} ref={componentRef}>
             <CardContent>
+              <div ref={componentRef}>
+                <strong className="cursor">
+                  Summary
+                </strong>
 
-              <strong className="cursor">
-                Summary
-              </strong>
-
-              <table>
-                {(farm || field || acres || cashCrop) && (
+                <table>
+                  {(farm || field || acres || cashCrop) && (
                   <>
                     <thead />
                     <tbody>
                       {farm && (
-                        <tr>
-                          <td>Farm     </td>
-                          <td style={{ textAlign: 'left' }}>
-                            {farm}
-                          </td>
-                        </tr>
+                      <tr>
+                        <td>Farm     </td>
+                        <td style={{ textAlign: 'left' }}>
+                          {farm}
+                        </td>
+                      </tr>
                       )}
                       {field && (
                       <tr>
@@ -316,39 +321,40 @@ export const Summary = () => {
                       </tr>
                       )}
                       {acres && (
-                        <tr>
-                          <td>Acres    </td>
-                          <td style={{ textAlign: 'left' }}>
-                            {acres}
-                          </td>
-                        </tr>
+                      <tr>
+                        <td>Acres    </td>
+                        <td style={{ textAlign: 'left' }}>
+                          {acres}
+                        </td>
+                      </tr>
                       )}
                       {cashCrop && (
-                        <tr>
-                          <td>Cash crop</td>
-                          <td style={{ textAlign: 'left' }}>
-                            {cashCrop}
-                          </td>
-                        </tr>
+                      <tr>
+                        <td>Cash crop</td>
+                        <td style={{ textAlign: 'left' }}>
+                          {cashCrop}
+                        </td>
+                      </tr>
                       )}
                     </tbody>
                   </>
-                )}
-                <CostsBenefits type="Costs" />
-                <CostsBenefits type="Benefits" />
-                {total ? (
-                  <tfoot>
-                    <tr style={{ fontWeight: 'bold' }}>
-                      <td>
-                        Total Economic
-                        {' '}
-                        {total < 0 ? 'Benefit' : 'Cost'}
-                      </td>
-                      <td style={style}>{dollars(Math.abs(total))}</td>
-                    </tr>
-                  </tfoot>
-                ) : null}
-              </table>
+                  )}
+                  <CostsBenefits type="Costs" />
+                  <CostsBenefits type="Benefits" />
+                  {total ? (
+                    <tfoot>
+                      <tr style={{ fontWeight: 'bold' }}>
+                        <td>
+                          Total Economic
+                          {' '}
+                          {total < 0 ? 'Benefit' : 'Cost'}
+                        </td>
+                        <td style={style}>{dollars(Math.abs(total))}</td>
+                      </tr>
+                    </tfoot>
+                  ) : null}
+                </table>
+              </div>
             </CardContent>
           </Card>
         </Draggable>

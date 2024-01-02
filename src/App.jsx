@@ -16,6 +16,7 @@ import {
 
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
 
+import PrintIcon from '@mui/icons-material/Print';
 import {
   dev, get, set,
 } from './store/Store';
@@ -160,7 +161,7 @@ const Navigation = ({ current }) => {
       {next && (
         <div id="Navigation" className="mobile">
           <NavLink to={`/${next}`}>
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" className="mobileNext">
               <div>
                 NEXT: &nbsp;
                 {next.replace('Practices', 'Summary')}
@@ -170,8 +171,17 @@ const Navigation = ({ current }) => {
         </div>
       )}
 
-      <div id="Navigation" className="desktop">
-        {back && (
+      <div
+        className="navButtons"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: '#ccc',
+        }}
+      >
+        <div id="Navigation" className="desktop" style={{ marginLeft: 'auto' }}>
+          {back && (
           <NavLink to={`/${back.replace('Home', '')}`}>
             <Button variant="contained" color="primary" tabIndex={-1}>
               {!mobile ? (
@@ -184,8 +194,8 @@ const Navigation = ({ current }) => {
               )}
             </Button>
           </NavLink>
-        )}
-        {next && (
+          )}
+          {next && (
           <NavLink to={`/${next}`}>
             <Button variant="contained" color="primary">
               {!mobile ? (
@@ -198,15 +208,33 @@ const Navigation = ({ current }) => {
               )}
             </Button>
           </NavLink>
-        )}
+          )}
 
-        {current !== 'Resources' && next !== 'Resources' && (
+          {current !== 'Resources' && next !== 'Resources' && (
           <NavLink to="/Resources">
             <Button variant="contained" color="primary">
               Resources
             </Button>
           </NavLink>
-        )}
+          )}
+
+        </div>
+        <Button
+          variant="contained"
+          color="success"
+          className="printButton"
+          onClick={() => {
+            window.print();
+          }}
+          style={{
+            width: 'auto',
+            marginLeft: 'auto',
+            marginRight: '2%',
+          }}
+          startIcon={<PrintIcon />}
+        >
+          Print
+        </Button>
       </div>
     </>
   );
@@ -528,7 +556,7 @@ const App = () => {
     <div id="Container">
       <MyModal />
 
-      <nav>
+      <nav className="topnav">
         <div className="mobile">
           <h1>
             <img src="PSAlogo-only.png" alt="logo" />
@@ -591,14 +619,14 @@ const App = () => {
           })}
         </div>
 
-        <hr />
+        <hr className="horizontalline" />
 
         <div className="menu-items">
           {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
             if (mobile && path === 'AT') return null;
 
             let cname = path === screen ? 'selected summary' : 'summary';
-            const dis = disabled && !/Feedback|AT/.test(path);
+            const dis = path !== 'Resources' && disabled && !/Feedback|AT/.test(path);
 
             if (dis) {
               cname += ' disabled';
@@ -654,27 +682,27 @@ const App = () => {
 
       <Summary />
 
-      <div id="Main">
+      <div id="Main" className="mainComponent">
         <Routes>
-          <Route path="" element={<Home />} />
-          <Route path="About" element={<About />} />
-          <Route path="Field" element={<Field />} />
-          <Route path="Seeds" element={<Seeds />} />
-          <Route path="Seedbed" element={<Seedbed />} />
-          <Route path="Planting" element={<Planting />} />
-          <Route path="Termination" element={<Termination />} />
-          <Route path="Tillage" element={<Tillage />} />
-          <Route path="Fertility" element={<Fertility />} />
-          <Route path="Herbicide" element={<Herbicide />} />
-          <Route path="Erosion" element={<Erosion />} />
-          <Route path="Grazing" element={<Grazing />} />
-          <Route path="Additional" element={<Additional />} />
-          <Route path="Yield" element={<Yield />} />
-          <Route path="Practices" element={<Practices />} />
-          <Route path="Revenue" element={<Revenue />} />
-          <Route path="Resources" element={<Resources />} />
-          <Route path="Feedback" element={<Feedback />} />
-          <Route path="AT" element={<AT />} />
+          <Route key="home" path="" element={<Home />} />
+          <Route key="About" path="About" element={<About />} />
+          <Route key="Field" path="Field" element={<Field />} />
+          <Route key="Seeds" path="Seeds" element={<Seeds />} />
+          <Route key="Seedbed" path="Seedbed" element={<Seedbed />} />
+          <Route key="Planting" path="Planting" element={<Planting />} />
+          <Route key="Termination" path="Termination" element={<Termination />} />
+          <Route key="Tillage" path="Tillage" element={<Tillage />} />
+          <Route key="Fertility" path="Fertility" element={<Fertility />} />
+          <Route key="Herbicide" path="Herbicide" element={<Herbicide />} />
+          <Route key="Erosion" path="Erosion" element={<Erosion />} />
+          <Route key="Grazing" path="Grazing" element={<Grazing />} />
+          <Route key="Additional" path="Additional" element={<Additional />} />
+          <Route key="Yield" path="Yield" element={<Yield />} />
+          <Route key="Practices" path="Practices" element={<Practices />} />
+          <Route key="Revenue" path="Revenue" element={<Revenue />} />
+          <Route key="Resources" path="Resources" element={<Resources />} />
+          <Route key="Feedback" path="Feedback" element={<Feedback />} />
+          <Route key="AT" path="AT" element={<AT />} />
           {Object.keys(airTables).map((key) => (
             <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}

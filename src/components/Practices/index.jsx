@@ -33,7 +33,6 @@ import {
 } from '../../store/Store';
 
 import './styles.scss';
-import Print from '../../shared/Print';
 
 const Tests = () => (
   <div className="test-buttons">
@@ -399,8 +398,6 @@ const Practices = () => {
         longitude:
         {` ${lon}`}
       </h1>
-
-      <Print />
 
       <NestedAccordion details={details} />
 
