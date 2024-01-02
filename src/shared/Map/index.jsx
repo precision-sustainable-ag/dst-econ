@@ -57,9 +57,11 @@ const MapComp = () => {
           If you already know your coordinates, you can enter them in the search bar separated by a comma (for example, 37.7, -80.2).
         </p>
       </div>
-      {
+      <div className="mapBody">
+        {
         lat === 0 ? <OpeningMap /> : <InteractiveMap />
       }
+      </div>
     </div>
   );
 };
