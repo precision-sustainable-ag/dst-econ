@@ -576,7 +576,7 @@ const App = () => {
             if (mobile && path === 'AT') return null;
 
             let cname = path === screen ? 'selected summary' : 'summary';
-            const dis = disabled && !/Feedback|AT/.test(path);
+            const dis = path !== 'Resources' && disabled && !/Feedback|AT/.test(path);
 
             if (dis) {
               cname += ' disabled';
@@ -634,25 +634,25 @@ const App = () => {
 
       <div id="Main" className="mainComponent">
         <Routes>
-          <Route path="" element={<Home />} />
-          <Route path="About" element={<About />} />
-          <Route path="Field" element={<Field />} />
-          <Route path="Seeds" element={<Seeds />} />
-          <Route path="Seedbed" element={<Seedbed />} />
-          <Route path="Planting" element={<Planting />} />
-          <Route path="Termination" element={<Termination />} />
-          <Route path="Tillage" element={<Tillage />} />
-          <Route path="Fertility" element={<Fertility />} />
-          <Route path="Herbicide" element={<Herbicide />} />
-          <Route path="Erosion" element={<Erosion />} />
-          <Route path="Grazing" element={<Grazing />} />
-          <Route path="Additional" element={<Additional />} />
-          <Route path="Yield" element={<Yield />} />
-          <Route path="Practices" element={<Practices />} />
-          <Route path="Revenue" element={<Revenue />} />
-          <Route path="Resources" element={<Resources />} />
-          <Route path="Feedback" element={<Feedback />} />
-          <Route path="AT" element={<AT />} />
+          <Route key="home" path="" element={<Home />} />
+          <Route key="About" path="About" element={<About />} />
+          <Route key="Field" path="Field" element={<Field />} />
+          <Route key="Seeds" path="Seeds" element={<Seeds />} />
+          <Route key="Seedbed" path="Seedbed" element={<Seedbed />} />
+          <Route key="Planting" path="Planting" element={<Planting />} />
+          <Route key="Termination" path="Termination" element={<Termination />} />
+          <Route key="Tillage" path="Tillage" element={<Tillage />} />
+          <Route key="Fertility" path="Fertility" element={<Fertility />} />
+          <Route key="Herbicide" path="Herbicide" element={<Herbicide />} />
+          <Route key="Erosion" path="Erosion" element={<Erosion />} />
+          <Route key="Grazing" path="Grazing" element={<Grazing />} />
+          <Route key="Additional" path="Additional" element={<Additional />} />
+          <Route key="Yield" path="Yield" element={<Yield />} />
+          <Route key="Practices" path="Practices" element={<Practices />} />
+          <Route key="Revenue" path="Revenue" element={<Revenue />} />
+          <Route key="Resources" path="Resources" element={<Resources />} />
+          <Route key="Feedback" path="Feedback" element={<Feedback />} />
+          <Route key="AT" path="AT" element={<AT />} />
           {Object.keys(airTables).map((key) => (
             <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}
