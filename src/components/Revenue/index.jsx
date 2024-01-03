@@ -164,12 +164,18 @@ const Revenue = () => {
     return `${description}${displayYear ? ` (year ${yearNumber})` : ''}`;
   };
 
+  const farmFieldValue = () => {
+    const farmValue = /^[0-9\s]+$/.test(farm) ? `FSA Farm Number: ${farm}` : farm;
+    const fieldValue = /^[0-9\s]+$/.test(field) ? `, FSA Field No. ${field}` : ` - ${field} `;
+    return `${farm ? `on ${farmValue}` : ''}${field ? `${fieldValue}` : ''}`;
+  };
+
   return (
     <div id="Revenue">
 
       <table style={{ float: 'left', width: '100%', marginTop: '2%' }}>
         <caption>
-          {`Economic Effects of Cover Crops ${farm ? ` on ${farm} ` : ''}${field ? ` - ${field} ` : ''} ${new Date().getFullYear()}`}
+          {`Economic Effects of Cover Crops ${farmFieldValue()} ${new Date().getFullYear()}`}
           {/* <Print /> */}
         </caption>
 

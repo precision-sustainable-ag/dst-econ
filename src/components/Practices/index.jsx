@@ -384,13 +384,21 @@ const Practices = () => {
       }),
     };
   }
+
+  const farmFieldValue = () => {
+    const farmValue = /^[0-9\s]+$/.test(farm) ? `FSA Farm Number: ${farm}` : farm;
+    const fieldValue = /^[0-9\s]+$/.test(field) ? `, FSA Field No. ${field}` : ` - ${field} `;
+    return `${farm ? `${farmValue}` : ''}${field ? `${fieldValue}` : ''}`;
+  };
+
   return (
     <div id="Practices">
       <h1>
         Summary of Practices for
         <br />
-        {farm && `${farm}`}
-        {field && ` - ${field}`}
+        {/* {farm && `${farm}`}
+        {field && ` - ${field}`} */}
+        {farmFieldValue()}
         {acres && ` (${acres} acres)`}
         <br />
         latitude:
