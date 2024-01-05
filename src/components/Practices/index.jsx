@@ -155,6 +155,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
     if (typeof content === 'object') {
       return (
         <Accordion
+          className="accordionItem"
           key={title}
           defaultExpanded
           style={{ paddingLeft: level * 15, margin: 0 }}
@@ -396,8 +397,6 @@ const Practices = () => {
       <h1>
         Summary of Practices for
         <br />
-        {/* {farm && `${farm}`}
-        {field && ` - ${field}`} */}
         {farmFieldValue()}
         {acres && ` (${acres} acres)`}
         <br />
