@@ -546,8 +546,11 @@ table.power {
 		height: 50px;
 	}
 
-	.mainComponent .map .mapBody {
-		page-break-before: always;
+	.mainComponent .map,
+	.mainComponent .yield .yieldTable,
+	.mainComponent .accordionItem,
+	.mainComponent .avoidPageBreak {
+		break-inside: avoid;
 	}
 	
 }

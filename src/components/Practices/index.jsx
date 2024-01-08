@@ -155,6 +155,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
     if (typeof content === 'object') {
       return (
         <Accordion
+          className="accordionItem"
           key={title}
           defaultExpanded
           style={{ paddingLeft: level * 15, margin: 0 }}
@@ -384,13 +385,20 @@ const Practices = () => {
       }),
     };
   }
+
+  const farmFieldValue = () => {
+    const farmFieldTest = /^[0-9\s]+$/.test(farm) && /^[0-9\s]+$/.test(field);
+    const farmValue = farmFieldTest ? `FSA Farm Number: ${farm}` : farm;
+    const fieldValue = farmFieldTest ? `, FSA Field No. ${field}` : ` - ${field} `;
+    return `${farm ? `${farmValue}` : ''}${field ? `${fieldValue}` : ''}`;
+  };
+
   return (
     <div id="Practices">
       <h1>
         Summary of Practices for
         <br />
-        {farm && `${farm}`}
-        {field && ` - ${field}`}
+        {farmFieldValue()}
         {acres && ` (${acres} acres)`}
         <br />
         latitude:
