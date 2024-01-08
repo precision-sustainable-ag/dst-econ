@@ -46,6 +46,14 @@ const Resources = () => {
           name: 'American Farmland Trust homepage',
           link: 'https://farmland.org/',
         },
+        {
+          name: 'Apple Podcast',
+          link: 'https://podcasts.apple.com/us/podcast/soil-sense/id1474699736',
+        },
+        {
+          name: 'FSH website - Soil Sense episodes (linked to Spotify)',
+          link: 'https://farmersforsoilhealth.com/success-stories/',
+        },
       ],
     },
     {

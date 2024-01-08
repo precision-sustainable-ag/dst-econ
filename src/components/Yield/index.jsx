@@ -150,7 +150,7 @@ const Yield = () => {
   const state = useSelector(get.yield);
 
   return (
-    <div id="Yield">
+    <div id="Yield" className="yield">
       <h1>
         Yield
       </h1>
@@ -252,7 +252,7 @@ const Yield = () => {
       </table>
       )}
 
-      <div>
+      <div className="yieldTable">
         <table
           id="YieldTable"
           style={

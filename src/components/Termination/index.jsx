@@ -86,7 +86,7 @@ const HerbicidesRow = ({ n, prop }) => (
 ); // HerbicidesRow
 
 const OtherHerbicides = ({ state, prop, description }) => (
-  <table style={{ width: '100%' }}>
+  <table style={{ width: '100%' }} className="avoidPageBreak">
     <caption>{description}</caption>
     <thead>
       <tr>
