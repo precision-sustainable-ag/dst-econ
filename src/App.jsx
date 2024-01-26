@@ -441,10 +441,14 @@ const App = () => {
     moreRight.current.classList.toggle('hidden', moreLeft.current.disabled && moreRight.current.disabled);
   };
 
+  let resizeTimer;
   const resize = () => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
-    dispatch(set.mobile(isMobile));
-    scroll();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
+      dispatch(set.mobile(isMobile));
+      scroll();
+    }, 100);
   };
 
   useEffect(() => {
