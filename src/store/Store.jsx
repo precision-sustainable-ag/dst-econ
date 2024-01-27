@@ -867,7 +867,13 @@ const loadAirtables = async (tables) => {
   const order = /commodities|costDefaults/.test(table) ? 'order' : 'key';
 
   const response = await fetch(
-    `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2&sort%5B0%5D%5Bfield%5D=${order}`,
+    `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?sort%5B0%5D%5Bfield%5D=${order}`,
+    {
+      method: 'GET',
+      headers: {
+        authorization: 'Bearer patNiQS8C8RFSD3TQ.5777663e47e400a18c0fdcfe5118c85044a755a5966be3391e26d9d13f2a076e',
+      },
+    },
   );
   const rec = await response.json();
 
