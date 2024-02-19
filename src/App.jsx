@@ -164,7 +164,7 @@ const Navigation = ({ current }) => {
             <Button variant="contained" color="primary" className="mobileNext">
               <div>
                 NEXT: &nbsp;
-                {next.replace('Practices', 'Summary')}
+                {next?.replace('Practices', 'Summary')}
               </div>
             </Button>
           </NavLink>
@@ -182,7 +182,7 @@ const Navigation = ({ current }) => {
       >
         <div id="Navigation" className="desktop" style={{ marginLeft: 'auto' }}>
           {back && (
-          <NavLink to={`/${back.replace('Home', '')}`}>
+          <NavLink to={`/${back?.replace('Home', '')}`}>
             <Button variant="contained" color="primary" tabIndex={-1}>
               {!mobile ? (
                 <div>
@@ -299,7 +299,7 @@ const unneededCSS = () => {
 
             rule.style.removeProperty(property);
             const newValue = getComputedStyle(obj)[property];
-            rule.style.setProperty(property, value.replace(' !important', ''), important ? 'important' : '');
+            rule.style.setProperty(property, value?.replace(' !important', ''), important ? 'important' : '');
 
             if (originalValue === newValue) {
               console.log(rule.selectorText, '-', property, '-', value, '-', originalValue, '-', newValue);
@@ -332,7 +332,7 @@ const unusedCSS = (log = false) => {
             }
 
             const re = /::[-\w]+/g;
-            const els = document.querySelectorAll(selector.replace(re, '') || 'EMPTY');
+            const els = document.querySelectorAll(selector?.replace(re, '') || 'EMPTY');
             if (!selectors[selector] && !els.length) {
               unused.push(selector);
             } else {
@@ -349,7 +349,7 @@ const unusedCSS = (log = false) => {
   if (log) {
     console.log('_'.repeat(20));
     unused
-      .sort((a, b) => a.replace(/^#/, 'ZZZ').localeCompare(b.replace(/^#/, 'ZZZ')))
+      .sort((a, b) => a?.replace(/^#/, 'ZZZ').localeCompare(b?.replace(/^#/, 'ZZZ')))
       .forEach((s) => console.log(s));
   }
 };
