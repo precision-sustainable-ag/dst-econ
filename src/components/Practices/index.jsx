@@ -329,6 +329,7 @@ const Practices = () => {
       obj.Product = `${herbicide.additional.product} @ ${dollars(herbicide.additional.cost)} / acre`;
     }
     equipment(obj, herbicide.reduced, false);
+    obj['Reduction by application of fall herbicide'] = ` ${dollars(herbicide.fall.savings)} / acre`;
     equipment(obj, herbicide.fall, false);
     details['Herbicide modifications to normal cropping system'] = obj;
   }
