@@ -176,7 +176,7 @@ const Revenue = () => {
 
       <table style={{ float: 'left', width: '100%', marginTop: '2%' }}>
         <caption>
-          {`Economic Effects of Cover Crops ${farmFieldValue()} ${new Date().getFullYear()}`}
+          {`Economic Effects of Cover Crops ${farmFieldValue()} (${acres} acres) ${new Date().getFullYear()}`}
         </caption>
 
         <tr>
