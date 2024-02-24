@@ -120,7 +120,7 @@ const Additional = () => (
       state program such as Soil &amp; Water Conservation Programs,
       federal programs such as EQIP (Environmental Quality Incentives Program)
       or CSP (Conservation Stewardship Program),
-      or payments from companies aggregated voluntary carbon offsets.
+      or payments from companies aggregating voluntary carbon offsets.
       If you are not familiar with these types of programs, please refer to the
       {' '}
       <NavLink className="link" to="/Resources">
