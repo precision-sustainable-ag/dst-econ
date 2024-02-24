@@ -372,22 +372,35 @@ const Practices = () => {
     };
   }
 
-  if (Yield.total) {
-    const year = {
-      1: 'first',
-      3: 'third',
-      5: 'fifth',
-    }[Yield.q4];
+  // Yield content start
+  const year = {
+    1: 'first',
+    3: 'third',
+    5: 'fifth',
+  }[Yield.q4];
 
-    details.Yield = Yield.total >= 0 ? {
-      [`Improved yield estimate in ${year} year of cover crops`]: dollars(Yield.total),
-    } : {
-      'Decreased yield estimate': Yield.total.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }),
-    };
+  let key;
+  let value;
+
+  if (/No change in yield estimates/.test(Yield.q2)) {
+    key = 'No change in yield estimates';
+    value = '';
+  } else if (Yield.total >= 0) {
+    key = `Improved yield estimate in ${year} year of cover crops`;
+    value = dollars(Yield.total);
+  } else {
+    key = 'Decreased yield estimate';
+    value = Yield.total.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
   }
+
+  details.Yield = {
+    [key]: value,
+    'Commodity price': dollars(Yield.price),
+  };
+  // Yield content end
 
   const farmFieldValue = () => {
     const farmFieldTest = /^[0-9\s]+$/.test(farm) && /^[0-9\s]+$/.test(field);
