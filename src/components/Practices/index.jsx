@@ -99,7 +99,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
               <tr key={title}>
                 <th />
                 {
-                  [...content].map((data) => <th key="data">{data}</th>)
+                  [...content].map((data, index) => <th key={`data${index}`}>{data}</th>)
                 }
               </tr>
             ))
@@ -111,7 +111,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
               .filter(([title, content]) => title !== 'th' && content !== '$0.00')
               .map(([title, content]) => {
                 if (Array.isArray(content)) {
-                  content = content.map((data) => <td key="data" className={getClass(data)}>{data}</td>);
+                  content = content.map((data, index) => <td key={`data${index}`} className={getClass(data)}>{data}</td>);
                 } else if (typeof content === 'object') {
                   content = (
                     <td className={getClass(content)}>
@@ -250,8 +250,10 @@ const Practices = () => {
   };
 
   if (species.length) {
+    const ratesNoNull = rates.filter((i) => i !== '');
+    const pricesNoNull = prices.filter((i) => i !== '');
     details['Seeds Planted'] = species.filter((s) => s).reduce((obj, s, i) => {
-      obj[s] = `${rates[i]} pounds/acre @ ${dollars(prices[i])}/pound`;
+      obj[s] = `${ratesNoNull[i]} pounds/acre @ ${dollars(pricesNoNull[i])}/pound`;
       return obj;
     }, {});
   }
