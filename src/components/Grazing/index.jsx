@@ -33,7 +33,7 @@ const GrazingHelper = () => {
         {grazing.grazing !== 'Yes' && <Stop />}
 
         <div>
-          Do you intend to lease your cover crop acres to a livestock producer (not graze them with your operation)?
+          Do you intend to lease your cover crop acres to a livestock producer (not graze them with your own cattle)?
         </div>
         <div>
           <Input id="grazing.lease" options={['Yes', 'No']} type="radio" />
