@@ -51,6 +51,7 @@ const About = () => (
       with a limited amount of data retrieval by growers.
       Begin by inputting ALL of the required information into the Field & Farm module
       and then proceed to each of the input modules (each of the input modules are buttons with white lettering).
+      Not all input modules will be needed by all users. Skip those input modules that are not applicable to your situation.
     </p>
 
     <p>
