@@ -22,7 +22,8 @@ const Planting = () => {
         we only want to consider management decisions directly associated with the use of cover crops.
         In this module we will consider any activity associated with planting cover crops, but only new activity.
         There are many potential options for planting cover crops; including aerial application.
-        Input per acre costs associated with using an airplane by selecting &quot;hire custom operator&quot; on the drop-down menu.
+        Input per acre costs associated with using an airplane by selecting &quot;Aerial seeding&quot; under the &quot;Hire custom operator&quot;
+        heading in the drop-down menu.
         As another example, if utilizing a no-till drill to plant cover crops select the appropriate equipment on the drop-down menu
         and proceed to answer questions on tractor horsepower.
       </p>

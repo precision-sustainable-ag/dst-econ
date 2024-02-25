@@ -99,7 +99,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
               <tr key={title}>
                 <th />
                 {
-                  [...content].map((data) => <th key="data">{data}</th>)
+                  [...content].map((data, index) => <th key={`data${index}`}>{data}</th>)
                 }
               </tr>
             ))
@@ -111,7 +111,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
               .filter(([title, content]) => title !== 'th' && content !== '$0.00')
               .map(([title, content]) => {
                 if (Array.isArray(content)) {
-                  content = content.map((data) => <td key="data" className={getClass(data)}>{data}</td>);
+                  content = content.map((data, index) => <td key={`data${index}`} className={getClass(data)}>{data}</td>);
                 } else if (typeof content === 'object') {
                   content = (
                     <td className={getClass(content)}>
@@ -250,8 +250,10 @@ const Practices = () => {
   };
 
   if (species.length) {
+    const ratesNoNull = rates.filter((i) => i !== '');
+    const pricesNoNull = prices.filter((i) => i !== '');
     details['Seeds Planted'] = species.filter((s) => s).reduce((obj, s, i) => {
-      obj[s] = `${rates[i]} pounds/acre @ ${dollars(prices[i])}/pound`;
+      obj[s] = `${ratesNoNull[i]} pounds/acre @ ${dollars(pricesNoNull[i])}/pound`;
       return obj;
     }, {});
   }
@@ -327,6 +329,7 @@ const Practices = () => {
       obj.Product = `${herbicide.additional.product} @ ${dollars(herbicide.additional.cost)} / acre`;
     }
     equipment(obj, herbicide.reduced, false);
+    obj['Reduction by application of fall herbicide'] = ` ${dollars(herbicide.fall.savings)} / acre`;
     equipment(obj, herbicide.fall, false);
     details['Herbicide modifications to normal cropping system'] = obj;
   }
@@ -369,22 +372,35 @@ const Practices = () => {
     };
   }
 
-  if (Yield.total) {
-    const year = {
-      1: 'first',
-      3: 'third',
-      5: 'fifth',
-    }[Yield.q4];
+  // Yield content start
+  const year = {
+    1: 'first',
+    3: 'third',
+    5: 'fifth',
+  }[Yield.q4];
 
-    details.Yield = Yield.total >= 0 ? {
-      [`Improved yield estimate in ${year} year of cover crops`]: dollars(Yield.total),
-    } : {
-      'Decreased yield estimate': Yield.total.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }),
-    };
+  let key;
+  let value;
+
+  if (/No change in yield estimates/.test(Yield.q2)) {
+    key = 'No change in yield estimates';
+    value = '';
+  } else if (Yield.total >= 0) {
+    key = `Improved yield estimate in ${year} year of cover crops`;
+    value = dollars(Yield.total);
+  } else {
+    key = 'Decreased yield estimate';
+    value = Yield.total.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
   }
+
+  details.Yield = {
+    [key]: value,
+    'Commodity price': dollars(Yield.price),
+  };
+  // Yield content end
 
   const farmFieldValue = () => {
     const farmFieldTest = /^[0-9\s]+$/.test(farm) && /^[0-9\s]+$/.test(field);

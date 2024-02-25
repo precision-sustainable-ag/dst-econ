@@ -5,7 +5,7 @@ import ClearInputs from '../ClearInputs';
 import Input from '../../shared/Inputs';
 
 import {
-  dev, get, getDefaults, clearInputs, exampleHerbicides,
+  dev, get, getDefaults, clearInputs, exampleHerbicides, dollars,
 } from '../../store/Store';
 
 const herbicideDefaults = getDefaults(
@@ -293,6 +293,27 @@ const Herbicide = () => {
               />
             </>
             )}
+
+            <Logic
+              current="herbicide"
+              q="Herbicide cost reductions due to adopting cover crop"
+              a={dollars(state.fall.total + state.fall.savings + state.reduced.total)}
+              style={{ background: 'lightyellow' }}
+            />
+
+            <Logic
+              current="herbicide"
+              q="Herbicide cost increases due to adopting cover crop"
+              a={dollars(state.additional.cost + state.additional.total)}
+              style={{ background: 'lightyellow' }}
+            />
+
+            <Logic
+              current="herbicide"
+              q="Net impact of adopting cover crop on herbicide costs"
+              a={dollars(state.total)}
+              style={{ background: 'lightyellow' }}
+            />
 
           </tbody>
         </table>
