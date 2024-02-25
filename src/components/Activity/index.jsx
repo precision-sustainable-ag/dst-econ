@@ -9,7 +9,7 @@ import './styles.scss';
 const Costs = ({ desc, type }) => {
   const selector = goto(get, type);
   const state = useSelector(selector);
-  const d = desc.replace('Storage shed', 'Storage');
+  const d = desc?.replace('Storage shed', 'Storage');
 
   const val = state[d];
 
