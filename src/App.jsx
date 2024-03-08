@@ -630,7 +630,6 @@ const App = () => {
         <div className="menu-items">
           {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
             if (mobile && path === 'AT') return null;
-            if (!mobile && path === 'Snapshot') return null;
 
             let cname = path === screen ? 'selected summary' : 'summary';
             const dis = path !== 'Resources' && disabled && !/Feedback|AT/.test(path);
@@ -647,7 +646,7 @@ const App = () => {
                 accessKey={accessKey}
                 tabIndex={-1}
                 onFocus={(e) => e.target.blur()}
-                className={`${cname} ${path}`}
+                className={`${cname} ${path}${path === 'Snapshot' ? ' budgetTable' : ''}`}
               >
                 <Button
                   screen={path}

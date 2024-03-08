@@ -1,18 +1,17 @@
 import React from 'react';
 import { SummaryDetails } from '../Activity';
 
-const Snapshot = () => {
-  console.log('snapshot');
-  return (
-    <SummaryDetails view="MOBILE" />
-  );
-};
+const Snapshot = () => (
+  <SummaryDetails view="MOBILE" />
+);
 
 Snapshot.menu = (
   <span>
-    Sna
-    <u>p</u>
-    shot
+    B
+    <u>u</u>
+    dget
+    {' '}
+    Table
   </span>
 );
 

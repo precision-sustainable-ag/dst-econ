@@ -301,7 +301,7 @@ export const SummaryDetails = ({ view }) => {
         <CardContent>
           <div ref={view === 'DESKTOP' ? componentRef : null}>
             <strong className="cursor" style={{ cursor: view === 'DESKTOP' ? '' : 'auto' }}>
-              Snapshot
+              Budget Table
             </strong>
 
             <table>
