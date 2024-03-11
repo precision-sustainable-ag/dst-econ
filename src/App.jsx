@@ -42,6 +42,7 @@ import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
+import Snapshot from './components/Snapshot';
 
 let firstTime = true;
 
@@ -138,6 +139,7 @@ const paths = {
   Revenue,
   Resources,
   Feedback,
+  Snapshot,
 };
 
 if (dev) {
@@ -164,7 +166,7 @@ const Navigation = ({ current }) => {
             <Button variant="contained" color="primary" className="mobileNext">
               <div>
                 NEXT: &nbsp;
-                {next.replace('Practices', 'Summary')}
+                {next?.replace('Practices', 'Summary')}
               </div>
             </Button>
           </NavLink>
@@ -182,7 +184,7 @@ const Navigation = ({ current }) => {
       >
         <div id="Navigation" className="desktop" style={{ marginLeft: 'auto' }}>
           {back && (
-          <NavLink to={`/${back.replace('Home', '')}`}>
+          <NavLink to={`/${back?.replace('Home', '')}`}>
             <Button variant="contained" color="primary" tabIndex={-1}>
               {!mobile ? (
                 <div>
@@ -299,7 +301,7 @@ const unneededCSS = () => {
 
             rule.style.removeProperty(property);
             const newValue = getComputedStyle(obj)[property];
-            rule.style.setProperty(property, value.replace(' !important', ''), important ? 'important' : '');
+            rule.style.setProperty(property, value?.replace(' !important', ''), important ? 'important' : '');
 
             if (originalValue === newValue) {
               console.log(rule.selectorText, '-', property, '-', value, '-', originalValue, '-', newValue);
@@ -332,7 +334,7 @@ const unusedCSS = (log = false) => {
             }
 
             const re = /::[-\w]+/g;
-            const els = document.querySelectorAll(selector.replace(re, '') || 'EMPTY');
+            const els = document.querySelectorAll(selector?.replace(re, '') || 'EMPTY');
             if (!selectors[selector] && !els.length) {
               unused.push(selector);
             } else {
@@ -349,7 +351,7 @@ const unusedCSS = (log = false) => {
   if (log) {
     console.log('_'.repeat(20));
     unused
-      .sort((a, b) => a.replace(/^#/, 'ZZZ').localeCompare(b.replace(/^#/, 'ZZZ')))
+      .sort((a, b) => a?.replace(/^#/, 'ZZZ').localeCompare(b?.replace(/^#/, 'ZZZ')))
       .forEach((s) => console.log(s));
   }
 };
@@ -593,7 +595,7 @@ const App = () => {
 
         <div className="menu-items topmenu" ref={topMenu}>
 
-          {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
+          {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
             let cname = path === screen ? 'selected' : '';
             const dis = disabled && !/Home|Field/.test(path);
 
@@ -626,7 +628,7 @@ const App = () => {
         <hr className="horizontalline" />
 
         <div className="menu-items">
-          {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
+          {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
             if (mobile && path === 'AT') return null;
 
             let cname = path === screen ? 'selected summary' : 'summary';
@@ -644,7 +646,7 @@ const App = () => {
                 accessKey={accessKey}
                 tabIndex={-1}
                 onFocus={(e) => e.target.blur()}
-                className={`${cname} ${path}`}
+                className={`${cname} ${path}${path === 'Snapshot' ? ' budgetTable' : ''}`}
               >
                 <Button
                   screen={path}
@@ -707,6 +709,7 @@ const App = () => {
           <Route key="Resources" path="Resources" element={<Resources />} />
           <Route key="Feedback" path="Feedback" element={<Feedback />} />
           <Route key="AT" path="AT" element={<AT />} />
+          <Route key="Snapshot" path="Snapshot" element={<Snapshot />} />
           {Object.keys(airTables).map((key) => (
             <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}

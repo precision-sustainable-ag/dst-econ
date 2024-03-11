@@ -253,6 +253,7 @@ const initialState = {
         ? 'Use cover crop adjusted yield estimates from the table above'
         : 'Enter my own estimated yield change'
     ),
+    q4: '1',
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
@@ -867,7 +868,13 @@ const loadAirtables = async (tables) => {
   const order = /commodities|costDefaults/.test(table) ? 'order' : 'key';
 
   const response = await fetch(
-    `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?api_key=keySO0dHQzGVaSZp2&sort%5B0%5D%5Bfield%5D=${order}`,
+    `https://api.airtable.com/v0/appRBt6oxz1E9v2F4/${table}?sort%5B0%5D%5Bfield%5D=${order}`,
+    {
+      method: 'GET',
+      headers: {
+        authorization: 'Bearer patNiQS8C8RFSD3TQ.5777663e47e400a18c0fdcfe5118c85044a755a5966be3391e26d9d13f2a076e',
+      },
+    },
   );
   const rec = await response.json();
 
@@ -1279,14 +1286,14 @@ export const exampleYield1 = () => {
   store.dispatch(set.yield.yield('150'));
   store.dispatch(set.cashCrop('Soybeans'));
   store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates from the table above'));
-  store.dispatch(set.yield.q4('5'));
+  store.dispatch(set.yield.q4('1'));
 }; // exampleYield1
 
 export const exampleYield2 = () => {
   store.dispatch(set.yield.yield('150'));
   store.dispatch(set.cashCrop('Corn'));
   store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates from the table above'));
-  store.dispatch(set.yield.q4('5'));
+  store.dispatch(set.yield.q4('1'));
 }; // exampleYield2
 
 export const exampleAdditional = () => {

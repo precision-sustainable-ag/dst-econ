@@ -65,7 +65,7 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
           const func = obj[key].toString();
 
           Object.keys(allkeys).forEach((key2) => {
-            const regex = new RegExp(`${key2.replace(/[.$]/g, (c) => `\\${c}`)}`);
+            const regex = new RegExp(`${key2?.replace(/[.$]/g, (c) => `\\${c}`)}`);
             if (func.match(regex)) {
               methods[key2] = methods[key2] || {};
               methods[key2][fullkey] = funcs[fullkey];
@@ -102,7 +102,7 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
             if (afterChange[fullkey]) {
               const func = afterChange[fullkey].toString();
               Object.keys(allkeys).forEach((key2) => {
-                if (func.match(new RegExp(`${key2.replace(/[.$]/g, (c) => `\\${c}`)}`))) {
+                if (func.match(new RegExp(`${key2?.replace(/[.$]/g, (c) => `\\${c}`)}`))) {
                   processMethods(state, key2);
                 }
               });
