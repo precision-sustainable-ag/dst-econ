@@ -199,6 +199,8 @@ const equipment = (obj, type, nest = true) => {
     power,
   } = type;
 
+  if (!implement) return;
+
   let updatedImplement = implement;
 
   if (description === 'Planting Decisions' || description === 'Chemical spray equipment') {
