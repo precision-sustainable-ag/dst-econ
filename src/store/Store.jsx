@@ -253,6 +253,7 @@ const initialState = {
         ? 'Use cover crop adjusted yield estimates from the table above'
         : 'Enter my own estimated yield change'
     ),
+    q4: '1',
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
@@ -1285,14 +1286,14 @@ export const exampleYield1 = () => {
   store.dispatch(set.yield.yield('150'));
   store.dispatch(set.cashCrop('Soybeans'));
   store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates from the table above'));
-  store.dispatch(set.yield.q4('5'));
+  store.dispatch(set.yield.q4('1'));
 }; // exampleYield1
 
 export const exampleYield2 = () => {
   store.dispatch(set.yield.yield('150'));
   store.dispatch(set.cashCrop('Corn'));
   store.dispatch(set.yield.q2('Use cover crop adjusted yield estimates from the table above'));
-  store.dispatch(set.yield.q4('5'));
+  store.dispatch(set.yield.q4('1'));
 }; // exampleYield2
 
 export const exampleAdditional = () => {

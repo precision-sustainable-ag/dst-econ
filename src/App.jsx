@@ -42,6 +42,7 @@ import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
 import AT from './components/AT';
 import { Summary } from './components/Activity';
+import Snapshot from './components/Snapshot';
 
 let firstTime = true;
 
@@ -138,6 +139,7 @@ const paths = {
   Revenue,
   Resources,
   Feedback,
+  Snapshot,
 };
 
 if (dev) {
@@ -593,7 +595,7 @@ const App = () => {
 
         <div className="menu-items topmenu" ref={topMenu}>
 
-          {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
+          {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
             let cname = path === screen ? 'selected' : '';
             const dis = disabled && !/Home|Field/.test(path);
 
@@ -626,7 +628,7 @@ const App = () => {
         <hr className="horizontalline" />
 
         <div className="menu-items">
-          {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback/.test(path))).map((path) => {
+          {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
             if (mobile && path === 'AT') return null;
 
             let cname = path === screen ? 'selected summary' : 'summary';
@@ -644,7 +646,7 @@ const App = () => {
                 accessKey={accessKey}
                 tabIndex={-1}
                 onFocus={(e) => e.target.blur()}
-                className={`${cname} ${path}`}
+                className={`${cname} ${path}${path === 'Snapshot' ? ' budgetTable' : ''}`}
               >
                 <Button
                   screen={path}
@@ -707,6 +709,7 @@ const App = () => {
           <Route key="Resources" path="Resources" element={<Resources />} />
           <Route key="Feedback" path="Feedback" element={<Feedback />} />
           <Route key="AT" path="AT" element={<AT />} />
+          <Route key="Snapshot" path="Snapshot" element={<Snapshot />} />
           {Object.keys(airTables).map((key) => (
             <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
           ))}
