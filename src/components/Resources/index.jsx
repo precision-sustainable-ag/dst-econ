@@ -117,6 +117,15 @@ const Resources = () => {
         },
       ],
     },
+    {
+      title: 'Grazing',
+      links: [
+        {
+          name: 'Cover Crop Disposition DST [xlsx]',
+          link: 'CoverCropDispositionDST.xlsx',
+        },
+      ],
+    },
   ];
 
   return (

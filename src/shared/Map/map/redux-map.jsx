@@ -426,7 +426,7 @@ const ReduxMap = ({
 
     map.current.on('load', () => {
       if (bounds) {
-        map.current.fitBounds(bounds);
+        map.current.fitBounds(bounds, { duration: 0 });
       }
 
       if (!scrollZoom) map.current.scrollZoom.disable();
@@ -553,11 +553,13 @@ const ReduxMap = ({
 
           map.current.fitBounds(overallBounds, {
             padding: 20,
+            duration: 0,
           });
 
           map.current.on('resize', () => {
             map.current.fitBounds(overallBounds, {
               padding: 20,
+              duration: 0,
             });
           });
         }
