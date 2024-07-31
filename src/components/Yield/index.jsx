@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import {
-  dev, get, getDefaults, dollars, exampleYield1, exampleYield2,
+  dev, set, get, getDefaults, dollars, exampleYield1, exampleYield2,
 } from '../../store/Store';
 
 import Help from '../../shared/Help';
@@ -148,6 +148,10 @@ const RevenueGraph = ({ className }) => {
 const Yield = () => {
   const cashCrop = useSelector(get.cashCrop) || ' your cash crop';
   const state = useSelector(get.yield);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(set.yield.q4('1'));
+  }, []);
 
   return (
     <div id="Yield" className="yield">
