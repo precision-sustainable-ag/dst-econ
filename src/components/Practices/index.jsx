@@ -381,27 +381,29 @@ const Practices = () => {
     5: 'fifth',
   }[Yield.q4];
 
-  let key;
-  let value;
+  if (year && Yield.total) {
+    let key;
+    let value;
 
-  if (/No change in yield estimates/.test(Yield.q2)) {
-    key = 'No change in yield estimates';
-    value = '';
-  } else if (Yield.total >= 0) {
-    key = `Improved yield estimate in ${year} year of cover crops`;
-    value = dollars(Yield.total);
-  } else {
-    key = 'Decreased yield estimate';
-    value = Yield.total.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
+    if (/No change in yield estimates/.test(Yield.q2)) {
+      key = 'No change in yield estimates';
+      value = '';
+    } else if (Yield.total >= 0) {
+      key = `Improved yield estimate in ${year} year of cover crops`;
+      value = dollars(Yield.total);
+    } else {
+      key = 'Decreased yield estimate';
+      value = Yield.total.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+    }
+
+    details.Yield = {
+      [key]: value,
+      'Commodity price': dollars(Yield.price),
+    };
   }
-
-  details.Yield = {
-    [key]: value,
-    'Commodity price': dollars(Yield.price),
-  };
   // Yield content end
 
   const farmFieldValue = () => {

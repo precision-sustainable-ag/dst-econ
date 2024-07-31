@@ -253,7 +253,7 @@ const initialState = {
         ? 'Use cover crop adjusted yield estimates from the table above'
         : 'Enter my own estimated yield change'
     ),
-    q4: '1',
+    q4: '',
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
