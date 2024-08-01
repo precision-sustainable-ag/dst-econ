@@ -386,7 +386,7 @@ const App = () => {
     let done = false;
 
     const errorHandler = (err) => {
-      if (done) return;
+      if (done || dev) return;
       done = true;
 
       const requestPayload = {
