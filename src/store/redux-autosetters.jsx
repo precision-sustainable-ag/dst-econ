@@ -1,5 +1,4 @@
 import { configureStore, createAction, createReducer } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 export const set = {};
 export const get = {};
@@ -122,17 +121,32 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
 
     builder.addCase(createAction('api'), (state, { payload }) => {
       const method = payload.options.method || 'get';
-
-      axios[method](payload.url, payload.options)
+      fetch(payload.url, {
+        method,
+        headers: payload.options.headers,
+        body: payload.options.body,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then((data) => {
           if (typeof payload.callback === 'function') {
-            payload.callback(data.data);
+            payload.callback(data);
           } else {
             alert(`Error: ${JSON.stringify(payload, null, 2)}`);
           }
         })
         .catch((error) => {
-          console.log('api error: ', error);
+          console.log('api error: ', payload.options.method);
+          console.log(payload);
+          console.log(error);
+          console.log('_'.repeat(40));
+          if (typeof payload.error === 'function') {
+            payload.error(error);
+          }
         });
     });
 
