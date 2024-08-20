@@ -18,7 +18,7 @@ import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-materi
 
 import PrintIcon from '@mui/icons-material/Print';
 import {
-  dev, get, set,
+  dev, get, set, errorHandler,
 } from './store/Store';
 
 import Home from './components/Home';
@@ -380,56 +380,6 @@ const App = () => {
     unusedCSS();
   }
 
-  const entireReduxState = useSelector((state) => state);
-
-  useEffect(() => {
-    let done = false;
-
-    const errorHandler = (err) => {
-      if (done || dev) return;
-      done = true;
-
-      const requestPayload = {
-        repository: 'dst-feedback',
-        title: 'CRASH',
-        name: 'error',
-        email: 'error@error.com',
-        comments: `${err?.message} ${JSON.stringify(entireReduxState)}`,
-        labels: ['crash', 'dst-econ'],
-      };
-
-      fetch('https://feedback.covercrop-data.org/v1/issues', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestPayload),
-      })
-        .then((response) => response.json())
-        .then((body) => {
-          console.log(body);
-          if (body?.data?.status === 'success') {
-            alert(`
-              An error occurred.
-              We have been notified and will investigate the problem.
-            `);
-          } else {
-            alert('An error occurred');
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('Failed to send Feedback to Github.');
-        });
-    };
-
-    window.addEventListener('error', errorHandler);
-
-    return () => {
-      window.removeEventListener('error', errorHandler);
-    };
-  }, []);
-
   const scroll = () => {
     if (!topMenu.current) return;
 
@@ -744,5 +694,7 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
   }
 });
+
+window.addEventListener('error', errorHandler);
 
 export default App;
