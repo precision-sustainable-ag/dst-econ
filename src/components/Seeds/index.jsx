@@ -17,56 +17,14 @@ const SpeciesRow = ({ n }) => {
 
   const speciesList = {
     Other: ['Commercial mix'],
-    Brassica: [
-      'Brassica, Forage',
-      'Mustard',
-      'Radish, Forage',
-      'Radish, Oilseed',
-      'Rape, Oilseed, Spring',
-      'Rape, Oilseed, Winter',
-      'Rapeseed, Forage',
-      'Turnip, Forage',
-      'Turnip, Purple Top',
-    ],
-    Broadleaf: ['Buckwheat', 'Phacelia', 'Sunflower'],
-    Grass: [
-      'Barley, Spring',
-      'Barley, Winter',
-      'Cereal Rye, Spring',
-      'Cereal Rye, Winter',
-      'Millet, Japanese',
-      'Millet, Pearl',
-      'Oats',
-      'Oats, Black',
-      'Oats, Spring',
-      'Ryegrass, Annual',
-      'Ryegrass, Perennial',
-      'Sorghum',
-      'Sorghum-sudangrass',
-      'Sudangrass',
-      'Teff',
-      'Triticale, Spring',
-      'Triticale, Winter',
-      'Wheat, Spring',
-      'Wheat, Winter',
-    ],
-    Legume: [
-      'Alfalfa, Dormant',
-      'Clover, Alsike',
-      'Clover, Balansa',
-      'Clover, Berseem',
-      'Clover, Crimson',
-      'Clover, Red',
-      'Clover, White',
-      'Cowpea',
-      'Pea, Spring',
-      'Pea, Winter',
-      'Soybeans',
-      'Sunn Hemp',
-      'Sweetclover, Yellow',
-      'Vetch, Hairy',
-    ],
   };
+
+  const types = [...new Set(Object.values(db.seedList).map((item) => item.type))].sort((a, b) => a.localeCompare(b));
+  types.forEach((type) => {
+    speciesList[type] = Object.values(db.seedList)
+      .filter((item) => item.type === type)
+      .map((item) => item.key);
+  });
 
   const options = [
     ...speciesList.Other,
