@@ -461,9 +461,9 @@ const getCosts = (state, current) => {
         + RV4 * db.rates.projected.value
       ) ** 2
         + 0.25 * RV5;
-      const listprice = p['purchase price 2020'] / (1 - p['list discount']);
+      const listprice = p['purchase price'] / (1 - p['list discount']);
       const $tradein = tradein * listprice;
-      const annualdepreciation = (p['purchase price 2020'] - $tradein) / p['expected life (years)'];
+      const annualdepreciation = (p['purchase price'] - $tradein) / p['expected life (years)'];
       const accumulatedrepairs = listprice * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];
 
@@ -486,7 +486,7 @@ const getCosts = (state, current) => {
         case 'Interest':
           value = (
             (
-              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+              (p['purchase price'] + $tradein + annualdepreciation) / 2
             )
             * db.rates.interest.value
           ) / divisor;
@@ -497,7 +497,7 @@ const getCosts = (state, current) => {
         case 'Taxes':
           value = (
             (
-              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+              (p['purchase price'] + $tradein + annualdepreciation) / 2
             )
             * db.rates.property.value
           ) / divisor;
@@ -505,7 +505,7 @@ const getCosts = (state, current) => {
         case 'Insurance':
           value = (
             (
-              (p['purchase price 2020'] + $tradein + annualdepreciation) / 2
+              (p['purchase price'] + $tradein + annualdepreciation) / 2
             )
             * db.rates.insurance.value
           ) / divisor;
