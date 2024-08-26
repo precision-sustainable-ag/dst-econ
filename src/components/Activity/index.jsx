@@ -89,7 +89,7 @@ const Activity = ({ type }) => {
             <th colSpan="3">{heading}</th>
           </tr>
           <tr>
-            <th className="hidden">&nbsp;</th>
+            <th className="hidden">_</th>
             <th>
               <label>
                 Implement

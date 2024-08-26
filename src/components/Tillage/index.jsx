@@ -13,6 +13,7 @@ import {
   exampleTillage3,
   exampleTillage4,
   exampleTillage5,
+  exampleTillage6,
 } from '../../store/Store';
 
 import Logic from '../Logic';
@@ -77,7 +78,6 @@ const Costs = ({
 }; // Costs
 
 const Tillage = () => {
-  const state = useSelector(get.tillage);
   const tillage = useSelector(get.tillage);
 
   return (
@@ -123,7 +123,7 @@ const Tillage = () => {
                 onChange={() => clearInputs(fallDefaults)}
               />
 
-              {state.q1 === 'No' && (
+              {tillage.q1 === 'No' && (
                 <>
                   <tr>
                     <th colSpan="3">Fall Tillage</th>
@@ -211,6 +211,9 @@ const Tillage = () => {
           </button>
           <button type="button" onClick={exampleTillage5}>
             Test 5
+          </button>
+          <button type="button" onClick={exampleTillage6}>
+            Test 6
           </button>
           <hr />
         </div>

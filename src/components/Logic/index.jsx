@@ -239,13 +239,11 @@ const Logic = ({
             if (sortCosts.includes(option)) {
               return 'Hire custom operator';
             }
-            if (option === 'No additional application activity') {
-              return 'None';
-            }
-            if (option === 'No reduced application activity') {
-              return 'None';
-            }
-            if (option === 'Incorporate planting with fertilizing. No CC planting cost.') {
+            if (
+              option === 'No additional application activity'
+              || option === 'No reduced application activity'
+              || option === 'Incorporate planting with fertilizing. No CC planting cost.'
+            ) {
               return 'None';
             }
             if (sortCosts.length) {

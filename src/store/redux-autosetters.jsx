@@ -10,8 +10,9 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
 
   const getAllkeys = (obj, parents = []) => {
     Object.keys(obj).forEach((key) => {
-      const isArray = Array.isArray(obj[key]);
-      const isObject = !isArray && obj[key] instanceof Object && typeof obj[key] !== 'function';
+      const val = obj[key];
+      const isArray = Array.isArray(val);
+      const isObject = !isArray && val !== null && typeof val === 'object';
       const fullkey = parents.length ? `${parents.join('.')}.${key}` : key;
 
       allkeys[fullkey] = true;
@@ -40,13 +41,10 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
 
   const builders = (builder) => {
     const recurse = (obj, set2, get2, parents = []) => {
-      if (!obj) { // TODO dst-econ
-        // console.log(set2);
-        return;
-      }
       Object.keys(obj).forEach((key) => {
-        const isArray = Array.isArray(obj[key]);
-        const isObject = !isArray && obj[key] instanceof Object;
+        const val = obj[key];
+        const isArray = Array.isArray(val);
+        const isObject = !isArray && val !== null && typeof val === 'object';
         const fullkey = parents.length ? `${parents.join('.')}.${key}` : key;
         allkeys[fullkey] = true;
 
@@ -83,6 +81,8 @@ export const createStore = (initialState, { afterChange = {}, reducers = {} }) =
             if (isArray && Number.isFinite(action.payload.index)) {
               const { index, value } = action.payload;
               st[key][index] = value;
+            } else if (typeof action.payload === 'function') {
+              st[key] = action.payload(st[key]);
             } else {
               st[key] = action.payload;
             }

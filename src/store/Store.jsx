@@ -37,18 +37,7 @@ const terminationTotal = (state) => (
 );
 
 const tillageTotal = (state) => (
-  state.tillage.other.total || 0
-)
-- (
-  state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0
-) - (
-  state.tillage.elimination.total || 0
-);
-
-const tillageCostReductions = (state) => (
-  state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0
-) + (
-  state.tillage.elimination.total || 0
+  state.tillage.other.total - state.tillage.costReductions
 );
 
 const herbicideTotal = (state) => (
@@ -347,11 +336,10 @@ const initialState = {
 
   tillage: {
     ...shared,
-    // costReductions: (state) => (
-    //   (state.tillage.q5 === 'Yes' ? -state.tillage.fall.total : 0)
-    //   - (state.tillage.elimination.total || 0)
-    // ),
-    costReductions: tillageCostReductions,
+    costReductions: (state) => (
+      (state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0)
+      + (state.tillage.elimination.total || 0)
+    ),
     fall: {
       description: 'Fall tillage',
       ...shared,
@@ -802,6 +790,9 @@ export const store = createStore(initialState, { afterChange, reducers });
       obj.estimated = db.costDefaults[payload].cost;
       obj.total = db.costDefaults[payload].cost;
       state.calculated[`${section}.total`] = obj.total;
+      state.termination.total = terminationTotal(state);
+      state.tillage.total = tillageTotal(state);
+      state.herbicide.total = herbicideTotal(state);
     } else if (
       payload === 'No additional application activity'
       || payload === 'No reduced application activity'
@@ -1245,6 +1236,17 @@ export const exampleTillage5 = () => {
   store.dispatch(set.tillage.other.q2('Yes'));
 }; // exampleTillage5
 
+export const exampleTillage6 = () => {
+  clearTillage();
+  store.dispatch(set.tillage.q1('No'));
+  store.dispatch(set.tillage.fall.q2('Yes'));
+  store.dispatch(set.tillage.elimination.q2('No'));
+  store.dispatch(set.tillage.fall.implement('Chisel Plow; 15 Ft'));
+  store.dispatch(set.tillage.q5('Yes'));
+  store.dispatch(set.tillage.other.q2('Yes'));
+  store.dispatch(set.tillage.other.implement('Hire custom operator|tillage'));
+}; // exampleTillage6
+
 export const exampleFertilityBenefit = () => {
   store.dispatch(set.fertility.N(30));
   store.dispatch(set.fertility.P(0));
@@ -1370,3 +1372,42 @@ if (/demo/i.test(window.location)) {
 }
 
 export const mobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
+
+let done;
+export const errorHandler = (err) => {
+  if (done || dev) return;
+  done = true;
+
+  const requestPayload = {
+    repository: 'dst-feedback',
+    title: 'CRASH',
+    name: 'error',
+    email: 'error@error.com',
+    comments: `${err?.message} ${JSON.stringify(store.getState())}`,
+    labels: ['crash', 'dst-econ'],
+  };
+
+  fetch('https://feedback.covercrop-data.org/v1/issues', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestPayload),
+  })
+    .then((response) => response.json())
+    .then((body) => {
+      console.log(body);
+      if (body?.data?.status === 'success') {
+        alert(`
+          An error occurred.
+          We have been notified and will investigate the problem.
+        `);
+      } else {
+        alert('An error occurred');
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      alert('Failed to send Feedback to Github.');
+    });
+};
