@@ -588,98 +588,98 @@ const ATrates = {
   "deflator": {
     "key": "deflator",
     "description": "GDP implicit price deflator, 2020 4th quarter",
-    "value": 114.4,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "value": 122.27,
+    "Notes": "Source: MachData2024 from Lazarus"
   },
   "deflator1996": {
     "key": "deflator1996",
     "description": "GDP implicit price deflator, 1996",
-    "value": 76.783,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "value": 68.16,
+    "Notes": "Source: MachData2024 from Lazarus"
   },
   "forecast": {
     "key": "forecast",
     "description": "2020 U.S. net farm income forecast ($ billions)",
-    "value": 111.4,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "value": 116.1,
+    "Notes": "Source: MachData2024 from Lazarus"
   },
   "fuel": {
     "key": "fuel",
     "description": "Fuel price, $/gallon",
-    "value": 3.5,
-    "Notes": "verified 6/1/23"
+    "value": 2.98,
+    "Notes": "Farm diesel price from MachData 2024"
   },
   "horsepower": {
     "key": "horsepower",
     "description": "Self propelled assumed horsepower (for fuel calcs)",
     "value": 80,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024 from Lazarus"
   },
   "inflation": {
     "key": "inflation",
     "description": "Inflation Rate, % per year",
     "value": 0,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "insurance": {
     "key": "insurance",
     "description": "Insurance Rate",
     "value": 0.0085,
-    "Notes": "verified 6/1/23"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "interest": {
     "key": "interest",
     "description": "Interest Rate, % of average investment",
     "value": 0.08,
-    "Notes": "verified 6/1/23"
+    "Notes": "Aug 2024 Operating loan rate from KC Fed Reserve"
   },
   "K2O": {
     "key": "K2O",
     "description": "$ per pound of K2O",
-    "value": 0.45,
-    "Notes": "Average Midwest values 9/1/23"
+    "value": 0.39,
+    "Notes": "Average Illinois Production Cost Report on 8/23/24"
   },
   "lubrication": {
     "key": "lubrication",
     "description": "Lubrication cost, % of fuel",
     "value": 0.1,
-    "Notes": "verified 6/1/23"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Nitrogen": {
     "key": "Nitrogen",
     "description": "$ per pound of N",
-    "value": 0.38,
-    "Notes": "Average Midwest values 9/1/23"
+    "value": 0.54,
+    "Notes": "Average Illinois Production Cost Report on 8/23/24"
   },
   "P2O5": {
     "key": "P2O5",
     "description": "$ per pound of P2O5",
-    "value": 0.65,
-    "Notes": "Average Midwest values 9/1/23"
+    "value": 0.58,
+    "Notes": "Average Illinois Production Cost Report on 8/23/24"
   },
   "projected": {
     "key": "projected",
     "description": "Real Net Farm Income projected at trade-in, in $ billion 1996 dollars",
-    "value": 74.76945979,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "value": 65,
+    "Notes": "Source: MachData2024 from Lazarus"
   },
   "property": {
     "key": "property",
     "description": "Property taxes",
-    "value": 0.005,
-    "Notes": ""
+    "value": 0.0025,
+    "Notes": "Note: this varies by state."
   },
   "skilled": {
     "key": "skilled",
     "description": "Skilled Labor Rate $/hr.",
-    "value": 20,
-    "Notes": "verified 6/1/23"
+    "value": 18.25,
+    "Notes": "May 2024 USDA Farm Labor wage for field workers"
   },
   "storage": {
     "key": "storage",
     "description": "Storage Cost/Sq. Foot of Space",
-    "value": 0.969218963,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "value": 0.97,
+    "Notes": "Source: MachData2024  from Lazarus"
   }
 };
 
@@ -687,21 +687,21 @@ const ATcostDefaults = {
   "Hire custom operator|termination.chemical": {
     "key": "Hire custom operator",
     "cost": 8,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "Notes": "Median broadcast, self propelled custom charge in 2024 ISU Custom Rates",
     "screen": "termination.chemical",
     "order": ""
   },
   "Anhydrous ammonia injection": {
     "key": "Anhydrous ammonia injection",
-    "cost": 14.75,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "cost": 15,
+    "Notes": "Median anhydrous injection custom charge in 2024 ISU Custom Rates",
     "screen": "",
     "order": ""
   },
   "Hire custom operator|seedbed": {
     "key": "Hire custom operator",
     "cost": 18,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "Notes": "Median tandem disk custom charge in 2024 ISU Custom Rates",
     "screen": "seedbed",
     "order": ""
   },
@@ -714,78 +714,78 @@ const ATcostDefaults = {
   },
   "Dry Fertilizer application": {
     "key": "Dry Fertilizer application",
-    "cost": 6.75,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "cost": 7,
+    "Notes": "Median dry bulk fertilizer custom charge in 2024 ISU Custom Rates",
     "screen": "",
     "order": ""
   },
   "Liquid fertilizer application": {
     "key": "Liquid fertilizer application",
-    "cost": 8,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "cost": 7.5,
+    "Notes": "Median liquid fert spraying custom charge in 2024 ISU Custom Rates",
     "screen": "",
     "order": ""
   },
   "Aerial spraying": {
     "key": "Aerial spraying",
-    "cost": 11,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "cost": 10.25,
+    "Notes": "Median aerial spraying custom charge in 2024 ISU Custom Rates",
     "screen": "",
     "order": ""
   },
   "Drone spraying": {
     "key": "Drone spraying",
     "cost": 15,
-    "Notes": "placeholder number",
+    "Notes": "Average drone seeding custom charge in 2024 UNL Custom Rates",
     "screen": "",
     "order": ""
   },
   "Drill or planter|planting": {
     "key": "Drill or planter",
-    "cost": 20,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "cost": 19,
+    "Notes": "Median drilling cover crop seed custom charge in 2024 ISU Custom Rates",
     "screen": "planting",
     "order": ""
   },
   "Hire custom operator|termination.tillage": {
     "key": "Hire custom operator",
     "cost": 23,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "Notes": "Median disk/chisel plow custom charge in 2024 ISU Custom Rates",
     "screen": "termination.tillage",
     "order": ""
   },
   "Hire custom operator|tillage": {
     "key": "Hire custom operator",
     "cost": 23,
-    "Notes": "Added by Rick",
+    "Notes": "Median disk/chisel plow custom charge in 2024 ISU Custom Rates",
     "screen": "tillage",
     "order": ""
   },
   "Hire custom operator|herbicide": {
     "key": "Hire custom operator",
-    "screen": "herbicide",
     "cost": 8,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "Notes": "Median broadcast, self propelled custom charge in 2024 ISU Custom Rates",
+    "screen": "herbicide",
     "order": ""
   },
   "Broadcast seeding|planting": {
     "key": "Broadcast seeding",
-    "cost": 12,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "cost": 13,
+    "Notes": "Median seeding grass/broadcast custom charge in 2024 ISU Custom Rates",
     "screen": "planting",
     "order": 1
   },
   "Aerial seeding|planting": {
     "key": "Aerial seeding",
     "cost": 14,
-    "Notes": "Estimated from 2023 Iowa Custom Rate Survey data",
+    "Notes": "Median aerial seeding custom charge in 2024 ISU Custom Rates",
     "screen": "planting",
     "order": 2
   },
   "Drone seeding|planting": {
     "key": "Drone seeding",
-    "cost": 20,
-    "Notes": "popular press articles",
+    "cost": 19,
+    "Notes": "Median drilling cover crop seed custom charge in 2024 ISU Custom Rates",
     "screen": "planting",
     "order": 3
   }
@@ -837,7 +837,7 @@ const ATimplements = {
     "size1": 52,
     "unit1": "Ft",
     "default power unit": "260 HP MFWD Tractor",
-    "purchase price 2020": 263500,
+    "purchase price 2020": 342000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -848,7 +848,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 270,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -859,7 +859,7 @@ const ATimplements = {
     "size1": 90,
     "unit1": "Ft",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 55000,
+    "purchase price 2020": 54500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 25,
@@ -870,7 +870,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.25,
     "labortype": "Skilled",
     "shed (ft^2)": 400,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -880,8 +880,8 @@ const ATimplements = {
     "name": "Boom Sprayer, Self-Propelled",
     "size1": 90,
     "unit1": "Ft",
-    "default power unit": "130 Self Propelled",
-    "purchase price 2020": 300500,
+    "default power unit": "130 HP Self Propelled",
+    "purchase price 2020": 673000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -892,7 +892,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.25,
     "labortype": "Skilled",
     "shed (ft^2)": 200,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -903,7 +903,7 @@ const ATimplements = {
     "size1": 16.25,
     "unit1": "Ft",
     "default power unit": "200 HP MFWD Tractor",
-    "purchase price 2020": 28500,
+    "purchase price 2020": 38000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -914,7 +914,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -925,7 +925,7 @@ const ATimplements = {
     "size1": 21.25,
     "unit1": "Ft Fold",
     "default power unit": "310 HP 4WD Tractor",
-    "purchase price 2020": 44500,
+    "purchase price 2020": 59500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -936,7 +936,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -947,7 +947,7 @@ const ATimplements = {
     "size1": 15,
     "unit1": "Ft",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 24000,
+    "purchase price 2020": 40000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 60,
@@ -958,7 +958,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 225,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "No longer reported by Lazarus. Price increased proportionately.",
     "size2": "",
     "unit2": ""
   },
@@ -969,7 +969,7 @@ const ATimplements = {
     "size1": 23,
     "unit1": "Ft",
     "default power unit": "200 HP MFWD Tractor",
-    "purchase price 2020": 43000,
+    "purchase price 2020": 59500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 60,
@@ -980,7 +980,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 250,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -991,7 +991,7 @@ const ATimplements = {
     "size1": 37,
     "unit1": "Ft",
     "default power unit": "310 HP 4WD Tractor",
-    "purchase price 2020": 63000,
+    "purchase price 2020": 87000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 60,
@@ -1002,7 +1002,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 370,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1013,7 +1013,7 @@ const ATimplements = {
     "size1": 57,
     "unit1": "Ft",
     "default power unit": "425 HP 4WD Tractor",
-    "purchase price 2020": 105500,
+    "purchase price 2020": 146000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 60,
@@ -1024,7 +1024,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 370,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1046,7 +1046,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 75,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1059,7 +1059,7 @@ const ATimplements = {
     "size2": "8",
     "unit2": "Row",
     "default power unit": "275 HP Combine",
-    "purchase price 2020": 88000,
+    "purchase price 2020": 115000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1070,7 +1070,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Chopping Corn Hd; 12 Row; 22 Ft": {
     "key": "Combine Chopping Corn Hd; 12 Row; 22 Ft",
@@ -1081,7 +1081,7 @@ const ATimplements = {
     "size2": "12",
     "unit2": "Row",
     "default power unit": "440 HP Combine",
-    "purchase price 2020": 131500,
+    "purchase price 2020": 170000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1092,7 +1092,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Chopping Corn Hd; 12 Row; 30 Ft": {
     "key": "Combine Chopping Corn Hd; 12 Row; 30 Ft",
@@ -1103,7 +1103,7 @@ const ATimplements = {
     "size2": "12",
     "unit2": "Row",
     "default power unit": "440 HP Combine",
-    "purchase price 2020": 133000,
+    "purchase price 2020": 174000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1114,7 +1114,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Corn Hd; 6 Row; 15 Ft": {
     "key": "Combine Corn Hd; 6 Row; 15 Ft",
@@ -1125,7 +1125,7 @@ const ATimplements = {
     "size2": "6",
     "unit2": "Row",
     "default power unit": "275 HP Combine",
-    "purchase price 2020": 50000,
+    "purchase price 2020": 66000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1136,7 +1136,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 120,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Corn Hd; 8 Row; 20 Ft": {
     "key": "Combine Corn Hd; 8 Row; 20 Ft",
@@ -1147,7 +1147,7 @@ const ATimplements = {
     "size2": "8",
     "unit2": "Row",
     "default power unit": "275 HP Combine",
-    "purchase price 2020": 64500,
+    "purchase price 2020": 85500,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1158,7 +1158,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Corn Hd; 12 Row; 22 Ft": {
     "key": "Combine Corn Hd; 12 Row; 22 Ft",
@@ -1169,7 +1169,7 @@ const ATimplements = {
     "size2": "12",
     "unit2": "Row",
     "default power unit": "375 HP Combine",
-    "purchase price 2020": 99500,
+    "purchase price 2020": 129000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1180,7 +1180,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Corn Hd; 12 Row; 30 Ft": {
     "key": "Combine Corn Hd; 12 Row; 30 Ft",
@@ -1191,7 +1191,7 @@ const ATimplements = {
     "size2": "12",
     "unit2": "Row",
     "default power unit": "375 HP Combine",
-    "purchase price 2020": 101000,
+    "purchase price 2020": 131000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1202,7 +1202,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Combine Flex Platform; 20 Ft": {
     "key": "Combine Flex Platform; 20 Ft",
@@ -1211,7 +1211,7 @@ const ATimplements = {
     "size1": 20,
     "unit1": "Ft",
     "default power unit": "275 HP Combine",
-    "purchase price 2020": 31000,
+    "purchase price 2020": 36000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 199.99999999999997,
@@ -1222,7 +1222,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 108,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1233,7 +1233,7 @@ const ATimplements = {
     "size1": 25,
     "unit1": "Ft",
     "default power unit": "375 HP Combine",
-    "purchase price 2020": 35500,
+    "purchase price 2020": 43500,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1244,7 +1244,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 108,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1255,7 +1255,7 @@ const ATimplements = {
     "size1": 30,
     "unit1": "Ft",
     "default power unit": "375 HP Combine",
-    "purchase price 2020": 43000,
+    "purchase price 2020": 51000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1266,7 +1266,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 108,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1288,7 +1288,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 130,
-    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
+    "Notes": "Drew Kientzy 2023 price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1310,7 +1310,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
-    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
+    "Notes": "Drew Kientzy 2023 price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1332,7 +1332,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
-    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
+    "Notes": "Drew Kientzy 2023 price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1354,7 +1354,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 300,
-    "Notes": "Drew Kientzy price; assumed ASAE coefficients",
+    "Notes": "Drew Kientzy 2023 price; assumed ASAE coefficients",
     "size2": "",
     "unit2": ""
   },
@@ -1365,7 +1365,7 @@ const ATimplements = {
     "size1": 23,
     "unit1": "Ft",
     "default power unit": "160 HP MFWD Tractor",
-    "purchase price 2020": 40500,
+    "purchase price 2020": 54000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -1376,7 +1376,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1387,7 +1387,7 @@ const ATimplements = {
     "size1": 47,
     "unit1": "Ft",
     "default power unit": "310 HP 4WD Tractor",
-    "purchase price 2020": 79000,
+    "purchase price 2020": 111000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -1398,7 +1398,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 400,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1409,7 +1409,7 @@ const ATimplements = {
     "size1": 60,
     "unit1": "Ft",
     "default power unit": "425 HP 4WD Tractor",
-    "purchase price 2020": 94000,
+    "purchase price 2020": 139000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -1420,7 +1420,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 400,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1433,7 +1433,7 @@ const ATimplements = {
     "size2": "3",
     "unit2": "Row",
     "default power unit": "160 HP MFWD Tractor",
-    "purchase price 2020": 76000,
+    "purchase price 2020": 96500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1444,7 +1444,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 140,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Forage Harvester, Pull-Type w/Pickup Head; 12 Ft": {
     "key": "Forage Harvester, Pull-Type w/Pickup Head; 12 Ft",
@@ -1453,7 +1453,7 @@ const ATimplements = {
     "size1": 12,
     "unit1": "Ft",
     "default power unit": "105 HP MFWD Tractor",
-    "purchase price 2020": 67000,
+    "purchase price 2020": 84500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1464,7 +1464,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 140,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1477,7 +1477,7 @@ const ATimplements = {
     "size2": "6",
     "unit2": "Row",
     "default power unit": "625 HP SP Forage Harvester Base Unit",
-    "purchase price 2020": 88500,
+    "purchase price 2020": 107000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1488,7 +1488,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Forage Harvester, Self-Prop Corn Head; 8 Row; 20 Ft": {
     "key": "Forage Harvester, Self-Prop Corn Head; 8 Row; 20 Ft",
@@ -1499,7 +1499,7 @@ const ATimplements = {
     "size2": "8",
     "unit2": "Row",
     "default power unit": "625 HP SP Forage Harvester Base Unit",
-    "purchase price 2020": 116500,
+    "purchase price 2020": 141000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1510,7 +1510,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Forage Harvester, Self-Prop Pickup Head (2X windrows); 24 Ft": {
     "key": "Forage Harvester, Self-Prop Pickup Head (2X windrows); 24 Ft",
@@ -1519,7 +1519,7 @@ const ATimplements = {
     "size1": 24,
     "unit1": "Ft",
     "default power unit": "625 HP SP Forage Harvester Base Unit",
-    "purchase price 2020": 29000,
+    "purchase price 2020": 35000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1530,7 +1530,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1541,7 +1541,7 @@ const ATimplements = {
     "size1": 12,
     "unit1": "Ft",
     "default power unit": "400 HP SP Forage Harvester Base Unit",
-    "purchase price 2020": 29000,
+    "purchase price 2020": 35000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1552,7 +1552,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1563,7 +1563,7 @@ const ATimplements = {
     "size1": 30,
     "unit1": "Ft",
     "default power unit": "225 HP MFWD Tractor",
-    "purchase price 2020": 123000,
+    "purchase price 2020": 152000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1574,7 +1574,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Unskilled",
     "shed (ft^2)": 0,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1607,7 +1607,7 @@ const ATimplements = {
     "size1": 12,
     "unit1": "Ft",
     "default power unit": "60 HP Tractor",
-    "purchase price 2020": 34500,
+    "purchase price 2020": 37000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -1618,7 +1618,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 184,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1629,7 +1629,7 @@ const ATimplements = {
     "size1": 30,
     "unit1": "Ft",
     "default power unit": "40 HP Tractor",
-    "purchase price 2020": 25000,
+    "purchase price 2020": 31000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -1640,7 +1640,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 250,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1652,7 +1652,7 @@ const ATimplements = {
     "unit1": "Ft",
     "size2": "3x3",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 131500,
+    "purchase price 2020": 155000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 250,
@@ -1663,7 +1663,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 250,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "unit2": ""
   },
   "Large Rectangular Baler; 4x3 ; 20 Ft": {
@@ -1674,7 +1674,7 @@ const ATimplements = {
     "unit1": "Ft",
     "size2": "4x3",
     "default power unit": "200 HP MFWD Tractor",
-    "purchase price 2020": 159500,
+    "purchase price 2020": 192000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 250,
@@ -1685,7 +1685,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 250,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "unit2": ""
   },
   "Moldboard Plow; 6 Bottom; 9 Ft": {
@@ -1697,7 +1697,7 @@ const ATimplements = {
     "size2": "6",
     "unit2": "Bottom",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 37500,
+    "purchase price 2020": 33500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 120,
@@ -1708,7 +1708,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 132,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Moldboard Plow; 8 Bottom; 12 Ft": {
     "key": "Moldboard Plow; 8 Bottom; 12 Ft",
@@ -1719,7 +1719,7 @@ const ATimplements = {
     "size2": "8",
     "unit2": "Bottom",
     "default power unit": "200 HP MFWD Tractor",
-    "purchase price 2020": 47500,
+    "purchase price 2020": 44500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 120,
@@ -1730,7 +1730,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "No-Till Drill; 15 Ft": {
     "key": "No-Till Drill; 15 Ft",
@@ -1739,7 +1739,7 @@ const ATimplements = {
     "size1": 15,
     "unit1": "Ft",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 62500,
+    "purchase price 2020": 79000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -1750,7 +1750,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 160,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1860,7 +1860,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Old data",
     "size2": "",
     "unit2": ""
   },
@@ -1871,7 +1871,7 @@ const ATimplements = {
     "size1": 16,
     "unit1": "Ft",
     "default power unit": "105 HP MFWD Tractor",
-    "purchase price 2020": 24500,
+    "purchase price 2020": 29500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 75,
@@ -1882,7 +1882,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 150,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1893,7 +1893,7 @@ const ATimplements = {
     "size1": 20,
     "unit1": "Ft",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 29000,
+    "purchase price 2020": 35000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 75,
@@ -1904,7 +1904,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 185,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1915,7 +1915,7 @@ const ATimplements = {
     "size1": 25,
     "unit1": "Ft",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 51000,
+    "purchase price 2020": 63000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 75,
@@ -1926,7 +1926,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 230,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1937,7 +1937,7 @@ const ATimplements = {
     "size1": 30,
     "unit1": "Ft",
     "default power unit": "160 HP MFWD Tractor",
-    "purchase price 2020": 63500,
+    "purchase price 2020": 79500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -1948,7 +1948,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.11,
     "labortype": "Skilled",
     "shed (ft^2)": 240,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -1970,7 +1970,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 150,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Old data",
     "size2": "",
     "unit2": ""
   },
@@ -1992,7 +1992,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 240,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Old data",
     "size2": "",
     "unit2": ""
   },
@@ -2014,7 +2014,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 250,
-    "Notes": "Modified by Drew Kientzy, 2023;Source: MachData2021  from Lazarus",
+    "Notes": "Old data",
     "size2": "",
     "unit2": ""
   },
@@ -2036,7 +2036,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 240,
-    "Notes": "Modified by Drew Kientzy, 2023;Source: MachData2021  from Lazarus",
+    "Notes": "Old data",
     "size2": "",
     "unit2": ""
   },
@@ -2047,7 +2047,7 @@ const ATimplements = {
     "size1": 12,
     "unit1": "Ft",
     "default power unit": "75 HP Tractor",
-    "purchase price 2020": 37500,
+    "purchase price 2020": 47500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 80,
@@ -2058,7 +2058,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 100,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2070,7 +2070,7 @@ const ATimplements = {
     "unit1": "Ft",
     "size2": "5x6",
     "default power unit": "75 HP Tractor",
-    "purchase price 2020": 84000,
+    "purchase price 2020": 114000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 200,
@@ -2081,7 +2081,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 60,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "unit2": ""
   },
   "Round Baler; 4x5 ; 20 Ft": {
@@ -2137,7 +2137,7 @@ const ATimplements = {
     "size2": "6",
     "unit2": "Row",
     "default power unit": "75 HP Tractor",
-    "purchase price 2020": 37000,
+    "purchase price 2020": 47500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 70,
@@ -2148,7 +2148,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
     "shed (ft^2)": 200,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Row Crop Planter; 8 Row; 20 Ft": {
     "key": "Row Crop Planter; 8 Row; 20 Ft",
@@ -2159,7 +2159,7 @@ const ATimplements = {
     "size2": "8",
     "unit2": "Row",
     "default power unit": "105 HP MFWD Tractor",
-    "purchase price 2020": 46000,
+    "purchase price 2020": 59000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 70,
@@ -2170,7 +2170,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
     "shed (ft^2)": 200,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Row Crop Planter; 12 Row; 30 Ft": {
     "key": "Row Crop Planter; 12 Row; 30 Ft",
@@ -2181,7 +2181,7 @@ const ATimplements = {
     "size2": "12",
     "unit2": "Row",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 109500,
+    "purchase price 2020": 136000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 70.00000000000001,
@@ -2192,7 +2192,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Row Crop Planter; 16 Row; 40 Ft": {
     "key": "Row Crop Planter; 16 Row; 40 Ft",
@@ -2203,7 +2203,7 @@ const ATimplements = {
     "size2": "16",
     "unit2": "Row",
     "default power unit": "200 HP MFWD Tractor",
-    "purchase price 2020": 166500,
+    "purchase price 2020": 200000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 70,
@@ -2214,7 +2214,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Row Crop Planter; 24 Row; 60 Ft": {
     "key": "Row Crop Planter; 24 Row; 60 Ft",
@@ -2225,7 +2225,7 @@ const ATimplements = {
     "size2": "24",
     "unit2": "Row",
     "default power unit": "310 HP 4WD Tractor",
-    "purchase price 2020": 254500,
+    "purchase price 2020": 324000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 70,
@@ -2236,7 +2236,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.16,
     "labortype": "Skilled",
     "shed (ft^2)": 300,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Row Cultivator; 12 Row; 30 Ft": {
     "key": "Row Cultivator; 12 Row; 30 Ft",
@@ -2247,7 +2247,7 @@ const ATimplements = {
     "size2": "12",
     "unit2": "Row",
     "default power unit": "160 HP MFWD Tractor",
-    "purchase price 2020": 44500,
+    "purchase price 2020": 48000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -2258,7 +2258,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.04,
     "labortype": "Unskilled",
     "shed (ft^2)": 140,
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus"
   },
   "Stalk Shredder; 20 Ft": {
     "key": "Stalk Shredder; 20 Ft",
@@ -2267,7 +2267,7 @@ const ATimplements = {
     "size1": 20,
     "unit1": "Ft",
     "default power unit": "130 HP MFWD Tractor",
-    "purchase price 2020": 31000,
+    "purchase price 2020": 40500,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -2278,7 +2278,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.1,
     "labortype": "Unskilled",
     "shed (ft^2)": 231,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2289,7 +2289,7 @@ const ATimplements = {
     "size1": 21,
     "unit1": "Ft Fold",
     "default power unit": "160 HP MFWD Tractor",
-    "purchase price 2020": 68000,
+    "purchase price 2020": 89000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -2300,7 +2300,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 260,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2311,7 +2311,7 @@ const ATimplements = {
     "size1": 30,
     "unit1": "Ft Fold",
     "default power unit": "260 HP MFWD Tractor",
-    "purchase price 2020": 93500,
+    "purchase price 2020": 129000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 100,
@@ -2322,7 +2322,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.02,
     "labortype": "Unskilled",
     "shed (ft^2)": 280,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Source: MachData2024  from Lazarus",
     "size2": "",
     "unit2": ""
   },
@@ -2344,7 +2344,7 @@ const ATimplements = {
     "labor (hr/trac)": 1.05,
     "labortype": "Unskilled",
     "shed (ft^2)": 200,
-    "Notes": "Source: MachData2021  from Lazarus",
+    "Notes": "Drew Kientzy research 2023",
     "size2": "",
     "unit2": ""
   },
@@ -2442,470 +2442,354 @@ const ATpower = {
   "40 HP Tractor": {
     "key": "40 HP Tractor",
     "Description": "HP Tractor",
-    "screen": "",
     "HP": 40,
-    "purchase price 2020": 26000,
+    "purchase price 2020": 33000,
     "list discount": 0,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 92,
     "default ASABE category": "Two wheel drive tractors, under 80 HP",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "60 HP Tractor": {
     "key": "60 HP Tractor",
     "Description": "HP Tractor",
-    "screen": "",
     "HP": 60,
-    "purchase price 2020": 33000,
+    "purchase price 2020": 37000,
     "list discount": 0,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 104,
     "default ASABE category": "Two wheel drive tractors, under 80 HP",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "75 HP Tractor": {
     "key": "75 HP Tractor",
     "Description": "HP Tractor",
-    "screen": "",
     "HP": 75,
-    "purchase price 2020": 54000,
+    "purchase price 2020": 65000,
     "list discount": 0.05,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 115,
     "default ASABE category": "Two wheel drive tractors, under 80 HP",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "105 HP MFWD Tractor": {
     "key": "105 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
-    "screen": "",
     "HP": 105,
-    "purchase price 2020": 145000,
+    "purchase price 2020": 173000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 450,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 127,
     "default ASABE category": "Mech. front wheel drive tractors",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "130 HP MFWD Tractor": {
     "key": "130 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
-    "screen": "",
     "HP": 130,
-    "purchase price 2020": 176000,
+    "purchase price 2020": 239000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 450,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 130,
     "default ASABE category": "Mech. front wheel drive tractors",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
-  "130 HP Self Propelled": {
+  "130 HP Self Propelled|termination.chemical": {
     "key": "130 HP Self Propelled",
     "Description": "HP Self Propelled",
-    "screen": "termination.chemical",
     "HP": 130,
-    "expected use (hr/yr)": 200,
+    "purchase price 2020": 673000,
+    "list discount": 0.1,
+    "expected life (years)": 12,
+    "expected use (hr/yr)": 100,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "default ASABE category": "None",
-    "Notes": "Source: MachData2021  from Lazarus",
-    "purchase price 2020": "",
-    "list discount": "",
-    "expected life (years)": "",
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": "termination.chemical",
     "shed (ft^2)": ""
   },
   "160 HP MFWD Tractor": {
     "key": "160 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
-    "screen": "",
     "HP": 160,
-    "purchase price 2020": 215000,
+    "purchase price 2020": 299000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 500,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 200,
     "default ASABE category": "Mech. front wheel drive tractors",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "200 HP MFWD Tractor": {
     "key": "200 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
-    "screen": "",
     "HP": 200,
-    "purchase price 2020": 277000,
+    "purchase price 2020": 387000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 500,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 230,
     "default ASABE category": "Mech. front wheel drive tractors",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "225 HP MFWD Tractor": {
     "key": "225 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
-    "screen": "",
     "HP": 225,
-    "purchase price 2020": 301000,
+    "purchase price 2020": 402000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 230,
     "default ASABE category": "Mech. front wheel drive tractors",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "260 HP MFWD Tractor": {
     "key": "260 HP MFWD Tractor",
     "Description": "HP MFWD Tractor",
-    "screen": "",
     "HP": 260,
-    "purchase price 2020": 345000,
+    "purchase price 2020": 480000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 230,
     "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
-  "260 HP Tracked Tractor": {
-    "key": "260 HP Tracked Tractor",
-    "Description": "HP Tracked Tractor",
-    "screen": "",
-    "HP": 260,
-    "purchase price 2020": 342000,
-    "list discount": 0.1,
-    "expected life (years)": 12,
-    "expected use (hr/yr)": 400,
-    "fuel use (gal/PTO hp/hr)": 0.044,
-    "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
-  },
-  "275 HP Combine": {
+  "275 HP Combine|hide": {
     "key": "275 HP Combine",
     "Description": "HP Combine",
-    "screen": "hide",
     "HP": 275,
-    "purchase price 2020": 362000,
+    "purchase price 2020": 447000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 400,
     "default ASABE category": "Combine (self propelled)",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": "hide"
   },
   "310 HP 4WD Tractor": {
     "key": "310 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
-    "screen": "",
     "HP": 310,
-    "purchase price 2020": 420000,
+    "purchase price 2020": 491000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
     "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
-  },
-  "350 HP Tracked Tractor": {
-    "key": "350 HP Tracked Tractor",
-    "Description": "HP Tracked Tractor",
-    "screen": "",
-    "HP": 350,
-    "purchase price 2020": 460000,
-    "list discount": 0.1,
-    "expected life (years)": 12,
-    "expected use (hr/yr)": 400,
-    "fuel use (gal/PTO hp/hr)": 0.044,
-    "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
   "360 HP 4WD Tractor": {
     "key": "360 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
-    "screen": "",
     "HP": 360,
-    "purchase price 2020": 379000,
+    "purchase price 2020": 451000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
     "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
-  "375 HP Combine": {
+  "375 HP Combine|hide": {
     "key": "375 HP Combine",
     "Description": "HP Combine",
-    "screen": "hide",
     "HP": 375,
-    "purchase price 2020": 418000,
+    "purchase price 2020": 525000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 500,
     "default ASABE category": "Combine (self propelled)",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": "hide"
   },
-  "400 HP SP Forage Harvester Base Unit": {
+  "400 HP SP Forage Harvester Base Unit|hide": {
     "key": "400 HP SP Forage Harvester Base Unit",
     "Description": "HP SP Forage Harvester Base Unit",
-    "screen": "hide",
     "HP": 400,
-    "purchase price 2020": 397000,
+    "purchase price 2020": 524000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 350,
     "fuel use (gal/PTO hp/hr)": 0.024,
     "shed (ft^2)": 500,
     "default ASABE category": "Forage harvester (SP)",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": "hide"
   },
   "425 HP 4WD Tractor": {
     "key": "425 HP 4WD Tractor",
     "Description": "HP 4WD Tractor",
-    "screen": "",
     "HP": 425,
-    "purchase price 2020": 452000,
+    "purchase price 2020": 536000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.044,
     "shed (ft^2)": 250,
     "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": ""
   },
-  "440 HP Combine": {
+  "440 HP Combine|hide": {
     "key": "440 HP Combine",
     "Description": "HP Combine",
-    "screen": "hide",
     "HP": 440,
-    "purchase price 2020": 443000,
+    "purchase price 2020": 557000,
     "list discount": 0.2,
     "expected life (years)": 12,
     "expected use (hr/yr)": 400,
     "fuel use (gal/PTO hp/hr)": 0.038305882,
     "shed (ft^2)": 500,
     "default ASABE category": "Combine (self propelled)",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": "hide"
   },
-  "550 HP 4WD Tractor": {
-    "key": "550 HP 4WD Tractor",
-    "Description": "HP 4WD Tractor",
-    "screen": "",
-    "HP": 550,
-    "purchase price 2020": 544000,
-    "list discount": 0.05,
-    "expected life (years)": 12,
-    "expected use (hr/yr)": 400,
-    "fuel use (gal/PTO hp/hr)": 0.044,
-    "shed (ft^2)": 300,
-    "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
-  },
-  "550 HP Tracked Tractor": {
-    "key": "550 HP Tracked Tractor",
-    "Description": "HP Tracked Tractor",
-    "screen": "",
-    "HP": 550,
-    "purchase price 2020": 677000,
-    "list discount": 0.05,
-    "expected life (years)": 12,
-    "expected use (hr/yr)": 400,
-    "fuel use (gal/PTO hp/hr)": 0.044,
-    "shed (ft^2)": 250,
-    "default ASABE category": "Four wheel drive tractors & crawlers",
-    "Notes": "Source: MachData2021  from Lazarus"
-  },
-  "625 HP SP Forage Harvester Base Unit": {
+  "625 HP SP Forage Harvester Base Unit|hide": {
     "key": "625 HP SP Forage Harvester Base Unit",
     "Description": "HP SP Forage Harvester Base Unit",
-    "screen": "hide",
     "HP": 625,
-    "purchase price 2020": 559000,
+    "purchase price 2020": 630000,
     "list discount": 0.1,
     "expected life (years)": 12,
     "expected use (hr/yr)": 350,
     "fuel use (gal/PTO hp/hr)": 0.024,
     "shed (ft^2)": 500,
     "default ASABE category": "Forage harvester (SP)",
-    "Notes": "Source: MachData2021  from Lazarus"
+    "Notes": "Source: MachData2024  from Lazarus",
+    "screen": "hide"
   }
 };
 
 const ATseedList = {
   "Alfalfa": {
     "key": "Alfalfa",
-    "seedingRate": 15,
-    "price": 4.29,
+    "seedingRate": 20,
+    "price": 4.53,
+    "NCredit": 40,
     "type": "Legume",
-    "Notes": "Updated 4-17-23 Prices are average of 6 sources internet price sheet. Seeding rate is average of covercrop council pubs. Data in CoverCrop rates and prices.xlsx.",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
-  "Barley, Spring": {
-    "key": "Barley, Spring",
-    "seedingRate": 80,
+  "Barley": {
+    "key": "Barley",
+    "seedingRate": 75,
     "price": 0.5,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Barley, Winter": {
-    "key": "Barley, Winter",
-    "seedingRate": 100,
-    "price": 0.78,
-    "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
   },
   "Brassica, Forage": {
     "key": "Brassica, Forage",
-    "seedingRate": 4,
-    "price": 4.32,
+    "seedingRate": 3,
+    "price": 3.57,
+    "NCredit": 10,
     "type": "Brassica",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
+    "erosion": "",
+    "legume": ""
+  },
+  "Brome": {
+    "key": "Brome",
+    "seedingRate": 20,
+    "price": 3.79,
+    "type": "Grass",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
   },
   "Buckwheat": {
     "key": "Buckwheat",
-    "seedingRate": 70,
-    "price": 1.74,
+    "seedingRate": 60,
+    "price": 1.49,
     "type": "Broadleaf",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
   },
-  "Cereal Rye, Spring": {
-    "key": "Cereal Rye, Spring",
-    "seedingRate": 75,
-    "price": 0.6,
+  "Cereal Rye": {
+    "key": "Cereal Rye",
+    "seedingRate": 80,
+    "price": 0.58,
     "NCredit": 0,
     "erosion": true,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "legume": ""
   },
-  "Cereal Rye, Winter": {
-    "key": "Cereal Rye, Winter",
-    "seedingRate": 100,
-    "price": 0.6,
-    "NCredit": 0,
-    "erosion": true,
-    "type": "Grass",
-    "Notes": "Updated 4-17-23",
-    "legume": ""
-  },
-  "Clover, Alsike": {
-    "key": "Clover, Alsike",
-    "seedingRate": 6,
-    "price": 3,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Clover, Balansa": {
-    "key": "Clover, Balansa",
-    "seedingRate": 6,
-    "price": 3.07,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Clover, Berseem": {
-    "key": "Clover, Berseem",
-    "seedingRate": 14,
-    "price": 3.01,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Clover, Crimson": {
-    "key": "Clover, Crimson",
-    "seedingRate": 17,
-    "price": 2.34,
-    "legume": true,
-    "NCredit": 30,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "erosion": ""
-  },
-  "Clover, Red": {
-    "key": "Clover, Red",
+  "Clover": {
+    "key": "Clover",
     "seedingRate": 10,
-    "price": 3.25,
-    "legume": true,
-    "NCredit": 35,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "erosion": ""
-  },
-  "Clover, White": {
-    "key": "Clover, White",
-    "seedingRate": 8,
-    "price": 4.02,
+    "price": 3.33,
     "legume": true,
     "NCredit": 30,
     "type": "Legume",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": ""
   },
   "Cowpea": {
     "key": "Cowpea",
-    "seedingRate": 60,
-    "price": 1.22,
+    "seedingRate": 70,
+    "price": 1.36,
+    "NCredit": 35,
     "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
-  "Millet, Japanese": {
-    "key": "Millet, Japanese",
+  "Fescue": {
+    "key": "Fescue",
     "seedingRate": 20,
-    "price": 1.32,
+    "price": 3.31,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
   },
-  "Millet, Pearl": {
-    "key": "Millet, Pearl",
-    "seedingRate": 15,
-    "price": 1.88,
+  "Millet": {
+    "key": "Millet",
+    "seedingRate": 20,
+    "price": 1.33,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
@@ -2913,149 +2797,79 @@ const ATseedList = {
   "Mustard": {
     "key": "Mustard",
     "seedingRate": 10,
-    "price": 3.26,
+    "price": 2.88,
     "type": "Brassica",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
   },
   "Oats": {
     "key": "Oats",
-    "seedingRate": 90,
-    "price": 0.66,
-    "NCredit": 0,
-    "erosion": true,
-    "type": "Grass",
-    "Notes": "Updated 4-17-23",
-    "legume": ""
-  },
-  "Oats, Black": {
-    "key": "Oats, Black",
-    "seedingRate": 32,
-    "price": 0.51,
-    "NCredit": 0,
-    "erosion": true,
-    "type": "Grass",
-    "Notes": "Updated 4-17-23",
-    "legume": ""
-  },
-  "Oats, Spring": {
-    "key": "Oats, Spring",
-    "seedingRate": 90,
-    "price": 0.8,
-    "NCredit": 0,
-    "erosion": true,
-    "type": "Grass",
-    "Notes": "Updated 4-17-23",
-    "legume": ""
-  },
-  "Pea, Spring": {
-    "key": "Pea, Spring",
     "seedingRate": 100,
-    "price": 0.83,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Pea, Winter": {
-    "key": "Pea, Winter",
-    "seedingRate": 65,
-    "price": 0.82,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Phacelia": {
-    "key": "Phacelia",
-    "seedingRate": 8,
-    "price": 7.35,
-    "type": "Broadleaf",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Radish, Forage": {
-    "key": "Radish, Forage",
-    "seedingRate": 10,
-    "price": 3,
-    "type": "Brassica",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Radish, Oilseed": {
-    "key": "Radish, Oilseed",
-    "seedingRate": 6,
-    "price": 1.8,
+    "price": 0.5,
     "NCredit": 0,
-    "type": "Brassica",
-    "Notes": "Updated 4-17-23",
+    "erosion": true,
+    "type": "Grass",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
+    "legume": ""
+  },
+  "Pea": {
+    "key": "Pea",
+    "seedingRate": 80,
+    "price": 0.79,
+    "NCredit": 30,
+    "type": "Legume",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
-  "Rape, Oilseed, Spring": {
-    "key": "Rape, Oilseed, Spring",
-    "seedingRate": 6,
-    "price": 1.8,
+  "Radish": {
+    "key": "Radish",
+    "seedingRate": 12,
+    "price": 2.77,
+    "NCredit": 10,
     "type": "Brassica",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Rape, Oilseed, Winter": {
-    "key": "Rape, Oilseed, Winter",
-    "seedingRate": 6,
-    "price": 1.8,
-    "type": "Brassica",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
   "Rapeseed, Forage": {
     "key": "Rapeseed, Forage",
-    "seedingRate": 10,
-    "price": 1.2,
+    "seedingRate": 8,
+    "price": 1.1,
+    "NCredit": 10,
     "type": "Brassica",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
   "Ryegrass, Annual": {
     "key": "Ryegrass, Annual",
-    "seedingRate": 20,
-    "price": 1.13,
+    "seedingRate": 15,
+    "price": 0.98,
     "NCredit": 0,
     "erosion": true,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "legume": ""
   },
   "Ryegrass, Perennial": {
     "key": "Ryegrass, Perennial",
     "seedingRate": 20,
-    "price": 2.91,
+    "price": 2.77,
     "NCredit": 0,
     "erosion": true,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "legume": ""
   },
   "Sorghum": {
     "key": "Sorghum",
-    "seedingRate": 30,
-    "price": 1.45,
+    "seedingRate": 25,
+    "price": 0.93,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
@@ -3063,9 +2877,9 @@ const ATseedList = {
   "Sorghum-sudangrass": {
     "key": "Sorghum-sudangrass",
     "seedingRate": 40,
-    "price": 1.32,
+    "price": 1.31,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
@@ -3074,18 +2888,18 @@ const ATseedList = {
     "key": "Soybeans",
     "seedingRate": 50,
     "price": 1.28,
+    "NCredit": 15,
     "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
   "Sudangrass": {
     "key": "Sudangrass",
-    "seedingRate": 30,
-    "price": 1.39,
+    "seedingRate": 25,
+    "price": 1.33,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
@@ -3093,9 +2907,9 @@ const ATseedList = {
   "Sunflower": {
     "key": "Sunflower",
     "seedingRate": 5,
-    "price": 1.51,
+    "price": 1.97,
     "type": "Broadleaf",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
@@ -3104,19 +2918,9 @@ const ATseedList = {
     "key": "Sunn Hemp",
     "seedingRate": 30,
     "price": 1.89,
+    "NCredit": 25,
     "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Sweetclover, Yellow": {
-    "key": "Sweetclover, Yellow",
-    "seedingRate": 15,
-    "price": 3.25,
-    "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
@@ -3125,27 +2929,17 @@ const ATseedList = {
     "seedingRate": 8,
     "price": 2.87,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
   },
-  "Triticale, Spring": {
-    "key": "Triticale, Spring",
+  "Triticale": {
+    "key": "Triticale",
     "seedingRate": 90,
-    "price": 0.55,
+    "price": 0.6,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
-    "erosion": "",
-    "legume": ""
-  },
-  "Triticale, Winter": {
-    "key": "Triticale, Winter",
-    "seedingRate": 110,
-    "price": 0.55,
-    "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "NCredit": "",
     "erosion": "",
     "legume": ""
@@ -3153,30 +2947,20 @@ const ATseedList = {
   "Turnip, Forage": {
     "key": "Turnip, Forage",
     "seedingRate": 8,
-    "price": 2.43,
-    "NCredit": 0,
+    "price": 2.29,
+    "NCredit": 10,
     "type": "Brassica",
-    "Notes": "Updated 4-17-23",
-    "erosion": "",
-    "legume": ""
-  },
-  "Turnip, Purple Top": {
-    "key": "Turnip, Purple Top",
-    "seedingRate": 10,
-    "price": 1.9,
-    "NCredit": 0,
-    "type": "Brassica",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
   "Vetch, Hairy": {
     "key": "Vetch, Hairy",
-    "seedingRate": 20,
-    "price": 2.43,
+    "seedingRate": 17,
+    "price": 2.28,
+    "NCredit": 30,
     "type": "Legume",
-    "Notes": "Updated 4-17-23",
-    "NCredit": "",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "erosion": "",
     "legume": ""
   },
@@ -3187,17 +2971,17 @@ const ATseedList = {
     "NCredit": 0,
     "erosion": true,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "legume": ""
   },
   "Wheat, Winter": {
     "key": "Wheat, Winter",
-    "seedingRate": 100,
-    "price": 0.42,
+    "seedingRate": 90,
+    "price": 0.36,
     "NCredit": 0,
     "erosion": true,
     "type": "Grass",
-    "Notes": "Updated 4-17-23",
+    "Notes": "Updated 8/15/24, average of 4 internet seed suppliers",
     "legume": ""
   }
 };
@@ -3463,28 +3247,28 @@ const ATstateRegions = {
 const ATcommodities = {
   "Corn": {
     "key": "Corn",
-    "price": 5.91,
+    "price": 4.66,
     "one year": 0.005200000000000001,
     "three year": 0.0176,
     "five year": 0.03,
-    "Notes": "Price is 2023 RMA springtime price; % change is from SARE publication by Myers.",
+    "Notes": "Price is 2024 RMA springtime price; % change is from SARE publication by Myers.",
     "order": 1,
     "yield": "160"
   },
   "Soybeans": {
     "key": "Soybeans",
-    "price": 13.76,
+    "price": 11.55,
     "one year": 0.0212,
     "three year": 0.0354,
     "five year": 0.0496,
-    "Notes": "Price is 2023 RMA springtime price; % change is from SARE publication by Myers.",
+    "Notes": "Price is 2024 RMA springtime price; % change is from SARE publication by Myers.",
     "order": 2,
     "yield": "50"
   },
   "Wheat": {
     "key": "Wheat",
-    "price": 8.77,
-    "Notes": "Price is 2022 RMA fall price",
+    "price": 5.97,
+    "Notes": "Price is 2024 RMA fall price",
     "order": 3,
     "one year": "",
     "three year": "",
@@ -3493,8 +3277,8 @@ const ATcommodities = {
   },
   "Grain Sorghum (milo)": {
     "key": "Grain Sorghum (milo)",
-    "price": 5.84,
-    "Notes": "Price is 2023 RMA springtime price",
+    "price": 4.67,
+    "Notes": "Price is 2024 RMA springtime price",
     "order": 4,
     "one year": "",
     "three year": "",
@@ -3503,8 +3287,8 @@ const ATcommodities = {
   },
   "Cotton": {
     "key": "Cotton",
-    "price": 0.85,
-    "Notes": "Price is 2023 RMA springtime price for SE US",
+    "price": 0.83,
+    "Notes": "Price is 2024 RMA springtime price for SE US",
     "order": 5,
     "one year": "",
     "three year": "",
@@ -3513,8 +3297,8 @@ const ATcommodities = {
   },
   "Rice": {
     "key": "Rice",
-    "price": 0.255,
-    "Notes": "Price is 2023RMA springtime price for SE US short/med grain rice",
+    "price": 0.24,
+    "Notes": "Price is 2024RMA springtime price for SE US short/med grain rice",
     "order": 6,
     "one year": "",
     "three year": "",
@@ -3523,8 +3307,8 @@ const ATcommodities = {
   },
   "Sunflower": {
     "key": "Sunflower",
-    "price": 0.305,
-    "Notes": "Price is 2023 RMA springtime price",
+    "price": 0.25,
+    "Notes": "Price is 2024 RMA springtime price (Avg of oil and confectionary)",
     "order": 7,
     "one year": "",
     "three year": "",
@@ -3533,8 +3317,8 @@ const ATcommodities = {
   },
   "Canola": {
     "key": "Canola",
-    "price": 0.305,
-    "Notes": "Price is 2023 RMA springtime price",
+    "price": 0.21,
+    "Notes": "Price is 2024 RMA fall price",
     "order": 8,
     "one year": "",
     "three year": "",
@@ -3546,203 +3330,215 @@ const ATcommodities = {
 const ATeqip = {
   "AL": {
     "key": "AL",
-    "basic": 52.36,
-    "multiple": 64.02,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.85,
+    "multiple": 77.28,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "AR": {
     "key": "AR",
-    "basic": 40.43,
-    "multiple": 49.76,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 48.07,
+    "multiple": 60.42,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "CT": {
     "key": "CT",
-    "basic": 52.44,
-    "multiple": 64.1,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.88,
+    "multiple": 77.31,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "DC": {
     "key": "DC",
-    "basic": 35.92,
-    "multiple": 47.45,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 62.09,
+    "multiple": 77.52,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "DE": {
     "key": "DE",
-    "basic": 56.28,
-    "multiple": 67.94,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 65.73,
+    "multiple": 81.16,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "FL": {
     "key": "FL",
-    "basic": 52.02,
-    "multiple": 63.68,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.52,
+    "multiple": 92.34,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "GA": {
     "key": "GA",
-    "basic": 51.36,
-    "multiple": 63.01,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 60.86,
+    "multiple": 76.29,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "IA": {
     "key": "IA",
-    "multiple": 42.45,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
-    "basic": ""
+    "basic": 61.5,
+    "multiple": 76.93,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "IL": {
     "key": "IL",
-    "basic": 52.6,
-    "multiple": 64.26,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 62.15,
+    "multiple": 77.58,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "IN": {
     "key": "IN",
-    "basic": 52.13,
-    "multiple": 63.79,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.67,
+    "multiple": 77.1,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
+  },
+  "KS": {
+    "key": "KS",
+    "basic": 62.25,
+    "multiple": 77.68,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "KY": {
     "key": "KY",
-    "basic": 52.81,
-    "multiple": 64.47,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 62.34,
+    "multiple": 77.76,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "LA": {
     "key": "LA",
-    "basic": 50.05,
-    "multiple": 61.71,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 59.68,
+    "multiple": 75.11,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "MA": {
     "key": "MA",
-    "basic": 52.29,
-    "multiple": 63.94,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.79,
+    "multiple": 77.22,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "MD": {
     "key": "MD",
-    "basic": 52.33,
-    "multiple": 63.99,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.92,
+    "multiple": 77.34,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "ME": {
     "key": "ME",
-    "basic": 52.16,
-    "multiple": 63.81,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.66,
+    "multiple": 77.09,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "MI": {
     "key": "MI",
-    "basic": 52.63,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
-    "multiple": ""
+    "basic": 61.95,
+    "multiple": 77.38,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "MN": {
     "key": "MN",
-    "basic": 34.9,
-    "multiple": 42.67,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 32.97,
+    "multiple": 66.95,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "MO": {
     "key": "MO",
-    "basic": 52.97,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
-    "multiple": ""
+    "basic": 62.45,
+    "multiple": 62.45,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "MS": {
     "key": "MS",
-    "basic": 52.17,
-    "multiple": 63.82,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.66,
+    "multiple": 77.08,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "NC": {
     "key": "NC",
-    "basic": 52.43,
-    "multiple": 64.09,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.99,
+    "multiple": 77.42,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
+  },
+  "NE": {
+    "key": "NE",
+    "basic": 40.97,
+    "multiple": 51.25,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "NH": {
     "key": "NH",
-    "basic": 52.18,
-    "multiple": 63.83,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.68,
+    "multiple": 77.1,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "NJ": {
     "key": "NJ",
-    "basic": 51.94,
-    "multiple": 63.59,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.45,
+    "multiple": 76.88,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "NY": {
     "key": "NY",
-    "basic": 54.65,
-    "multiple": 66.3,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 64.01,
+    "multiple": 79.44,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "OH": {
     "key": "OH",
-    "basic": 51.05,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs",
-    "multiple": ""
+    "basic": 60.64,
+    "multiple": 60.64,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "PA": {
     "key": "PA",
-    "basic": 54.73,
-    "multiple": 66.38,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 64.2,
+    "multiple": 79.63,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "RI": {
     "key": "RI",
-    "basic": 52.64,
-    "multiple": 64.29,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 62.15,
+    "multiple": 77.58,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "SC": {
     "key": "SC",
-    "basic": 52.47,
-    "multiple": 64.12,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 62.02,
+    "multiple": 77.45,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "TN": {
     "key": "TN",
-    "basic": 52.14,
-    "multiple": 63.79,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.62,
+    "multiple": 77.05,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "VA": {
     "key": "VA",
-    "basic": 52.86,
-    "multiple": 64.51,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 74.86,
+    "multiple": 93.38,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "VT": {
     "key": "VT",
-    "basic": 52.18,
-    "multiple": 63.84,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.68,
+    "multiple": 77.11,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "WI": {
     "key": "WI",
-    "basic": 52.37,
-    "multiple": 64.03,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 61.84,
+    "multiple": 77.26,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   },
   "WV": {
     "key": "WV",
-    "basic": 52.55,
-    "multiple": 64.2,
-    "Notes": "2022 EQIP Practice 340 rates from USDA pubs"
+    "basic": 62.09,
+    "multiple": 77.51,
+    "Notes": "2024 EQIP Practice 340 rates from USDA pubs"
   }
 };
 
 const ATerosionControl = {
   "Dozer": {
     "key": "Dozer",
-    "cost": 145,
-    "Notes": "average rate for under 150 hp bulldozer on 2022 MO Custom rates survey"
+    "cost": 175,
+    "Notes": "Median 2024 charge for Bulldozing on ISU Custom Rates, assumed 10 ft blade"
   },
   "Skid steer": {
     "key": "Skid steer",
@@ -3751,8 +3547,8 @@ const ATerosionControl = {
   },
   "Trackhoe": {
     "key": "Trackhoe",
-    "cost": 115,
-    "Notes": "median 2022 rate on MO Custom rate survey for 2-6 ton trackhoe"
+    "cost": 120,
+    "Notes": "Median 2024 charge for Backhoeing on ISU Custom Rates"
   }
 };
 
