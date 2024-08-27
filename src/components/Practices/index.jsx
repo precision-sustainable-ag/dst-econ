@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import {
   Accordion, AccordionDetails, AccordionSummary, Typography, Box,
 } from '@mui/material';
-import { get } from '../../store/redux-autosetters';
+import { get } from 'redux-autosetters';
 
 import {
   dev,

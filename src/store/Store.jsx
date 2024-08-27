@@ -5,10 +5,10 @@
 
 import React from 'react';
 
-import { createStore, set, get } from './redux-autosetters';
+import { createStore, set, get } from 'redux-autosetters';
 import { db } from './airtables';
 
-export { set, get } from './redux-autosetters';
+export { set, get } from 'redux-autosetters';
 export { db } from './airtables';
 
 export const dollars = (n) => {
