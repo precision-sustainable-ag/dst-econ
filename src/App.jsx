@@ -37,6 +37,7 @@ import Yield from './components/Yield';
 import Practices from './components/Practices';
 import Revenue from './components/Revenue';
 import Resources from './components/Resources';
+import Training from './components/Training';
 import Grazing from './components/Grazing';
 import Airtable from './components/Airtables';
 import Feedback from './components/Feedback';
@@ -137,6 +138,7 @@ const paths = {
   Yield,
   Practices,
   Revenue,
+  Training,
   Resources,
   Feedback,
   Snapshot,
@@ -545,7 +547,7 @@ const App = () => {
 
         <div className="menu-items topmenu" ref={topMenu}>
 
-          {keys.filter((path) => !(/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
+          {keys.filter((path) => !(/Practices|Revenue|Resources|Training|AT|Feedback|Snapshot/.test(path))).map((path) => {
             let cname = path === screen ? 'selected' : '';
             const dis = disabled && !/Home|Field/.test(path);
 
@@ -578,11 +580,11 @@ const App = () => {
         <hr className="horizontalline" />
 
         <div className="menu-items">
-          {keys.filter((path) => (/Practices|Revenue|Resources|AT|Feedback|Snapshot/.test(path))).map((path) => {
+          {keys.filter((path) => (/Practices|Revenue|Resources|Training|AT|Feedback|Snapshot/.test(path))).map((path) => {
             if (mobile && path === 'AT') return null;
 
             let cname = path === screen ? 'selected summary' : 'summary';
-            const dis = path !== 'Resources' && disabled && !/Feedback|AT/.test(path);
+            const dis = disabled && !/Resources|Training|Feedback|AT/.test(path);
 
             if (dis) {
               cname += ' disabled';
@@ -657,6 +659,7 @@ const App = () => {
           <Route key="Practices" path="Practices" element={<Practices />} />
           <Route key="Revenue" path="Revenue" element={<Revenue />} />
           <Route key="Resources" path="Resources" element={<Resources />} />
+          <Route key="Training" path="Training" element={<Training />} />
           <Route key="Feedback" path="Feedback" element={<Feedback />} />
           <Route key="AT" path="AT" element={<AT />} />
           <Route key="Snapshot" path="Snapshot" element={<Snapshot />} />
