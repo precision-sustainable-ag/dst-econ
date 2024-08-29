@@ -4,11 +4,11 @@ import './styles.scss';
 const Training = () => {
   const videos = [
     {
-      desc: 'Module 2',
+      desc: '2. Input Decisions',
       link: 'https://youtube.com/embed/b3MR8bVGZ2Q?rel=0',
     },
     {
-      desc: 'Module 3',
+      desc: '3. Machinery Decisions',
       link: 'https://youtube.com/embed/uwVywoGJN5k?rel=0',
     },
   ];

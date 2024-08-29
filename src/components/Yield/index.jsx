@@ -1,3 +1,5 @@
+/* eslint-disable react/no-this-in-sfc */
+
 import React, { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -71,9 +73,17 @@ const RevenueGraph = ({ className }) => {
       },
       labels: {
         formatter() {
-          // eslint-disable-next-line react/no-this-in-sfc
           return `$${this.axis.defaultLabelFormatter.call(this)}`;
         },
+      },
+    },
+    tooltip: {
+      formatter() {
+        return `
+          Yield impact in year ${this.x + 1}:
+          <br/>
+          $${this.y.toFixed(2)}/acre
+        `;
       },
     },
     series: [
@@ -284,7 +294,7 @@ const Yield = () => {
                   </p>
                 </Help>
               </td>
-              <td>
+              <td style={{ background: '#dfd' }}>
                 <Input id="yield.yield" type="number" />
               </td>
               <td rowSpan="4" className="revenue">
@@ -332,7 +342,7 @@ const Yield = () => {
 
             <tr>
               <td>Commodity price</td>
-              <td>
+              <td style={{ background: '#dfd' }}>
                 <Input id="yield.price" type="dollar" />
               </td>
             </tr>

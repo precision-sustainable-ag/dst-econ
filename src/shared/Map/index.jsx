@@ -50,7 +50,7 @@ const MapComp = () => {
   return (
     <div className="map">
       <div className="mapHeaderText">
-        <h1>Where is your Field located?</h1>
+        <h1>Where is this field located?</h1>
         <p>
           Enter your address or Zip code in the search bar below.
           You can then zoom in and move the marker to your precise location by dragging it or by double-clicking the map.

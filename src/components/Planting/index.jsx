@@ -33,9 +33,7 @@ const Planting = () => {
         or customize with the estimated hours associated with your operation.
         This will more accurately represent costs in your operation.
       </p>
-      <hr />
 
-      <strong>Cover Crop Establishment</strong>
       <div className="mobile-table-div">
         <table className="planting inputs mobile-table power">
           <tbody>
