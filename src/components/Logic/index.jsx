@@ -9,8 +9,9 @@ import {
 
 const Logic = ({
   current, intro, question, q, a, property, type, suffix = '',
-  onChange, onInput, value, estimated, total, warning, style, custom = [],
+  onChange, onInput, value, estimated, total, warning, style = {}, custom = [],
 }) => {
+  const style2 = {};
   const cd = db.costDefaults;
   const sortCosts = Object.keys(cd)
     .filter((key) => cd[key].screen === current || cd[key].screen === current.split('.')[0])
@@ -82,6 +83,10 @@ const Logic = ({
   ].includes(currentImplement?.replace(/hire (?!custom operator)/i, ''));
 
   iscustom = currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.' ? true : iscustom;
+
+  if (currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.') {
+    style2.width = '100%';
+  }
 
   let info = '';
   let shown = true;
@@ -311,7 +316,9 @@ const Logic = ({
                 <td style={style}>
                   {q}
                 </td>
-                <td style={style}>{result}</td>
+                <td style={{ ...style, ...style2 }}>
+                  {result}
+                </td>
                 {
                   property === 'implement'
                     && !iscustom

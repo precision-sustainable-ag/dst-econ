@@ -71,7 +71,7 @@ const Field = () => {
             <h2>Field name (or FSA field number)</h2>
             <Input id="field" fullWidth />
 
-            <h2>How many acres are in your Field?</h2>
+            <h2>How many acres are in this field?</h2>
             <Input id="mapFeatures.area" type="number" />
 
             <h2>What cash crop will follow the cover crop in this field?</h2>
@@ -83,11 +83,11 @@ const Field = () => {
               <Input id="otherCashCrop" placeholder="Enter cash crop here" />
             )}
 
-            <h2>What is your Labor Value for Analysis? ($/hour)</h2>
-            <Input id="$labor" />
+            <h2>What is your labor cost? ($/hour)</h2>
+            <Input id="$labor" style={{ background: '#dfd' }} />
 
             <h2>What is your diesel cost? ($/gal)</h2>
-            <Input id="$diesel" />
+            <Input id="$diesel" style={{ background: '#dfd' }} />
           </div>
           <Map />
         </div>

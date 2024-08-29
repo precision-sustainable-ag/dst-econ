@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Icon } from '@mui/material';
-import { set } from '../../store/redux-autosetters';
+import { set } from 'redux-autosetters';
 import './styles.scss';
 
 const Help = ({ children }) => {

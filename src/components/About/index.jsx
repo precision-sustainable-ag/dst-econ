@@ -68,6 +68,12 @@ const About = () => (
       At any point, users can go back to specific input modules to modify their responses.
     </p>
 
+    <h2>Training Videos</h2>
+    <p>
+      Videos explaining how to how to use the tool can be accessed on the Training Videos tab.
+      Topics covered include: getting started, entering input decisions and machinery decisions and complex decisions, and entering revenue impacts.
+    </p>
+
     <div className="home-button-container">
       <Link className="link location" to="/Field">GET STARTED</Link>
     </div>

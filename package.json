@@ -33,6 +33,7 @@
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.1",
     "react-to-print": "^2.14.15",
+    "redux-autosetters": "https://github.com/precision-sustainable-ag/redux-autosetters",
     "sass": "^1.63.6",
     "vite": "^4.4.1"
   },

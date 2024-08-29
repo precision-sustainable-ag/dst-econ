@@ -5,10 +5,10 @@
 
 import React from 'react';
 
-import { createStore, set, get } from './redux-autosetters';
+import { createStore, set, get } from 'redux-autosetters';
 import { db } from './airtables';
 
-export { set, get } from './redux-autosetters';
+export { set, get } from 'redux-autosetters';
 export { db } from './airtables';
 
 export const dollars = (n) => {
@@ -599,8 +599,13 @@ const afterChange = {
   'herbicide.q1': (state, { payload }) => {
     if (payload === 'No') {
       state.herbicide.additional.estimated = 0;
+      state.herbicide.additional.cost = 0;
       state.herbicide.additional.total = 0;
       state.herbicide.additional.implement = '';
+      state.herbicide.reduced.estimated = 0;
+      state.herbicide.reduced.cost = 0;
+      state.herbicide.reduced.total = 0;
+      state.herbicide.reduced.implement = '';
     }
   },
   'herbicide.q2': (state, { payload }) => {
@@ -619,6 +624,8 @@ const afterChange = {
       state.focus = 'termination.product';
     } else {
       state.termination.productCost = 0;
+      state.termination.tillage.implement = '';
+      state.termination.tillage.total = 0;
     }
   },
   'herbicide.q5': (state, { payload }) => {

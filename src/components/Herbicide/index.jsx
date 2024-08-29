@@ -297,7 +297,7 @@ const Herbicide = () => {
             <Logic
               current="herbicide"
               q="Herbicide cost reductions due to adopting cover crop"
-              a={dollars(state.fall.total + state.fall.savings + state.reduced.total)}
+              a={dollars(state.fall.total + state.fall.savings + state.reduced.total + state.reduced.cost)}
               style={{ background: 'lightyellow' }}
             />
 
