@@ -221,7 +221,7 @@ const equipment = (obj, type, nest = true) => {
 const Practices = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const acres = useSelector(get.mapFeatures.area);
+  const acres = useSelector(get.map.area);
   const lat = useSelector(get.map.lat).toFixed(4);
   const lon = useSelector(get.map.lon).toFixed(4);
   const cashCrop = useSelector(get.cashCrop);

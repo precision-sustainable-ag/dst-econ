@@ -58,7 +58,7 @@ const Tests = () => (
 const Revenue = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const acres = useSelector(get.mapFeatures.area);
+  const acres = useSelector(get.map.area);
 
   const coverCropTotal = { desc: 'Seed Expense', value: useSelector(get.coverCropTotal) };
   const seedbedPreparation = { desc: 'Seedbed Preparation', value: useSelector(get.seedbed) };

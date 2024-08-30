@@ -136,7 +136,7 @@
 .mapboxgl-ctrl-geocoder--icon {
     display: inline-block;
     vertical-align: middle;
-    speak: none;
+    /* speak: none; */
     fill: #282828;
     top: 15px;
 }
@@ -237,6 +237,8 @@
     }
     .mapboxgl-ctrl-geocoder {
         width: 33.3333%;
+        min-width: 30rem;
+        max-width: 80%;
         font-size: 15px;
         line-height: 20px;
         max-width: 360px;
@@ -283,4 +285,16 @@
     .mapboxgl-ctrl-geocoder--powered-by {
         font-size: 11px !important;
     }
+
+    .mapboxgl-ctrl-geocoder::after {
+        content: '✖';
+        position: absolute;
+        left: calc(100% - 22px);
+        margin-top: 3px;
+    }
+
+    .mapboxgl-ctrl-geocoder.clearHovered::after {
+        background-color: #eee;
+    }
 }
+

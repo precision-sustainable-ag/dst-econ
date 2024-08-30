@@ -367,7 +367,7 @@ const App = () => {
   const mobile = useSelector(get.mobile);
   const navigate = useNavigate();
 
-  const acres = useSelector(get.mapFeatures.area);
+  const acres = useSelector(get.map.area);
   const $labor = useSelector(get.$labor);
   const $diesel = useSelector(get.$diesel);
   const crop = useSelector(get.cashCrop);

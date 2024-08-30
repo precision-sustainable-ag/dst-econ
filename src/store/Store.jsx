@@ -159,11 +159,20 @@ const initialState = {
   map: {
     lat: 0,
     lon: 0,
-    address: {},
-  },
-  mapFeatures: {
+    elevation: 0,
     zoom: 13,
-    area: '',
+    area: 0,
+    bounds: false,
+    address: {
+      address: '',
+      fullAddress: '',
+      city: '',
+      county: '',
+      state: '',
+      stateCode: '',
+      zipCode: '',
+    },
+    features: [],
   },
   location: '',
   farm: '',
@@ -282,7 +291,7 @@ const initialState = {
 
   erosion: {
     ...shared,
-    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.mapFeatures.area,
+    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.map.area,
   },
 
   termination: {
@@ -399,7 +408,7 @@ const initialState = {
     $hay: 0,
     hoursFeeding: 0,
     hoursGrazingFeeding: 0,
-    hoursAcre: (state) => (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.mapFeatures.area,
+    hoursAcre: (state) => (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.map.area,
     fall: '0',
     spring: '0',
     total: grazingTotal,
@@ -749,7 +758,7 @@ const afterChange = {
     getCosts(state, 'herbicide.fall');
   },
   map: (state) => {
-    state.mapFeatures.zoom = 16;
+    state.map.zoom = 16;
   },
 };
 
@@ -1285,7 +1294,7 @@ export const exampleFertilityCost = () => {
 export const exampleErosion = () => {
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.mapFeatures.area(150));
+  store.dispatch(set.map.area(150));
   store.dispatch(set.erosion.q1('Yes'));
   store.dispatch(set.erosion.q2('Trackhoe'));
   store.dispatch(set.erosion.q4(20));
@@ -1333,24 +1342,24 @@ export const exampleHome = () => {
   store.dispatch(set.location('123 Main Street, Athens, GA, USA'));
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.mapFeatures.area(123));
+  store.dispatch(set.map.area(123));
   store.dispatch(set.field('My field'));
   store.dispatch(set.cashCrop('Corn'));
   store.dispatch(set.map.lat(33.9347));
   store.dispatch(set.map.lon(-83.3157));
-  store.dispatch(set.mapFeatures.zoom(13));
+  store.dispatch(set.map.zoom(13));
 }; // exampleHome
 
 export const exampleField = () => {
   store.dispatch(set.location('123 Main Street, Athens, GA, USA'));
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.mapFeatures.area(123));
+  store.dispatch(set.map.area(123));
   store.dispatch(set.field('My field'));
   store.dispatch(set.cashCrop('Corn'));
   store.dispatch(set.map.lat(33.9347));
   store.dispatch(set.map.lon(-83.3157));
-  store.dispatch(set.mapFeatures.zoom(13));
+  store.dispatch(set.map.zoom(13));
 }; // exampleField
 
 if (/demo/i.test(window.location)) {
