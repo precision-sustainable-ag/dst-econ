@@ -17,11 +17,20 @@ const defaults = getDefaults([
   'location',
   'farm',
   'field',
-  'mapFeatures.area',
+  'map.area',
   '$labor',
   '$diesel',
   'cashCrop',
   'otherCashCrop',
+  'map.lat',
+  'map.lon',
+  'map.address.address',
+  'map.address.fullAddress',
+  'map.address.city',
+  'map.address.county',
+  'map.address.state',
+  'map.address.stateCode',
+  'map.address.zipCode',
 ]);
 
 const Field = () => {
@@ -72,7 +81,7 @@ const Field = () => {
             <Input id="field" fullWidth />
 
             <h2>How many acres are in this field?</h2>
-            <Input id="mapFeatures.area" type="number" />
+            <Input id="map.area" type="number" />
 
             <h2>What cash crop will follow the cover crop in this field?</h2>
             <Input

@@ -1,12 +1,11 @@
-/* eslint-disable */
 /*
   Handles reverse geocoding from lat lon to asci address
 */
 
-async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude }) {
-  await fetch(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude}%2C%20${latitude}.json?access_token=${apiKey}`
-  )
+async function geocodeReverse({
+  apiKey, setterFunc, zoom, latitude, longitude,
+}) {
+  await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude}%2C%20${latitude}.json?access_token=${apiKey}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.features && data.features.length > 0) {
@@ -17,7 +16,7 @@ async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude })
 
           const stateCode = () => {
             const f = data.features.filter((feature) => feature.id.includes('region'))[0];
-            return f.properties?.short_code?.split('-')[1];
+            return f?.properties?.short_code?.split('-')[1];
           };
 
           const newVal = {
@@ -30,8 +29,8 @@ async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude })
             state: value('region'),
             stateCode: stateCode(),
             zoom,
-          }
-          return newVal
+          };
+          return newVal;
         });
       }
     });
@@ -41,12 +40,10 @@ async function geocodeReverse({ apiKey, setterFunc, zoom, latitude, longitude })
  * returns the matching geographic coordinate(s)
  * as search results in carmen geojson format,
  * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md */
-const coordinatesGeocoder = function (query) {
+const coordinatesGeocoder = (query) => {
   // Match anything which looks like
   // decimal degrees coordinate pair.
-  const matches = query.match(
-    /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
-  );
+  const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
   if (!matches) {
     return null;
   }
@@ -58,7 +55,7 @@ const coordinatesGeocoder = function (query) {
         type: 'Point',
         coordinates: [lng, lat],
       },
-      place_name: 'Lat: ' + lat + ' Lng: ' + lng,
+      place_name: `Lat: ${lat} Lng: ${lng}`,
       place_type: ['coordinate'],
       properties: {},
       type: 'Feature',
@@ -81,7 +78,7 @@ const coordinatesGeocoder = function (query) {
 
   if (geocodes.length === 0) {
     // else could be either lng, lat or lat, lng
-    geocodes.push(coordinateFeature(coord1, coord2));
+    // geocodes.push(coordinateFeature(coord1, coord2));
     geocodes.push(coordinateFeature(coord2, coord1));
   }
 

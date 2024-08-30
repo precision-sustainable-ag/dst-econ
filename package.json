@@ -35,6 +35,7 @@
     "react-to-print": "^2.14.15",
     "redux-autosetters": "https://github.com/precision-sustainable-ag/redux-autosetters",
     "sass": "^1.63.6",
+    "shapefile": "^0.6.6",
     "vite": "^4.4.1"
   },
   "devDependencies": {
