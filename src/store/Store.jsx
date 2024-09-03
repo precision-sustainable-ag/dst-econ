@@ -757,9 +757,6 @@ const afterChange = {
     getCosts(state, 'herbicide.reduced');
     getCosts(state, 'herbicide.fall');
   },
-  map: (state) => {
-    state.map.zoom = 16;
-  },
 };
 
 afterChange.$diesel = afterChange.$labor;

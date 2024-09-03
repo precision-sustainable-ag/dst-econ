@@ -25,6 +25,7 @@ const OpeningMap = () => (
     hasSearchBar
     hasGeolocate
     hasMarkerMovable
+    hasImport
   />
 ); // OpeningMap
 

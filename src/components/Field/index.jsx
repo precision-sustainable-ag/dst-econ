@@ -24,6 +24,10 @@ const defaults = getDefaults([
   'otherCashCrop',
   'map.lat',
   'map.lon',
+  'map.elevation',
+  'map.zoom',
+  'map.area',
+  'map.bounds',
   'map.address.address',
   'map.address.fullAddress',
   'map.address.city',
@@ -31,6 +35,7 @@ const defaults = getDefaults([
   'map.address.state',
   'map.address.stateCode',
   'map.address.zipCode',
+  'map.features',
 ]);
 
 const Field = () => {
