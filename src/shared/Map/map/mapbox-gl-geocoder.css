@@ -294,6 +294,7 @@
     }
 
     .mapboxgl-ctrl-geocoder.clearHovered::after {
+        cursor: pointer;
         background-color: #eee;
     }
 }

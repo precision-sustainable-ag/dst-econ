@@ -10,10 +10,10 @@ import * as shapefile from 'shapefile';
 import { geocodeReverse, coordinatesGeocoder } from './helpers';
 // import { MapboxApiKey } from '../../../store/keys';
 
-import fullscreen from './fullscreen.png';
-import polygon from './polygon.png';
-import freehand from './freehand.png';
-import trashcan from './trashcan.png';
+import fullscreenIcon from './fullscreen.png';
+import polygonIcon from './polygon.png';
+import freehandIcon from './freehand.png';
+import trashcanIcon from './trashcan.png';
 
 import styles from './map.module.scss';
 
@@ -44,12 +44,12 @@ const Help = () => (
     <p><strong>Controls</strong></p>
     <p>
       For a larger map after the location is selected, click the full screen icon:
-      <img className="icon" alt="fullscreen" src={fullscreen} style={{ height: '2rem' }} />
+      <img className="icon" alt="fullscreen" src={fullscreenIcon} style={{ height: '2rem' }} />
     </p>
 
     <p>
       You can use the polygon tool on the right side of the map to outline the site area and estimate its acreage:
-      <img className="icon" alt="polygon" src={polygon} style={{ height: '2rem' }} />
+      <img className="icon" alt="polygon" src={polygonIcon} style={{ height: '2rem' }} />
       <br />
       To create the boundary, click on each point that defines your field on the map.
       <br />
@@ -58,7 +58,7 @@ const Help = () => (
 
     <p>
       You can also use the freehand tool to outline the site area and estimate its acreage:
-      <img className="icon" alt="freehand" src={freehand} style={{ height: '1.5rem' }} />
+      <img className="icon" alt="freehand" src={freehandIcon} style={{ height: '1.5rem' }} />
       <br />
       To create the boundary, click on the edge of your field and drag the mouse around the perimeter.
       <br />
@@ -73,7 +73,7 @@ const Help = () => (
 
     <p>
       To delete and re-draw polygons, select the polygon, then click the trash can icon under the polygon tool:
-      <img className="icon" alt="trashcan" src={trashcan} style={{ height: '2rem' }} />
+      <img className="icon" alt="trashcan" src={trashcanIcon} style={{ height: '2rem' }} />
     </p>
 
     <p>
@@ -250,6 +250,7 @@ const ReduxMap = ({
 
     return () => {
       geocoderContainer?.removeEventListener('click', handleClick);
+      geocoderContainer?.removeEventListener('mousemove', handleMousemove);
     };
   }, [map.current]);
 
@@ -1038,10 +1039,10 @@ const ReduxMap = ({
     map.current.on('draw.delete', handleDrawDelete);
     map.current.on('draw.selectionchange', handleDrawSelection);
 
-    map.current.on('zoom', () => {
+    map.current.on('zoom', (event) => {
+      if (!event.originalEvent) return;
       const currentZoom = map.current.getZoom();
       if (setters.map) {
-        // dispatch(setters.map.zoom(currentZoom));
         dispatch(setters.map((cmap) => (
           {
             ...cmap,
