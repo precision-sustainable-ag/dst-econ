@@ -4,12 +4,24 @@ import './styles.scss';
 const Training = () => {
   const videos = [
     {
+      desc: '1. Introduction',
+      link: 'https://youtube.com/embed/Xut74N-EQTs?rel=0',
+    },
+    {
       desc: '2. Input Decisions',
       link: 'https://youtube.com/embed/b3MR8bVGZ2Q?rel=0',
     },
     {
       desc: '3. Machinery Decisions',
       link: 'https://youtube.com/embed/uwVywoGJN5k?rel=0',
+    },
+    {
+      desc: '4. Complex Decisions',
+      link: 'https://youtube.com/embed/74WXAn7SVtE?rel=0',
+    },
+    {
+      desc: '5. Financial Benefits',
+      link: 'https://youtube.com/embed/I4lRDczGAss?rel=0',
     },
   ];
 
