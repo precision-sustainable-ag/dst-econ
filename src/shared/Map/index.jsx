@@ -1,38 +1,26 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-relative-packages */
-
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-// import mapboxgl from 'mapbox-gl';
-import Map from './map';
+import { PSAReduxMap as Map } from 'shared-react-components/src';
 import { get, set } from '../../store/Store';
 import './styles.scss';
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-// mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 const OpeningMap = () => (
   <Map
-    getters={get}
-    setters={set}
-    bounds={[
-      [-124.731422, 24.743319], // Southwest coordinates
-      [-66.969849, 49.345786], // Northeast coordinates
-    ]}
+    getter={get.map}
+    setter={set.map}
     layer="mapbox://styles/mapbox/outdoors-v11"
-    initWidth="100%"
-    initHeight="100%"
     hasSearchBar
     hasGeolocate
     hasMarkerMovable
+    hasMarker
     hasImport
   />
 ); // OpeningMap
 
 const InteractiveMap = () => (
   <Map
-    getters={get}
-    setters={set}
+    getter={get.map}
+    setter={set.map}
     initWidth="100%"
     hasSearchBar
     hasGeolocate

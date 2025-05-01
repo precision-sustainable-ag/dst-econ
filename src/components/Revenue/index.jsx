@@ -23,7 +23,7 @@ import {
   exampleTillage5,
   exampleFertilityBenefit,
   exampleFertilityCost,
-  exampleYield1,
+  // exampleYield1,
   exampleYield2,
   get,
 } from '../../store/Store';
@@ -50,7 +50,7 @@ const Tests = () => (
     <button type="button" onClick={exampleTillage5}>Test Tillage5</button>
     <button type="button" onClick={exampleFertilityBenefit}>Test FertilityBenefit</button>
     <button type="button" onClick={exampleFertilityCost}>Test FertilityCost</button>
-    <button type="button" onClick={exampleYield1}>Test Yield1</button>
+    {/* <button type="button" onClick={exampleYield1}>Test Yield1</button> */}
     <button type="button" onClick={exampleYield2}>Test Yield2</button>
   </div>
 );
