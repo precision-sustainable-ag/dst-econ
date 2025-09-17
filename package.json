@@ -37,7 +37,7 @@
     "sass": "^1.63.6",
     "shapefile": "^0.6.6",
     "shared-react-components": "github:precision-sustainable-ag/shared-react-components#feature/infosheet",
-    "vite": "^4.4.1"
+    "vite": "^7.1.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
