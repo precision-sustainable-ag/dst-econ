@@ -20,7 +20,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import {
   dev, get, set, errorHandler,
 } from './store/Store';
-
+import pirschAnalytics from './shared/analytics';
 import Home from './components/Home';
 import About from './components/About';
 import Field from './components/Field';
@@ -420,6 +420,12 @@ const App = () => {
     }
     return () => {};
   }, [dispatch, location.pathname, screen, crop]);
+
+  useEffect(() => {
+    if (screen === 'Loading') return;
+    const page = location.pathname.slice(1) || 'Home';
+    pirschAnalytics('Visited Page', { meta: { visited: page }});
+  }, [location.pathname, screen]);
 
   useEffect(() => {
     if (newScreen !== '') {
