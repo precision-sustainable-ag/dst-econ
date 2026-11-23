@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-autofocus */
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { get, mobile } from '../../store/Store';
 
@@ -10,14 +8,9 @@ const AT = () => {
   return (
     <div id="AT">
       <p>
-        When approved, save as
-        {' '}
-        <strong>store/airtables.js</strong>
-        :
+        When approved, save as <strong>store/airtables.js</strong>:
       </p>
-      <textarea autoFocus={!mobile}>
-        {at}
-      </textarea>
+      <textarea autoFocus={!mobile}>{at}</textarea>
     </div>
   );
 }; // Home

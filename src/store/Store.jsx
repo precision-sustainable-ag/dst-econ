@@ -1,14 +1,11 @@
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-console */
-
 // import { current as showCurrent } from '@reduxjs/toolkit';
 
-import React from 'react';
+const { VITE_AIRTABLE_KEY } = import.meta.env; // localhost only now
 
-import { createStore, set, get } from 'redux-autosetters';
+import { createStore, get, set } from 'redux-autosetters';
 import { db } from './airtables';
 
-export { set, get } from 'redux-autosetters';
+export { get, set } from 'redux-autosetters';
 export { db } from './airtables';
 
 export const dollars = (n) => {
@@ -16,37 +13,28 @@ export const dollars = (n) => {
     return '';
   }
   if (+n < 0) {
-    return (
-      <span style={{ color: 'red' }}>
-        $
-        {(-n).toFixed(2)}
-      </span>
-    );
+    return <span style={{ color: 'red' }}>${(-n).toFixed(2)}</span>;
   }
   return `$${(+n).toFixed(2)}`;
 }; // dollars
 
-export const dev = /(localhost|dev)/i.test(window.location);
+export const dev = /(localhost|zdev)/i.test(window.location);
 
-const terminationTotal = (state) => (
-  (+state.termination.productCost || 0)
-  + (+state.termination.chemical.total || 0)
-  + (+state.termination.roller.total || 0)
-  + (+state.termination.tillage.total || 0)
-  + ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0))
-);
+const terminationTotal = (state) =>
+  (+state.termination.productCost || 0) +
+  (+state.termination.chemical.total || 0) +
+  (+state.termination.roller.total || 0) +
+  (+state.termination.tillage.total || 0) +
+  ((+state.termination.additionalTotal || 0) - (+state.termination.reducedTotal || 0));
 
-const tillageTotal = (state) => (
-  state.tillage.other.total - state.tillage.costReductions
-);
+const tillageTotal = (state) => state.tillage.other.total - state.tillage.costReductions;
 
-const herbicideTotal = (state) => (
-  (state.herbicide.additional.cost || 0)
-  + (state.herbicide.additional.total || 0)
-  - (state.herbicide.fall.total || 0)
-  - (state.herbicide.fall.savings || 0)
-  - ((state.herbicide.reduced.cost || 0) + (state.herbicide.reduced.total || 0))
-);
+const herbicideTotal = (state) =>
+  (state.herbicide.additional.cost || 0) +
+  (state.herbicide.additional.total || 0) -
+  (state.herbicide.fall.total || 0) -
+  (state.herbicide.fall.savings || 0) -
+  ((state.herbicide.reduced.cost || 0) + (state.herbicide.reduced.total || 0));
 
 const grazingTotal = (state) => {
   if (state.grazing.$lease) {
@@ -68,11 +56,11 @@ const grazingTotal = (state) => {
     return 0;
   }
 
-  const pctFallWaste = 0.50;
-  const pctSpringWaste = 0.50;
+  const pctFallWaste = 0.5;
+  const pctSpringWaste = 0.5;
   const dryMatter = 0.88;
   const hayWasted = 0.22;
-  const lbsNotFed = ((((fall * pctFallWaste) + (spring * pctSpringWaste)) / dryMatter) / (1 - hayWasted));
+  const lbsNotFed = (fall * pctFallWaste + spring * pctSpringWaste) / dryMatter / (1 - hayWasted);
   const balesFed = 1800;
   const timeFed = 0.5;
   const fuelConsumption = 6;
@@ -246,27 +234,26 @@ const initialState = {
     ...shared,
     yield: undefined,
     manualYieldEstimate: 0,
-    q2: (state) => (
+    q2: (state) =>
       ['Corn', 'Soybeans'].includes(state.cashCrop)
         ? 'Use cover crop adjusted yield estimates from the table above'
-        : 'Enter my own estimated yield change'
-    ),
+        : 'Enter my own estimated yield change',
     q4: '',
     price: (state) => db.commodities?.[state.cashCrop]?.price,
     typical: (state) => state.yield.yield * state.yield.price,
     adjusted: (state) => {
       const r = [
         +(
-          state.yield.typical
-          * (1 + (db.commodities?.[state.cashCrop]?.['one year'] ?? 0))
+          state.yield.typical *
+          (1 + (db.commodities?.[state.cashCrop]?.['one year'] ?? 0))
         ).toFixed(0),
         +(
-          state.yield.typical
-          * (1 + (db.commodities?.[state.cashCrop]?.['three year'] ?? 0))
+          state.yield.typical *
+          (1 + (db.commodities?.[state.cashCrop]?.['three year'] ?? 0))
         ).toFixed(0),
         +(
-          state.yield.typical
-          * (1 + (db.commodities?.[state.cashCrop]?.['five year'] ?? 0))
+          state.yield.typical *
+          (1 + (db.commodities?.[state.cashCrop]?.['five year'] ?? 0))
         ).toFixed(0),
       ];
 
@@ -308,7 +295,9 @@ const initialState = {
 
       state.termination.additionalHerbicides.forEach((s, n) => {
         if (s) {
-          total += (state.termination.additionalRates[n] || 0) * (state.termination.additionalPrices[n] || 0);
+          total +=
+            (state.termination.additionalRates[n] || 0) *
+            (state.termination.additionalPrices[n] || 0);
         }
       });
       return total;
@@ -321,8 +310,8 @@ const initialState = {
 
       state.termination.reducedHerbicides.forEach((s, n) => {
         if (s) {
-          total += (state.termination.reducedRates[n] || 0)
-                   * (state.termination.reducedPrices[n] || 0);
+          total +=
+            (state.termination.reducedRates[n] || 0) * (state.termination.reducedPrices[n] || 0);
         }
       });
 
@@ -345,10 +334,9 @@ const initialState = {
 
   tillage: {
     ...shared,
-    costReductions: (state) => (
-      (state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0)
-      + (state.tillage.elimination.total || 0)
-    ),
+    costReductions: (state) =>
+      (state.tillage.q5 === 'Yes' ? state.tillage.fall.total : 0 || 0) +
+      (state.tillage.elimination.total || 0),
     fall: {
       description: 'Fall tillage',
       ...shared,
@@ -378,16 +366,18 @@ const initialState = {
     PAdded: 0,
     KAdded: 0,
     $application: undefined, // was db.costDefaults['Custom Fertilizer Appl'].cost
-    $credit: (state) => state.fertility.N * state.fertility.$N + state.fertility.P * state.fertility.$P + state.fertility.K * state.fertility.$K,
-    $cost: (state) => (
-      state.fertility.useFertilizer === 'Yes'
+    $credit: (state) =>
+      state.fertility.N * state.fertility.$N +
+      state.fertility.P * state.fertility.$P +
+      state.fertility.K * state.fertility.$K,
+    $cost: (state) =>
+      (state.fertility.useFertilizer === 'Yes'
         ? -(
-          state.fertility.NAdded * state.fertility.$N
-            + state.fertility.PAdded * state.fertility.$P
-            + state.fertility.KAdded * state.fertility.$K
-        )
-        : 0
-    ) - (state.fertility.$application || 0),
+            state.fertility.NAdded * state.fertility.$N +
+            state.fertility.PAdded * state.fertility.$P +
+            state.fertility.KAdded * state.fertility.$K
+          )
+        : 0) - (state.fertility.$application || 0),
     total: (state) => state.fertility.$credit + state.fertility.$cost,
   },
 
@@ -397,8 +387,11 @@ const initialState = {
     $costShare: 0,
     $carbonOffset: 0,
     $insuranceDiscount: 0,
-    total: (state) => +state.additional.$landowner + +state.additional.$costShare
-                      + +state.additional.$carbonOffset + +state.additional.$insuranceDiscount,
+    total: (state) =>
+      +state.additional.$landowner +
+      +state.additional.$costShare +
+      +state.additional.$carbonOffset +
+      +state.additional.$insuranceDiscount,
   },
 
   grazing: {
@@ -408,7 +401,8 @@ const initialState = {
     $hay: 0,
     hoursFeeding: 0,
     hoursGrazingFeeding: 0,
-    hoursAcre: (state) => (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.map.area,
+    hoursAcre: (state) =>
+      (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.map.area,
     fall: '0',
     spring: '0',
     total: grazingTotal,
@@ -417,7 +411,8 @@ const initialState = {
 
 export const formulas = { ...initialState };
 
-export const goto = (object, property) => property.split('.').reduce((obj, prop) => obj[prop], object);
+export const goto = (object, property) =>
+  property.split('.').reduce((obj, prop) => obj[prop], object);
 
 const getCosts = (state, current) => {
   ['implements', 'power'].forEach((type) => {
@@ -445,9 +440,8 @@ const getCosts = (state, current) => {
 
       const { acresHour } = scurrent;
 
-      const divisor = type === 'implements'
-        ? section.annualUseAcres
-        : section.annualUseHours * acresHour;
+      const divisor =
+        type === 'implements' ? section.annualUseAcres : section.annualUseHours * acresHour;
 
       const p = db[type][o] || {};
 
@@ -463,17 +457,19 @@ const getCosts = (state, current) => {
       // console.log({RF1,RF2,RV1,RV2,RV3,RV4,RV5});
 
       // console.log(p['default ASABE category']);
-      const tradein = (
-        RV1
-        - RV2 * p['expected life (years)'] ** 0.5
-        - RV3 * p['expected use (hr/yr)'] ** 0.5
-        + RV4 * db.rates.projected.value
-      ) ** 2
-        + 0.25 * RV5;
+      const tradein =
+        (RV1 -
+          RV2 * p['expected life (years)'] ** 0.5 -
+          RV3 * p['expected use (hr/yr)'] ** 0.5 +
+          RV4 * db.rates.projected.value) **
+          2 +
+        0.25 * RV5;
       const listprice = p['purchase price'] / (1 - p['list discount']);
       const $tradein = tradein * listprice;
       const annualdepreciation = (p['purchase price'] - $tradein) / p['expected life (years)'];
-      const accumulatedrepairs = listprice * (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
+      const accumulatedrepairs =
+        listprice *
+        (RF1 * ((p['expected life (years)'] * p['expected use (hr/yr)']) / 1000) ** RF2);
       const annualrepairs = accumulatedrepairs / p['expected life (years)'];
 
       // console.log({parm, tradein, listprice, $tradein, annualdepreciation, accumulatedrepairs, annualrepairs, divisor});
@@ -482,49 +478,43 @@ const getCosts = (state, current) => {
 
       switch (parm) {
         case 'Fuel':
-          value = +(
-            p.HP
-            * p['fuel use (gal/PTO hp/hr)']
-            * (1 + +db.rates.lubrication.value)
-            * state.$diesel
-          ) / acresHour;
+          value =
+            +(
+              p.HP *
+              p['fuel use (gal/PTO hp/hr)'] *
+              (1 + +db.rates.lubrication.value) *
+              state.$diesel
+            ) / acresHour;
           break;
         case 'Depreciation':
           value = annualdepreciation / divisor;
           break;
         case 'Interest':
-          value = (
-            (
-              (p['purchase price'] + $tradein + annualdepreciation) / 2
-            )
-            * db.rates.interest.value
-          ) / divisor;
+          value =
+            (((p['purchase price'] + $tradein + annualdepreciation) / 2) *
+              db.rates.interest.value) /
+            divisor;
           break;
         case 'Repairs':
           value = annualrepairs / divisor;
           break;
         case 'Taxes':
-          value = (
-            (
-              (p['purchase price'] + $tradein + annualdepreciation) / 2
-            )
-            * db.rates.property.value
-          ) / divisor;
+          value =
+            (((p['purchase price'] + $tradein + annualdepreciation) / 2) *
+              db.rates.property.value) /
+            divisor;
           break;
         case 'Insurance':
-          value = (
-            (
-              (p['purchase price'] + $tradein + annualdepreciation) / 2
-            )
-            * db.rates.insurance.value
-          ) / divisor;
+          value =
+            (((p['purchase price'] + $tradein + annualdepreciation) / 2) *
+              db.rates.insurance.value) /
+            divisor;
           break;
         case 'Storage':
           value = (db.rates.storage.value * p['shed (ft^2)']) / divisor;
           break;
         case 'Labor':
-          value = ((p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour)
-          * state.$labor;
+          value = ((p['tractor (hr/impl)'] * p['labor (hr/trac)']) / acresHour) * state.$labor;
           break;
         default:
           value = p[parm];
@@ -536,9 +526,7 @@ const getCosts = (state, current) => {
       scurrent[`$${type}`].total += value;
     });
 
-    scurrent.estimated = +(
-      scurrent.$implements.total + scurrent.$power.total
-    ).toFixed(2);
+    scurrent.estimated = +(scurrent.$implements.total + scurrent.$power.total).toFixed(2);
 
     scurrent.total = scurrent.estimated;
     state.calculated[`${current}.total`] = scurrent.total;
@@ -793,8 +781,10 @@ export const store = createStore(initialState, { afterChange, reducers });
   afterChange[`${section}.Taxes`] = (state) => getCosts(state, section);
   afterChange[`${section}.Storage`] = (state) => getCosts(state, section);
   afterChange[`${section}.Insurance`] = (state) => getCosts(state, section);
-  afterChange[`${section}.annualUseHours`] = (state, { payload }) => payload && getCosts(state, section);
-  afterChange[`${section}.annualUseAcres`] = (state, { payload }) => payload && getCosts(state, section);
+  afterChange[`${section}.annualUseHours`] = (state, { payload }) =>
+    payload && getCosts(state, section);
+  afterChange[`${section}.annualUseAcres`] = (state, { payload }) =>
+    payload && getCosts(state, section);
 
   afterChange[`${section}.implement`] = (state, { payload }) => {
     const obj = goto(state, section);
@@ -807,9 +797,9 @@ export const store = createStore(initialState, { afterChange, reducers });
       state.tillage.total = tillageTotal(state);
       state.herbicide.total = herbicideTotal(state);
     } else if (
-      payload === 'No additional application activity'
-      || payload === 'No reduced application activity'
-      || payload === 'Incorporate planting with fertilizing. No CC planting cost.'
+      payload === 'No additional application activity' ||
+      payload === 'No reduced application activity' ||
+      payload === 'Incorporate planting with fertilizing. No CC planting cost.'
     ) {
       obj.estimated = 0;
       obj.total = 0;
@@ -818,8 +808,8 @@ export const store = createStore(initialState, { afterChange, reducers });
       const p = db.implements[payload] || {};
       obj.power = p['default power unit'];
       obj.acresHour = +(
-        (p.size1 * p['field speed (m/h)'] * p['field efficiency'])
-        / db.rates.conversion.value
+        (p.size1 * p['field speed (m/h)'] * p['field efficiency']) /
+        db.rates.conversion.value
       ).toFixed(2);
       obj.annualUseAcres = +(obj.acresHour * p['expected use (hr/yr)']).toFixed(0);
       state.calculated[`${section}.annualUseAcres`] = obj.annualUseAcres;
@@ -876,7 +866,7 @@ const loadAirtables = async (tables) => {
     {
       method: 'GET',
       headers: {
-        authorization: 'Bearer patNiQS8C8RFSD3TQ.5777663e47e400a18c0fdcfe5118c85044a755a5966be3391e26d9d13f2a076e',
+        authorization: `Bearer ${VITE_AIRTABLE_KEY}`,
       },
     },
   );
@@ -886,7 +876,8 @@ const loadAirtables = async (tables) => {
 
   status += `${table} `;
 
-  if (!rec.records) { // don't know why this sometimes fails
+  if (!rec.records) {
+    // don't know why this sometimes fails
     window.location.reload();
   }
   const data = rec.records.map((r) => r.fields);
@@ -1027,7 +1018,9 @@ export const exampleSeeds = () => {
 
 export const exampleHerbicides = () => {
   const herbicideDefaults = getDefaults(
-    Object.keys(get.herbicide).map((parm) => `herbicide.${parm}`).filter((parm) => !/fall|additional|reduced/.test(parm)),
+    Object.keys(get.herbicide)
+      .map((parm) => `herbicide.${parm}`)
+      .filter((parm) => !/fall|additional|reduced/.test(parm)),
   );
 
   const fallDefaults = getDefaults(
@@ -1179,9 +1172,7 @@ export const exampleTermination5 = () => {
 }; // exampleTermination5
 
 const clearTillage = () => {
-  const tillageDefaults = getDefaults(
-    Object.keys(get.tillage).map((parm) => `tillage.${parm}`),
-  );
+  const tillageDefaults = getDefaults(Object.keys(get.tillage).map((parm) => `tillage.${parm}`));
   const fallDefaults = getDefaults(
     Object.keys(get.tillage.fall).map((parm) => `tillage.fall.${parm}`),
   );
@@ -1384,7 +1375,8 @@ if (/demo/i.test(window.location)) {
   exampleYield2();
 }
 
-export const mobile = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
+export const mobile =
+  !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
 
 let done;
 export const errorHandler = (err) => {

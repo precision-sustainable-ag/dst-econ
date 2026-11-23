@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './styles.scss';
 
 const Training = () => {
@@ -31,19 +31,17 @@ const Training = () => {
     <div id="Training">
       <h1>Training Videos</h1>
       <p>These videos illustrate how to use the Cover Crop Economic Decision Support Tool.</p>
-      {
-        videos.map((video) => (
-          <a
-            key={video.desc}
-            onClick={() => setSelected(video)}
-            target="frame"
-            className={`button ${video.desc === selected.desc ? 'selected' : ''}`}
-            href={video.link}
-          >
-            {video.desc}
-          </a>
-        ))
-      }
+      {videos.map((video) => (
+        <a
+          key={video.desc}
+          onClick={() => setSelected(video)}
+          target="frame"
+          className={`button ${video.desc === selected.desc ? 'selected' : ''}`}
+          href={video.link}
+        >
+          {video.desc}
+        </a>
+      ))}
       <div id="Video">
         <iframe
           name="frame"

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Resources = () => {
   const referenceLinks = [
     {
@@ -132,25 +130,26 @@ const Resources = () => {
     <div className="Resources">
       <h1>Resources</h1>
       <p>
-        Numerous resources exist to assist with decisions on the use of cover crops.
-        Listed below are links to groups with extensive educational resources on conservation practices, soil health, and use of cover crops.
+        Numerous resources exist to assist with decisions on the use of cover crops. Listed below
+        are links to groups with extensive educational resources on conservation practices, soil
+        health, and use of cover crops.
       </p>
 
       <ul>
-        {
-          referenceLinks.map((item) => (
-            <li key={item.title} style={{ marginTop: '10px' }}>
-              {item.title}
-              <ul>
-                {item.links.map((linkItem) => (
-                  <li key={linkItem} style={{ marginTop: '6px' }}>
-                    <a href={linkItem.link} target="_blank" rel="noreferrer">{linkItem.name}</a>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))
-        }
+        {referenceLinks.map((item) => (
+          <li key={item.title} style={{ marginTop: '10px' }}>
+            {item.title}
+            <ul>
+              {item.links.map((linkItem) => (
+                <li key={linkItem} style={{ marginTop: '6px' }}>
+                  <a href={linkItem.link} target="_blank" rel="noreferrer">
+                    {linkItem.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
       </ul>
     </div>
   );

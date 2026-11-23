@@ -1,20 +1,12 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-import Logic from '../Logic';
 import Help from '../../shared/Help';
-import {
-  dev, get, dollars, exampleErosion, getDefaults, db,
-} from '../../store/Store';
+import { db, dev, dollars, exampleErosion, get, getDefaults } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
+import Logic from '../Logic';
 
 import './styles.scss';
 
-const defaults = getDefaults([
-  'erosion.q1',
-  'erosion.q2',
-  'erosion.q3',
-  'erosion.q4',
-]);
+const defaults = getDefaults(['erosion.q1', 'erosion.q2', 'erosion.q3', 'erosion.q4']);
 
 const Erosion = () => {
   const erosion = useSelector(get.erosion);
@@ -23,8 +15,7 @@ const Erosion = () => {
     <div id="Erosion">
       <h1>Soil Erosion Control</h1>
       <p>
-        Using cover crops has been documented to provide benefits with controlling soil erosion.
-        {' '}
+        Using cover crops has been documented to provide benefits with controlling soil erosion.{' '}
         {/* Select the
         {' '}
         <NavLink className="link" to="/Resources">
@@ -32,8 +23,8 @@ const Erosion = () => {
         </NavLink>
         {' '}
         button at the bottom of this page if you would like to read more about which cover crops can provide strong erosion control benefits. */}
-        This portion of the Cover Crop Economic DST (Decision Support Tool) will help quantify potential cost savings.
-        Please answer the following questions:
+        This portion of the Cover Crop Economic DST (Decision Support Tool) will help quantify
+        potential cost savings. Please answer the following questions:
       </p>
 
       <div className="mobile-table-div">
@@ -76,8 +67,8 @@ const Erosion = () => {
                     Calculation of cost savings
                     <Help>
                       <p>
-                        If erosion repair occurs less than once/year, estimate the time it takes when done
-                        and divide by the number of years between repair activities.
+                        If erosion repair occurs less than once/year, estimate the time it takes
+                        when done and divide by the number of years between repair activities.
                       </p>
                     </Help>
                   </td>
@@ -102,9 +93,7 @@ const Erosion = () => {
 Erosion.menu = (
   <span>
     Erosio
-    <u>n</u>
-    {' '}
-    Control
+    <u>n</u> Control
   </span>
 );
 

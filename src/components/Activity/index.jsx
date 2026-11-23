@@ -1,9 +1,9 @@
-import React, { createRef } from 'react';
-import { useSelector } from 'react-redux';
-import { CardContent, Card } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
+import { createRef } from 'react';
 import Draggable from 'react-draggable';
-import { goto, get, dollars } from '../../store/Store';
+import { useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
+import { dollars, get, goto } from '../../store/Store';
 import './styles.scss';
 
 const Costs = ({ desc, type }) => {
@@ -27,12 +27,7 @@ const Costs = ({ desc, type }) => {
   return (
     <tr style={style}>
       <td>
-        <Input
-          id={`${type}.${d}`}
-          type="checkbox"
-          tabIndex={-1}
-          label={desc}
-        />
+        <Input id={`${type}.${d}`} type="checkbox" tabIndex={-1} label={desc} />
       </td>
       <td>{iCost ? `$${iCost.toFixed(2)}` : ''}</td>
       <td>{pCost ? `$${pCost.toFixed(2)}` : ''}</td>
@@ -73,11 +68,7 @@ const Activity = ({ type }) => {
   let style;
 
   const breakdown = imp && !edited && (
-    <div
-      className={cname}
-      id="Breakdown"
-      style={style}
-    >
+    <div className={cname} id="Breakdown" style={style}>
       <table id="Costs">
         <thead>
           <tr>
@@ -98,11 +89,7 @@ const Activity = ({ type }) => {
                 <br />
                 ($/acre)
                 <br />
-                <Input
-                  id={`${type}.implementsCost`}
-                  type="checkbox"
-                  tabIndex={-1}
-                />
+                <Input id={`${type}.implementsCost`} type="checkbox" tabIndex={-1} />
               </label>
             </th>
             <th>
@@ -113,11 +100,7 @@ const Activity = ({ type }) => {
                 <br />
                 ($/acre)
                 <br />
-                <Input
-                  id={`${type}.powerCost`}
-                  type="checkbox"
-                  tabIndex={-1}
-                />
+                <Input id={`${type}.powerCost`} type="checkbox" tabIndex={-1} />
               </label>
             </th>
             <th>
@@ -155,19 +138,13 @@ const Activity = ({ type }) => {
 const SummaryRow = ({ parm, desc, type }) => {
   const style = type === 'Costs' ? { color: 'red' } : { color: 'black' };
 
-  if (
-    (type === 'Costs' && parm > 0)
-    || (type === 'Benefits' && parm < 0)
-  ) {
+  if ((type === 'Costs' && parm > 0) || (type === 'Benefits' && parm < 0)) {
     return (
-      <tr style={{
-        backgroundColor: desc === 'Total'
-          ? '#feff97'
-          : null,
-        fontWeight: desc === 'Total'
-          ? 'bold'
-          : '',
-      }}
+      <tr
+        style={{
+          backgroundColor: desc === 'Total' ? '#feff97' : null,
+          fontWeight: desc === 'Total' ? 'bold' : '',
+        }}
       >
         <td>
           {desc}
@@ -222,14 +199,29 @@ const CostsBenefits = ({ type }) => {
   }, 0);
 
   if (
-    (type === 'Costs' && (
-      coverCropTotal > 0 || seedbedTotal > 0 || plantingTotal > 0 || grazingTotal > 0 || fertilityTotal > 0 || herbicideTotal > 0 || erosionTotal > 0
-      || terminationTotal > 0 || tillageTotal > 0 || yieldTotal > 0)
-    )
-    || (type === 'Benefits' && (
-      coverCropTotal < 0 || seedbedTotal < 0 || plantingTotal < 0 || grazingTotal < 0 || fertilityTotal < 0 || herbicideTotal < 0 || erosionTotal < 0
-      || terminationTotal < 0 || tillageTotal < 0 || yieldTotal < 0 || additionalTotal < 0)
-    )
+    (type === 'Costs' &&
+      (coverCropTotal > 0 ||
+        seedbedTotal > 0 ||
+        plantingTotal > 0 ||
+        grazingTotal > 0 ||
+        fertilityTotal > 0 ||
+        herbicideTotal > 0 ||
+        erosionTotal > 0 ||
+        terminationTotal > 0 ||
+        tillageTotal > 0 ||
+        yieldTotal > 0)) ||
+    (type === 'Benefits' &&
+      (coverCropTotal < 0 ||
+        seedbedTotal < 0 ||
+        plantingTotal < 0 ||
+        grazingTotal < 0 ||
+        fertilityTotal < 0 ||
+        herbicideTotal < 0 ||
+        erosionTotal < 0 ||
+        terminationTotal < 0 ||
+        tillageTotal < 0 ||
+        yieldTotal < 0 ||
+        additionalTotal < 0))
   ) {
     return (
       <>
@@ -251,7 +243,11 @@ const CostsBenefits = ({ type }) => {
           <SummaryRow type={type} parm={grazingTotal} desc="Grazing" />
           <SummaryRow type={type} parm={yieldTotal} desc="Yield impact" />
           <SummaryRow type={type} parm={additionalTotal} desc="Additional considerations" />
-          <SummaryRow type={type} parm={type === 'Costs' ? costsTotal : benefitsTotal} desc="Total" />
+          <SummaryRow
+            type={type}
+            parm={type === 'Costs' ? costsTotal : benefitsTotal}
+            desc="Total"
+          />
         </tbody>
       </>
     );
@@ -272,8 +268,18 @@ export const SummaryDetails = ({ view }) => {
   const herbicideTotal = useSelector(get.herbicide).total || 0;
   const additionalTotal = -useSelector(get.additional).total || 0;
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +grazingTotal + +fertilityTotal + +erosionTotal
-                + +terminationTotal + +tillageTotal + +yieldTotal + +herbicideTotal + +additionalTotal;
+  const total =
+    +coverCropTotal +
+    +seedbedTotal +
+    +plantingTotal +
+    +grazingTotal +
+    +fertilityTotal +
+    +erosionTotal +
+    +terminationTotal +
+    +tillageTotal +
+    +yieldTotal +
+    +herbicideTotal +
+    +additionalTotal;
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
@@ -286,83 +292,71 @@ export const SummaryDetails = ({ view }) => {
 
   return (
     (total || farm || field || acres || cashCrop) && (
-    <Draggable handle="strong" disabled={view !== 'DESKTOP'}>
-      <Card
-        id="Summary"
-        variant="outlined"
-        style={{
-          backgroundColor: '#eee',
-          position: view === 'DESKTOP' ? 'absolute' : '',
-          marginTop: view === 'DESKTOP' ? '' : '5%',
-          margin: view === 'DESKTOP' ? '' : 'auto',
-        }}
-        ref={view === 'DESKTOP' ? componentRef : null}
-      >
-        <CardContent>
-          <div ref={view === 'DESKTOP' ? componentRef : null}>
-            <strong className="cursor" style={{ cursor: view === 'DESKTOP' ? '' : 'auto' }}>
-              Budget Table
-            </strong>
+      <Draggable handle="strong" disabled={view !== 'DESKTOP'}>
+        <Card
+          id="Summary"
+          variant="outlined"
+          style={{
+            backgroundColor: '#eee',
+            position: view === 'DESKTOP' ? 'absolute' : '',
+            marginTop: view === 'DESKTOP' ? '' : '5%',
+            margin: view === 'DESKTOP' ? '' : 'auto',
+          }}
+          ref={view === 'DESKTOP' ? componentRef : null}
+        >
+          <CardContent>
+            <div ref={view === 'DESKTOP' ? componentRef : null}>
+              <strong className="cursor" style={{ cursor: view === 'DESKTOP' ? '' : 'auto' }}>
+                Budget Table
+              </strong>
 
-            <table>
-              {(farm || field || acres || cashCrop) && (
-              <>
-                <thead />
-                <tbody>
-                  {farm && (
-                  <tr>
-                    <td>Farm     </td>
-                    <td style={{ textAlign: 'left' }}>
-                      {farm}
-                    </td>
-                  </tr>
-                  )}
-                  {field && (
-                  <tr>
-                    <td>Field    </td>
-                    <td style={{ textAlign: 'left' }}>
-                      {field}
-                    </td>
-                  </tr>
-                  )}
-                  {acres && (
-                  <tr>
-                    <td>Acres    </td>
-                    <td style={{ textAlign: 'left' }}>
-                      {acres}
-                    </td>
-                  </tr>
-                  )}
-                  {cashCrop && (
-                  <tr>
-                    <td>Cash crop</td>
-                    <td style={{ textAlign: 'left' }}>
-                      {cashCrop}
-                    </td>
-                  </tr>
-                  )}
-                </tbody>
-              </>
-              )}
-              <CostsBenefits type="Costs" />
-              <CostsBenefits type="Benefits" />
-              {total ? (
-                <tfoot>
-                  <tr style={{ fontWeight: 'bold' }}>
-                    <td>
-                      Total Economic
-                      {' '}
-                      {total < 0 ? 'Benefit' : 'Cost'}
-                    </td>
-                    <td style={style}>{dollars(Math.abs(total))}</td>
-                  </tr>
-                </tfoot>
-              ) : null}
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-    </Draggable>
+              <table>
+                {(farm || field || acres || cashCrop) && (
+                  <>
+                    <thead />
+                    <tbody>
+                      {farm && (
+                        <tr>
+                          <td>Farm </td>
+                          <td style={{ textAlign: 'left' }}>{farm}</td>
+                        </tr>
+                      )}
+                      {field && (
+                        <tr>
+                          <td>Field </td>
+                          <td style={{ textAlign: 'left' }}>{field}</td>
+                        </tr>
+                      )}
+                      {acres && (
+                        <tr>
+                          <td>Acres </td>
+                          <td style={{ textAlign: 'left' }}>{acres}</td>
+                        </tr>
+                      )}
+                      {cashCrop && (
+                        <tr>
+                          <td>Cash crop</td>
+                          <td style={{ textAlign: 'left' }}>{cashCrop}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </>
+                )}
+                <CostsBenefits type="Costs" />
+                <CostsBenefits type="Benefits" />
+                {total ? (
+                  <tfoot>
+                    <tr style={{ fontWeight: 'bold' }}>
+                      <td>Total Economic {total < 0 ? 'Benefit' : 'Cost'}</td>
+                      <td style={style}>{dollars(Math.abs(total))}</td>
+                    </tr>
+                  </tfoot>
+                ) : null}
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </Draggable>
     )
   );
 };
@@ -380,8 +374,18 @@ export const Summary = () => {
   const herbicideTotal = useSelector(get.herbicide).total || 0;
   const additionalTotal = -useSelector(get.additional).total || 0;
 
-  const total = +coverCropTotal + +seedbedTotal + +plantingTotal + +grazingTotal + +fertilityTotal + +erosionTotal
-                + +terminationTotal + +tillageTotal + +yieldTotal + +herbicideTotal + +additionalTotal;
+  const total =
+    +coverCropTotal +
+    +seedbedTotal +
+    +plantingTotal +
+    +grazingTotal +
+    +fertilityTotal +
+    +erosionTotal +
+    +terminationTotal +
+    +tillageTotal +
+    +yieldTotal +
+    +herbicideTotal +
+    +additionalTotal;
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
@@ -390,11 +394,11 @@ export const Summary = () => {
 
   return (
     (total || farm || field || acres || cashCrop) && (
-    <div className="desktop2">
-      <Draggable handle="strong">
-        <SummaryDetails view="DESKTOP" />
-      </Draggable>
-    </div>
+      <div className="desktop2">
+        <Draggable handle="strong">
+          <SummaryDetails view="DESKTOP" />
+        </Draggable>
+      </div>
     )
   );
 }; // Summary

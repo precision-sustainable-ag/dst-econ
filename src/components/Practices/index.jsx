@@ -1,19 +1,19 @@
-/* eslint-disable jsx-a11y/no-access-key */
-import React from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import {
-  Accordion, AccordionDetails, AccordionSummary, Typography, Box,
-} from '@mui/material';
 import { get } from 'redux-autosetters';
 
 import {
   dev,
+  dollars,
+  exampleAdditional,
   exampleErosion,
+  exampleFertilityBenefit,
+  exampleFertilityCost,
+  exampleGrazing,
+  exampleHerbicides,
   examplePlanting,
   exampleSeedbed,
   exampleSeeds,
-  exampleGrazing,
-  exampleHerbicides,
   exampleTermination1,
   exampleTermination2,
   exampleTermination3,
@@ -24,39 +24,77 @@ import {
   exampleTillage3,
   exampleTillage4,
   exampleTillage5,
-  exampleFertilityBenefit,
-  exampleFertilityCost,
-  exampleAdditional,
   exampleYield1,
   exampleYield2,
-  dollars,
 } from '../../store/Store';
 
 import './styles.scss';
 
 const Tests = () => (
   <div className="test-buttons">
-    <button type="button" onClick={exampleSeeds}>Test Seeds</button>
-    <button type="button" onClick={exampleSeedbed}>Test Seedbed</button>
-    <button type="button" onClick={examplePlanting}>Test Planting</button>
-    <button type="button" onClick={exampleTermination1}>Test Termination 1</button>
-    <button type="button" onClick={exampleTermination2}>Test Termination 2</button>
-    <button type="button" onClick={exampleTermination3}>Test Termination 3</button>
-    <button type="button" onClick={exampleTermination4}>Test Termination 4</button>
-    <button type="button" onClick={exampleTermination5}>Test Termination 5</button>
-    <button type="button" onClick={exampleTillage1}>Test Tillage 1</button>
-    <button type="button" onClick={exampleTillage2}>Test Tillage 2</button>
-    <button type="button" onClick={exampleTillage3}>Test Tillage 3</button>
-    <button type="button" onClick={exampleTillage4}>Test Tillage 4</button>
-    <button type="button" onClick={exampleTillage5}>Test Tillage 5</button>
-    <button type="button" onClick={exampleFertilityBenefit}>Test FertilityBenefit</button>
-    <button type="button" onClick={exampleFertilityCost}>Test FertilityCost</button>
-    <button type="button" onClick={exampleHerbicides}>Test Herbicides</button>
-    <button type="button" onClick={exampleErosion}>Test Erosion</button>
-    <button type="button" onClick={exampleGrazing}>Test Grazing</button>
-    <button type="button" onClick={exampleAdditional}>Test Additional</button>
-    <button type="button" onClick={exampleYield1}>Test Yield1</button>
-    <button type="button" onClick={exampleYield2}>Test Yield2</button>
+    <button type="button" onClick={exampleSeeds}>
+      Test Seeds
+    </button>
+    <button type="button" onClick={exampleSeedbed}>
+      Test Seedbed
+    </button>
+    <button type="button" onClick={examplePlanting}>
+      Test Planting
+    </button>
+    <button type="button" onClick={exampleTermination1}>
+      Test Termination 1
+    </button>
+    <button type="button" onClick={exampleTermination2}>
+      Test Termination 2
+    </button>
+    <button type="button" onClick={exampleTermination3}>
+      Test Termination 3
+    </button>
+    <button type="button" onClick={exampleTermination4}>
+      Test Termination 4
+    </button>
+    <button type="button" onClick={exampleTermination5}>
+      Test Termination 5
+    </button>
+    <button type="button" onClick={exampleTillage1}>
+      Test Tillage 1
+    </button>
+    <button type="button" onClick={exampleTillage2}>
+      Test Tillage 2
+    </button>
+    <button type="button" onClick={exampleTillage3}>
+      Test Tillage 3
+    </button>
+    <button type="button" onClick={exampleTillage4}>
+      Test Tillage 4
+    </button>
+    <button type="button" onClick={exampleTillage5}>
+      Test Tillage 5
+    </button>
+    <button type="button" onClick={exampleFertilityBenefit}>
+      Test FertilityBenefit
+    </button>
+    <button type="button" onClick={exampleFertilityCost}>
+      Test FertilityCost
+    </button>
+    <button type="button" onClick={exampleHerbicides}>
+      Test Herbicides
+    </button>
+    <button type="button" onClick={exampleErosion}>
+      Test Erosion
+    </button>
+    <button type="button" onClick={exampleGrazing}>
+      Test Grazing
+    </button>
+    <button type="button" onClick={exampleAdditional}>
+      Test Additional
+    </button>
+    <button type="button" onClick={exampleYield1}>
+      Test Yield1
+    </button>
+    <button type="button" onClick={exampleYield2}>
+      Test Yield2
+    </button>
   </div>
 );
 
@@ -94,50 +132,50 @@ const NestedAccordion = ({ details, level = 0 }) => {
     return (
       <table>
         <thead>
-          {
-            Object.entries(details).filter(([title]) => title === 'th').map(([title, content]) => (
+          {Object.entries(details)
+            .filter(([title]) => title === 'th')
+            .map(([title, content]) => (
               <tr key={title}>
                 <th />
-                {
-                  [...content].map((data, index) => <th key={`data${index}`}>{data}</th>)
-                }
+                {[...content].map((data, index) => (
+                  <th key={`data${index}`}>{data}</th>
+                ))}
               </tr>
-            ))
-          }
+            ))}
         </thead>
         <tbody>
-          {
-            Object.entries(details)
-              .filter(([title, content]) => title !== 'th' && content !== '$0.00')
-              .map(([title, content]) => {
-                if (Array.isArray(content)) {
-                  content = content.map((data, index) => <td key={`data${index}`} className={getClass(data)}>{data}</td>);
-                } else if (typeof content === 'object') {
-                  content = (
-                    <td className={getClass(content)}>
-                      {
-                        Object.keys(content).map((key) => (
-                          <div key={key}>
-                            {key}
-                            :&nbsp;
-                            {content[key]}
-                          </div>
-                        ))
-                      }
-                    </td>
-                  );
-                } else {
-                  content = <td className={getClass(content)}>{content}</td>;
-                }
-
-                return (
-                  <tr key={title}>
-                    <td>{title}</td>
-                    {content}
-                  </tr>
+          {Object.entries(details)
+            .filter(([title, content]) => title !== 'th' && content !== '$0.00')
+            .map(([title, content]) => {
+              if (Array.isArray(content)) {
+                content = content.map((data, index) => (
+                  <td key={`data${index}`} className={getClass(data)}>
+                    {data}
+                  </td>
+                ));
+              } else if (typeof content === 'object') {
+                content = (
+                  <td className={getClass(content)}>
+                    {Object.keys(content).map((key) => (
+                      <div key={key}>
+                        {key}
+                        :&nbsp;
+                        {content[key]}
+                      </div>
+                    ))}
+                  </td>
                 );
-              })
-          }
+              } else {
+                content = <td className={getClass(content)}>{content}</td>;
+              }
+
+              return (
+                <tr key={title}>
+                  <td>{title}</td>
+                  {content}
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     );
@@ -164,9 +202,7 @@ const NestedAccordion = ({ details, level = 0 }) => {
             expandIcon={<CustomExpandIcon />}
             style={{ flexDirection: 'row-reverse' }}
           >
-            <Typography style={{ fontWeight: level === 0 ? 'bold' : 'normal' }}>
-              {title}
-            </Typography>
+            <Typography style={{ fontWeight: level === 0 ? 'bold' : 'normal' }}>{title}</Typography>
           </AccordionSummary>
           <NestedAccordion details={content} level={level + 1} />
         </Accordion>
@@ -182,22 +218,14 @@ const NestedAccordion = ({ details, level = 0 }) => {
           paddingBottom: 10,
         }}
       >
-        {title}
-        :
-        {' '}
-        <strong>{content}</strong>
+        {title}: <strong>{content}</strong>
       </AccordionDetails>
     );
   });
 };
 
 const equipment = (obj, type, nest = true) => {
-  const {
-    description,
-    total,
-    implement,
-    power,
-  } = type;
+  const { description, total, implement, power } = type;
 
   if (!implement) return;
 
@@ -254,10 +282,12 @@ const Practices = () => {
   if (species.length) {
     const ratesNoNull = rates.filter((i) => i !== '');
     const pricesNoNull = prices.filter((i) => i !== '');
-    details['Seeds Planted'] = species.filter((s) => s).reduce((obj, s, i) => {
-      obj[s] = `${ratesNoNull[i]} pounds/acre @ ${dollars(pricesNoNull[i])}/pound`;
-      return obj;
-    }, {});
+    details['Seeds Planted'] = species
+      .filter((s) => s)
+      .reduce((obj, s, i) => {
+        obj[s] = `${ratesNoNull[i]} pounds/acre @ ${dollars(pricesNoNull[i])}/pound`;
+        return obj;
+      }, {});
   }
 
   equipment(details, seedbed);
@@ -266,9 +296,16 @@ const Practices = () => {
   if (termination.total) {
     const {
       method,
-      product, productCost,
-      additionalTotal, additionalHerbicides, additionalRates, additionalPrices,
-      reducedTotal, reducedHerbicides, reducedRates, reducedPrices,
+      product,
+      productCost,
+      additionalTotal,
+      additionalHerbicides,
+      additionalRates,
+      additionalPrices,
+      reducedTotal,
+      reducedHerbicides,
+      reducedRates,
+      reducedPrices,
     } = termination;
 
     const obj = {
@@ -276,17 +313,21 @@ const Practices = () => {
     };
 
     if (additionalTotal) {
-      obj['Additional herbicides'] = additionalHerbicides.filter((s) => s).reduce((obj2, s, i) => {
-        obj2[s] = `${additionalRates[i]} pounds/acre @ ${dollars(additionalPrices[i])}/acre`;
-        return obj2;
-      }, {});
+      obj['Additional herbicides'] = additionalHerbicides
+        .filter((s) => s)
+        .reduce((obj2, s, i) => {
+          obj2[s] = `${additionalRates[i]} pounds/acre @ ${dollars(additionalPrices[i])}/acre`;
+          return obj2;
+        }, {});
     }
 
     if (reducedTotal) {
-      obj['Reduced herbicides'] = reducedHerbicides.filter((s) => s).reduce((obj2, s, i) => {
-        obj2[s] = `${reducedRates[i]} pounds/acre @ ${dollars(reducedPrices[i])}/acre`;
-        return obj2;
-      }, {});
+      obj['Reduced herbicides'] = reducedHerbicides
+        .filter((s) => s)
+        .reduce((obj2, s, i) => {
+          obj2[s] = `${reducedRates[i]} pounds/acre @ ${dollars(reducedPrices[i])}/acre`;
+          return obj2;
+        }, {});
     }
 
     if (product) {
@@ -311,10 +352,25 @@ const Practices = () => {
 
   if (fertility.total) {
     details.Fertility = {
-      // eslint-disable-next-line react/jsx-one-expression-per-line
-      th: ['N', <>P<sub>2</sub>O<sub>5</sub></>, <>K<sub>2</sub>O</>],
-      'Fertilizer value ($/pound of nutrient)': [dollars(fertility.$N), dollars(fertility.$P), dollars(fertility.$K)],
-      'Expected fertilizer credit from your cover crop species (pounds/acre).': [fertility.N, fertility.P, fertility.K],
+      th: [
+        'N',
+        <>
+          P<sub>2</sub>O<sub>5</sub>
+        </>,
+        <>
+          K<sub>2</sub>O
+        </>,
+      ],
+      'Fertilizer value ($/pound of nutrient)': [
+        dollars(fertility.$N),
+        dollars(fertility.$P),
+        dollars(fertility.$K),
+      ],
+      'Expected fertilizer credit from your cover crop species (pounds/acre).': [
+        fertility.N,
+        fertility.P,
+        fertility.K,
+      ],
       'Fertilizer added for cover crop production (pounds/acre)': [
         fertility.NAdded,
         fertility.PAdded,
@@ -331,7 +387,8 @@ const Practices = () => {
       obj.Product = `${herbicide.additional.product} @ ${dollars(herbicide.additional.cost)} / acre`;
     }
     equipment(obj, herbicide.reduced, false);
-    obj['Reduction by application of fall herbicide'] = ` ${dollars(herbicide.fall.savings)} / acre`;
+    obj['Reduction by application of fall herbicide'] =
+      ` ${dollars(herbicide.fall.savings)} / acre`;
     equipment(obj, herbicide.fall, false);
     details['Herbicide modifications to normal cropping system'] = obj;
   }
@@ -436,8 +493,7 @@ const Practices = () => {
 
 Practices.menu = (
   <span>
-    S
-    <u>u</u>
+    S<u>u</u>
     mmary
   </span>
 );

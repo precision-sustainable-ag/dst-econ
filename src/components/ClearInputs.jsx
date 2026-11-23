@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-import React from 'react';
 import { Button } from '@mui/material';
 import { clearInputs } from '../store/Store';
 

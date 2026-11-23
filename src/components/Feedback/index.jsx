@@ -1,6 +1,5 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
 import { get, set } from '../../store/Store';
 
@@ -16,10 +15,12 @@ const Feedback = () => {
     if (!feedback.trim()) {
       alert('Please enter Feedback before submitting.');
       return;
-    } if (!name.trim()) {
+    }
+    if (!name.trim()) {
       alert('Please enter Name before submitting.');
       return;
-    } if (!email.trim()) {
+    }
+    if (!email.trim()) {
       alert('Please enter Email before submitting.');
       return;
     }
@@ -79,7 +80,6 @@ const Feedback = () => {
         className="feedback"
         contentEditable
         placeholder="Enter comments here"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: feedback }}
         onBlur={(e) => dispatch(set.feedback(e.currentTarget.innerText.replace(/[\n\r]/g, '<br>')))}
       />
@@ -93,10 +93,7 @@ const Feedback = () => {
 
         <br />
         <div>
-          <Button
-            variant="contained"
-            onClick={(e) => submit(e)}
-          >
+          <Button variant="contained" onClick={(e) => submit(e)}>
             Submit
           </Button>
         </div>

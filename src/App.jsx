@@ -1,49 +1,37 @@
-/* eslint-disable no-shadow */
-/* eslint-disable jsx-a11y/no-access-key */
 import './App.scss';
 
-import { React, useEffect, useRef } from 'react';
-
-import {
-  Route, Routes, NavLink, useLocation, useNavigate,
-} from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { renderToString } from 'react-dom/server';
-
-import {
-  Modal, Button, IconButton, Popover,
-} from '@mui/material';
-
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
-
 import PrintIcon from '@mui/icons-material/Print';
-import {
-  dev, get, set, errorHandler,
-} from './store/Store';
-import pirschAnalytics from './shared/analytics';
-import Home from './components/Home';
+import { Button, IconButton, Modal, Popover } from '@mui/material';
+import { useEffect, useRef } from 'react';
+import { renderToString } from 'react-dom/server';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import About from './components/About';
+import { Summary } from './components/Activity';
+import Additional from './components/Additional';
+import Airtable from './components/Airtables';
+import AT from './components/AT';
+import Erosion from './components/Erosion';
+import Feedback from './components/Feedback';
+import Fertility from './components/Fertility';
 import Field from './components/Field';
-import Seeds from './components/Seeds';
-import Seedbed from './components/Seedbed';
+import Grazing from './components/Grazing';
+import Herbicide from './components/Herbicide';
+import Home from './components/Home';
 import Planting from './components/Planting';
+import Practices from './components/Practices';
+import Resources from './components/Resources';
+import Revenue from './components/Revenue';
+import Seedbed from './components/Seedbed';
+import Seeds from './components/Seeds';
+import Snapshot from './components/Snapshot';
 import Termination from './components/Termination';
 import Tillage from './components/Tillage';
-import Fertility from './components/Fertility';
-import Herbicide from './components/Herbicide';
-import Erosion from './components/Erosion';
-import Additional from './components/Additional';
-import Yield from './components/Yield';
-import Practices from './components/Practices';
-import Revenue from './components/Revenue';
-import Resources from './components/Resources';
 import Training from './components/Training';
-import Grazing from './components/Grazing';
-import Airtable from './components/Airtables';
-import Feedback from './components/Feedback';
-import AT from './components/AT';
-import { Summary } from './components/Activity';
-import Snapshot from './components/Snapshot';
+import Yield from './components/Yield';
+import pirschAnalytics from './shared/analytics';
+import { dev, errorHandler, get, set } from './store/Store';
 
 let firstTime = true;
 
@@ -76,9 +64,7 @@ const MyModal = () => {
   }
 
   return (
-    <Modal
-      open
-    >
+    <Modal open>
       <Popover
         // id={id}
         open={modalData > ''}
@@ -110,9 +96,7 @@ const MyModal = () => {
             }}
             onClick={() => dispatch(set.modalData(''))}
           >
-            <CloseIcon
-              style={{ fontSize: '1.2rem' }}
-            />
+            <CloseIcon style={{ fontSize: '1.2rem' }} />
           </IconButton>
 
           {modalData}
@@ -186,42 +170,41 @@ const Navigation = ({ current }) => {
       >
         <div id="Navigation" className="desktop" style={{ marginLeft: 'auto' }}>
           {back && (
-          <NavLink to={`/${back?.replace('Home', '')}`}>
-            <Button variant="contained" color="primary" tabIndex={-1}>
-              {!mobile ? (
-                <div>
-                  BACK: &nbsp;
-                  {paths[back].menu}
-                </div>
-              ) : (
-                <div>BACK</div>
-              )}
-            </Button>
-          </NavLink>
+            <NavLink to={`/${back?.replace('Home', '')}`}>
+              <Button variant="contained" color="primary" tabIndex={-1}>
+                {!mobile ? (
+                  <div>
+                    BACK: &nbsp;
+                    {paths[back].menu}
+                  </div>
+                ) : (
+                  <div>BACK</div>
+                )}
+              </Button>
+            </NavLink>
           )}
           {next && (
-          <NavLink to={`/${next}`}>
-            <Button variant="contained" color="primary">
-              {!mobile ? (
-                <div>
-                  NEXT: &nbsp;
-                  {paths[next].menu}
-                </div>
-              ) : (
-                <div>NEXT</div>
-              )}
-            </Button>
-          </NavLink>
+            <NavLink to={`/${next}`}>
+              <Button variant="contained" color="primary">
+                {!mobile ? (
+                  <div>
+                    NEXT: &nbsp;
+                    {paths[next].menu}
+                  </div>
+                ) : (
+                  <div>NEXT</div>
+                )}
+              </Button>
+            </NavLink>
           )}
 
           {current !== 'Resources' && next !== 'Resources' && (
-          <NavLink to="/Resources">
-            <Button variant="contained" color="primary">
-              Resources
-            </Button>
-          </NavLink>
+            <NavLink to="/Resources">
+              <Button variant="contained" color="primary">
+                Resources
+              </Button>
+            </NavLink>
           )}
-
         </div>
         <Button
           variant="contained"
@@ -276,7 +259,9 @@ const normalizeCSS = (tagName, property, value) => {
 
 const unneededCSS = () => {
   console.clear();
-  console.log('CAREFUL:  Some styles may not apply to elements on this page, but they may on other pages.');
+  console.log(
+    'CAREFUL:  Some styles may not apply to elements on this page, but they may on other pages.',
+  );
   console.log('___________________________');
   [...document.styleSheets].forEach((styleSheet) => {
     if (styleSheet.cssRules) {
@@ -303,10 +288,24 @@ const unneededCSS = () => {
 
             rule.style.removeProperty(property);
             const newValue = getComputedStyle(obj)[property];
-            rule.style.setProperty(property, value?.replace(' !important', ''), important ? 'important' : '');
+            rule.style.setProperty(
+              property,
+              value?.replace(' !important', ''),
+              important ? 'important' : '',
+            );
 
             if (originalValue === newValue) {
-              console.log(rule.selectorText, '-', property, '-', value, '-', originalValue, '-', newValue);
+              console.log(
+                rule.selectorText,
+                '-',
+                property,
+                '-',
+                value,
+                '-',
+                originalValue,
+                '-',
+                newValue,
+              );
             }
           });
 
@@ -391,15 +390,22 @@ const App = () => {
     const { right } = topMenu.current.lastChild.getBoundingClientRect();
     moreRight.current.disabled = right <= topMenu.current.clientWidth + 35;
 
-    moreLeft.current.classList.toggle('hidden', moreLeft.current.disabled && moreRight.current.disabled);
-    moreRight.current.classList.toggle('hidden', moreLeft.current.disabled && moreRight.current.disabled);
+    moreLeft.current.classList.toggle(
+      'hidden',
+      moreLeft.current.disabled && moreRight.current.disabled,
+    );
+    moreRight.current.classList.toggle(
+      'hidden',
+      moreLeft.current.disabled && moreRight.current.disabled,
+    );
   };
 
   let resizeTimer;
   const resize = () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
+      const isMobile =
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
       dispatch(set.mobile(isMobile));
       scroll();
     }, 100);
@@ -424,7 +430,7 @@ const App = () => {
   useEffect(() => {
     if (screen === 'Loading') return;
     const page = location.pathname.slice(1) || 'Home';
-    pirschAnalytics('Visited Page', { meta: { visited: page }});
+    pirschAnalytics('Visited Page', { meta: { visited: page } });
   }, [location.pathname, screen]);
 
   useEffect(() => {
@@ -535,86 +541,79 @@ const App = () => {
           </h1>
         </div>
 
-        <IconButton
-          className="moreLeft"
-          ref={moreLeft}
-          onClick={scrollLeft}
-        >
+        <IconButton className="moreLeft" ref={moreLeft} onClick={scrollLeft}>
           <ChevronLeft />
         </IconButton>
 
-        <IconButton
-          className="moreRight"
-          ref={moreRight}
-          onClick={scrollRight}
-        >
+        <IconButton className="moreRight" ref={moreRight} onClick={scrollRight}>
           <ChevronRight />
         </IconButton>
 
         <div className="menu-items topmenu" ref={topMenu}>
+          {keys
+            .filter(
+              (path) => !/Practices|Revenue|Resources|Training|AT|Feedback|Snapshot/.test(path),
+            )
+            .map((path) => {
+              let cname = path === screen ? 'selected' : '';
+              const dis = disabled && !/Home|Field/.test(path);
 
-          {keys.filter((path) => !(/Practices|Revenue|Resources|Training|AT|Feedback|Snapshot/.test(path))).map((path) => {
-            let cname = path === screen ? 'selected' : '';
-            const dis = disabled && !/Home|Field/.test(path);
+              if (dis) {
+                cname += ' disabled';
+              }
 
-            if (dis) {
-              cname += ' disabled';
-            }
+              const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
 
-            const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
-
-            return (
-              <NavLink
-                key={path}
-                to={dis || path === 'Home' ? '/' : path}
-                accessKey={accessKey}
-                tabIndex={-1}
-                onFocus={(e) => e.target.blur()}
-                className={`${cname} ${path}`}
-              >
-                <Button
-                  screen={path}
+              return (
+                <NavLink
+                  key={path}
+                  to={dis || path === 'Home' ? '/' : path}
+                  accessKey={accessKey}
                   tabIndex={-1}
+                  onFocus={(e) => e.target.blur()}
+                  className={`${cname} ${path}`}
                 >
-                  {paths[path].menu}
-                </Button>
-              </NavLink>
-            );
-          })}
+                  <Button screen={path} tabIndex={-1}>
+                    {paths[path].menu}
+                  </Button>
+                </NavLink>
+              );
+            })}
         </div>
 
         <hr className="horizontalline" />
 
         <div className="menu-items">
-          {keys.filter((path) => (/Practices|Revenue|Resources|Training|AT|Feedback|Snapshot/.test(path))).map((path) => {
-            if (mobile && path === 'AT') return null;
+          {keys
+            .filter((path) =>
+              /Practices|Revenue|Resources|Training|AT|Feedback|Snapshot/.test(path),
+            )
+            .map((path) => {
+              if (mobile && path === 'AT') return null;
 
-            let cname = path === screen ? 'selected summary' : 'summary';
-            const dis = disabled && !/Resources|Training|Feedback|AT/.test(path);
+              let cname = path === screen ? 'selected summary' : 'summary';
+              const dis = disabled && !/Resources|Training|Feedback|AT/.test(path);
 
-            if (dis) {
-              cname += ' disabled';
-            }
+              if (dis) {
+                cname += ' disabled';
+              }
 
-            const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
-            return (
-              <NavLink
-                key={path}
-                to={dis ? '/' : path}
-                accessKey={accessKey}
-                tabIndex={-1}
-                onFocus={(e) => e.target.blur()}
-                className={`${cname} ${path}${path === 'Snapshot' ? ' budgetTable' : ''}`}
-              >
-                <Button
-                  screen={path}
+              const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
+              return (
+                <NavLink
+                  key={path}
+                  to={dis ? '/' : path}
+                  accessKey={accessKey}
                   tabIndex={-1}
+                  onFocus={(e) => e.target.blur()}
+                  className={`${cname} ${path}${path === 'Snapshot' ? ' budgetTable' : ''}`}
                 >
-                  {paths[path].menu}
-                </Button>
-              </NavLink>
-            );
-          })}
+                  <Button screen={path} tabIndex={-1}>
+                    {paths[path].menu}
+                  </Button>
+                </NavLink>
+              );
+            })}
 
           {/localhost/i.test(window.location) && (
             <>
@@ -675,9 +674,7 @@ const App = () => {
         </Routes>
       </div>
 
-      {
-        disabled || /Home|About/.test(screen) ? null : <Navigation current={screen} />
-      }
+      {disabled || /Home|About/.test(screen) ? null : <Navigation current={screen} />}
 
       <div id="AirTables">
         <select onChange={(e) => navigate(e.target.value)}>
