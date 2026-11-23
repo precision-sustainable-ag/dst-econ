@@ -1,6 +1,5 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Icon } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { set } from 'redux-autosetters';
 import './styles.scss';
 

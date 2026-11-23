@@ -1,27 +1,23 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 
 import {
-  dev,
-  goto,
-  get,
-  getDefaults,
-  dollars,
   clearInputs,
+  dev,
+  dollars,
   exampleTillage1,
   exampleTillage2,
   exampleTillage3,
   exampleTillage4,
   exampleTillage5,
   exampleTillage6,
+  get,
+  getDefaults,
+  goto,
 } from '../../store/Store';
-
-import Logic from '../Logic';
 import ClearInputs from '../ClearInputs';
+import Logic from '../Logic';
 
-const tillageDefaults = getDefaults(
-  Object.keys(get.tillage).map((parm) => `tillage.${parm}`),
-);
+const tillageDefaults = getDefaults(Object.keys(get.tillage).map((parm) => `tillage.${parm}`));
 const fallDefaults = getDefaults(
   Object.keys(get.tillage.fall).map((parm) => `tillage.fall.${parm}`),
 );
@@ -39,21 +35,13 @@ const defaults = {
   ...otherDefaults,
 };
 
-const Costs = ({
-  current, q2, q3, q4, onChange,
-}) => {
+const Costs = ({ current, q2, q3, q4, onChange }) => {
   const state = useSelector(goto(get, current));
   const estimated = { state };
 
   return (
     <>
-      <Logic
-        current={current}
-        property="q2"
-        q={q2}
-        a={['Yes', 'No']}
-        onChange={onChange}
-      />
+      <Logic current={current} property="q2" q={q2} a={['Yes', 'No']} onChange={onChange} />
 
       {state.q2 === 'Yes' && (
         <>
@@ -85,14 +73,14 @@ const Tillage = () => {
       <div className="Tillage">
         <h1>Tillage</h1>
         <p>
-          As a reminder to the user, the
-          {' '}
-          <strong>Cover Crop Economic DST (Decision Support Tool)</strong>
-          {' '}
-          considers changes to your crop management system specific to the inclusion of cover crops into your rotation.
-          Therefore, this module will consider any reduction or addition of tillage that may result from utilizing cover crops.
-          For example, many growers have discovered that utilizing cover crops will reduce or eliminate the need for deep tillage in the fall.
-          Other growers have switched from conventional tillage to no-till planting after making a switch to extensive use of cover crops.
+          As a reminder to the user, the{' '}
+          <strong>Cover Crop Economic DST (Decision Support Tool)</strong> considers changes to your
+          crop management system specific to the inclusion of cover crops into your rotation.
+          Therefore, this module will consider any reduction or addition of tillage that may result
+          from utilizing cover crops. For example, many growers have discovered that utilizing cover
+          crops will reduce or eliminate the need for deep tillage in the fall. Other growers have
+          switched from conventional tillage to no-till planting after making a switch to extensive
+          use of cover crops.
         </p>
 
         {/* <p>
@@ -224,8 +212,7 @@ const Tillage = () => {
 
 Tillage.menu = (
   <span>
-    T
-    <u>i</u>
+    T<u>i</u>
     llage
   </span>
 );

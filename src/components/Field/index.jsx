@@ -1,15 +1,8 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-import Map from '../../shared/Map';
 import Input from '../../shared/Inputs';
+import Map from '../../shared/Map';
+import { db, dev, exampleField, get, getDefaults } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
-import {
-  dev,
-  get,
-  getDefaults,
-  db,
-  exampleField,
-} from '../../store/Store';
 
 import './styles.scss';
 
@@ -45,18 +38,18 @@ const Field = () => {
     <div id="Field">
       <h1>Field and Farm</h1>
       <p>
-        Our first step with the
-        {' '}
+        Our first step with the{' '}
         <strong>
           <em>Cover Crop Economic DST (Decision Support Tool)</em>
-        </strong>
-        {' '}
+        </strong>{' '}
         is to provide basic information on the field you wish to examine.
       </p>
       <p style={{ display: 'none' }}>
-        If you are a registered user, this information will be saved to your account but not utilized for any other purpose.
+        If you are a registered user, this information will be saved to your account but not
+        utilized for any other purpose.
         <br />
-        If you are a guest user, the information will not be saved and cannot be accessed by you again if you close out of the DST.
+        If you are a guest user, the information will not be saved and cannot be accessed by you
+        again if you close out of the DST.
       </p>
 
       <p>Please answer all of the following:</p>
@@ -64,17 +57,16 @@ const Field = () => {
       <div className="inputs">
         {dev && (
           <div className="test-buttons">
-            <button
-              type="button"
-              onClick={exampleField}
-            >
+            <button type="button" onClick={exampleField}>
               Test data
             </button>
           </div>
         )}
 
         <div className="clear" style={{ backgroundColor: '#eeeeee' }}>
-          <span style={{ marginLeft: '40%' }}><b>Field and Farm</b></span>
+          <span style={{ marginLeft: '40%' }}>
+            <b>Field and Farm</b>
+          </span>
           <ClearInputs defaults={defaults} />
         </div>
         <div className="field-grid">
@@ -89,10 +81,7 @@ const Field = () => {
             <Input id="map.area" type="number" />
 
             <h2>What cash crop will follow the cover crop in this field?</h2>
-            <Input
-              id="cashCrop"
-              options={[...Object.keys(db.commodities), 'Other']}
-            />
+            <Input id="cashCrop" options={[...Object.keys(db.commodities), 'Other']} />
             {cashCrop === 'Other' && (
               <Input id="otherCashCrop" placeholder="Enter cash crop here" />
             )}

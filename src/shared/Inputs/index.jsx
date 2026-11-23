@@ -1,28 +1,18 @@
 // TODO:
-/* eslint-disable react/no-unstable-nested-components */
 
-/* eslint-disable no-console */
-/* eslint-disable no-alert */
-
-import React, {
-  useEffect, useState, useRef, useCallback,
-} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import {
-  TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   Checkbox,
+  FormControlLabel,
   FormLabel,
   Autocomplete as MUIAutocomplete,
+  Radio,
+  RadioGroup,
+  TextField,
 } from '@mui/material';
-
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { get, goto, mobile, set } from '../../store/Store';
 import Help from '../Help';
-
-import {
-  goto, get, set, mobile,
-} from '../../store/Store';
 
 import './styles.scss';
 
@@ -63,7 +53,17 @@ const equals = (v1, v2) => {
 }; // equals
 
 const Input = ({
-  type, id, options, isOptionEqualToValue, renderInput, index = '', value, onChange, onInput, immediate, suffix,
+  type,
+  id,
+  options,
+  isOptionEqualToValue,
+  renderInput,
+  index = '',
+  value,
+  onChange,
+  onInput,
+  immediate,
+  suffix,
   ...props
 }) => {
   const dispatch = useDispatch();
@@ -150,36 +150,38 @@ const Input = ({
 
   const setter = goto(set, id);
 
-  const update = useCallback((e, newValue) => {
-    // eslint-disable-next-line
-    if (newValue == value && sel2 !== undefined) return;  // == in case numeric
+  const update = useCallback(
+    (e, newValue) => {
+      if (newValue == value && sel2 !== undefined) return; // == in case numeric
 
-    setChanged(true);
+      setChanged(true);
 
-    if (/dollar|number|percent/.test(type)) {
-      if (newValue === '') {
-        newValue = undefined;
-      } else {
-        newValue = +newValue;
+      if (/dollar|number|percent/.test(type)) {
+        if (newValue === '') {
+          newValue = undefined;
+        } else {
+          newValue = +newValue;
+        }
       }
-    }
 
-    if (type === 'percent') {
-      newValue /= 100;
-    }
-
-    if (isArray) {
-      if (sel2[index] !== newValue) {
-        dispatch(setter({ index, value: newValue }));
+      if (type === 'percent') {
+        newValue /= 100;
       }
-    } else if (sel2 !== newValue) {
-      dispatch(setter(newValue));
-    }
 
-    if (onChange) {
-      onChange(e, newValue);
-    }
-  }, [onChange, value, dispatch, id, index, isArray, sel2, type]); // update
+      if (isArray) {
+        if (sel2[index] !== newValue) {
+          dispatch(setter({ index, value: newValue }));
+        }
+      } else if (sel2 !== newValue) {
+        dispatch(setter(newValue));
+      }
+
+      if (onChange) {
+        onChange(e, newValue);
+      }
+    },
+    [onChange, value, dispatch, id, index, isArray, sel2, type],
+  ); // update
 
   value = value !== undefined ? value : val;
 
@@ -189,10 +191,7 @@ const Input = ({
 
   useEffect(() => {
     if (value) {
-      update(
-        { target: { value } },
-        value,
-      );
+      update({ target: { value } }, value);
     }
   }, [update, value, type]);
 
@@ -210,11 +209,7 @@ const Input = ({
     return (
       <>
         <FormLabel>{props.label}</FormLabel>
-        <RadioGroup
-          {...props}
-          className="input"
-          id={id}
-        >
+        <RadioGroup {...props} className="input" id={id}>
           {options.map((option, i) => (
             <FormControlLabel
               value={option}
@@ -231,7 +226,8 @@ const Input = ({
         </RadioGroup>
       </>
     );
-  } if (options) {
+  }
+  if (options) {
     // let max = Math.max.apply(Math, options.map(option => option.description ? option.description.length : option.length));
 
     const max = '100%';
@@ -268,11 +264,7 @@ const Input = ({
           sx={{ width: max }}
           // isOptionEqualToValue={isOptionEqualToValue}   // avoids warning, per https://stackoverflow.com/q/61947941/3903374
           groupBy={props.groupBy}
-          getOptionLabel={
-            props.getOptionLabel || (
-              (o) => o?.toString().split('|')[0]
-            )
-          }
+          getOptionLabel={props.getOptionLabel || ((o) => o?.toString().split('|')[0])}
           onInputChange={props.onInputChange}
           includeInputInList={props.includeInputInList}
           filterSelectedOptions={props.filterSelectedOptions}
@@ -291,7 +283,7 @@ const Input = ({
     return (
       <FormControlLabel
         label={props.label}
-        control={(
+        control={
           <Checkbox
             {...props}
             id={id}
@@ -302,7 +294,7 @@ const Input = ({
               update(e, e.target.checked);
             }}
           />
-        )}
+        }
       />
     );
   }
@@ -341,23 +333,10 @@ const Input = ({
           boxSizing: 'border-box',
         }}
         variant={props.variant || 'outlined'}
-        inputProps={{
-          role: 'presentation',
-          style: {
-            paddingLeft: 7,
-            paddingTop: 5,
-            paddingBottom: 5,
-            minWidth: !(/number|dollar|percent/.test(type))
-              && ['termination.additionalHerbicides', 'termination.reducedHerbicides'].includes(id) ? 300 : 'auto',
-            maxWidth: /number|dollar|percent/.test(type) ? 70 : 1000,
-            background: 'white',
-            ...props.style,
-          },
-          inputMode: /dollar|number|percent/.test(type) ? 'numeric' : '',
-        }}
         ref={focusRef}
         onKeyPress={keyPress}
-        onWheel={(e) => e.target.blur()} // https://github.com/mui/material-ui/issues/7960#issuecomment-760367956
+        // https://github.com/mui/material-ui/issues/7960#issuecomment-760367956
+        onWheel={(e) => e.target.blur()}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
             e.nativeEvent.preventDefault(); // for number type
@@ -367,12 +346,20 @@ const Input = ({
         }}
         onChange={(e) => {
           change(e.target.value);
-          if (immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))) {
+          if (
+            immediate ||
+            (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))
+          ) {
             update(e, e.target.value);
           }
         }}
         onBlur={(e) => {
-          if (!(immediate || (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate')))) {
+          if (
+            !(
+              immediate ||
+              (e.target.form && (e.target.form.getAttribute('options') || '').includes('immediate'))
+            )
+          ) {
             update(e, e.target.value);
           }
         }}
@@ -381,24 +368,41 @@ const Input = ({
             onInput(e);
           }
         }}
+        slotProps={{
+          htmlInput: {
+            role: 'presentation',
+            style: {
+              paddingLeft: 7,
+              paddingTop: 5,
+              paddingBottom: 5,
+              minWidth:
+                !/number|dollar|percent/.test(type) &&
+                ['termination.additionalHerbicides', 'termination.reducedHerbicides'].includes(id)
+                  ? 300
+                  : 'auto',
+              maxWidth: /number|dollar|percent/.test(type) ? 70 : 1000,
+              background: 'white',
+              ...props.style,
+            },
+            inputMode: /dollar|number|percent/.test(type) ? 'numeric' : '',
+          },
+        }}
       />
-      {
-        !equals(calculated[id], v) && (
-          <button
-            type="button"
-            tabIndex={-1}
-            style={{ float: 'right', fontSize: '0.7rem', color: 'gray' }}
-            onClick={() => {
-              dispatch(setter(calculated[id]));
-              dispatch(set.focus(id));
-            }}
-          >
-            default
-            <br />
-            {calculated[id]}
-          </button>
-        )
-      }
+      {!equals(calculated[id], v) && (
+        <button
+          type="button"
+          tabIndex={-1}
+          style={{ float: 'right', fontSize: '0.7rem', color: 'gray' }}
+          onClick={() => {
+            dispatch(setter(calculated[id]));
+            dispatch(set.focus(id));
+          }}
+        >
+          default
+          <br />
+          {calculated[id]}
+        </button>
+      )}
 
       {props.info && <Help>{props.info}</Help>}
 

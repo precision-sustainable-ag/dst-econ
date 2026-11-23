@@ -1,15 +1,25 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
+import { db, dollars, get, goto } from '../../store/Store';
 import Activity from '../Activity';
 
-import {
-  goto, get, dollars, db,
-} from '../../store/Store';
-
 const Logic = ({
-  current, intro, question, q, a, property, type, suffix = '',
-  onChange, onInput, value, estimated, total, warning, style = {}, custom = [],
+  current,
+  intro,
+  question,
+  q,
+  a,
+  property,
+  type,
+  suffix = '',
+  onChange,
+  onInput,
+  value,
+  estimated,
+  total,
+  warning,
+  style = {},
+  custom = [],
 }) => {
   const style2 = {};
   const cd = db.costDefaults;
@@ -23,8 +33,11 @@ const Logic = ({
     });
 
   const sortAndFilterPower = () => {
-    const filteredPowerOptions = Object.values(db.power).filter((power) => power.screen === '' || power.screen === current);
-    let result = filteredPowerOptions.map((power) => power.key)
+    const filteredPowerOptions = Object.values(db.power).filter(
+      (power) => power.screen === '' || power.screen === current,
+    );
+    let result = filteredPowerOptions
+      .map((power) => power.key)
       .sort((k1, k2) => {
         const key1 = k1.match(/(^\d+) (.+)/);
         const key2 = k2.match(/(^\d+) (.+)/);
@@ -43,17 +56,17 @@ const Logic = ({
     return ['', ...result];
   }; // sortAndFilterPower
 
-  const sortRollerTerminationOptions = (options) => options.map((op) => {
-    if (op === 'Hire custom operator') {
-      return { id: 0, text: op };
-    }
-    const calculatedId = op.includes('; ') ? op.split('; ')[1].split(' ')[0] : 0;
-    return { id: calculatedId, text: op };
-  }).sort(
-    (a1, a2) => a1.id - a2.id,
-  ).map(
-    (op) => op.text,
-  ); // sortRollerTerminationOptions
+  const sortRollerTerminationOptions = (options) =>
+    options
+      .map((op) => {
+        if (op === 'Hire custom operator') {
+          return { id: 0, text: op };
+        }
+        const calculatedId = op.includes('; ') ? op.split('; ')[1].split(' ')[0] : 0;
+        return { id: calculatedId, text: op };
+      })
+      .sort((a1, a2) => a1.id - a2.id)
+      .map((op) => op.text); // sortRollerTerminationOptions
 
   const selector = goto(get, current);
   const context = useSelector(selector);
@@ -66,7 +79,8 @@ const Logic = ({
         return 'Seedbed preparation equipment costs';
       case 'planting':
         return 'Planting equipment costs';
-      default: return 'Estimated relevant cost';
+      default:
+        return 'Estimated relevant cost';
     }
   };
 
@@ -82,7 +96,10 @@ const Logic = ({
     ...Object.keys(db.costDefaults),
   ].includes(currentImplement?.replace(/hire (?!custom operator)/i, ''));
 
-  iscustom = currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.' ? true : iscustom;
+  iscustom =
+    currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.'
+      ? true
+      : iscustom;
 
   if (currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.') {
     style2.width = '100%';
@@ -109,7 +126,10 @@ const Logic = ({
       info = (
         <>
           <p>Costs associated with tractor and implement use are based upon annual use.</p>
-          <p>Users can insert the estimated number of acres of annual use to more accurately represent their operation.</p>
+          <p>
+            Users can insert the estimated number of acres of annual use to more accurately
+            represent their operation.
+          </p>
         </>
       );
 
@@ -125,7 +145,10 @@ const Logic = ({
       info = (
         <>
           <p>Costs associated with tractor and implement use are based upon annual use.</p>
-          <p>Users can insert the estimated number of hours of annual use to more accurately represent their operation.</p>
+          <p>
+            Users can insert the estimated number of hours of annual use to more accurately
+            represent their operation.
+          </p>
         </>
       );
 
@@ -149,62 +172,54 @@ const Logic = ({
       td = false;
       property = 'total';
       estimated = context.estimated;
-      q = (
-        iscustom ? `Estimated cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`
+      q =
+        (iscustom
+          ? `Estimated cost (${dollars(estimated * 0.75)} - ${dollars(estimated * 1.25)} /acre)`
           : q || (
-          <div>
-            {getDefaultEstimatedCostText()}
-            {' '}
-            (
-            {dollars(estimated)}
-            /acre)
-          </div>
-          )
-      ) || question;
+              <div>
+                {getDefaultEstimatedCostText()} ({dollars(estimated)}
+                /acre)
+              </div>
+            )) || question;
       a = 'dollar';
       value = total || estimated;
-      shown = context.q3 || (
-        currentImplement && !(
-          currentImplement === 'No additional application activity'
-          || currentImplement === 'No reduced application activity'
-          || currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.'
-        )
-      );
-      warning = (
-        iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25)
-          ? (
-            <div className="warning">
-              Warning:
-              {' '}
-              {dollars(context.total)}
-              {' '}
-              is outside the expected range for this activity.
-            </div>
-          )
-          : null
-      );
-      info = iscustom ? '' : (
+      shown =
+        context.q3 ||
+        (currentImplement &&
+          !(
+            currentImplement === 'No additional application activity' ||
+            currentImplement === 'No reduced application activity' ||
+            currentImplement === 'Incorporate planting with fertilizing. No CC planting cost.'
+          ));
+      warning =
+        iscustom && (context.total < estimated * 0.75 || context.total > estimated * 1.25) ? (
+          <div className="warning">
+            Warning: {dollars(context.total)} is outside the expected range for this activity.
+          </div>
+        ) : null;
+      info = iscustom ? (
+        ''
+      ) : (
         <>
           <p>
-            Farmers view costs differently.
-            The table to the right allows you to customize the cost estimation to fit your needs.
-            Three ways exist to estimate cost of this activity.
+            Farmers view costs differently. The table to the right allows you to customize the cost
+            estimation to fit your needs. Three ways exist to estimate cost of this activity.
           </p>
           <ol>
             <li>
-              Accept the default cost estimation.
-              This assumes all ownership and variable costs are relevant.
+              Accept the default cost estimation. This assumes all ownership and variable costs are
+              relevant.
             </li>
             <li>
-              Select relevant costs.
-              Some farmers will want to focus on costs that change with cover crop use.
-              Removing the check from the box beside particular costs removes that cost from the estimated cost of doing that activity.
-              The costs you want to count toward the cost of cover crops should have a checkmark beside it.
-              Remove all others.
+              Select relevant costs. Some farmers will want to focus on costs that change with cover
+              crop use. Removing the check from the box beside particular costs removes that cost
+              from the estimated cost of doing that activity. The costs you want to count toward the
+              cost of cover crops should have a checkmark beside it. Remove all others.
             </li>
-            <li>Overwrite any estimated cost in this box by typing the cost you think appropriate.</li>
+            <li>
+              Overwrite any estimated cost in this box by typing the cost you think appropriate.
+            </li>
           </ol>
-
         </>
       );
       break;
@@ -227,9 +242,7 @@ const Logic = ({
       if (current === 'termination.roller' && property === 'implement') {
         a = sortRollerTerminationOptions(a);
       } else if (current === 'termination.chemical' && property === 'implement') {
-        a = a.filter(
-          (aValue) => aValue !== 'Hire custom operator',
-        );
+        a = a.filter((aValue) => aValue !== 'Hire custom operator');
       }
       result = (
         <Input
@@ -245,9 +258,9 @@ const Logic = ({
               return 'Hire custom operator';
             }
             if (
-              option === 'No additional application activity'
-              || option === 'No reduced application activity'
-              || option === 'Incorporate planting with fertilizing. No CC planting cost.'
+              option === 'No additional application activity' ||
+              option === 'No reduced application activity' ||
+              option === 'Incorporate planting with fertilizing. No CC planting cost.'
             ) {
               return 'None';
             }
@@ -274,10 +287,7 @@ const Logic = ({
     );
   } else if (Number.isFinite(a)) {
     result = (
-      <span
-        className="input"
-        id={property ? `${current}.${property}` : ''}
-      >
+      <span className="input" id={property ? `${current}.${property}` : ''}>
         {`$${(+a).toFixed(2)}`}
       </span>
     );
@@ -285,70 +295,50 @@ const Logic = ({
     result = a;
   }
 
-  const displayRow = (currentValue, propertyValue) => !(
-    (
-      [
-        'herbicide.additional',
-        'herbicide.reduced',
-      ].includes(currentValue)
-      && propertyValue === 'total'
-      && (
-        context.implement === 'No additional application activity'
-        || context.implement === 'No reduced application activity'
-      )
-    )
-    || (
-      currentValue === 'planting'
-      && propertyValue === 'total'
-      && context.implement === 'Incorporate planting with fertilizing. No CC planting cost.'
-    )
-  );
+  const displayRow = (currentValue, propertyValue) =>
+    !(
+      (['herbicide.additional', 'herbicide.reduced'].includes(currentValue) &&
+        propertyValue === 'total' &&
+        (context.implement === 'No additional application activity' ||
+          context.implement === 'No reduced application activity')) ||
+      (currentValue === 'planting' &&
+        propertyValue === 'total' &&
+        context.implement === 'Incorporate planting with fertilizing. No CC planting cost.')
+    );
 
-  return (
-    current && shown
-      ? (
-        <>
-          {intro && <tr><td colSpan={2}>{intro}</td></tr>}
-          {
-            displayRow(current, property)
-              && (
-              <tr className={current}>
-                <td style={style}>
-                  {q}
-                </td>
-                <td style={{ ...style, ...style2 }}>
-                  {result}
-                </td>
-                {
-                  property === 'implement'
-                    && !iscustom
-                    && !([
-                      'herbicide.additional',
-                      'herbicide.reduced',
-                      'herbicide.fall',
-                      'tillage.elimination',
-                      'tillage.fall',
-                      'tillage.other',
-                    ].includes(current) && context.implement === '')
-                    ? (
-                      <td
-                        style={{ padding: 0, border: '1px solid black' }}
-                        rowSpan="6"
-                      >
-                        <Activity type={current} />
-                      </td>
-                    )
-                    : (
-                      td && <td />
-                    )
-                }
-              </tr>
-              )
-          }
-        </>
-      )
-      : null
-  );
+  return current && shown ? (
+    <>
+      {intro && (
+        <tr>
+          <td colSpan={2}>{intro}</td>
+        </tr>
+      )}
+      {displayRow(current, property) && (
+        <tr className={current}>
+          <td style={style}>{q}</td>
+          <td style={{ ...style, ...style2 }}>{result}</td>
+          {property === 'implement' &&
+          !iscustom &&
+          !(
+            [
+              'herbicide.additional',
+              'herbicide.reduced',
+              'herbicide.fall',
+              'tillage.elimination',
+              'tillage.fall',
+              'tillage.other',
+            ].includes(current) && context.implement === ''
+          ) ? (
+            <td style={{ padding: 0, border: '1px solid black' }} rowSpan="6">
+              <Activity type={current} />
+            </td>
+          ) : (
+            td && <td />
+          )}
+        </tr>
+      )}
+    </>
+  ) : null;
 }; // Logic
 
 export default Logic;

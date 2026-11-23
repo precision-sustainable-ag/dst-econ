@@ -1,17 +1,16 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-import Input from '../../shared/Inputs';
-import ClearInputs from '../ClearInputs';
 import Help from '../../shared/Help';
+import Input from '../../shared/Inputs';
 import {
-  dev,
-  get,
-  dollars,
-  getDefaults,
   db,
+  dev,
+  dollars,
   exampleFertilityBenefit,
   exampleFertilityCost,
+  get,
+  getDefaults,
 } from '../../store/Store';
+import ClearInputs from '../ClearInputs';
 
 import './styles.scss';
 
@@ -47,13 +46,14 @@ const Fertility = () => {
     <div id="Fertility">
       <h1>Fertility</h1>
       <p>
-        Integrating cover crops into your rotation can affect fertility in multiple ways.
-        One of the most commonly cited impacts is incorporating a legume into your cover crop mix.
-        Depending upon the species selected and maturity at termination the legume cover crop can provide a nitrogen credit for your rotation.
-        Many cover crops have also demonstrated an ability to reduce the export of subsurface drainage water and dissolved nutrients
-        such as nitrogen and phosphorous.
-        In this module you can input your estimates of macronutrients saved (or not applied) and the value of those macronutrients.
-        Alternatively, if you intend to apply additional nutrients with the integration of cover crops you can also provide those values.
+        Integrating cover crops into your rotation can affect fertility in multiple ways. One of the
+        most commonly cited impacts is incorporating a legume into your cover crop mix. Depending
+        upon the species selected and maturity at termination the legume cover crop can provide a
+        nitrogen credit for your rotation. Many cover crops have also demonstrated an ability to
+        reduce the export of subsurface drainage water and dissolved nutrients such as nitrogen and
+        phosphorous. In this module you can input your estimates of macronutrients saved (or not
+        applied) and the value of those macronutrients. Alternatively, if you intend to apply
+        additional nutrients with the integration of cover crops you can also provide those values.
       </p>
       <div className="mobile-table-div">
         <table className="mobile-table">
@@ -68,15 +68,10 @@ const Fertility = () => {
               <td />
               <th>N</th>
               <th>
-                P
-                <sub>2</sub>
-                O
-                <sub>5</sub>
+                P<sub>2</sub>O<sub>5</sub>
               </th>
               <th>
-                K
-                <sub>2</sub>
-                O
+                K<sub>2</sub>O
               </th>
             </tr>
 
@@ -129,13 +124,13 @@ const Fertility = () => {
                 </tr>
                 <tr>
                   <td>
-                    Cost of fertilizer application ($/acre)
-                    {' '}
+                    Cost of fertilizer application ($/acre){' '}
                     <Help>
                       <p>
-                        If additional fertilizer requires an additional trip or trips through the field, enter your expected application cost.
-                        If additional fertilizer will be added, even to a cover crop, with an activity that would be done
-                        even if you did not plant a cover crop, enter a zero value.
+                        If additional fertilizer requires an additional trip or trips through the
+                        field, enter your expected application cost. If additional fertilizer will
+                        be added, even to a cover crop, with an activity that would be done even if
+                        you did not plant a cover crop, enter a zero value.
                       </p>
                     </Help>
                   </td>

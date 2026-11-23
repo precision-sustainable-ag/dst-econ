@@ -1,9 +1,6 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-import {
-  dev, get, dollars, db, getDefaults, exampleSeeds, mobile,
-} from '../../store/Store';
 import Input from '../../shared/Inputs';
+import { db, dev, dollars, exampleSeeds, get, getDefaults, mobile } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
 
 import './styles.scss';
@@ -19,7 +16,9 @@ const SpeciesRow = ({ n }) => {
     Other: ['Commercial mix'],
   };
 
-  const types = [...new Set(Object.values(db.seedList).map((item) => item.type))].sort((a, b) => a.localeCompare(b));
+  const types = [...new Set(Object.values(db.seedList).map((item) => item.type))].sort((a, b) =>
+    a.localeCompare(b),
+  );
   types.forEach((type) => {
     speciesList[type] = Object.values(db.seedList)
       .filter((item) => item.type === type)
@@ -70,9 +69,7 @@ const SpeciesRow = ({ n }) => {
       <td>
         <Input type="dollar" id="prices" index={n} />
       </td>
-      <td>
-        {dollars(rates[n] * prices[n])}
-      </td>
+      <td>{dollars(rates[n] * prices[n])}</td>
     </tr>
   );
 }; // SpeciesRow
@@ -102,9 +99,8 @@ const Seeds = () => {
       <h1>Cover Crops Species Selection</h1>
 
       <p>
-        In the User box below, select your cover crop species.
-        Default seeding rates and prices will appear.
-        You are encouraged to adjust these to fit your farming plan.
+        In the User box below, select your cover crop species. Default seeding rates and prices will
+        appear. You are encouraged to adjust these to fit your farming plan.
       </p>
 
       <div className="mobile-table-div">
@@ -153,28 +149,26 @@ const Seeds = () => {
         </table>
       </div>
       <p>
-        A common strategy for selecting a cover crop is to base your decision upon a specific goal you have for a field or farm.
-        For example, if you wish to build soil organic matter you may want to select a cover crop
-        with high levels of biomass and a fibrous root structure.
-        Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed pressure.
-        If you already know which cover crop you wish to consider, please select from the drop-down menu.
-        If you are new to the use of cover crops or still have questions, please consider using the
-        {' '}
+        A common strategy for selecting a cover crop is to base your decision upon a specific goal
+        you have for a field or farm. For example, if you wish to build soil organic matter you may
+        want to select a cover crop with high levels of biomass and a fibrous root structure.
+        Options exist to mitigate soil erosion, create grazing opportunities, and to decrease weed
+        pressure. If you already know which cover crop you wish to consider, please select from the
+        drop-down menu. If you are new to the use of cover crops or still have questions, please
+        consider using the{' '}
         <a href={link} target="_blank" rel="noreferrer">
-          {region}
-          {' '}
-          Cover Crops Council Species Selector
+          {region} Cover Crops Council Species Selector
         </a>
         .
       </p>
 
       <p>
-        After selecting a cover crop species, please select a seeding rate.
-        Seeding rate selection will depend upon whether you are using a single species or a mix.
-        In addition, you may adjust seeding rates even for single species based upon your intended purpose.
-        For example, you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
-        but may plant a higher rate if you seek to maximize grazing potential.
-        You may use the common rate listed in the green shaded boxes or input your own rate.
+        After selecting a cover crop species, please select a seeding rate. Seeding rate selection
+        will depend upon whether you are using a single species or a mix. In addition, you may
+        adjust seeding rates even for single species based upon your intended purpose. For example,
+        you may use a lower seeding rate of cereal rye if you only seek help with erosion control,
+        but may plant a higher rate if you seek to maximize grazing potential. You may use the
+        common rate listed in the green shaded boxes or input your own rate.
       </p>
 
       {/* <p>
@@ -187,21 +181,16 @@ const Seeds = () => {
       </p> */}
 
       <p>
-        Prices for cover crops may vary widely based upon your geography and availability from season to season.
-        You may utilize the default value or enter specific pricing from your region.
-        Growers planning to plant a cover crop
-        {' '}
-        <em>mix</em>
-        {' '}
-        can either
-        &apos;build&apos; their mix by selecting multiple cover crop species and an
-        {' '}
+        Prices for cover crops may vary widely based upon your geography and availability from
+        season to season. You may utilize the default value or enter specific pricing from your
+        region. Growers planning to plant a cover crop <em>mix</em> can either &apos;build&apos;
+        their mix by selecting multiple cover crop species and an{' '}
         <em>
           <strong>appropriate</strong>
-        </em>
-        {' '}
+        </em>{' '}
         seeding rate (i.e. seeding rate may be lower in a mix relative to seeding as a stand-alone)
-        or by selecting commercial mix and entering a seed rate and price for the commercial mix you chose.
+        or by selecting commercial mix and entering a seed rate and price for the commercial mix you
+        chose.
       </p>
 
       {dev && (
@@ -217,8 +206,7 @@ const Seeds = () => {
 
 Seeds.menu = (
   <span>
-    S
-    <u>e</u>
+    S<u>e</u>
     eds
   </span>
 );
