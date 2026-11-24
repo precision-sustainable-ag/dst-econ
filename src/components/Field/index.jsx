@@ -1,10 +1,10 @@
-import { TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import Input from '../../shared/Inputs';
+import Input, { MyTextField } from '../../shared/Inputs';
 import MapComp from '../../shared/Map';
 import { db, dev, exampleField, get, getDefaults, set } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
 import './styles.scss';
+import { useEffect } from 'react';
 
 const defaults = getDefaults([
   'location',
@@ -33,9 +33,12 @@ const defaults = getDefaults([
 
 const Field = () => {
   const cashCrop = useSelector(get.cashCrop);
+  const area = useSelector(get.map.area);
   const dispatch = useDispatch();
-  const area = useSelector(get.map.area).toFixed(2);
-  const acres = useSelector(get.acres) || area;
+
+  useEffect(() => {
+    if (+area) dispatch(set.acres(+area.toFixed(2)));
+  }, [dispatch, area]);
 
   return (
     <div id="Field">
@@ -75,30 +78,27 @@ const Field = () => {
         <div className="field-grid">
           <div className="field-details">
             <h2>Farm name (or FSA farm number)</h2>
-            <Input id="farm" fullWidth />
+            <MyTextField id="farm" fullWidth />
 
             <h2>Field name (or FSA field number)</h2>
-            <Input id="field" fullWidth />
+            <MyTextField id="field" fullWidth />
 
             <h2>How many acres are in this field?</h2>
-            <TextField
-              type="number"
-              size="small"
-              value={acres ?? ''}
-              onChange={(e) => dispatch(set.acres(Number(e.target.value)))}
-            />
+            <MyTextField id="acres" />
 
             <h2>What cash crop will follow the cover crop in this field?</h2>
             <Input id="cashCrop" options={[...Object.keys(db.commodities), 'Other']} />
             {cashCrop === 'Other' && (
-              <Input id="otherCashCrop" placeholder="Enter cash crop here" />
+              <p>
+                <MyTextField id="otherCashCrop" label="Enter cash crop here" />
+              </p>
             )}
 
             <h2>What is your labor cost? ($/hour)</h2>
-            <Input id="$labor" style={{ background: '#dfd' }} />
+            <MyTextField id="$labor" style={{ background: '#dfd' }} />
 
             <h2>What is your diesel cost? ($/gal)</h2>
-            <Input id="$diesel" style={{ background: '#dfd' }} />
+            <MyTextField id="$diesel" style={{ background: '#dfd' }} />
           </div>
           <MapComp />
         </div>
