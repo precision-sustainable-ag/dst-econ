@@ -3,7 +3,7 @@ import './App.scss';
 import { ChevronLeft, ChevronRight, Close as CloseIcon } from '@mui/icons-material';
 import PrintIcon from '@mui/icons-material/Print';
 import { Button, IconButton, Modal, Popover } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -227,136 +227,6 @@ const Navigation = ({ current }) => {
   );
 }; // Navigation
 
-const selectors = {};
-
-const isVisible = (element) => {
-  const computedStyle = window.getComputedStyle(element);
-  const isHidden = computedStyle.display === 'none' || computedStyle.visibility === 'hidden';
-
-  if (isHidden) {
-    return false;
-  }
-
-  if (element.parentNode instanceof Element) {
-    return isVisible(element.parentNode);
-  }
-
-  return true;
-};
-
-const normalizeCSS = (tagName, property, value) => {
-  const tempElement = document.createElement(tagName);
-
-  tempElement.style[property] = value;
-  document.body.appendChild(tempElement);
-
-  const computedValue = getComputedStyle(tempElement)[property];
-
-  document.body.removeChild(tempElement);
-
-  return computedValue;
-};
-
-const unneededCSS = () => {
-  console.clear();
-  console.log(
-    'CAREFUL:  Some styles may not apply to elements on this page, but they may on other pages.',
-  );
-  console.log('___________________________');
-  [...document.styleSheets].forEach((styleSheet) => {
-    if (styleSheet.cssRules) {
-      [...styleSheet.cssRules].forEach((rule) => {
-        if (!rule.style) return;
-
-        const selector = rule.selectorText;
-        if (/^(\.css)/.test(selector)) {
-          return;
-        }
-
-        const { cssText } = rule.style;
-        const declarationRegex = /([\w-]+)\s*:\s*([^;]+)/g;
-
-        let match = declarationRegex.exec(cssText);
-
-        while (match !== null) {
-          const property = match[1].trim();
-          const value = match[2].trim();
-          document.querySelectorAll(`${selector}`).forEach((obj) => {
-            if (/^(\*|html)$|mapbox/.test(selector) || !isVisible(obj)) return;
-            const originalValue = normalizeCSS(obj.tagName, property, value);
-            const important = rule.style.getPropertyPriority(property) === 'important';
-
-            rule.style.removeProperty(property);
-            const newValue = getComputedStyle(obj)[property];
-            rule.style.setProperty(
-              property,
-              value?.replace(' !important', ''),
-              important ? 'important' : '',
-            );
-
-            if (originalValue === newValue) {
-              console.log(
-                rule.selectorText,
-                '-',
-                property,
-                '-',
-                value,
-                '-',
-                originalValue,
-                '-',
-                newValue,
-              );
-            }
-          });
-
-          match = declarationRegex.exec(cssText);
-        }
-      });
-    }
-  });
-};
-
-const unusedCSS = (log = false) => {
-  const unused = [];
-
-  if (log) {
-    console.clear();
-  }
-
-  [...document.styleSheets].forEach((sheet) => {
-    try {
-      if (sheet.cssRules) {
-        [...sheet.cssRules].forEach((rule) => {
-          if (rule.constructor.name === 'CSSStyleRule') {
-            const selector = rule.selectorText;
-
-            if (/^\.(css|Mui)|mapbox|data-shrink|_infobar/.test(selector)) {
-              return;
-            }
-
-            const re = /::[-\w]+/g;
-            const els = document.querySelectorAll(selector?.replace(re, '') || 'EMPTY');
-            if (!selectors[selector] && !els.length) {
-              unused.push(selector);
-            } else {
-              selectors[selector] = true;
-            }
-          }
-        });
-      }
-    } catch (error) {
-      console.error('Error accessing stylesheet:', error);
-    }
-  });
-
-  if (log) {
-    console.log('_'.repeat(20));
-    unused
-      .sort((a, b) => a?.replace(/^#/, 'ZZZ').localeCompare(b?.replace(/^#/, 'ZZZ')))
-      .forEach((s) => console.log(s));
-  }
-};
-
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -377,11 +247,7 @@ const App = () => {
   const moreLeft = useRef(null);
   const moreRight = useRef(null);
 
-  if (dev) {
-    unusedCSS();
-  }
-
-  const scroll = () => {
+  const scroll = useCallback(() => {
     if (!topMenu.current) return;
 
     const { left } = topMenu.current.firstChild.getBoundingClientRect();
@@ -398,10 +264,10 @@ const App = () => {
       'hidden',
       moreLeft.current.disabled && moreRight.current.disabled,
     );
-  };
+  });
 
   let resizeTimer;
-  const resize = () => {
+  const resize = useCallback(() => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       const isMobile =
@@ -409,7 +275,7 @@ const App = () => {
       dispatch(set.mobile(isMobile));
       scroll();
     }, 100);
-  };
+  });
 
   useEffect(() => {
     if (screen !== 'Loading') {
@@ -425,7 +291,7 @@ const App = () => {
       };
     }
     return () => {};
-  }, [dispatch, location.pathname, screen, crop]);
+  }, [dispatch, location.pathname, screen, scroll]);
 
   useEffect(() => {
     if (screen === 'Loading') return;
@@ -438,7 +304,7 @@ const App = () => {
       navigate(newScreen);
       dispatch(set.newScreen(''));
     }
-  }, [newScreen]);
+  }, [newScreen, dispatch, navigate]);
 
   useEffect(() => {
     if (!firstTime) return;
@@ -473,7 +339,7 @@ const App = () => {
     );
 
     window.addEventListener('resize', resize);
-  }, [dispatch]);
+  }, [dispatch, resize]);
 
   const scrollLeft = () => {
     const buttonToScroll = [...topMenu.current.childNodes].reverse().find((button) => {
@@ -614,32 +480,6 @@ const App = () => {
                 </NavLink>
               );
             })}
-
-          {/localhost/i.test(window.location) && (
-            <>
-              <div className="desktop">
-                <button
-                  type="button"
-                  style={{ float: 'right' }}
-                  onClick={() => unneededCSS(true)}
-                  accessKey="8"
-                >
-                  Unneeded CSS
-                </button>
-              </div>
-
-              <div className="desktop">
-                <button
-                  type="button"
-                  style={{ float: 'right' }}
-                  onClick={() => unusedCSS(true)}
-                  accessKey="9"
-                >
-                  Unused CSS
-                </button>
-              </div>
-            </>
-          )}
         </div>
       </nav>
 

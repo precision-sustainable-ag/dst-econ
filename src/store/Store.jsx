@@ -200,8 +200,6 @@ const initialState = {
     ...shared,
   },
 
-  unused: { ...shared },
-
   herbicide: {
     ...shared,
     additional: {
@@ -562,10 +560,10 @@ const afterChange = {
   species: (state, action) => {
     const { index, value } = action.payload;
     if (Number.isFinite(index)) {
-      state.rates[index] = (db.seedList[value] || {}).seedingRate || '';
-      state.prices[index] = (db.seedList[value] || {}).price || '';
+      state.rates[index] = db.seedList[value]?.seedingRate || '';
+      state.prices[index] = db.seedList[value]?.price || '';
       state.focus = `rates${index}`;
-      const fertN = (db.seedList[value] || {}).NCredit || '';
+      const fertN = db.seedList[value]?.NCredit || '';
       if (fertN) {
         state.fertility.N = fertN;
       }

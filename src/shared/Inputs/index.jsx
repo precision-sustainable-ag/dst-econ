@@ -142,7 +142,7 @@ const Input = ({
         }, 1000); // wait for all Inputs to load
       }
     }
-  }, [changed, val, focus, dispatch, props]);
+  }, [changed, val, focus, dispatch]);
 
   const change = (value2) => {
     setValue(value2);
@@ -180,7 +180,7 @@ const Input = ({
         onChange(e, newValue);
       }
     },
-    [onChange, value, dispatch, id, index, isArray, sel2, type],
+    [onChange, value, dispatch, index, isArray, sel2, type, setter],
   ); // update
 
   value = value !== undefined ? value : val;
@@ -193,7 +193,7 @@ const Input = ({
     if (value) {
       update({ target: { value } }, value);
     }
-  }, [update, value, type]);
+  }, [update, value]);
 
   if (type === 'checkbox') {
     if (value === '') {

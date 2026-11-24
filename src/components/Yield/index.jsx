@@ -155,7 +155,7 @@ const Yield = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(set.yield.q4('1'));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div id="Yield" className="yield">
