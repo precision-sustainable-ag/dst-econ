@@ -21,10 +21,10 @@ const Home = () => (
     </p>
 
     <div className="home-button-container">
-      <ScreenLink className="link about" to="/About">
+      <ScreenLink className="link about" to="About">
         ABOUT
       </ScreenLink>
-      <ScreenLink className="link location" to="/Field">
+      <ScreenLink className="link location" to="Field">
         GET STARTED
       </ScreenLink>
     </div>

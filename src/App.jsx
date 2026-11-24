@@ -140,7 +140,7 @@ if (dev) {
   paths.AT = AT;
 }
 
-const keys = Object.keys(paths);
+const keys = Object.keys(paths).filter((path) => path !== 'About');
 
 const Navigation = ({ current }) => {
   const mobile = useSelector(get.mobile);
