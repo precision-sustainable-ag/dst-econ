@@ -21,7 +21,16 @@
       "a11y": {
         "useKeyWithClickEvents": "warn",
         "noNoninteractiveElementInteractions": "warn",
-        "noRedundantRoles": "warn"
+        "noRedundantRoles": "warn",
+        "noAutofocus": "off",
+        "noLabelWithoutControl": {
+          "level": "error",
+          "options": {
+            "inputComponents": [
+              "Input"
+            ]
+          }
+        }
       },
       "style": {
         "useSingleVarDeclarator": "warn"

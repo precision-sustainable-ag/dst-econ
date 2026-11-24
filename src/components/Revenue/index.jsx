@@ -93,6 +93,8 @@ const Revenue = () => {
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
   const acres = useSelector(get.acres);
+  const yearNumber = useSelector(get.yield.q4);
+  const selectedYieldOption = useSelector(get.yield.q2);
 
   const coverCropTotal = {
     desc: 'Seed Expense',
@@ -209,12 +211,10 @@ const Revenue = () => {
     currency: 'USD',
   };
 
-  const checkIncreaseInIcomeForYield = (description) => {
+  const checkIncreaseInIncomeForYield = (description) => {
     if (description !== 'Yield Impact') {
       return description;
     }
-    const yearNumber = useSelector(get.yield.q4);
-    const selectedYieldOption = useSelector(get.yield.q2);
     const displayYear =
       yearNumber &&
       selectedYieldOption === 'Use cover crop adjusted yield estimates from the table above';
@@ -267,11 +267,13 @@ const Revenue = () => {
         {Array(countSection1)
           .fill(0)
           .map((_, index) => (
-            <tr key={index}>
+            <tr
+              key={`${increaseInIncome[index]?.desc ?? ''}-${decreaseInIncome[index]?.desc ?? ''}`}
+            >
               <td style={{ textAlign: 'left', width: '25%' }}>
                 {index >= increaseInIncome.length
                   ? descPlaceholder(index)
-                  : checkIncreaseInIcomeForYield(increaseInIncome[index].desc)}
+                  : checkIncreaseInIncomeForYield(increaseInIncome[index].desc)}
               </td>
               <td style={{ textAlign: 'right' }}>
                 {index >= increaseInIncome.length
@@ -340,7 +342,7 @@ const Revenue = () => {
         {Array(countSection2)
           .fill(0)
           .map((_, index) => (
-            <tr key={index}>
+            <tr key={`${decreaseInCost[index]?.desc ?? ''}-${increaseInCost[index]?.desc ?? ''}`}>
               <td style={{ textAlign: 'left', width: '25%' }}>
                 {index >= decreaseInCost.length
                   ? descPlaceholder(index)

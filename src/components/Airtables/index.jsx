@@ -44,7 +44,6 @@ const Airtable = ({ name, url }) => {
                     <input
                       id={`${name}.${key}.${k}`}
                       defaultValue={table[key][k]}
-                      // biome-ignore lint/a11y/noAutofocus: ok here
                       autoFocus={first++ === 1}
                       onFocus={(e) => e.target.select()}
                       onBlur={(e) => {

@@ -568,7 +568,7 @@ const afterChange = {
       }
     }
   },
-  'fertilizer.useFertilizer': (state, { payload }) => {
+  'fertility.useFertilizer': (state, { payload }) => {
     if (payload === 'Yes') {
       state.focus = 'fertility.NAdded';
     } else {
@@ -936,7 +936,8 @@ export const db = {
 }; // loadAirtables
 
 const queue = (f, time = 1) => {
-  setTimeout(f, (queue.i += 1) * time);
+  queue.i += 1;
+  setTimeout(f, queue.i * time);
   setTimeout(() => {
     queue.i = 0;
   }, time + 999);
@@ -1260,6 +1261,7 @@ export const exampleFertilityBenefit = () => {
   store.dispatch(set.fertility.PAdded(15));
   store.dispatch(set.fertility.KAdded(10));
   store.dispatch(set.fertility.$application(8));
+  // biome-ignore lint/correctness/useHookAtTopLevel: Redux action, not a React hook.
   store.dispatch(set.fertility.useFertilizer('Yes'));
 }; // exampleFertilityBenefit
 
@@ -1274,6 +1276,7 @@ export const exampleFertilityCost = () => {
   store.dispatch(set.fertility.PAdded(15));
   store.dispatch(set.fertility.KAdded(10));
   store.dispatch(set.fertility.$application(8));
+  // biome-ignore lint/correctness/useHookAtTopLevel: Redux action, not a React hook.
   store.dispatch(set.fertility.useFertilizer('Yes'));
 }; // exampleFertilityCost
 
