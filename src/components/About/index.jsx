@@ -73,7 +73,7 @@ const About = () => (
     </p>
 
     <div className="home-button-container">
-      <ScreenLink className="link location" to="/Field">
+      <ScreenLink className="link location" to="Field">
         GET STARTED
       </ScreenLink>
     </div>
