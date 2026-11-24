@@ -1,16 +1,16 @@
-import { useSelector } from 'react-redux';
+import { TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
-import Map from '../../shared/Map';
-import { db, dev, exampleField, get, getDefaults } from '../../store/Store';
+import MapComp from '../../shared/Map';
+import { db, dev, exampleField, get, getDefaults, set } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
-
 import './styles.scss';
 
 const defaults = getDefaults([
   'location',
   'farm',
   'field',
-  'map.area',
+  'acres',
   '$labor',
   '$diesel',
   'cashCrop',
@@ -33,6 +33,9 @@ const defaults = getDefaults([
 
 const Field = () => {
   const cashCrop = useSelector(get.cashCrop);
+  const dispatch = useDispatch();
+  const area = useSelector(get.map.area).toFixed(2);
+  const acres = useSelector(get.acres) || area;
 
   return (
     <div id="Field">
@@ -78,7 +81,12 @@ const Field = () => {
             <Input id="field" fullWidth />
 
             <h2>How many acres are in this field?</h2>
-            <Input id="map.area" type="number" />
+            <TextField
+              type="number"
+              size="small"
+              value={acres ?? ''}
+              onChange={(e) => dispatch(set.acres(Number(e.target.value)))}
+            />
 
             <h2>What cash crop will follow the cover crop in this field?</h2>
             <Input id="cashCrop" options={[...Object.keys(db.commodities), 'Other']} />
@@ -92,7 +100,7 @@ const Field = () => {
             <h2>What is your diesel cost? ($/gal)</h2>
             <Input id="$diesel" style={{ background: '#dfd' }} />
           </div>
-          <Map />
+          <MapComp />
         </div>
       </div>
     </div>

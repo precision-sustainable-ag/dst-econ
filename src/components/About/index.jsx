@@ -1,5 +1,5 @@
 import { Icon } from '@mui/material';
-import { Link } from 'react-router-dom';
+import ScreenLink from '../../shared/ScreenLink';
 import { dev, exampleHome } from '../../store/Store';
 import './styles.scss';
 
@@ -73,9 +73,9 @@ const About = () => (
     </p>
 
     <div className="home-button-container">
-      <Link className="link location" to="/Field">
+      <ScreenLink className="link location" to="/Field">
         GET STARTED
-      </Link>
+      </ScreenLink>
     </div>
 
     <p style={{ fontSize: '90%' }}>

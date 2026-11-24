@@ -283,7 +283,7 @@ export const SummaryDetails = ({ view }) => {
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const acres = useSelector(get.map.area);
+  const acres = useSelector(get.acres);
   const cashCrop = useSelector(get.cashCrop);
 
   const style = total > 0 ? { color: 'red' } : { color: 'black' };
@@ -389,7 +389,7 @@ export const Summary = () => {
 
   const farm = useSelector(get.farm);
   const field = useSelector(get.field);
-  const acres = useSelector(get.map.area);
+  const acres = useSelector(get.acres);
   const cashCrop = useSelector(get.cashCrop);
 
   return (

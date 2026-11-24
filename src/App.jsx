@@ -6,11 +6,17 @@ import { Button, IconButton, Modal, Popover } from '@mui/material';
 import { useCallback, useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import About from './components/About';
 import { Summary } from './components/Activity';
 import Additional from './components/Additional';
+
 import Airtable from './components/Airtables';
+// {
+//   Object.keys(airTables).map((key) => (
+//     <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
+//   ));
+// }
+
 import AT from './components/AT';
 import Erosion from './components/Erosion';
 import Feedback from './components/Feedback';
@@ -126,6 +132,8 @@ const paths = {
   Resources,
   Feedback,
   Snapshot,
+  About,
+  ...(dev ? { AT } : {}),
 };
 
 if (dev) {
@@ -136,6 +144,7 @@ const keys = Object.keys(paths);
 
 const Navigation = ({ current }) => {
   const mobile = useSelector(get.mobile);
+  const dispatch = useDispatch();
   const previousScreen = useSelector(get.previousScreen);
 
   const back = current === 'Resources' ? previousScreen : keys[keys.indexOf(current) - 1];
@@ -148,14 +157,10 @@ const Navigation = ({ current }) => {
     <>
       {next && (
         <div id="Navigation" className="mobile">
-          <NavLink to={`/${next}`}>
-            <Button variant="contained" color="primary" className="mobileNext">
-              <div>
-                NEXT: &nbsp;
-                {next?.replace('Practices', 'Summary')}
-              </div>
-            </Button>
-          </NavLink>
+          <Button variant="contained" color="primary" onClick={() => dispatch(set.screen(next))}>
+            NEXT: &nbsp;
+            {next?.replace('Practices', 'Summary')}
+          </Button>
         </div>
       )}
 
@@ -170,40 +175,24 @@ const Navigation = ({ current }) => {
       >
         <div id="Navigation" className="desktop" style={{ marginLeft: 'auto' }}>
           {back && (
-            <NavLink to={`/${back?.replace('Home', '')}`}>
-              <Button variant="contained" color="primary" tabIndex={-1}>
-                {!mobile ? (
-                  <div>
-                    BACK: &nbsp;
-                    {paths[back].menu}
-                  </div>
-                ) : (
-                  <div>BACK</div>
-                )}
-              </Button>
-            </NavLink>
+            <Button variant="contained" color="primary" onClick={() => dispatch(set.screen(back))}>
+              BACK{!mobile && <>: &nbsp;{paths[back].menu}</>}
+            </Button>
           )}
           {next && (
-            <NavLink to={`/${next}`}>
-              <Button variant="contained" color="primary">
-                {!mobile ? (
-                  <div>
-                    NEXT: &nbsp;
-                    {paths[next].menu}
-                  </div>
-                ) : (
-                  <div>NEXT</div>
-                )}
-              </Button>
-            </NavLink>
+            <Button variant="contained" color="primary" onClick={() => dispatch(set.screen(next))}>
+              NEXT{!mobile && <>: &nbsp;{paths[next].menu}</>}
+            </Button>
           )}
 
           {current !== 'Resources' && next !== 'Resources' && (
-            <NavLink to="/Resources">
-              <Button variant="contained" color="primary">
-                Resources
-              </Button>
-            </NavLink>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => dispatch(set.screen('Resources'))}
+            >
+              Resources
+            </Button>
           )}
         </div>
         <Button
@@ -229,14 +218,14 @@ const Navigation = ({ current }) => {
 
 const App = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
   const screen = useSelector(get.screen);
+  const Screen = paths[screen] || Home;
+
   const newScreen = useSelector(get.newScreen);
   const status = useSelector(get.status);
   const mobile = useSelector(get.mobile);
-  const navigate = useNavigate();
 
-  const acres = useSelector(get.map.area);
+  const acres = useSelector(get.acres);
   const $labor = useSelector(get.$labor);
   const $diesel = useSelector(get.$diesel);
   const crop = useSelector(get.cashCrop);
@@ -264,47 +253,44 @@ const App = () => {
       'hidden',
       moreLeft.current.disabled && moreRight.current.disabled,
     );
-  });
+  }, []);
 
-  let resizeTimer;
+  const resizeTimer = useRef(null);
   const resize = useCallback(() => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
+    clearTimeout(resizeTimer.current);
+    resizeTimer.current = setTimeout(() => {
       const isMobile =
         /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 800;
       dispatch(set.mobile(isMobile));
       scroll();
     }, 100);
-  });
+  }, [dispatch, scroll]);
 
   useEffect(() => {
-    if (screen !== 'Loading') {
-      dispatch(set.screen(location.pathname.slice(1) || 'Home'));
-    }
+    const menu = topMenu.current;
+    if (!menu) return;
 
-    if (topMenu.current) {
-      topMenu.current.addEventListener('scroll', scroll);
-      scroll();
+    menu.addEventListener('scroll', scroll);
+    scroll();
 
-      return () => {
-        topMenu?.current?.removeEventListener('scroll', scroll);
-      };
-    }
-    return () => {};
-  }, [dispatch, location.pathname, screen, scroll]);
+    return () => {
+      menu.removeEventListener('scroll', scroll);
+    };
+  }, [scroll]);
 
   useEffect(() => {
     if (screen === 'Loading') return;
-    const page = location.pathname.slice(1) || 'Home';
-    pirschAnalytics('Visited Page', { meta: { visited: page } });
-  }, [location.pathname, screen]);
+    pirschAnalytics('Visited Page', {
+      meta: { visited: screen },
+    });
+  }, [screen]);
 
   useEffect(() => {
-    if (newScreen !== '') {
-      navigate(newScreen);
+    if (newScreen) {
+      dispatch(set.screen(newScreen));
       dispatch(set.newScreen(''));
     }
-  }, [newScreen, dispatch, navigate]);
+  }, [newScreen, dispatch]);
 
   useEffect(() => {
     if (!firstTime) return;
@@ -431,18 +417,15 @@ const App = () => {
               const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
 
               return (
-                <NavLink
+                <Button
                   key={path}
-                  to={dis || path === 'Home' ? '/' : path}
                   accessKey={accessKey}
-                  tabIndex={-1}
-                  onFocus={(e) => e.target.blur()}
                   className={`${cname} ${path}`}
+                  disabled={dis}
+                  onClick={() => dispatch(set.screen(path))}
                 >
-                  <Button screen={path} tabIndex={-1}>
-                    {paths[path].menu}
-                  </Button>
-                </NavLink>
+                  {paths[path].menu}
+                </Button>
               );
             })}
         </div>
@@ -466,18 +449,15 @@ const App = () => {
 
               const accessKey = renderToString(paths[path].menu).match(/<u>.+/)[0][3];
               return (
-                <NavLink
+                <Button
                   key={path}
-                  to={dis ? '/' : path}
                   accessKey={accessKey}
-                  tabIndex={-1}
-                  onFocus={(e) => e.target.blur()}
+                  disabled={dis}
                   className={`${cname} ${path}${path === 'Snapshot' ? ' budgetTable' : ''}`}
+                  onClick={() => dispatch(set.screen(path))}
                 >
-                  <Button screen={path} tabIndex={-1}>
-                    {paths[path].menu}
-                  </Button>
-                </NavLink>
+                  {paths[path].menu}
+                </Button>
               );
             })}
         </div>
@@ -486,38 +466,13 @@ const App = () => {
       <Summary />
 
       <div id="Main" className="mainComponent">
-        <Routes>
-          <Route key="home" path="" element={<Home />} />
-          <Route key="About" path="About" element={<About />} />
-          <Route key="Field" path="Field" element={<Field />} />
-          <Route key="Seeds" path="Seeds" element={<Seeds />} />
-          <Route key="Seedbed" path="Seedbed" element={<Seedbed />} />
-          <Route key="Planting" path="Planting" element={<Planting />} />
-          <Route key="Termination" path="Termination" element={<Termination />} />
-          <Route key="Tillage" path="Tillage" element={<Tillage />} />
-          <Route key="Fertility" path="Fertility" element={<Fertility />} />
-          <Route key="Herbicide" path="Herbicide" element={<Herbicide />} />
-          <Route key="Erosion" path="Erosion" element={<Erosion />} />
-          <Route key="Grazing" path="Grazing" element={<Grazing />} />
-          <Route key="Additional" path="Additional" element={<Additional />} />
-          <Route key="Yield" path="Yield" element={<Yield />} />
-          <Route key="Practices" path="Practices" element={<Practices />} />
-          <Route key="Revenue" path="Revenue" element={<Revenue />} />
-          <Route key="Resources" path="Resources" element={<Resources />} />
-          <Route key="Training" path="Training" element={<Training />} />
-          <Route key="Feedback" path="Feedback" element={<Feedback />} />
-          <Route key="AT" path="AT" element={<AT />} />
-          <Route key="Snapshot" path="Snapshot" element={<Snapshot />} />
-          {Object.keys(airTables).map((key) => (
-            <Route key={key} path={key} element={<Airtable name={key} url={airTables[key]} />} />
-          ))}
-        </Routes>
+        <Screen />
       </div>
 
       {disabled || /Home|About/.test(screen) ? null : <Navigation current={screen} />}
 
       <div id="AirTables">
-        <select onChange={(e) => navigate(e.target.value)}>
+        <select onChange={(e) => dispatch(set.screen(e.target.value))}>
           <option>&nbsp;</option>
           {Object.keys(airTables).map((key) => (
             <option key={key}>{key}</option>

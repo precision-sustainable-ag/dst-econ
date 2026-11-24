@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import Help from '../../shared/Help';
 import Input from '../../shared/Inputs';
+import ScreenLink from '../../shared/ScreenLink';
 import { dev, exampleAdditional, get, getDefaults } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
 import './styles.scss';
@@ -120,9 +120,9 @@ const Additional = () => (
       (Environmental Quality Incentives Program) or CSP (Conservation Stewardship Program), or
       payments from companies aggregating voluntary carbon offsets. If you are not familiar with
       these types of programs, please refer to the{' '}
-      <NavLink className="link" to="/Resources">
+      <ScreenLink className="link" to="Resources">
         Resources page
-      </NavLink>
+      </ScreenLink>{' '}
       . You will find a number of resources links to explore potential programs for your operation.
     </p>
 

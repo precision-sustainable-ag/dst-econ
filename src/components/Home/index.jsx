@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import ScreenLink from '../../shared/ScreenLink';
 
 import { dev, exampleHome } from '../../store/Store';
 
@@ -21,12 +21,12 @@ const Home = () => (
     </p>
 
     <div className="home-button-container">
-      <Link className="link about" to="/About">
+      <ScreenLink className="link about" to="/About">
         ABOUT
-      </Link>
-      <Link className="link location" to="/Field">
+      </ScreenLink>
+      <ScreenLink className="link location" to="/Field">
         GET STARTED
-      </Link>
+      </ScreenLink>
     </div>
 
     <img className="crops fullwidth" src="background.png" alt="" />

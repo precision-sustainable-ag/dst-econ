@@ -76,7 +76,7 @@ body {
   }
 }
 
-a.budgetTable {
+button.budgetTable {
 	float: right;
 	margin-right: 1%;
 }
@@ -91,7 +91,7 @@ nav {
   .topmenu {
     display: flex;
 
-    a {
+    button {
       flex-grow: 1;
     }
   }
@@ -117,38 +117,38 @@ nav {
     margin-right: 0.2rem;
   }
 
-  a.selected button {
+  button.selected {
     color: rgba(3, 3, 3) !important;
     background: #eee !important;
   }
 
-  a:not(.selected):hover button {
+  button:not(.selected):hover {
     background: rgba(255, 255, 255, 0.2);
   }
 
-  a.selected:hover button {
+  button.selected:hover {
     background: white;
   }
 
-  a.Field button {width: 4rem;}
-  a.Seedbed button {width: 5.5rem;}
-  a.Planting button {width: 5rem;}
-  a.Termination button {min-width: 6rem !important;}
-  a.Herbicide button {min-width: 5rem !important;}
-  a.Erosion button {width: 4rem;}
-  a.Grazing button {min-width: 4.5rem !important;}
-  a.Additional button {width: 6.5rem;}
+  button.Field {width: 4rem;}
+  button.Seedbed {width: 5.5rem;}
+  button.Planting {width: 5rem;}
+  button.Termination {min-width: 6rem !important;}
+  button.Herbicide {min-width: 5rem !important;}
+  button.Erosion {width: 4rem;}
+  button.Grazing {min-width: 4.5rem !important;}
+  button.Additional {width: 6.5rem;}
   
-  a.summary button {
+  button.summary {
     height: 2rem !important;
     color: yellow !important;
   }
 
-  a.summary.selected button {
+  button.summary.selected {
     color: black !important;
   }
 
-  a.Feedback button {
+  button.Feedback {
     position: absolute;
     top: 0.5rem;
     right: 0;
@@ -157,7 +157,7 @@ nav {
     height: 2rem !important;
   }
 
-  a.disabled button {
+  button.disabled {
     &:hover {
       &::before {
         content: "To continue, please select your location, and enter acres, crop, labor value, and diesel price.";
@@ -375,7 +375,7 @@ body.hotkeys u {
   border-bottom: 1px solid #ddd;
 }
 
-a.selected button u {
+button.selected u {
   border-bottom: none;
 }
 
@@ -533,7 +533,6 @@ table.power {
 		background: white;
 	}
 
-	.menu-items topmenu,
 	.menu-items,
 	.moreLeft,
 	.moreRight,
