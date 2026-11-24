@@ -4,6 +4,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormLabel,
+  InputAdornment,
   Autocomplete as MUIAutocomplete,
   Radio,
   RadioGroup,
@@ -410,5 +411,67 @@ const Input = ({
     </form>
   );
 }; // Input
+
+const sanitizeNumber = (s) =>
+  s
+    .replace(/[^0-9.-]/g, '') // digits, dot, minus only
+    .replace(/(?!^)-/g, '') // minus only at the start
+    .replace(/(\..*)\./g, '$1'); // one decimal point
+
+export const MyTextField = ({ id, sx, ...props }) => {
+  const dispatch = useDispatch();
+  const raw = useSelector(get[id]);
+  const numeric = typeof raw === 'number';
+  const currency = id.startsWith('$');
+  const value = currency ? raw.toFixed(2) : raw;
+
+  const commit = (e) => {
+    const text = e.target.value;
+    const next = numeric ? Number(text) : text;
+
+    if (numeric && !Number.isFinite(next))
+      e.target.value = value; // revert bad input
+    else dispatch(set[id](next));
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    e.target.blur();
+    requestAnimationFrame(() => document.getElementById(id)?.focus());
+  };
+
+  return (
+    <TextField
+      key={value}
+      id={id}
+      size="small"
+      variant="outlined"
+      autoComplete="off"
+      defaultValue={value ?? ''}
+      slotProps={{
+        input: {
+          startAdornment: currency && <InputAdornment position="start">$</InputAdornment>,
+        },
+        htmlInput: {
+          inputMode: numeric ? 'decimal' : 'text',
+          style: { textAlign: numeric ? 'right' : 'left' },
+        },
+      }}
+      onFocus={(e) => e.target.select()}
+      onInput={
+        numeric
+          ? (e) => {
+              e.target.value = sanitizeNumber(e.target.value);
+            }
+          : undefined
+      }
+      onBlur={commit}
+      onKeyDown={handleKeyDown}
+      {...props}
+      sx={{ width: numeric ? 100 : 'auto', ...sx }}
+    />
+  );
+};
 
 export default Input;
