@@ -1,5 +1,4 @@
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';
 import {
   clearInputs,
@@ -12,6 +11,7 @@ import {
   exampleTermination5,
   get,
   getDefaults,
+  set,
 } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
 import Logic from '../Logic';
@@ -241,7 +241,7 @@ const Termination = () => {
   const current = 'termination';
   const method = useSelector(get.termination.method);
   const state = useSelector(get[current]);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -300,7 +300,7 @@ const Termination = () => {
                   onChange={(_, value) => {
                     // clearInputs(defaults, ['termination.method', 'termination.q2']);
                     if (value === 'Yes' && state.method !== 'Herbicide application') {
-                      navigate('/Tillage');
+                      dispatch(set.screen('Tillage'));
                     }
                   }}
                 />
@@ -321,7 +321,7 @@ const Termination = () => {
                   onChange={(_, value) => {
                     // clearInputs(defaults);
                     if (value === 'No') {
-                      navigate('/Tillage');
+                      dispatch(set.screen('Tillage'));
                     }
                   }}
                 />

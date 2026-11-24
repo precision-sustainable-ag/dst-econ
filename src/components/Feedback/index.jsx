@@ -1,3 +1,6 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: ok here */
+/** biome-ignore-all lint/a11y/noNoninteractiveElementInteractions: ok here */
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: ok here */
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../shared/Inputs';

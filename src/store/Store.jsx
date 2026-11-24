@@ -144,6 +144,7 @@ const initialState = {
   newScreen: '',
   status: '',
   previousScreen: 'Field',
+  acres: 0,
   map: {
     lat: 0,
     lon: 0,
@@ -199,8 +200,6 @@ const initialState = {
     description: 'Planting Decisions',
     ...shared,
   },
-
-  unused: { ...shared },
 
   herbicide: {
     ...shared,
@@ -278,7 +277,7 @@ const initialState = {
 
   erosion: {
     ...shared,
-    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.map.area,
+    total: (state) => (state.erosion.q3 * state.erosion.q4) / state.acres,
   },
 
   termination: {
@@ -402,14 +401,12 @@ const initialState = {
     hoursFeeding: 0,
     hoursGrazingFeeding: 0,
     hoursAcre: (state) =>
-      (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.map.area,
+      (state.grazing.hoursGrazingFeeding - state.grazing.hoursFeeding) / state.acres,
     fall: '0',
     spring: '0',
     total: grazingTotal,
   },
 };
-
-export const formulas = { ...initialState };
 
 export const goto = (object, property) =>
   property.split('.').reduce((obj, prop) => obj[prop], object);
@@ -562,10 +559,10 @@ const afterChange = {
   species: (state, action) => {
     const { index, value } = action.payload;
     if (Number.isFinite(index)) {
-      state.rates[index] = (db.seedList[value] || {}).seedingRate || '';
-      state.prices[index] = (db.seedList[value] || {}).price || '';
+      state.rates[index] = db.seedList[value]?.seedingRate || '';
+      state.prices[index] = db.seedList[value]?.price || '';
       state.focus = `rates${index}`;
-      const fertN = (db.seedList[value] || {}).NCredit || '';
+      const fertN = db.seedList[value]?.NCredit || '';
       if (fertN) {
         state.fertility.N = fertN;
       }
@@ -837,7 +834,7 @@ export const store = createStore(initialState, { afterChange, reducers });
 });
 
 const loaded = () => {
-  store.dispatch(set.screen('Field'));
+  store.dispatch(set.screen('Home'));
   store.dispatch(set.$labor(db.rates?.skilled?.value));
   store.dispatch(set.$diesel(db.rates?.fuel?.value));
   store.dispatch(set.fertility.$P(db.rates?.P2O5?.value));
@@ -938,7 +935,7 @@ export const db = {
   }
 }; // loadAirtables
 
-export const queue = (f, time = 1) => {
+const queue = (f, time = 1) => {
   setTimeout(f, (queue.i += 1) * time);
   setTimeout(() => {
     queue.i = 0;
@@ -961,12 +958,13 @@ const tables = [
 ];
 
 if (dev) {
-  loadAirtables(tables);
+  loaded();
+  // loadAirtables(tables);
 } else {
   loaded();
 }
 
-export const test = (key, result) => {
+const test = (key, result) => {
   let value = get[key]?.(store.getState())?.toString();
   if (value !== result.toString()) {
     value = store.getState();
@@ -1282,7 +1280,7 @@ export const exampleFertilityCost = () => {
 export const exampleErosion = () => {
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.map.area(150));
+  store.dispatch(set.acres(150));
   store.dispatch(set.erosion.q1('Yes'));
   store.dispatch(set.erosion.q2('Trackhoe'));
   store.dispatch(set.erosion.q4(20));
@@ -1330,7 +1328,7 @@ export const exampleHome = () => {
   store.dispatch(set.location('123 Main Street, Athens, GA, USA'));
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.map.area(123));
+  store.dispatch(set.acres(123));
   store.dispatch(set.field('My field'));
   store.dispatch(set.cashCrop('Corn'));
   store.dispatch(set.map.lat(33.9347));
@@ -1342,7 +1340,7 @@ export const exampleField = () => {
   store.dispatch(set.location('123 Main Street, Athens, GA, USA'));
   store.dispatch(set.farm('My farm'));
   store.dispatch(set.field('My field'));
-  store.dispatch(set.map.area(123));
+  store.dispatch(set.acres(123));
   store.dispatch(set.field('My field'));
   store.dispatch(set.cashCrop('Corn'));
   store.dispatch(set.map.lat(33.9347));
