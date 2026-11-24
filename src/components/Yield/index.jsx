@@ -1,7 +1,6 @@
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Bar, BarChart, Tooltip, XAxis, YAxis } from 'recharts';
 import Help from '../../shared/Help';
 import Input from '../../shared/Inputs';
 import {
@@ -19,81 +18,54 @@ import './styles.scss';
 
 const defaults = getDefaults(['yield.yield', 'yield.q2', 'yield.price', 'yield.q4']);
 
-Highcharts.setOptions({
-  chart: {
-    animation: false,
-    width: 400,
-  },
-});
-
 const RevenueGraph = ({ className }) => {
   const state = useSelector(get.yield);
   const { typical, adjusted, impact, q4 } = state;
-  const width = 250;
-  const width2 = width / 5;
 
   if (!adjusted[0]) {
     return null;
   }
 
-  const chartOptions = {
-    chart: {
-      type: 'column',
-      height: 100,
-    },
-    plotOptions: {
-      series: {
-        animation: false,
-      },
-    },
-    title: {
-      text: '',
-    },
-    xAxis: {
-      tickLength: 0,
-      labels: {
-        enabled: false,
-      },
-      title: {},
-    },
-    yAxis: {
-      title: {
-        useHTML: true,
-        text: `
-          <div style="height: ${width2}px; display: flex;">
-            <div style="align-self: flex-end;">dollars/acre</div>
-          </div>
-        `,
-      },
-      labels: {
-        formatter() {
-          return `$${this.axis.defaultLabelFormatter.call(this)}`;
-        },
-      },
-    },
-    tooltip: {
-      formatter() {
-        return `
-          Yield impact in year ${this.x + 1}:
-          <br/>
-          $${this.y.toFixed(2)}/acre
-        `;
-      },
-    },
-    series: [
-      {
-        showInLegend: false,
-        data: [...impact],
-      },
-    ],
-  };
+  const data = [1, 3, 5].map((year, index) => ({
+    year,
+    impact: impact[index],
+  }));
+
+  const min = Math.floor(Math.min(0, ...impact) / 5) * 5;
+  const max = Math.ceil(Math.max(0, ...impact) / 5) * 5;
+  const ticks = Array.from({ length: (max - min) / 5 + 1 }, (_, i) => min + i * 5);
 
   return (
     <div id="RevenueGraph" className={className}>
       <div style={{ textAlign: 'center' }}>Revenue</div>
 
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-
+      <BarChart
+        width={400}
+        height={100}
+        data={data}
+        margin={{ top: 5, right: 0, bottom: 5, left: 0 }}
+      >
+        <XAxis dataKey="year" hide />
+        <YAxis
+          width={100}
+          domain={[min, max]}
+          ticks={ticks}
+          allowDecimals={false}
+          tickFormatter={(value) => `$${value}`}
+          label={{
+            value: 'dollars/acre',
+            angle: -90,
+            position: 'insideLeft',
+            offset: 45,
+            style: { textAnchor: 'middle', fontSize: 12 },
+          }}
+        />
+        <Tooltip
+          labelFormatter={(year) => `Yield impact in year ${year}`}
+          formatter={(value) => [`$${Number(value).toFixed(2)}/acre`, 'Impact']}
+        />
+        <Bar dataKey="impact" fill="#058DC7" barSize={44} isAnimationActive={false} />
+      </BarChart>
       <div>
         <table id="ChartTable">
           <tbody>
