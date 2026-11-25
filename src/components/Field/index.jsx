@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import Input, { MyTextField } from '../../shared/Inputs';
+import Input from '../../shared/Inputs';
 import MapComp from '../../shared/Map';
 import { db, dev, exampleField, get, getDefaults, set } from '../../store/Store';
 import ClearInputs from '../ClearInputs';
@@ -78,27 +78,27 @@ const Field = () => {
         <div className="field-grid">
           <div className="field-details">
             <h2>Farm name (or FSA farm number)</h2>
-            <MyTextField id="farm" fullWidth />
+            <Input id="farm" fullWidth />
 
             <h2>Field name (or FSA field number)</h2>
-            <MyTextField id="field" fullWidth />
+            <Input id="field" fullWidth />
 
             <h2>How many acres are in this field?</h2>
-            <MyTextField id="acres" />
+            <Input id="acres" />
 
             <h2>What cash crop will follow the cover crop in this field?</h2>
             <Input id="cashCrop" options={[...Object.keys(db.commodities), 'Other']} />
             {cashCrop === 'Other' && (
               <p>
-                <MyTextField id="otherCashCrop" label="Enter cash crop here" />
+                <Input id="otherCashCrop" placeholder="Enter cash crop here" />
               </p>
             )}
 
             <h2>What is your labor cost? ($/hour)</h2>
-            <MyTextField id="$labor" style={{ background: '#dfd' }} />
+            <Input id="$labor" style={{ background: '#dfd' }} />
 
             <h2>What is your diesel cost? ($/gal)</h2>
-            <MyTextField id="$diesel" style={{ background: '#dfd' }} />
+            <Input id="$diesel" style={{ background: '#dfd' }} />
           </div>
           <MapComp />
         </div>

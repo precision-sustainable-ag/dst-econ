@@ -21,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-redux": "^9.3.1",
+    "recharts": "^3.11.1",
     "redux": "^5.0.1",
     "redux-autosetters": "https://github.com/precision-sustainable-ag/redux-autosetters",
     "sass": "^1.63.6",
